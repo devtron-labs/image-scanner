@@ -81,7 +81,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 	var sess *session.Session
 	if (len(scanEvent.AccessKey) > 0 && len(scanEvent.SecretKey) > 0) || len(scanEvent.Token) > 0 {
 		sess, err = session.NewSession(&aws.Config{
-			Region:      aws.String("us-east-2"),
+			Region:      aws.String(scanEvent.AwsRegion),
 			Credentials: credentials.NewStaticCredentials(scanEvent.AccessKey, scanEvent.SecretKey, scanEvent.Token),
 		})
 	}
@@ -90,7 +90,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 	tokenData := ""
 	tokens := &tokenData
 	if (len(scanEvent.AccessKey) > 0 && len(scanEvent.SecretKey) > 0) || len(scanEvent.Token) > 0 {
-		svc := ecr.New(sess, aws.NewConfig().WithRegion("us-east-2"))
+		svc := ecr.New(sess, aws.NewConfig().WithRegion(scanEvent.AwsRegion))
 		token, err := svc.GetAuthorizationToken(&ecr.GetAuthorizationTokenInput{})
 		if err != nil {
 			return nil, err
