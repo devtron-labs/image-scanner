@@ -16,6 +16,7 @@ type ScanEvent struct {
 	AccessKey    string `json:"accessKey"`
 	SecretKey    string `json:"secretKey"`
 	Token        string `json:"token"`
+	AwsRegion    string `json:"awsRegion"`
 }
 
 type ScanEventResponse struct {
