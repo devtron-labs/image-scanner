@@ -1,20 +1,20 @@
 package klarService
 
 import (
-	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/internal/sql/repository"
-	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecr"
+	"github.com/devtron-labs/image-scanner/common"
+	"github.com/devtron-labs/image-scanner/internal/sql/repository"
+	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
 
+	"errors"
+	"github.com/caarlos0/env"
 	/*"github.com/devtron-labs/image-scanner/client"*/
 	/*"github.com/devtron-labs/image-scanner/client"*/
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
-	"errors"
-	"github.com/caarlos0/env"
 	"github.com/optiopay/klar/clair"
 	"github.com/optiopay/klar/docker"
 	"go.uber.org/zap"
@@ -45,21 +45,24 @@ type KlarService interface {
 }
 
 type KlarServiceImpl struct {
-	logger           *zap.SugaredLogger
-	klarConfig       *KlarConfig
-	grafeasService   grafeasService.GrafeasService
-	repository       repository.UserRepository
-	imageScanService security.ImageScanService
+	logger                        *zap.SugaredLogger
+	klarConfig                    *KlarConfig
+	grafeasService                grafeasService.GrafeasService
+	userRepository                repository.UserRepository
+	imageScanService              security.ImageScanService
+	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository
 }
 
 func NewKlarServiceImpl(logger *zap.SugaredLogger, klarConfig *KlarConfig, grafeasService grafeasService.GrafeasService,
-	repository repository.UserRepository, imageScanService security.ImageScanService) *KlarServiceImpl {
+	userRepository repository.UserRepository, imageScanService security.ImageScanService,
+	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository) *KlarServiceImpl {
 	return &KlarServiceImpl{
-		logger:           logger,
-		klarConfig:       klarConfig,
-		grafeasService:   grafeasService,
-		repository:       repository,
-		imageScanService: imageScanService,
+		logger:                        logger,
+		klarConfig:                    klarConfig,
+		grafeasService:                grafeasService,
+		userRepository:                userRepository,
+		imageScanService:              imageScanService,
+		dockerArtifactStoreRepository: dockerArtifactStoreRepository,
 	}
 }
 
@@ -67,7 +70,11 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
 	}
-
+	dockerRegistry, err := impl.dockerArtifactStoreRepository.FindById(scanEvent.DockerRegistryId)
+	if err != nil {
+		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", scanEvent.DockerRegistryId)
+		return nil, err
+	}
 	scanned, err := impl.imageScanService.IsImageScanned(scanEvent.Image)
 	if err != nil && err != pg.ErrNoRows {
 		impl.logger.Errorw("error in fetching scan history ", "err", err)
@@ -77,20 +84,17 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		impl.logger.Infow("image already scanned", "image", scanEvent.Image)
 		return scanEventResponse, nil
 	}
-
-	var sess *session.Session
-	if (len(scanEvent.AccessKey) > 0 && len(scanEvent.SecretKey) > 0) || len(scanEvent.Token) > 0 {
-		sess, err = session.NewSession(&aws.Config{
-			Region:      aws.String(scanEvent.AwsRegion),
-			Credentials: credentials.NewStaticCredentials(scanEvent.AccessKey, scanEvent.SecretKey, scanEvent.Token),
-		})
-	}
-
-	// Create a ECR client with additional configuration
 	tokenData := ""
 	tokens := &tokenData
-	if (len(scanEvent.AccessKey) > 0 && len(scanEvent.SecretKey) > 0) || len(scanEvent.Token) > 0 {
-		svc := ecr.New(sess, aws.NewConfig().WithRegion(scanEvent.AwsRegion))
+	if dockerRegistry.RegistryType == repository.REGISTRYTYPE_ECR {
+		var sess *session.Session
+		sess, err = session.NewSession(&aws.Config{
+			Region:      aws.String(dockerRegistry.AWSRegion),
+			Credentials: credentials.NewStaticCredentials(dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey, ""),
+		})
+
+		// Create a ECR client with additional configuration
+		svc := ecr.New(sess, aws.NewConfig().WithRegion(dockerRegistry.AWSRegion))
 		token, err := svc.GetAuthorizationToken(&ecr.GetAuthorizationTokenInput{})
 		if err != nil {
 			return nil, err
@@ -103,10 +107,11 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		}
 		fmt.Println(string(decoded))*/
 	}
+
 	config := &docker.Config{
 		ImageName: scanEvent.Image,
-		//User:      "AWS",
-		//Password:  string(decoded),
+		User:      dockerRegistry.Username,
+		Password:  dockerRegistry.Password,
 		//InsecureRegistry: true,
 		//InsecureTLS:      true,
 		Token:   *tokens,
