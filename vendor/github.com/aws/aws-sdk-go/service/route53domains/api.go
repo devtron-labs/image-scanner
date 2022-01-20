@@ -57,9 +57,14 @@ func (c *Route53Domains) AcceptDomainTransferFromAnotherAwsAccountRequest(input 
 
 // AcceptDomainTransferFromAnotherAwsAccount API operation for Amazon Route 53 Domains.
 //
-// Accepts the transfer of a domain from another AWS account to the current
-// AWS account. You initiate a transfer between AWS accounts using TransferDomainToAnotherAwsAccount
-// (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html).
+// Accepts the transfer of a domain from another Amazon Web Services account
+// to the currentAmazon Web Services account. You initiate a transfer between
+// Amazon Web Services accounts using TransferDomainToAnotherAwsAccount (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html).
+//
+// If you use the CLI command at accept-domain-transfer-from-another-aws-account
+// (https://docs.aws.amazon.com/cli/latest/reference/route53domains/accept-domain-transfer-from-another-aws-account.html),
+// use JSON format as input instead of text because otherwise CLI will throw
+// an error from domain transfer input that includes single quotes.
 //
 // Use either ListOperations (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_ListOperations.html)
 // or GetOperationDetail (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_GetOperationDetail.html)
@@ -87,6 +92,9 @@ func (c *Route53Domains) AcceptDomainTransferFromAnotherAwsAccountRequest(input 
 //
 //   * DomainLimitExceeded
 //   The number of domains has exceeded the allowed threshold for the account.
+//
+//   * UnsupportedTLD
+//   Amazon Route 53 does not support this top-level domain (TLD).
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/route53domains-2014-05-15/AcceptDomainTransferFromAnotherAwsAccount
 func (c *Route53Domains) AcceptDomainTransferFromAnotherAwsAccount(input *AcceptDomainTransferFromAnotherAwsAccountInput) (*AcceptDomainTransferFromAnotherAwsAccountOutput, error) {
@@ -154,12 +162,12 @@ func (c *Route53Domains) CancelDomainTransferToAnotherAwsAccountRequest(input *C
 
 // CancelDomainTransferToAnotherAwsAccount API operation for Amazon Route 53 Domains.
 //
-// Cancels the transfer of a domain from the current AWS account to another
-// AWS account. You initiate a transfer between AWS accounts using TransferDomainToAnotherAwsAccount
-// (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html).
+// Cancels the transfer of a domain from the current Amazon Web Services account
+// to another Amazon Web Services account. You initiate a transfer betweenAmazon
+// Web Services accounts using TransferDomainToAnotherAwsAccount (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html).
 //
-// You must cancel the transfer before the other AWS account accepts the transfer
-// using AcceptDomainTransferFromAnotherAwsAccount (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_AcceptDomainTransferFromAnotherAwsAccount.html).
+// You must cancel the transfer before the other Amazon Web Services account
+// accepts the transfer using AcceptDomainTransferFromAnotherAwsAccount (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_AcceptDomainTransferFromAnotherAwsAccount.html).
 //
 // Use either ListOperations (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_ListOperations.html)
 // or GetOperationDetail (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_GetOperationDetail.html)
@@ -184,6 +192,9 @@ func (c *Route53Domains) CancelDomainTransferToAnotherAwsAccountRequest(input *C
 //   * OperationLimitExceeded
 //   The number of operations or jobs running exceeded the allowed threshold for
 //   the account.
+//
+//   * UnsupportedTLD
+//   Amazon Route 53 does not support this top-level domain (TLD).
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/route53domains-2014-05-15/CancelDomainTransferToAnotherAwsAccount
 func (c *Route53Domains) CancelDomainTransferToAnotherAwsAccount(input *CancelDomainTransferToAnotherAwsAccountInput) (*CancelDomainTransferToAnotherAwsAccountOutput, error) {
@@ -374,6 +385,111 @@ func (c *Route53Domains) CheckDomainTransferability(input *CheckDomainTransferab
 // for more information on using Contexts.
 func (c *Route53Domains) CheckDomainTransferabilityWithContext(ctx aws.Context, input *CheckDomainTransferabilityInput, opts ...request.Option) (*CheckDomainTransferabilityOutput, error) {
 	req, out := c.CheckDomainTransferabilityRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteDomain = "DeleteDomain"
+
+// DeleteDomainRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteDomain operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteDomain for more information on using the DeleteDomain
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteDomainRequest method.
+//    req, resp := client.DeleteDomainRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/route53domains-2014-05-15/DeleteDomain
+func (c *Route53Domains) DeleteDomainRequest(input *DeleteDomainInput) (req *request.Request, output *DeleteDomainOutput) {
+	op := &request.Operation{
+		Name:       opDeleteDomain,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DeleteDomainInput{}
+	}
+
+	output = &DeleteDomainOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DeleteDomain API operation for Amazon Route 53 Domains.
+//
+// This operation deletes the specified domain. This action is permanent. For
+// more information, see Deleting a domain name registration (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-delete.html).
+//
+// To transfer the domain registration to another registrar, use the transfer
+// process that’s provided by the registrar to which you want to transfer
+// the registration. Otherwise, the following apply:
+//
+// You can’t get a refund for the cost of a deleted domain registration.
+//
+// The registry for the top-level domain might hold the domain name for a brief
+// time before releasing it for other users to register (varies by registry).
+//
+// When the registration has been deleted, we'll send you a confirmation to
+// the registrant contact. The email will come from noreply@domainnameverification.net
+// or noreply@registrar.amazon.com.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Route 53 Domains's
+// API operation DeleteDomain for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInput
+//   The requested item is not acceptable. For example, for APIs that accept a
+//   domain name, the request might specify a domain name that doesn't belong
+//   to the account that submitted the request. For AcceptDomainTransferFromAnotherAwsAccount,
+//   the password might be invalid.
+//
+//   * DuplicateRequest
+//   The request is already in progress for the domain.
+//
+//   * TLDRulesViolation
+//   The top-level domain does not support this operation.
+//
+//   * UnsupportedTLD
+//   Amazon Route 53 does not support this top-level domain (TLD).
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/route53domains-2014-05-15/DeleteDomain
+func (c *Route53Domains) DeleteDomain(input *DeleteDomainInput) (*DeleteDomainOutput, error) {
+	req, out := c.DeleteDomainRequest(input)
+	return out, req.Send()
+}
+
+// DeleteDomainWithContext is the same as DeleteDomain with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteDomain for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Route53Domains) DeleteDomainWithContext(ctx aws.Context, input *DeleteDomainInput, opts ...request.Option) (*DeleteDomainOutput, error) {
+	req, out := c.DeleteDomainRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -707,7 +823,7 @@ func (c *Route53Domains) EnableDomainAutoRenewRequest(input *EnableDomainAutoRen
 //
 // This operation configures Amazon Route 53 to automatically renew the specified
 // domain before the domain registration expires. The cost of renewing your
-// domain registration is billed to your AWS account.
+// domain registration is billed to your Amazon Web Services account.
 //
 // The period during which you can renew a domain name varies by TLD. For a
 // list of TLDs and their renewal policies, see Domains That You Can Register
@@ -996,8 +1112,8 @@ func (c *Route53Domains) GetDomainDetailRequest(input *GetDomainDetailInput) (re
 // GetDomainDetail API operation for Amazon Route 53 Domains.
 //
 // This operation returns detailed information about a specified domain that
-// is associated with the current AWS account. Contact information for the domain
-// is also returned as part of the output.
+// is associated with the current Amazon Web Services account. Contact information
+// for the domain is also returned as part of the output.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1256,7 +1372,8 @@ func (c *Route53Domains) ListDomainsRequest(input *ListDomainsInput) (req *reque
 // ListDomains API operation for Amazon Route 53 Domains.
 //
 // This operation returns all the domain names registered with Amazon Route
-// 53 for the current AWS account.
+// 53 for the current Amazon Web Services account if no filtering conditions
+// are used.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1400,6 +1517,8 @@ func (c *Route53Domains) ListOperationsRequest(input *ListOperationsInput) (req 
 // ID and that have ever been performed on domains that were registered by the
 // current account.
 //
+// This command runs only in the us-east-1 Region.
+//
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
 // the error.
@@ -1481,6 +1600,160 @@ func (c *Route53Domains) ListOperationsPagesWithContext(ctx aws.Context, input *
 
 	for p.Next() {
 		if !fn(p.Page().(*ListOperationsOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opListPrices = "ListPrices"
+
+// ListPricesRequest generates a "aws/request.Request" representing the
+// client's request for the ListPrices operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListPrices for more information on using the ListPrices
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListPricesRequest method.
+//    req, resp := client.ListPricesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/route53domains-2014-05-15/ListPrices
+func (c *Route53Domains) ListPricesRequest(input *ListPricesInput) (req *request.Request, output *ListPricesOutput) {
+	op := &request.Operation{
+		Name:       opListPrices,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"Marker"},
+			OutputTokens:    []string{"NextPageMarker"},
+			LimitToken:      "MaxItems",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &ListPricesInput{}
+	}
+
+	output = &ListPricesOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListPrices API operation for Amazon Route 53 Domains.
+//
+// Lists the following prices for either all the TLDs supported by Route 53,
+// or the specified TLD:
+//
+//    * Registration
+//
+//    * Transfer
+//
+//    * Owner change
+//
+//    * Domain renewal
+//
+//    * Domain restoration
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Route 53 Domains's
+// API operation ListPrices for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInput
+//   The requested item is not acceptable. For example, for APIs that accept a
+//   domain name, the request might specify a domain name that doesn't belong
+//   to the account that submitted the request. For AcceptDomainTransferFromAnotherAwsAccount,
+//   the password might be invalid.
+//
+//   * UnsupportedTLD
+//   Amazon Route 53 does not support this top-level domain (TLD).
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/route53domains-2014-05-15/ListPrices
+func (c *Route53Domains) ListPrices(input *ListPricesInput) (*ListPricesOutput, error) {
+	req, out := c.ListPricesRequest(input)
+	return out, req.Send()
+}
+
+// ListPricesWithContext is the same as ListPrices with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListPrices for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Route53Domains) ListPricesWithContext(ctx aws.Context, input *ListPricesInput, opts ...request.Option) (*ListPricesOutput, error) {
+	req, out := c.ListPricesRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// ListPricesPages iterates over the pages of a ListPrices operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListPrices method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListPrices operation.
+//    pageNum := 0
+//    err := client.ListPricesPages(params,
+//        func(page *route53domains.ListPricesOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *Route53Domains) ListPricesPages(input *ListPricesInput, fn func(*ListPricesOutput, bool) bool) error {
+	return c.ListPricesPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// ListPricesPagesWithContext same as ListPricesPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Route53Domains) ListPricesPagesWithContext(ctx aws.Context, input *ListPricesInput, fn func(*ListPricesOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *ListPricesInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.ListPricesRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*ListPricesOutput), !p.HasNextPage()) {
 			break
 		}
 	}
@@ -1644,14 +1917,16 @@ func (c *Route53Domains) RegisterDomainRequest(input *RegisterDomainInput) (req 
 //    information either for Amazon Registrar (for .com, .net, and .org domains)
 //    or for our registrar associate, Gandi (for all other TLDs). If you don't
 //    enable privacy protection, WHOIS queries return the information that you
-//    entered for the registrant, admin, and tech contacts.
+//    entered for the administrative, registrant, and technical contacts. You
+//    must specify the same privacy setting for the administrative, registrant,
+//    and technical contacts.
 //
 //    * If registration is successful, returns an operation ID that you can
 //    use to track the progress and completion of the action. If the request
 //    is not completed successfully, the domain registrant is notified by email.
 //
-//    * Charges your AWS account an amount based on the top-level domain. For
-//    more information, see Amazon Route 53 Pricing (http://aws.amazon.com/route53/pricing/).
+//    * Charges your Amazon Web Services account an amount based on the top-level
+//    domain. For more information, see Amazon Route 53 Pricing (http://aws.amazon.com/route53/pricing/).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1749,9 +2024,9 @@ func (c *Route53Domains) RejectDomainTransferFromAnotherAwsAccountRequest(input 
 
 // RejectDomainTransferFromAnotherAwsAccount API operation for Amazon Route 53 Domains.
 //
-// Rejects the transfer of a domain from another AWS account to the current
-// AWS account. You initiate a transfer between AWS accounts using TransferDomainToAnotherAwsAccount
-// (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html).
+// Rejects the transfer of a domain from another Amazon Web Services account
+// to the current Amazon Web Services account. You initiate a transfer betweenAmazon
+// Web Services accounts using TransferDomainToAnotherAwsAccount (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html).
 //
 // Use either ListOperations (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_ListOperations.html)
 // or GetOperationDetail (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_GetOperationDetail.html)
@@ -1776,6 +2051,9 @@ func (c *Route53Domains) RejectDomainTransferFromAnotherAwsAccountRequest(input 
 //   * OperationLimitExceeded
 //   The number of operations or jobs running exceeded the allowed threshold for
 //   the account.
+//
+//   * UnsupportedTLD
+//   Amazon Route 53 does not support this top-level domain (TLD).
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/route53domains-2014-05-15/RejectDomainTransferFromAnotherAwsAccount
 func (c *Route53Domains) RejectDomainTransferFromAnotherAwsAccount(input *RejectDomainTransferFromAnotherAwsAccountInput) (*RejectDomainTransferFromAnotherAwsAccountOutput, error) {
@@ -1844,7 +2122,7 @@ func (c *Route53Domains) RenewDomainRequest(input *RenewDomainInput) (req *reque
 // RenewDomain API operation for Amazon Route 53 Domains.
 //
 // This operation renews a domain for the specified number of years. The cost
-// of renewing your domain is billed to your AWS account.
+// of renewing your domain is billed to your Amazon Web Services account.
 //
 // We recommend that you renew your domain several weeks before the expiration
 // date. Some TLD registries delete domains before the expiration date if you
@@ -2134,8 +2412,8 @@ func (c *Route53Domains) TransferDomainRequest(input *TransferDomainInput) (req 
 //    Transferring Registration for a Domain to Amazon Route 53 (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-to-route-53.html)
 //    in the Amazon Route 53 Developer Guide.
 //
-//    * For information about how to transfer a domain from one AWS account
-//    to another, see TransferDomainToAnotherAwsAccount (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html).
+//    * For information about how to transfer a domain from one Amazon Web Services
+//    account to another, see TransferDomainToAnotherAwsAccount (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html).
 //
 //    * For information about how to transfer a domain to another domain registrar,
 //    see Transferring a Domain from Amazon Route 53 to Another Registrar (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/domain-transfer-from-route-53.html)
@@ -2253,12 +2531,12 @@ func (c *Route53Domains) TransferDomainToAnotherAwsAccountRequest(input *Transfe
 
 // TransferDomainToAnotherAwsAccount API operation for Amazon Route 53 Domains.
 //
-// Transfers a domain from the current AWS account to another AWS account. Note
-// the following:
+// Transfers a domain from the current Amazon Web Services account to another
+// Amazon Web Services account. Note the following:
 //
-//    * The AWS account that you're transferring the domain to must accept the
-//    transfer. If the other account doesn't accept the transfer within 3 days,
-//    we cancel the transfer. See AcceptDomainTransferFromAnotherAwsAccount
+//    * The Amazon Web Services account that you're transferring the domain
+//    to must accept the transfer. If the other account doesn't accept the transfer
+//    within 3 days, we cancel the transfer. See AcceptDomainTransferFromAnotherAwsAccount
 //    (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_AcceptDomainTransferFromAnotherAwsAccount.html).
 //
 //    * You can cancel the transfer before the other account accepts it. See
@@ -2267,12 +2545,12 @@ func (c *Route53Domains) TransferDomainToAnotherAwsAccountRequest(input *Transfe
 //    * The other account can reject the transfer. See RejectDomainTransferFromAnotherAwsAccount
 //    (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_RejectDomainTransferFromAnotherAwsAccount.html).
 //
-// When you transfer a domain from one AWS account to another, Route 53 doesn't
-// transfer the hosted zone that is associated with the domain. DNS resolution
-// isn't affected if the domain and the hosted zone are owned by separate accounts,
-// so transferring the hosted zone is optional. For information about transferring
-// the hosted zone to another AWS account, see Migrating a Hosted Zone to a
-// Different AWS Account (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-migrating.html)
+// When you transfer a domain from one Amazon Web Services account to another,
+// Route 53 doesn't transfer the hosted zone that is associated with the domain.
+// DNS resolution isn't affected if the domain and the hosted zone are owned
+// by separate accounts, so transferring the hosted zone is optional. For information
+// about transferring the hosted zone to another Amazon Web Services account,
+// see Migrating a Hosted Zone to a Different Amazon Web Services Account (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/hosted-zones-migrating.html)
 // in the Amazon Route 53 Developer Guide.
 //
 // Use either ListOperations (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_ListOperations.html)
@@ -2301,6 +2579,9 @@ func (c *Route53Domains) TransferDomainToAnotherAwsAccountRequest(input *Transfe
 //
 //   * DuplicateRequest
 //   The request is already in progress for the domain.
+//
+//   * UnsupportedTLD
+//   Amazon Route 53 does not support this top-level domain (TLD).
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/route53domains-2014-05-15/TransferDomainToAnotherAwsAccount
 func (c *Route53Domains) TransferDomainToAnotherAwsAccount(input *TransferDomainToAnotherAwsAccountInput) (*TransferDomainToAnotherAwsAccountOutput, error) {
@@ -2476,9 +2757,12 @@ func (c *Route53Domains) UpdateDomainContactPrivacyRequest(input *UpdateDomainCo
 // .net, and .org domains) or with contact information for our registrar associate,
 // Gandi.
 //
+// You must specify the same privacy setting for the administrative, registrant,
+// and technical contacts.
+//
 // This operation affects only the contact information for the specified contact
-// type (registrant, administrator, or tech). If the request succeeds, Amazon
-// Route 53 returns an operation ID that you can use with GetOperationDetail
+// type (administrative, registrant, or technical). If the request succeeds,
+// Amazon Route 53 returns an operation ID that you can use with GetOperationDetail
 // (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_GetOperationDetail.html)
 // to track the progress and completion of the action. If the request doesn't
 // complete successfully, the domain registrant will be notified by email.
@@ -2767,6 +3051,12 @@ func (c *Route53Domains) ViewBillingRequest(input *ViewBillingInput) (req *reque
 		Name:       opViewBilling,
 		HTTPMethod: "POST",
 		HTTPPath:   "/",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"Marker"},
+			OutputTokens:    []string{"NextPageMarker"},
+			LimitToken:      "MaxItems",
+			TruncationToken: "",
+		},
 	}
 
 	if input == nil {
@@ -2780,8 +3070,8 @@ func (c *Route53Domains) ViewBillingRequest(input *ViewBillingInput) (req *reque
 
 // ViewBilling API operation for Amazon Route 53 Domains.
 //
-// Returns all the domain-related billing records for the current AWS account
-// for a specified period
+// Returns all the domain-related billing records for the current Amazon Web
+// Services account for a specified period
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -2819,13 +3109,65 @@ func (c *Route53Domains) ViewBillingWithContext(ctx aws.Context, input *ViewBill
 	return out, req.Send()
 }
 
+// ViewBillingPages iterates over the pages of a ViewBilling operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ViewBilling method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ViewBilling operation.
+//    pageNum := 0
+//    err := client.ViewBillingPages(params,
+//        func(page *route53domains.ViewBillingOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *Route53Domains) ViewBillingPages(input *ViewBillingInput, fn func(*ViewBillingOutput, bool) bool) error {
+	return c.ViewBillingPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// ViewBillingPagesWithContext same as ViewBillingPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Route53Domains) ViewBillingPagesWithContext(ctx aws.Context, input *ViewBillingInput, fn func(*ViewBillingOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *ViewBillingInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.ViewBillingRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*ViewBillingOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
 // The AcceptDomainTransferFromAnotherAwsAccount request includes the following
 // elements.
 type AcceptDomainTransferFromAnotherAwsAccountInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of the domain that was specified when another AWS account submitted
-	// a TransferDomainToAnotherAwsAccount (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html)
+	// The name of the domain that was specified when another Amazon Web Services
+	// account submitted a TransferDomainToAnotherAwsAccount (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html)
 	// request.
 	//
 	// DomainName is a required field
@@ -2838,12 +3180,20 @@ type AcceptDomainTransferFromAnotherAwsAccountInput struct {
 	Password *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AcceptDomainTransferFromAnotherAwsAccountInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AcceptDomainTransferFromAnotherAwsAccountInput) GoString() string {
 	return s.String()
 }
@@ -2886,12 +3236,20 @@ type AcceptDomainTransferFromAnotherAwsAccountOutput struct {
 	OperationId *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AcceptDomainTransferFromAnotherAwsAccountOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AcceptDomainTransferFromAnotherAwsAccountOutput) GoString() string {
 	return s.String()
 }
@@ -2928,12 +3286,20 @@ type BillingRecord struct {
 	Price *float64 `type:"double"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s BillingRecord) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s BillingRecord) GoString() string {
 	return s.String()
 }
@@ -2974,18 +3340,26 @@ type CancelDomainTransferToAnotherAwsAccountInput struct {
 	_ struct{} `type:"structure"`
 
 	// The name of the domain for which you want to cancel the transfer to another
-	// AWS account.
+	// Amazon Web Services account.
 	//
 	// DomainName is a required field
 	DomainName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelDomainTransferToAnotherAwsAccountInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelDomainTransferToAnotherAwsAccountInput) GoString() string {
 	return s.String()
 }
@@ -3021,12 +3395,20 @@ type CancelDomainTransferToAnotherAwsAccountOutput struct {
 	OperationId *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelDomainTransferToAnotherAwsAccountOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelDomainTransferToAnotherAwsAccountOutput) GoString() string {
 	return s.String()
 }
@@ -3070,12 +3452,20 @@ type CheckDomainAvailabilityInput struct {
 	IdnLangCode *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CheckDomainAvailabilityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CheckDomainAvailabilityInput) GoString() string {
 	return s.String()
 }
@@ -3160,12 +3550,20 @@ type CheckDomainAvailabilityOutput struct {
 	Availability *string `type:"string" required:"true" enum:"DomainAvailability"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CheckDomainAvailabilityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CheckDomainAvailabilityOutput) GoString() string {
 	return s.String()
 }
@@ -3183,6 +3581,10 @@ type CheckDomainTransferabilityInput struct {
 	// If the registrar for the top-level domain (TLD) requires an authorization
 	// code to transfer the domain, the code that you got from the current registrar
 	// for the domain.
+	//
+	// AuthCode is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by CheckDomainTransferabilityInput's
+	// String and GoString methods.
 	AuthCode *string `type:"string" sensitive:"true"`
 
 	// The name of the domain that you want to transfer to Route 53. The top-level
@@ -3206,12 +3608,20 @@ type CheckDomainTransferabilityInput struct {
 	DomainName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CheckDomainTransferabilityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CheckDomainTransferabilityInput) GoString() string {
 	return s.String()
 }
@@ -3252,12 +3662,20 @@ type CheckDomainTransferabilityOutput struct {
 	Transferability *DomainTransferability `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CheckDomainTransferabilityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CheckDomainTransferabilityOutput) GoString() string {
 	return s.String()
 }
@@ -3292,8 +3710,8 @@ type ContactDetail struct {
 	//    for your TLD, see Domains that You Can Register with Amazon Route 53 (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/registrar-tld-list.html)
 	//    in the Amazon Route 53 Developer Guide
 	//
-	//    * For .es domains, if you specify PERSON, you must specify INDIVIDUAL
-	//    for the value of ES_LEGAL_FORM.
+	//    * For .es domains, the value of ContactType must be PERSON for all three
+	//    contacts.
 	ContactType *string `type:"string" enum:"ContactType"`
 
 	// Code for the country of the contact's address.
@@ -3335,12 +3753,20 @@ type ContactDetail struct {
 	ZipCode *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ContactDetail) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ContactDetail) GoString() string {
 	return s.String()
 }
@@ -3449,6 +3875,84 @@ func (s *ContactDetail) SetZipCode(v string) *ContactDetail {
 	return s
 }
 
+type DeleteDomainInput struct {
+	_ struct{} `type:"structure"`
+
+	// Name of the domain to be deleted.
+	//
+	// DomainName is a required field
+	DomainName *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteDomainInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteDomainInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteDomainInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteDomainInput"}
+	if s.DomainName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DomainName"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDomainName sets the DomainName field's value.
+func (s *DeleteDomainInput) SetDomainName(v string) *DeleteDomainInput {
+	s.DomainName = &v
+	return s
+}
+
+type DeleteDomainOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Identifier for tracking the progress of the request. To query the operation
+	// status, use GetOperationDetail (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_GetOperationDetail.html).
+	OperationId *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteDomainOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteDomainOutput) GoString() string {
+	return s.String()
+}
+
+// SetOperationId sets the OperationId field's value.
+func (s *DeleteDomainOutput) SetOperationId(v string) *DeleteDomainOutput {
+	s.OperationId = &v
+	return s
+}
+
 // The DeleteTagsForDomainRequest includes the following elements.
 type DeleteTagsForDomainInput struct {
 	_ struct{} `type:"structure"`
@@ -3464,12 +3968,20 @@ type DeleteTagsForDomainInput struct {
 	TagsToDelete []*string `type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTagsForDomainInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTagsForDomainInput) GoString() string {
 	return s.String()
 }
@@ -3506,12 +4018,20 @@ type DeleteTagsForDomainOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTagsForDomainOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTagsForDomainOutput) GoString() string {
 	return s.String()
 }
@@ -3525,12 +4045,20 @@ type DisableDomainAutoRenewInput struct {
 	DomainName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableDomainAutoRenewInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableDomainAutoRenewInput) GoString() string {
 	return s.String()
 }
@@ -3558,12 +4086,20 @@ type DisableDomainAutoRenewOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableDomainAutoRenewOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableDomainAutoRenewOutput) GoString() string {
 	return s.String()
 }
@@ -3578,12 +4114,20 @@ type DisableDomainTransferLockInput struct {
 	DomainName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableDomainTransferLockInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableDomainTransferLockInput) GoString() string {
 	return s.String()
 }
@@ -3618,12 +4162,20 @@ type DisableDomainTransferLockOutput struct {
 	OperationId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableDomainTransferLockOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableDomainTransferLockOutput) GoString() string {
 	return s.String()
 }
@@ -3643,12 +4195,20 @@ type DomainLimitExceeded struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainLimitExceeded) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainLimitExceeded) GoString() string {
 	return s.String()
 }
@@ -3689,6 +4249,83 @@ func (s *DomainLimitExceeded) StatusCode() int {
 // RequestID returns the service's response RequestID for request.
 func (s *DomainLimitExceeded) RequestID() string {
 	return s.RespMetadata.RequestID
+}
+
+// Information about the domain price associated with a TLD.
+type DomainPrice struct {
+	_ struct{} `type:"structure"`
+
+	// The price for changing domain ownership.
+	ChangeOwnershipPrice *PriceWithCurrency `type:"structure"`
+
+	// The name of the TLD for which the prices apply.
+	Name *string `min:"1" type:"string"`
+
+	// The price for domain registration with Route 53.
+	RegistrationPrice *PriceWithCurrency `type:"structure"`
+
+	// The price for renewing domain registration with Route 53.
+	RenewalPrice *PriceWithCurrency `type:"structure"`
+
+	// The price for restoring the domain with Route 53.
+	RestorationPrice *PriceWithCurrency `type:"structure"`
+
+	// The price for transferring the domain registration to Route 53.
+	TransferPrice *PriceWithCurrency `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DomainPrice) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DomainPrice) GoString() string {
+	return s.String()
+}
+
+// SetChangeOwnershipPrice sets the ChangeOwnershipPrice field's value.
+func (s *DomainPrice) SetChangeOwnershipPrice(v *PriceWithCurrency) *DomainPrice {
+	s.ChangeOwnershipPrice = v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *DomainPrice) SetName(v string) *DomainPrice {
+	s.Name = &v
+	return s
+}
+
+// SetRegistrationPrice sets the RegistrationPrice field's value.
+func (s *DomainPrice) SetRegistrationPrice(v *PriceWithCurrency) *DomainPrice {
+	s.RegistrationPrice = v
+	return s
+}
+
+// SetRenewalPrice sets the RenewalPrice field's value.
+func (s *DomainPrice) SetRenewalPrice(v *PriceWithCurrency) *DomainPrice {
+	s.RenewalPrice = v
+	return s
+}
+
+// SetRestorationPrice sets the RestorationPrice field's value.
+func (s *DomainPrice) SetRestorationPrice(v *PriceWithCurrency) *DomainPrice {
+	s.RestorationPrice = v
+	return s
+}
+
+// SetTransferPrice sets the TransferPrice field's value.
+func (s *DomainPrice) SetTransferPrice(v *PriceWithCurrency) *DomainPrice {
+	s.TransferPrice = v
+	return s
 }
 
 // Information about one suggested domain name.
@@ -3747,12 +4384,20 @@ type DomainSuggestion struct {
 	DomainName *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainSuggestion) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainSuggestion) GoString() string {
 	return s.String()
 }
@@ -3790,12 +4435,20 @@ type DomainSummary struct {
 	TransferLock *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainSummary) GoString() string {
 	return s.String()
 }
@@ -3849,12 +4502,20 @@ type DomainTransferability struct {
 	Transferable *string `type:"string" enum:"Transferable"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainTransferability) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainTransferability) GoString() string {
 	return s.String()
 }
@@ -3874,12 +4535,20 @@ type DuplicateRequest struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DuplicateRequest) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DuplicateRequest) GoString() string {
 	return s.String()
 }
@@ -3931,12 +4600,20 @@ type EnableDomainAutoRenewInput struct {
 	DomainName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EnableDomainAutoRenewInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EnableDomainAutoRenewInput) GoString() string {
 	return s.String()
 }
@@ -3964,12 +4641,20 @@ type EnableDomainAutoRenewOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EnableDomainAutoRenewOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EnableDomainAutoRenewOutput) GoString() string {
 	return s.String()
 }
@@ -3984,12 +4669,20 @@ type EnableDomainTransferLockInput struct {
 	DomainName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EnableDomainTransferLockInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EnableDomainTransferLockInput) GoString() string {
 	return s.String()
 }
@@ -4024,12 +4717,20 @@ type EnableDomainTransferLockOutput struct {
 	OperationId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EnableDomainTransferLockOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EnableDomainTransferLockOutput) GoString() string {
 	return s.String()
 }
@@ -4085,10 +4786,19 @@ type ExtraParam struct {
 	//
 	// .es
 	//
-	//    * ES_IDENTIFICATION Specify the applicable value: For contacts inside
-	//    Spain: Enter your passport ID. For contacts outside of Spain: Enter the
-	//    VAT identification number for the company. For .es domains, the value
-	//    of ContactType must be PERSON.
+	//    * ES_IDENTIFICATION The value of ES_IDENTIFICATION depends on the following
+	//    values: The value of ES_LEGAL_FORM The value of ES_IDENTIFICATION_TYPE
+	//    If ES_LEGAL_FORM is any value other than INDIVIDUAL: Specify 1 letter
+	//    + 8 numbers (CIF [Certificado de Identificación Fiscal]) Example: B12345678
+	//    If ES_LEGAL_FORM is INDIVIDUAL, the value that you specify for ES_IDENTIFICATION
+	//    depends on the value of ES_IDENTIFICATION_TYPE: If ES_IDENTIFICATION_TYPE
+	//    is DNI_AND_NIF (for Spanish contacts): Specify 8 numbers + 1 letter (DNI
+	//    [Documento Nacional de Identidad], NIF [Número de Identificación Fiscal])
+	//    Example: 12345678M If ES_IDENTIFICATION_TYPE is NIE (for foreigners with
+	//    legal residence): Specify 1 letter + 7 numbers + 1 letter ( NIE [Número
+	//    de Identidad de Extranjero]) Example: Y1234567X If ES_IDENTIFICATION_TYPE
+	//    is OTHER (for contacts outside of Spain): Specify a passport number, drivers
+	//    license number, or national identity card number
 	//
 	//    * ES_IDENTIFICATION_TYPE Valid values include the following: DNI_AND_NIF
 	//    (For Spanish contacts) NIE (For foreigners with legal residence) OTHER
@@ -4105,6 +4815,10 @@ type ExtraParam struct {
 	//    REGIONAL_PUBLIC_ENTITY SAVINGS_BANK SPANISH_OFFICE SPORTS_ASSOCIATION
 	//    SPORTS_FEDERATION SPORTS_LIMITED_COMPANY TEMPORARY_ALLIANCE_OF_ENTERPRISES
 	//    TRADE_UNION WORKER_OWNED_COMPANY WORKER_OWNED_LIMITED_COMPANY
+	//
+	// .eu
+	//
+	//    * EU_COUNTRY_OF_CITIZENSHIP
 	//
 	// .fi
 	//
@@ -4183,16 +4897,28 @@ type ExtraParam struct {
 
 	// The value that corresponds with the name of an extra parameter.
 	//
+	// Value is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by ExtraParam's
+	// String and GoString methods.
+	//
 	// Value is a required field
-	Value *string `type:"string" required:"true"`
+	Value *string `type:"string" required:"true" sensitive:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ExtraParam) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ExtraParam) GoString() string {
 	return s.String()
 }
@@ -4225,6 +4951,92 @@ func (s *ExtraParam) SetValue(v string) *ExtraParam {
 	return s
 }
 
+// Information for the filtering of a list of domains returned by ListDomains
+// (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains__ListDomains.html).
+type FilterCondition struct {
+	_ struct{} `type:"structure"`
+
+	// Name of the field which should be used for filtering the list of domains.
+	//
+	// Name is a required field
+	Name *string `type:"string" required:"true" enum:"ListDomainsAttributeName"`
+
+	// The operator values for filtering domain names. The values can be:
+	//
+	//    * LE: Less than, or equal to
+	//
+	//    * GE: Greater than, or equal to
+	//
+	//    * BEGINS_WITH: Begins with
+	//
+	// Operator is a required field
+	Operator *string `type:"string" required:"true" enum:"Operator"`
+
+	// An array of strings presenting values to compare. Only 1 item in the list
+	// is currently supported.
+	//
+	// Values is a required field
+	Values []*string `min:"1" type:"list" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FilterCondition) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FilterCondition) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *FilterCondition) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "FilterCondition"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Operator == nil {
+		invalidParams.Add(request.NewErrParamRequired("Operator"))
+	}
+	if s.Values == nil {
+		invalidParams.Add(request.NewErrParamRequired("Values"))
+	}
+	if s.Values != nil && len(s.Values) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Values", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetName sets the Name field's value.
+func (s *FilterCondition) SetName(v string) *FilterCondition {
+	s.Name = &v
+	return s
+}
+
+// SetOperator sets the Operator field's value.
+func (s *FilterCondition) SetOperator(v string) *FilterCondition {
+	s.Operator = &v
+	return s
+}
+
+// SetValues sets the Values field's value.
+func (s *FilterCondition) SetValues(v []*string) *FilterCondition {
+	s.Values = v
+	return s
+}
+
 type GetContactReachabilityStatusInput struct {
 	_ struct{} `type:"structure"`
 
@@ -4233,12 +5045,20 @@ type GetContactReachabilityStatusInput struct {
 	DomainName *string `locationName:"domainName" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetContactReachabilityStatusInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetContactReachabilityStatusInput) GoString() string {
 	return s.String()
 }
@@ -4271,12 +5091,20 @@ type GetContactReachabilityStatusOutput struct {
 	Status *string `locationName:"status" type:"string" enum:"ReachabilityStatus"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetContactReachabilityStatusOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetContactReachabilityStatusOutput) GoString() string {
 	return s.String()
 }
@@ -4303,12 +5131,20 @@ type GetDomainDetailInput struct {
 	DomainName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainDetailInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainDetailInput) GoString() string {
 	return s.String()
 }
@@ -4346,6 +5182,10 @@ type GetDomainDetailOutput struct {
 
 	// Provides details about the domain administrative contact.
 	//
+	// AdminContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by GetDomainDetailOutput's
+	// String and GoString methods.
+	//
 	// AdminContact is a required field
 	AdminContact *ContactDetail `type:"structure" required:"true" sensitive:"true"`
 
@@ -4364,7 +5204,7 @@ type GetDomainDetailOutput struct {
 	// time (UTC).
 	CreationDate *time.Time `type:"timestamp"`
 
-	// Reserved for future use.
+	// Deprecated.
 	DnsSec *string `type:"string"`
 
 	// The name of a domain.
@@ -4382,6 +5222,10 @@ type GetDomainDetailOutput struct {
 	Nameservers []*Nameserver `type:"list" required:"true"`
 
 	// Provides details about the domain registrant.
+	//
+	// RegistrantContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by GetDomainDetailOutput's
+	// String and GoString methods.
 	//
 	// RegistrantContact is a required field
 	RegistrantContact *ContactDetail `type:"structure" required:"true" sensitive:"true"`
@@ -4428,6 +5272,10 @@ type GetDomainDetailOutput struct {
 
 	// Provides details about the domain technical contact.
 	//
+	// TechContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by GetDomainDetailOutput's
+	// String and GoString methods.
+	//
 	// TechContact is a required field
 	TechContact *ContactDetail `type:"structure" required:"true" sensitive:"true"`
 
@@ -4447,12 +5295,20 @@ type GetDomainDetailOutput struct {
 	WhoIsServer *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainDetailOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainDetailOutput) GoString() string {
 	return s.String()
 }
@@ -4625,12 +5481,20 @@ type GetDomainSuggestionsInput struct {
 	SuggestionCount *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainSuggestionsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainSuggestionsInput) GoString() string {
 	return s.String()
 }
@@ -4680,12 +5544,20 @@ type GetDomainSuggestionsOutput struct {
 	SuggestionsList []*DomainSuggestion `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainSuggestionsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainSuggestionsOutput) GoString() string {
 	return s.String()
 }
@@ -4708,12 +5580,20 @@ type GetOperationDetailInput struct {
 	OperationId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOperationDetailInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOperationDetailInput) GoString() string {
 	return s.String()
 }
@@ -4760,12 +5640,20 @@ type GetOperationDetailOutput struct {
 	Type *string `type:"string" enum:"OperationType"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOperationDetailOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOperationDetailOutput) GoString() string {
 	return s.String()
 }
@@ -4820,12 +5708,20 @@ type InvalidInput struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidInput) GoString() string {
 	return s.String()
 }
@@ -4872,12 +5768,17 @@ func (s *InvalidInput) RequestID() string {
 type ListDomainsInput struct {
 	_ struct{} `type:"structure"`
 
+	// A complex type that contains information about the filters applied during
+	// the ListDomains request. The filter conditions can include domain name and
+	// domain expiration.
+	FilterConditions []*FilterCondition `type:"list"`
+
 	// For an initial request for a list of domains, omit this element. If the number
-	// of domains that are associated with the current AWS account is greater than
-	// the value that you specified for MaxItems, you can use Marker to return additional
-	// domains. Get the value of NextPageMarker from the previous response, and
-	// submit another request that includes the value of NextPageMarker in the Marker
-	// element.
+	// of domains that are associated with the current Amazon Web Services account
+	// is greater than the value that you specified for MaxItems, you can use Marker
+	// to return additional domains. Get the value of NextPageMarker from the previous
+	// response, and submit another request that includes the value of NextPageMarker
+	// in the Marker element.
 	//
 	// Constraints: The marker must match the value specified in the previous request.
 	Marker *string `type:"string"`
@@ -4886,16 +5787,59 @@ type ListDomainsInput struct {
 	//
 	// Default: 20
 	MaxItems *int64 `type:"integer"`
+
+	// A complex type that contains information about the requested ordering of
+	// domains in the returned list.
+	SortCondition *SortCondition `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDomainsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDomainsInput) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListDomainsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListDomainsInput"}
+	if s.FilterConditions != nil {
+		for i, v := range s.FilterConditions {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "FilterConditions", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+	if s.SortCondition != nil {
+		if err := s.SortCondition.Validate(); err != nil {
+			invalidParams.AddNested("SortCondition", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFilterConditions sets the FilterConditions field's value.
+func (s *ListDomainsInput) SetFilterConditions(v []*FilterCondition) *ListDomainsInput {
+	s.FilterConditions = v
+	return s
 }
 
 // SetMarker sets the Marker field's value.
@@ -4910,11 +5854,17 @@ func (s *ListDomainsInput) SetMaxItems(v int64) *ListDomainsInput {
 	return s
 }
 
+// SetSortCondition sets the SortCondition field's value.
+func (s *ListDomainsInput) SetSortCondition(v *SortCondition) *ListDomainsInput {
+	s.SortCondition = v
+	return s
+}
+
 // The ListDomains response includes the following elements.
 type ListDomainsOutput struct {
 	_ struct{} `type:"structure"`
 
-	// A summary of domains.
+	// A list of domains.
 	//
 	// Domains is a required field
 	Domains []*DomainSummary `type:"list" required:"true"`
@@ -4925,12 +5875,20 @@ type ListDomainsOutput struct {
 	NextPageMarker *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDomainsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDomainsOutput) GoString() string {
 	return s.String()
 }
@@ -4970,12 +5928,20 @@ type ListOperationsInput struct {
 	SubmittedSince *time.Time `type:"timestamp"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListOperationsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListOperationsInput) GoString() string {
 	return s.String()
 }
@@ -5013,12 +5979,20 @@ type ListOperationsOutput struct {
 	Operations []*OperationSummary `type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListOperationsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListOperationsOutput) GoString() string {
 	return s.String()
 }
@@ -5035,6 +6009,127 @@ func (s *ListOperationsOutput) SetOperations(v []*OperationSummary) *ListOperati
 	return s
 }
 
+type ListPricesInput struct {
+	_ struct{} `type:"structure"`
+
+	// For an initial request for a list of prices, omit this element. If the number
+	// of prices that are not yet complete is greater than the value that you specified
+	// for MaxItems, you can use Marker to return additional prices. Get the value
+	// of NextPageMarker from the previous response, and submit another request
+	// that includes the value of NextPageMarker in the Marker element.
+	//
+	// Used only for all TLDs. If you specify a TLD, don't specify a Marker.
+	Marker *string `type:"string"`
+
+	// Number of Prices to be returned.
+	//
+	// Used only for all TLDs. If you specify a TLD, don't specify a MaxItems.
+	MaxItems *int64 `type:"integer"`
+
+	// The TLD for which you want to receive the pricing information. For example.
+	// .net.
+	//
+	// If a Tld value is not provided, a list of prices for all TLDs supported by
+	// Route 53 is returned.
+	Tld *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListPricesInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListPricesInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListPricesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListPricesInput"}
+	if s.Tld != nil && len(*s.Tld) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Tld", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListPricesInput) SetMarker(v string) *ListPricesInput {
+	s.Marker = &v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *ListPricesInput) SetMaxItems(v int64) *ListPricesInput {
+	s.MaxItems = &v
+	return s
+}
+
+// SetTld sets the Tld field's value.
+func (s *ListPricesInput) SetTld(v string) *ListPricesInput {
+	s.Tld = &v
+	return s
+}
+
+type ListPricesOutput struct {
+	_ struct{} `type:"structure"`
+
+	// If there are more prices than you specified for MaxItems in the request,
+	// submit another request and include the value of NextPageMarker in the value
+	// of Marker.
+	//
+	// Used only for all TLDs. If you specify a TLD, don't specify a NextPageMarker.
+	NextPageMarker *string `type:"string"`
+
+	// A complex type that includes all the pricing information. If you specify
+	// a TLD, this array contains only the pricing for that TLD.
+	//
+	// Prices is a required field
+	Prices []*DomainPrice `type:"list" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListPricesOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListPricesOutput) GoString() string {
+	return s.String()
+}
+
+// SetNextPageMarker sets the NextPageMarker field's value.
+func (s *ListPricesOutput) SetNextPageMarker(v string) *ListPricesOutput {
+	s.NextPageMarker = &v
+	return s
+}
+
+// SetPrices sets the Prices field's value.
+func (s *ListPricesOutput) SetPrices(v []*DomainPrice) *ListPricesOutput {
+	s.Prices = v
+	return s
+}
+
 // The ListTagsForDomainRequest includes the following elements.
 type ListTagsForDomainInput struct {
 	_ struct{} `type:"structure"`
@@ -5045,12 +6140,20 @@ type ListTagsForDomainInput struct {
 	DomainName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForDomainInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForDomainInput) GoString() string {
 	return s.String()
 }
@@ -5084,12 +6187,20 @@ type ListTagsForDomainOutput struct {
 	TagList []*Tag `type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForDomainOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForDomainOutput) GoString() string {
 	return s.String()
 }
@@ -5120,12 +6231,20 @@ type Nameserver struct {
 	Name *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Nameserver) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Nameserver) GoString() string {
 	return s.String()
 }
@@ -5166,12 +6285,20 @@ type OperationLimitExceeded struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OperationLimitExceeded) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OperationLimitExceeded) GoString() string {
 	return s.String()
 }
@@ -5239,12 +6366,20 @@ type OperationSummary struct {
 	Type *string `type:"string" required:"true" enum:"OperationType"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OperationSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OperationSummary) GoString() string {
 	return s.String()
 }
@@ -5273,12 +6408,61 @@ func (s *OperationSummary) SetType(v string) *OperationSummary {
 	return s
 }
 
+// Currency-specific price information.
+type PriceWithCurrency struct {
+	_ struct{} `type:"structure"`
+
+	// The currency specifier.
+	//
+	// Currency is a required field
+	Currency *string `min:"3" type:"string" required:"true"`
+
+	// The price of a domain, in a specific currency.
+	//
+	// Price is a required field
+	Price *float64 `type:"double" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PriceWithCurrency) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PriceWithCurrency) GoString() string {
+	return s.String()
+}
+
+// SetCurrency sets the Currency field's value.
+func (s *PriceWithCurrency) SetCurrency(v string) *PriceWithCurrency {
+	s.Currency = &v
+	return s
+}
+
+// SetPrice sets the Price field's value.
+func (s *PriceWithCurrency) SetPrice(v float64) *PriceWithCurrency {
+	s.Price = &v
+	return s
+}
+
 // The RegisterDomain request includes the following elements.
 type RegisterDomainInput struct {
 	_ struct{} `type:"structure"`
 
 	// Provides detailed contact information. For information about the values that
 	// you specify for each element, see ContactDetail (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_ContactDetail.html).
+	//
+	// AdminContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by RegisterDomainInput's
+	// String and GoString methods.
 	//
 	// AdminContact is a required field
 	AdminContact *ContactDetail `type:"structure" required:"true" sensitive:"true"`
@@ -5333,6 +6517,9 @@ type RegisterDomainInput struct {
 	// associate, Gandi (for all other TLDs). If you specify false, WHOIS queries
 	// return the information that you entered for the admin contact.
 	//
+	// You must specify the same privacy setting for the administrative, registrant,
+	// and technical contacts.
+	//
 	// Default: true
 	PrivacyProtectAdminContact *bool `type:"boolean"`
 
@@ -5343,6 +6530,9 @@ type RegisterDomainInput struct {
 	// return the information that you entered for the registrant contact (the domain
 	// owner).
 	//
+	// You must specify the same privacy setting for the administrative, registrant,
+	// and technical contacts.
+	//
 	// Default: true
 	PrivacyProtectRegistrantContact *bool `type:"boolean"`
 
@@ -5352,11 +6542,18 @@ type RegisterDomainInput struct {
 	// associate, Gandi (for all other TLDs). If you specify false, WHOIS queries
 	// return the information that you entered for the technical contact.
 	//
+	// You must specify the same privacy setting for the administrative, registrant,
+	// and technical contacts.
+	//
 	// Default: true
 	PrivacyProtectTechContact *bool `type:"boolean"`
 
 	// Provides detailed contact information. For information about the values that
 	// you specify for each element, see ContactDetail (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_ContactDetail.html).
+	//
+	// RegistrantContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by RegisterDomainInput's
+	// String and GoString methods.
 	//
 	// RegistrantContact is a required field
 	RegistrantContact *ContactDetail `type:"structure" required:"true" sensitive:"true"`
@@ -5364,16 +6561,28 @@ type RegisterDomainInput struct {
 	// Provides detailed contact information. For information about the values that
 	// you specify for each element, see ContactDetail (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_ContactDetail.html).
 	//
+	// TechContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by RegisterDomainInput's
+	// String and GoString methods.
+	//
 	// TechContact is a required field
 	TechContact *ContactDetail `type:"structure" required:"true" sensitive:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RegisterDomainInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RegisterDomainInput) GoString() string {
 	return s.String()
 }
@@ -5492,12 +6701,20 @@ type RegisterDomainOutput struct {
 	OperationId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RegisterDomainOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RegisterDomainOutput) GoString() string {
 	return s.String()
 }
@@ -5513,20 +6730,28 @@ func (s *RegisterDomainOutput) SetOperationId(v string) *RegisterDomainOutput {
 type RejectDomainTransferFromAnotherAwsAccountInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of the domain that was specified when another AWS account submitted
-	// a TransferDomainToAnotherAwsAccount (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html)
+	// The name of the domain that was specified when another Amazon Web Services
+	// account submitted a TransferDomainToAnotherAwsAccount (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_TransferDomainToAnotherAwsAccount.html)
 	// request.
 	//
 	// DomainName is a required field
 	DomainName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RejectDomainTransferFromAnotherAwsAccountInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RejectDomainTransferFromAnotherAwsAccountInput) GoString() string {
 	return s.String()
 }
@@ -5562,12 +6787,20 @@ type RejectDomainTransferFromAnotherAwsAccountOutput struct {
 	OperationId *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RejectDomainTransferFromAnotherAwsAccountOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RejectDomainTransferFromAnotherAwsAccountOutput) GoString() string {
 	return s.String()
 }
@@ -5603,12 +6836,20 @@ type RenewDomainInput struct {
 	DurationInYears *int64 `min:"1" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RenewDomainInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RenewDomainInput) GoString() string {
 	return s.String()
 }
@@ -5660,12 +6901,20 @@ type RenewDomainOutput struct {
 	OperationId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RenewDomainOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RenewDomainOutput) GoString() string {
 	return s.String()
 }
@@ -5684,12 +6933,20 @@ type ResendContactReachabilityEmailInput struct {
 	DomainName *string `locationName:"domainName" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResendContactReachabilityEmailInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResendContactReachabilityEmailInput) GoString() string {
 	return s.String()
 }
@@ -5716,12 +6973,20 @@ type ResendContactReachabilityEmailOutput struct {
 	IsAlreadyVerified *bool `locationName:"isAlreadyVerified" type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResendContactReachabilityEmailOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResendContactReachabilityEmailOutput) GoString() string {
 	return s.String()
 }
@@ -5755,12 +7020,20 @@ type RetrieveDomainAuthCodeInput struct {
 	DomainName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveDomainAuthCodeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveDomainAuthCodeInput) GoString() string {
 	return s.String()
 }
@@ -5790,16 +7063,28 @@ type RetrieveDomainAuthCodeOutput struct {
 
 	// The authorization code for the domain.
 	//
+	// AuthCode is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by RetrieveDomainAuthCodeOutput's
+	// String and GoString methods.
+	//
 	// AuthCode is a required field
 	AuthCode *string `type:"string" required:"true" sensitive:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveDomainAuthCodeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveDomainAuthCodeOutput) GoString() string {
 	return s.String()
 }
@@ -5807,6 +7092,72 @@ func (s RetrieveDomainAuthCodeOutput) GoString() string {
 // SetAuthCode sets the AuthCode field's value.
 func (s *RetrieveDomainAuthCodeOutput) SetAuthCode(v string) *RetrieveDomainAuthCodeOutput {
 	s.AuthCode = &v
+	return s
+}
+
+// Information for sorting a list of domains.
+type SortCondition struct {
+	_ struct{} `type:"structure"`
+
+	// Field to be used for sorting the list of domains. It can be either the name
+	// or the expiration for a domain. Note that if filterCondition is used in the
+	// same ListDomains (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains__ListDomains.html)
+	// call, the field used for sorting has to be the same as the field used for
+	// filtering.
+	//
+	// Name is a required field
+	Name *string `type:"string" required:"true" enum:"ListDomainsAttributeName"`
+
+	// The sort order for a list of domains. Either ascending (ASC) or descending
+	// (DES).
+	//
+	// SortOrder is a required field
+	SortOrder *string `type:"string" required:"true" enum:"SortOrder"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s SortCondition) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s SortCondition) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *SortCondition) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "SortCondition"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.SortOrder == nil {
+		invalidParams.Add(request.NewErrParamRequired("SortOrder"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetName sets the Name field's value.
+func (s *SortCondition) SetName(v string) *SortCondition {
+	s.Name = &v
+	return s
+}
+
+// SetSortOrder sets the SortOrder field's value.
+func (s *SortCondition) SetSortOrder(v string) *SortCondition {
+	s.SortOrder = &v
 	return s
 }
 
@@ -5819,12 +7170,20 @@ type TLDRulesViolation struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TLDRulesViolation) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TLDRulesViolation) GoString() string {
 	return s.String()
 }
@@ -5876,7 +7235,7 @@ type Tag struct {
 	// Valid values: A-Z, a-z, 0-9, space, ".:/=+\-@"
 	//
 	// Constraints: Each key can be 1-128 characters long.
-	Key *string `type:"string"`
+	Key *string `min:"1" type:"string"`
 
 	// The value of a tag.
 	//
@@ -5886,14 +7245,35 @@ type Tag struct {
 	Value *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Tag) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Tag"}
+	if s.Key != nil && len(*s.Key) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Key", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // SetKey sets the Key field's value.
@@ -5914,11 +7294,19 @@ type TransferDomainInput struct {
 
 	// Provides detailed contact information.
 	//
+	// AdminContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by TransferDomainInput's
+	// String and GoString methods.
+	//
 	// AdminContact is a required field
 	AdminContact *ContactDetail `type:"structure" required:"true" sensitive:"true"`
 
 	// The authorization code for the domain. You get this value from the current
 	// registrar.
+	//
+	// AuthCode is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by TransferDomainInput's
+	// String and GoString methods.
 	AuthCode *string `type:"string" sensitive:"true"`
 
 	// Indicates whether the domain will be automatically renewed (true) or not
@@ -5968,6 +7356,9 @@ type TransferDomainInput struct {
 	// associate, Gandi (for all other TLDs). If you specify false, WHOIS queries
 	// return the information that you entered for the admin contact.
 	//
+	// You must specify the same privacy setting for the administrative, registrant,
+	// and technical contacts.
+	//
 	// Default: true
 	PrivacyProtectAdminContact *bool `type:"boolean"`
 
@@ -5978,6 +7369,9 @@ type TransferDomainInput struct {
 	// return the information that you entered for the registrant contact (domain
 	// owner).
 	//
+	// You must specify the same privacy setting for the administrative, registrant,
+	// and technical contacts.
+	//
 	// Default: true
 	PrivacyProtectRegistrantContact *bool `type:"boolean"`
 
@@ -5987,26 +7381,45 @@ type TransferDomainInput struct {
 	// associate, Gandi (for all other TLDs). If you specify false, WHOIS queries
 	// return the information that you entered for the technical contact.
 	//
+	// You must specify the same privacy setting for the administrative, registrant,
+	// and technical contacts.
+	//
 	// Default: true
 	PrivacyProtectTechContact *bool `type:"boolean"`
 
 	// Provides detailed contact information.
+	//
+	// RegistrantContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by TransferDomainInput's
+	// String and GoString methods.
 	//
 	// RegistrantContact is a required field
 	RegistrantContact *ContactDetail `type:"structure" required:"true" sensitive:"true"`
 
 	// Provides detailed contact information.
 	//
+	// TechContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by TransferDomainInput's
+	// String and GoString methods.
+	//
 	// TechContact is a required field
 	TechContact *ContactDetail `type:"structure" required:"true" sensitive:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransferDomainInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransferDomainInput) GoString() string {
 	return s.String()
 }
@@ -6147,12 +7560,20 @@ type TransferDomainOutput struct {
 	OperationId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransferDomainOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransferDomainOutput) GoString() string {
 	return s.String()
 }
@@ -6167,25 +7588,33 @@ func (s *TransferDomainOutput) SetOperationId(v string) *TransferDomainOutput {
 type TransferDomainToAnotherAwsAccountInput struct {
 	_ struct{} `type:"structure"`
 
-	// The account ID of the AWS account that you want to transfer the domain to,
-	// for example, 111122223333.
+	// The account ID of the Amazon Web Services account that you want to transfer
+	// the domain to, for example, 111122223333.
 	//
 	// AccountId is a required field
-	AccountId *string `type:"string" required:"true"`
+	AccountId *string `min:"12" type:"string" required:"true"`
 
-	// The name of the domain that you want to transfer from the current AWS account
-	// to another account.
+	// The name of the domain that you want to transfer from the current Amazon
+	// Web Services account to another account.
 	//
 	// DomainName is a required field
 	DomainName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransferDomainToAnotherAwsAccountInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransferDomainToAnotherAwsAccountInput) GoString() string {
 	return s.String()
 }
@@ -6195,6 +7624,9 @@ func (s *TransferDomainToAnotherAwsAccountInput) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "TransferDomainToAnotherAwsAccountInput"}
 	if s.AccountId == nil {
 		invalidParams.Add(request.NewErrParamRequired("AccountId"))
+	}
+	if s.AccountId != nil && len(*s.AccountId) < 12 {
+		invalidParams.Add(request.NewErrParamMinLen("AccountId", 12))
 	}
 	if s.DomainName == nil {
 		invalidParams.Add(request.NewErrParamRequired("DomainName"))
@@ -6226,20 +7658,28 @@ type TransferDomainToAnotherAwsAccountOutput struct {
 	// status, use GetOperationDetail (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_GetOperationDetail.html).
 	OperationId *string `type:"string"`
 
-	// To finish transferring a domain to another AWS account, the account that
-	// the domain is being transferred to must submit an AcceptDomainTransferFromAnotherAwsAccount
+	// To finish transferring a domain to another Amazon Web Services account, the
+	// account that the domain is being transferred to must submit an AcceptDomainTransferFromAnotherAwsAccount
 	// (https://docs.aws.amazon.com/Route53/latest/APIReference/API_domains_AcceptDomainTransferFromAnotherAwsAccount.html)
 	// request. The request must include the value of the Password element that
 	// was returned in the TransferDomainToAnotherAwsAccount response.
 	Password *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransferDomainToAnotherAwsAccountOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransferDomainToAnotherAwsAccountOutput) GoString() string {
 	return s.String()
 }
@@ -6265,12 +7705,20 @@ type UnsupportedTLD struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UnsupportedTLD) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UnsupportedTLD) GoString() string {
 	return s.String()
 }
@@ -6318,6 +7766,10 @@ type UpdateDomainContactInput struct {
 	_ struct{} `type:"structure"`
 
 	// Provides detailed contact information.
+	//
+	// AdminContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by UpdateDomainContactInput's
+	// String and GoString methods.
 	AdminContact *ContactDetail `type:"structure" sensitive:"true"`
 
 	// The name of the domain that you want to update contact information for.
@@ -6326,18 +7778,34 @@ type UpdateDomainContactInput struct {
 	DomainName *string `type:"string" required:"true"`
 
 	// Provides detailed contact information.
+	//
+	// RegistrantContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by UpdateDomainContactInput's
+	// String and GoString methods.
 	RegistrantContact *ContactDetail `type:"structure" sensitive:"true"`
 
 	// Provides detailed contact information.
+	//
+	// TechContact is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by UpdateDomainContactInput's
+	// String and GoString methods.
 	TechContact *ContactDetail `type:"structure" sensitive:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainContactInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainContactInput) GoString() string {
 	return s.String()
 }
@@ -6405,12 +7873,20 @@ type UpdateDomainContactOutput struct {
 	OperationId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainContactOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainContactOutput) GoString() string {
 	return s.String()
 }
@@ -6430,6 +7906,9 @@ type UpdateDomainContactPrivacyInput struct {
 	// for Amazon Registrar (for .com, .net, and .org domains) or for our registrar
 	// associate, Gandi (for all other TLDs). If you specify false, WHOIS queries
 	// return the information that you entered for the admin contact.
+	//
+	// You must specify the same privacy setting for the administrative, registrant,
+	// and technical contacts.
 	AdminPrivacy *bool `type:"boolean"`
 
 	// The name of the domain that you want to update the privacy setting for.
@@ -6443,6 +7922,9 @@ type UpdateDomainContactPrivacyInput struct {
 	// associate, Gandi (for all other TLDs). If you specify false, WHOIS queries
 	// return the information that you entered for the registrant contact (domain
 	// owner).
+	//
+	// You must specify the same privacy setting for the administrative, registrant,
+	// and technical contacts.
 	RegistrantPrivacy *bool `type:"boolean"`
 
 	// Whether you want to conceal contact information from WHOIS queries. If you
@@ -6450,15 +7932,26 @@ type UpdateDomainContactPrivacyInput struct {
 	// for Amazon Registrar (for .com, .net, and .org domains) or for our registrar
 	// associate, Gandi (for all other TLDs). If you specify false, WHOIS queries
 	// return the information that you entered for the technical contact.
+	//
+	// You must specify the same privacy setting for the administrative, registrant,
+	// and technical contacts.
 	TechPrivacy *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainContactPrivacyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainContactPrivacyInput) GoString() string {
 	return s.String()
 }
@@ -6511,12 +8004,20 @@ type UpdateDomainContactPrivacyOutput struct {
 	OperationId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainContactPrivacyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainContactPrivacyOutput) GoString() string {
 	return s.String()
 }
@@ -6545,7 +8046,11 @@ type UpdateDomainNameserversInput struct {
 	// The authorization key for .fi domains
 	//
 	// Deprecated: FIAuthKey has been deprecated
-	FIAuthKey *string `deprecated:"true" type:"string"`
+	//
+	// FIAuthKey is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by UpdateDomainNameserversInput's
+	// String and GoString methods.
+	FIAuthKey *string `deprecated:"true" type:"string" sensitive:"true"`
 
 	// A list of new name servers for the domain.
 	//
@@ -6553,12 +8058,20 @@ type UpdateDomainNameserversInput struct {
 	Nameservers []*Nameserver `type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainNameserversInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainNameserversInput) GoString() string {
 	return s.String()
 }
@@ -6618,12 +8131,20 @@ type UpdateDomainNameserversOutput struct {
 	OperationId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainNameserversOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainNameserversOutput) GoString() string {
 	return s.String()
 }
@@ -6648,12 +8169,20 @@ type UpdateTagsForDomainInput struct {
 	TagsToUpdate []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateTagsForDomainInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateTagsForDomainInput) GoString() string {
 	return s.String()
 }
@@ -6663,6 +8192,16 @@ func (s *UpdateTagsForDomainInput) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "UpdateTagsForDomainInput"}
 	if s.DomainName == nil {
 		invalidParams.Add(request.NewErrParamRequired("DomainName"))
+	}
+	if s.TagsToUpdate != nil {
+		for i, v := range s.TagsToUpdate {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "TagsToUpdate", i), err.(request.ErrInvalidParams))
+			}
+		}
 	}
 
 	if invalidParams.Len() > 0 {
@@ -6687,12 +8226,20 @@ type UpdateTagsForDomainOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateTagsForDomainOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateTagsForDomainOutput) GoString() string {
 	return s.String()
 }
@@ -6707,11 +8254,12 @@ type ViewBillingInput struct {
 	End *time.Time `type:"timestamp"`
 
 	// For an initial request for a list of billing records, omit this element.
-	// If the number of billing records that are associated with the current AWS
-	// account during the specified period is greater than the value that you specified
-	// for MaxItems, you can use Marker to return additional billing records. Get
-	// the value of NextPageMarker from the previous response, and submit another
-	// request that includes the value of NextPageMarker in the Marker element.
+	// If the number of billing records that are associated with the current Amazon
+	// Web Services account during the specified period is greater than the value
+	// that you specified for MaxItems, you can use Marker to return additional
+	// billing records. Get the value of NextPageMarker from the previous response,
+	// and submit another request that includes the value of NextPageMarker in the
+	// Marker element.
 	//
 	// Constraints: The marker must match the value of NextPageMarker that was returned
 	// in the previous response.
@@ -6728,12 +8276,20 @@ type ViewBillingInput struct {
 	Start *time.Time `type:"timestamp"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ViewBillingInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ViewBillingInput) GoString() string {
 	return s.String()
 }
@@ -6775,12 +8331,20 @@ type ViewBillingOutput struct {
 	NextPageMarker *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ViewBillingOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ViewBillingOutput) GoString() string {
 	return s.String()
 }
@@ -6826,6 +8390,9 @@ func ContactType_Values() []string {
 }
 
 const (
+	// CountryCodeAc is a CountryCode enum value
+	CountryCodeAc = "AC"
+
 	// CountryCodeAd is a CountryCode enum value
 	CountryCodeAd = "AD"
 
@@ -6871,6 +8438,9 @@ const (
 	// CountryCodeAw is a CountryCode enum value
 	CountryCodeAw = "AW"
 
+	// CountryCodeAx is a CountryCode enum value
+	CountryCodeAx = "AX"
+
 	// CountryCodeAz is a CountryCode enum value
 	CountryCodeAz = "AZ"
 
@@ -6913,6 +8483,9 @@ const (
 	// CountryCodeBo is a CountryCode enum value
 	CountryCodeBo = "BO"
 
+	// CountryCodeBq is a CountryCode enum value
+	CountryCodeBq = "BQ"
+
 	// CountryCodeBr is a CountryCode enum value
 	CountryCodeBr = "BR"
 
@@ -6921,6 +8494,9 @@ const (
 
 	// CountryCodeBt is a CountryCode enum value
 	CountryCodeBt = "BT"
+
+	// CountryCodeBv is a CountryCode enum value
+	CountryCodeBv = "BV"
 
 	// CountryCodeBw is a CountryCode enum value
 	CountryCodeBw = "BW"
@@ -6976,6 +8552,9 @@ const (
 	// CountryCodeCv is a CountryCode enum value
 	CountryCodeCv = "CV"
 
+	// CountryCodeCw is a CountryCode enum value
+	CountryCodeCw = "CW"
+
 	// CountryCodeCx is a CountryCode enum value
 	CountryCodeCx = "CX"
 
@@ -7011,6 +8590,9 @@ const (
 
 	// CountryCodeEg is a CountryCode enum value
 	CountryCodeEg = "EG"
+
+	// CountryCodeEh is a CountryCode enum value
+	CountryCodeEh = "EH"
 
 	// CountryCodeEr is a CountryCode enum value
 	CountryCodeEr = "ER"
@@ -7051,6 +8633,12 @@ const (
 	// CountryCodeGe is a CountryCode enum value
 	CountryCodeGe = "GE"
 
+	// CountryCodeGf is a CountryCode enum value
+	CountryCodeGf = "GF"
+
+	// CountryCodeGg is a CountryCode enum value
+	CountryCodeGg = "GG"
+
 	// CountryCodeGh is a CountryCode enum value
 	CountryCodeGh = "GH"
 
@@ -7066,11 +8654,17 @@ const (
 	// CountryCodeGn is a CountryCode enum value
 	CountryCodeGn = "GN"
 
+	// CountryCodeGp is a CountryCode enum value
+	CountryCodeGp = "GP"
+
 	// CountryCodeGq is a CountryCode enum value
 	CountryCodeGq = "GQ"
 
 	// CountryCodeGr is a CountryCode enum value
 	CountryCodeGr = "GR"
+
+	// CountryCodeGs is a CountryCode enum value
+	CountryCodeGs = "GS"
 
 	// CountryCodeGt is a CountryCode enum value
 	CountryCodeGt = "GT"
@@ -7086,6 +8680,9 @@ const (
 
 	// CountryCodeHk is a CountryCode enum value
 	CountryCodeHk = "HK"
+
+	// CountryCodeHm is a CountryCode enum value
+	CountryCodeHm = "HM"
 
 	// CountryCodeHn is a CountryCode enum value
 	CountryCodeHn = "HN"
@@ -7114,6 +8711,9 @@ const (
 	// CountryCodeIn is a CountryCode enum value
 	CountryCodeIn = "IN"
 
+	// CountryCodeIo is a CountryCode enum value
+	CountryCodeIo = "IO"
+
 	// CountryCodeIq is a CountryCode enum value
 	CountryCodeIq = "IQ"
 
@@ -7125,6 +8725,9 @@ const (
 
 	// CountryCodeIt is a CountryCode enum value
 	CountryCodeIt = "IT"
+
+	// CountryCodeJe is a CountryCode enum value
+	CountryCodeJe = "JE"
 
 	// CountryCodeJm is a CountryCode enum value
 	CountryCodeJm = "JM"
@@ -7240,6 +8843,9 @@ const (
 	// CountryCodeMp is a CountryCode enum value
 	CountryCodeMp = "MP"
 
+	// CountryCodeMq is a CountryCode enum value
+	CountryCodeMq = "MQ"
+
 	// CountryCodeMr is a CountryCode enum value
 	CountryCodeMr = "MR"
 
@@ -7275,6 +8881,9 @@ const (
 
 	// CountryCodeNe is a CountryCode enum value
 	CountryCodeNe = "NE"
+
+	// CountryCodeNf is a CountryCode enum value
+	CountryCodeNf = "NF"
 
 	// CountryCodeNg is a CountryCode enum value
 	CountryCodeNg = "NG"
@@ -7333,6 +8942,9 @@ const (
 	// CountryCodePr is a CountryCode enum value
 	CountryCodePr = "PR"
 
+	// CountryCodePs is a CountryCode enum value
+	CountryCodePs = "PS"
+
 	// CountryCodePt is a CountryCode enum value
 	CountryCodePt = "PT"
 
@@ -7344,6 +8956,9 @@ const (
 
 	// CountryCodeQa is a CountryCode enum value
 	CountryCodeQa = "QA"
+
+	// CountryCodeRe is a CountryCode enum value
+	CountryCodeRe = "RE"
 
 	// CountryCodeRo is a CountryCode enum value
 	CountryCodeRo = "RO"
@@ -7381,6 +8996,9 @@ const (
 	// CountryCodeSi is a CountryCode enum value
 	CountryCodeSi = "SI"
 
+	// CountryCodeSj is a CountryCode enum value
+	CountryCodeSj = "SJ"
+
 	// CountryCodeSk is a CountryCode enum value
 	CountryCodeSk = "SK"
 
@@ -7399,11 +9017,17 @@ const (
 	// CountryCodeSr is a CountryCode enum value
 	CountryCodeSr = "SR"
 
+	// CountryCodeSs is a CountryCode enum value
+	CountryCodeSs = "SS"
+
 	// CountryCodeSt is a CountryCode enum value
 	CountryCodeSt = "ST"
 
 	// CountryCodeSv is a CountryCode enum value
 	CountryCodeSv = "SV"
+
+	// CountryCodeSx is a CountryCode enum value
+	CountryCodeSx = "SX"
 
 	// CountryCodeSy is a CountryCode enum value
 	CountryCodeSy = "SY"
@@ -7416,6 +9040,9 @@ const (
 
 	// CountryCodeTd is a CountryCode enum value
 	CountryCodeTd = "TD"
+
+	// CountryCodeTf is a CountryCode enum value
+	CountryCodeTf = "TF"
 
 	// CountryCodeTg is a CountryCode enum value
 	CountryCodeTg = "TG"
@@ -7440,6 +9067,9 @@ const (
 
 	// CountryCodeTo is a CountryCode enum value
 	CountryCodeTo = "TO"
+
+	// CountryCodeTp is a CountryCode enum value
+	CountryCodeTp = "TP"
 
 	// CountryCodeTr is a CountryCode enum value
 	CountryCodeTr = "TR"
@@ -7517,6 +9147,7 @@ const (
 // CountryCode_Values returns all elements of the CountryCode enum
 func CountryCode_Values() []string {
 	return []string{
+		CountryCodeAc,
 		CountryCodeAd,
 		CountryCodeAe,
 		CountryCodeAf,
@@ -7532,6 +9163,7 @@ func CountryCode_Values() []string {
 		CountryCodeAt,
 		CountryCodeAu,
 		CountryCodeAw,
+		CountryCodeAx,
 		CountryCodeAz,
 		CountryCodeBa,
 		CountryCodeBb,
@@ -7546,9 +9178,11 @@ func CountryCode_Values() []string {
 		CountryCodeBm,
 		CountryCodeBn,
 		CountryCodeBo,
+		CountryCodeBq,
 		CountryCodeBr,
 		CountryCodeBs,
 		CountryCodeBt,
+		CountryCodeBv,
 		CountryCodeBw,
 		CountryCodeBy,
 		CountryCodeBz,
@@ -7567,6 +9201,7 @@ func CountryCode_Values() []string {
 		CountryCodeCr,
 		CountryCodeCu,
 		CountryCodeCv,
+		CountryCodeCw,
 		CountryCodeCx,
 		CountryCodeCy,
 		CountryCodeCz,
@@ -7579,6 +9214,7 @@ func CountryCode_Values() []string {
 		CountryCodeEc,
 		CountryCodeEe,
 		CountryCodeEg,
+		CountryCodeEh,
 		CountryCodeEr,
 		CountryCodeEs,
 		CountryCodeEt,
@@ -7592,18 +9228,23 @@ func CountryCode_Values() []string {
 		CountryCodeGb,
 		CountryCodeGd,
 		CountryCodeGe,
+		CountryCodeGf,
+		CountryCodeGg,
 		CountryCodeGh,
 		CountryCodeGi,
 		CountryCodeGl,
 		CountryCodeGm,
 		CountryCodeGn,
+		CountryCodeGp,
 		CountryCodeGq,
 		CountryCodeGr,
+		CountryCodeGs,
 		CountryCodeGt,
 		CountryCodeGu,
 		CountryCodeGw,
 		CountryCodeGy,
 		CountryCodeHk,
+		CountryCodeHm,
 		CountryCodeHn,
 		CountryCodeHr,
 		CountryCodeHt,
@@ -7613,10 +9254,12 @@ func CountryCode_Values() []string {
 		CountryCodeIl,
 		CountryCodeIm,
 		CountryCodeIn,
+		CountryCodeIo,
 		CountryCodeIq,
 		CountryCodeIr,
 		CountryCodeIs,
 		CountryCodeIt,
+		CountryCodeJe,
 		CountryCodeJm,
 		CountryCodeJo,
 		CountryCodeJp,
@@ -7655,6 +9298,7 @@ func CountryCode_Values() []string {
 		CountryCodeMn,
 		CountryCodeMo,
 		CountryCodeMp,
+		CountryCodeMq,
 		CountryCodeMr,
 		CountryCodeMs,
 		CountryCodeMt,
@@ -7667,6 +9311,7 @@ func CountryCode_Values() []string {
 		CountryCodeNa,
 		CountryCodeNc,
 		CountryCodeNe,
+		CountryCodeNf,
 		CountryCodeNg,
 		CountryCodeNi,
 		CountryCodeNl,
@@ -7686,10 +9331,12 @@ func CountryCode_Values() []string {
 		CountryCodePm,
 		CountryCodePn,
 		CountryCodePr,
+		CountryCodePs,
 		CountryCodePt,
 		CountryCodePw,
 		CountryCodePy,
 		CountryCodeQa,
+		CountryCodeRe,
 		CountryCodeRo,
 		CountryCodeRs,
 		CountryCodeRu,
@@ -7702,18 +9349,22 @@ func CountryCode_Values() []string {
 		CountryCodeSg,
 		CountryCodeSh,
 		CountryCodeSi,
+		CountryCodeSj,
 		CountryCodeSk,
 		CountryCodeSl,
 		CountryCodeSm,
 		CountryCodeSn,
 		CountryCodeSo,
 		CountryCodeSr,
+		CountryCodeSs,
 		CountryCodeSt,
 		CountryCodeSv,
+		CountryCodeSx,
 		CountryCodeSy,
 		CountryCodeSz,
 		CountryCodeTc,
 		CountryCodeTd,
+		CountryCodeTf,
 		CountryCodeTg,
 		CountryCodeTh,
 		CountryCodeTj,
@@ -7722,6 +9373,7 @@ func CountryCode_Values() []string {
 		CountryCodeTm,
 		CountryCodeTn,
 		CountryCodeTo,
+		CountryCodeTp,
 		CountryCodeTr,
 		CountryCodeTt,
 		CountryCodeTv,
@@ -7876,6 +9528,9 @@ const (
 
 	// ExtraParamNameUkCompanyNumber is a ExtraParamName enum value
 	ExtraParamNameUkCompanyNumber = "UK_COMPANY_NUMBER"
+
+	// ExtraParamNameEuCountryOfCitizenship is a ExtraParamName enum value
+	ExtraParamNameEuCountryOfCitizenship = "EU_COUNTRY_OF_CITIZENSHIP"
 )
 
 // ExtraParamName_Values returns all elements of the ExtraParamName enum
@@ -7910,6 +9565,23 @@ func ExtraParamName_Values() []string {
 		ExtraParamNameVatNumber,
 		ExtraParamNameUkContactType,
 		ExtraParamNameUkCompanyNumber,
+		ExtraParamNameEuCountryOfCitizenship,
+	}
+}
+
+const (
+	// ListDomainsAttributeNameDomainName is a ListDomainsAttributeName enum value
+	ListDomainsAttributeNameDomainName = "DomainName"
+
+	// ListDomainsAttributeNameExpiry is a ListDomainsAttributeName enum value
+	ListDomainsAttributeNameExpiry = "Expiry"
+)
+
+// ListDomainsAttributeName_Values returns all elements of the ListDomainsAttributeName enum
+func ListDomainsAttributeName_Values() []string {
+	return []string{
+		ListDomainsAttributeNameDomainName,
+		ListDomainsAttributeNameExpiry,
 	}
 }
 
@@ -8022,6 +9694,26 @@ func OperationType_Values() []string {
 }
 
 const (
+	// OperatorLe is a Operator enum value
+	OperatorLe = "LE"
+
+	// OperatorGe is a Operator enum value
+	OperatorGe = "GE"
+
+	// OperatorBeginsWith is a Operator enum value
+	OperatorBeginsWith = "BEGINS_WITH"
+)
+
+// Operator_Values returns all elements of the Operator enum
+func Operator_Values() []string {
+	return []string{
+		OperatorLe,
+		OperatorGe,
+		OperatorBeginsWith,
+	}
+}
+
+const (
 	// ReachabilityStatusPending is a ReachabilityStatus enum value
 	ReachabilityStatusPending = "PENDING"
 
@@ -8038,6 +9730,22 @@ func ReachabilityStatus_Values() []string {
 		ReachabilityStatusPending,
 		ReachabilityStatusDone,
 		ReachabilityStatusExpired,
+	}
+}
+
+const (
+	// SortOrderAsc is a SortOrder enum value
+	SortOrderAsc = "ASC"
+
+	// SortOrderDesc is a SortOrder enum value
+	SortOrderDesc = "DESC"
+)
+
+// SortOrder_Values returns all elements of the SortOrder enum
+func SortOrder_Values() []string {
+	return []string{
+		SortOrderAsc,
+		SortOrderDesc,
 	}
 }
 

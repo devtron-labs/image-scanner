@@ -13,6 +13,111 @@ import (
 	"github.com/aws/aws-sdk-go/private/protocol/restxml"
 )
 
+const opAssociateAlias = "AssociateAlias2020_05_31"
+
+// AssociateAliasRequest generates a "aws/request.Request" representing the
+// client's request for the AssociateAlias operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See AssociateAlias for more information on using the AssociateAlias
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the AssociateAliasRequest method.
+//    req, resp := client.AssociateAliasRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/AssociateAlias
+func (c *CloudFront) AssociateAliasRequest(input *AssociateAliasInput) (req *request.Request, output *AssociateAliasOutput) {
+	op := &request.Operation{
+		Name:       opAssociateAlias,
+		HTTPMethod: "PUT",
+		HTTPPath:   "/2020-05-31/distribution/{TargetDistributionId}/associate-alias",
+	}
+
+	if input == nil {
+		input = &AssociateAliasInput{}
+	}
+
+	output = &AssociateAliasOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restxml.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// AssociateAlias API operation for Amazon CloudFront.
+//
+// Associates an alias (also known as a CNAME or an alternate domain name) with
+// a CloudFront distribution.
+//
+// With this operation you can move an alias that’s already in use on a CloudFront
+// distribution to a different distribution in one step. This prevents the downtime
+// that could occur if you first remove the alias from one distribution and
+// then separately add the alias to another distribution.
+//
+// To use this operation to associate an alias with a distribution, you provide
+// the alias and the ID of the target distribution for the alias. For more information,
+// including how to set up the target distribution, prerequisites that you must
+// complete, and other restrictions, see Moving an alternate domain name to
+// a different distribution (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html#alternate-domain-names-move)
+// in the Amazon CloudFront Developer Guide.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation AssociateAlias for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeNoSuchDistribution "NoSuchDistribution"
+//   The specified distribution does not exist.
+//
+//   * ErrCodeTooManyDistributionCNAMEs "TooManyDistributionCNAMEs"
+//   Your request contains more CNAMEs than are allowed per distribution.
+//
+//   * ErrCodeIllegalUpdate "IllegalUpdate"
+//   The update contains modifications that are not allowed.
+//
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/AssociateAlias
+func (c *CloudFront) AssociateAlias(input *AssociateAliasInput) (*AssociateAliasOutput, error) {
+	req, out := c.AssociateAliasRequest(input)
+	return out, req.Send()
+}
+
+// AssociateAliasWithContext is the same as AssociateAlias with the addition of
+// the ability to pass a context and additional request options.
+//
+// See AssociateAlias for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) AssociateAliasWithContext(ctx aws.Context, input *AssociateAliasInput, opts ...request.Option) (*AssociateAliasOutput, error) {
+	req, out := c.AssociateAliasRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opCreateCachePolicy = "CreateCachePolicy2020_05_31"
 
 // CreateCachePolicyRequest generates a "aws/request.Request" representing the
@@ -75,7 +180,7 @@ func (c *CloudFront) CreateCachePolicyRequest(input *CreateCachePolicyInput) (re
 // are automatically included in requests that CloudFront sends to the origin.
 // CloudFront sends a request when it can’t find an object in its cache that
 // matches the request’s cache key. If you want to send values to the origin
-// but not include them in the cache key, use CreateOriginRequestPolicy.
+// but not include them in the cache key, use OriginRequestPolicy.
 //
 // For more information about cache policies, see Controlling the cache key
 // (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html)
@@ -103,8 +208,8 @@ func (c *CloudFront) CreateCachePolicyRequest(input *CreateCachePolicyInput) (re
 //   To modify an existing cache policy, use UpdateCachePolicy.
 //
 //   * ErrCodeTooManyCachePolicies "TooManyCachePolicies"
-//   You have reached the maximum number of cache policies for this AWS account.
-//   For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   You have reached the maximum number of cache policies for this Amazon Web
+//   Services account. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
 //   (formerly known as limits) in the Amazon CloudFront Developer Guide.
 //
 //   * ErrCodeTooManyHeadersInCachePolicy "TooManyHeadersInCachePolicy"
@@ -422,8 +527,8 @@ func (c *CloudFront) CreateDistributionRequest(input *CreateDistributionInput) (
 //
 //   * ErrCodeInvalidWebACLId "InvalidWebACLId"
 //   A web ACL ID specified is not valid. To specify a web ACL created using the
-//   latest version of AWS WAF, use the ACL ARN, for example arn:aws:wafv2:us-east-1:123456789012:global/webacl/ExampleWebACL/473e64fd-f30b-4765-81a0-62ad96dd167a.
-//   To specify a web ACL created using AWS WAF Classic, use the ACL ID, for example
+//   latest version of WAF, use the ACL ARN, for example arn:aws:wafv2:us-east-1:123456789012:global/webacl/ExampleWebACL/473e64fd-f30b-4765-81a0-62ad96dd167a.
+//   To specify a web ACL created using WAF Classic, use the ACL ID, for example
 //   473e64fd-f30b-4765-81a0-62ad96dd167a.
 //
 //   * ErrCodeTooManyOriginCustomHeaders "TooManyOriginCustomHeaders"
@@ -437,18 +542,31 @@ func (c *CloudFront) CreateDistributionRequest(input *CreateDistributionInput) (
 //
 //   * ErrCodeTooManyDistributionsWithLambdaAssociations "TooManyDistributionsWithLambdaAssociations"
 //   Processing your request would cause the maximum number of distributions with
-//   Lambda function associations per owner to be exceeded.
+//   Lambda@Edge function associations per owner to be exceeded.
 //
 //   * ErrCodeTooManyDistributionsWithSingleFunctionARN "TooManyDistributionsWithSingleFunctionARN"
 //   The maximum number of distributions have been associated with the specified
-//   Lambda function.
+//   Lambda@Edge function.
 //
 //   * ErrCodeTooManyLambdaFunctionAssociations "TooManyLambdaFunctionAssociations"
-//   Your request contains more Lambda function associations than are allowed
+//   Your request contains more Lambda@Edge function associations than are allowed
 //   per distribution.
 //
 //   * ErrCodeInvalidLambdaFunctionAssociation "InvalidLambdaFunctionAssociation"
-//   The specified Lambda function association is invalid.
+//   The specified Lambda@Edge function association is invalid.
+//
+//   * ErrCodeTooManyDistributionsWithFunctionAssociations "TooManyDistributionsWithFunctionAssociations"
+//   You have reached the maximum number of distributions that are associated
+//   with a CloudFront function. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTooManyFunctionAssociations "TooManyFunctionAssociations"
+//   You have reached the maximum number of CloudFront function associations for
+//   this distribution. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeInvalidFunctionAssociation "InvalidFunctionAssociation"
+//   A CloudFront function association is invalid.
 //
 //   * ErrCodeInvalidOriginReadTimeout "InvalidOriginReadTimeout"
 //   The read timeout specified for the origin is not valid.
@@ -475,6 +593,16 @@ func (c *CloudFront) CreateDistributionRequest(input *CreateDistributionInput) (
 //   cache policy. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
 //   (formerly known as limits) in the Amazon CloudFront Developer Guide.
 //
+//   * ErrCodeNoSuchResponseHeadersPolicy "NoSuchResponseHeadersPolicy"
+//   The response headers policy does not exist.
+//
+//   * ErrCodeTooManyDistributionsAssociatedToResponseHeadersPolicy "TooManyDistributionsAssociatedToResponseHeadersPolicy"
+//   The maximum number of distributions have been associated with the specified
+//   response headers policy.
+//
+//   For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
 //   * ErrCodeNoSuchOriginRequestPolicy "NoSuchOriginRequestPolicy"
 //   The origin request policy does not exist.
 //
@@ -482,6 +610,26 @@ func (c *CloudFront) CreateDistributionRequest(input *CreateDistributionInput) (
 //   The maximum number of distributions have been associated with the specified
 //   origin request policy. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
 //   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTooManyDistributionsAssociatedToKeyGroup "TooManyDistributionsAssociatedToKeyGroup"
+//   The number of distributions that reference this key group is more than the
+//   maximum allowed. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTooManyKeyGroupsAssociatedToDistribution "TooManyKeyGroupsAssociatedToDistribution"
+//   The number of key groups referenced by this distribution is more than the
+//   maximum allowed. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTrustedKeyGroupDoesNotExist "TrustedKeyGroupDoesNotExist"
+//   The specified key group does not exist.
+//
+//   * ErrCodeNoSuchRealtimeLogConfig "NoSuchRealtimeLogConfig"
+//   The real-time log configuration does not exist.
+//
+//   * ErrCodeRealtimeLogConfigOwnerMismatch "RealtimeLogConfigOwnerMismatch"
+//   The specified real-time log configuration belongs to a different Amazon Web
+//   Services account.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateDistribution
 func (c *CloudFront) CreateDistribution(input *CreateDistributionInput) (*CreateDistributionOutput, error) {
@@ -670,8 +818,8 @@ func (c *CloudFront) CreateDistributionWithTagsRequest(input *CreateDistribution
 //
 //   * ErrCodeInvalidWebACLId "InvalidWebACLId"
 //   A web ACL ID specified is not valid. To specify a web ACL created using the
-//   latest version of AWS WAF, use the ACL ARN, for example arn:aws:wafv2:us-east-1:123456789012:global/webacl/ExampleWebACL/473e64fd-f30b-4765-81a0-62ad96dd167a.
-//   To specify a web ACL created using AWS WAF Classic, use the ACL ID, for example
+//   latest version of WAF, use the ACL ARN, for example arn:aws:wafv2:us-east-1:123456789012:global/webacl/ExampleWebACL/473e64fd-f30b-4765-81a0-62ad96dd167a.
+//   To specify a web ACL created using WAF Classic, use the ACL ID, for example
 //   473e64fd-f30b-4765-81a0-62ad96dd167a.
 //
 //   * ErrCodeTooManyOriginCustomHeaders "TooManyOriginCustomHeaders"
@@ -688,18 +836,31 @@ func (c *CloudFront) CreateDistributionWithTagsRequest(input *CreateDistribution
 //
 //   * ErrCodeTooManyDistributionsWithLambdaAssociations "TooManyDistributionsWithLambdaAssociations"
 //   Processing your request would cause the maximum number of distributions with
-//   Lambda function associations per owner to be exceeded.
+//   Lambda@Edge function associations per owner to be exceeded.
 //
 //   * ErrCodeTooManyDistributionsWithSingleFunctionARN "TooManyDistributionsWithSingleFunctionARN"
 //   The maximum number of distributions have been associated with the specified
-//   Lambda function.
+//   Lambda@Edge function.
 //
 //   * ErrCodeTooManyLambdaFunctionAssociations "TooManyLambdaFunctionAssociations"
-//   Your request contains more Lambda function associations than are allowed
+//   Your request contains more Lambda@Edge function associations than are allowed
 //   per distribution.
 //
 //   * ErrCodeInvalidLambdaFunctionAssociation "InvalidLambdaFunctionAssociation"
-//   The specified Lambda function association is invalid.
+//   The specified Lambda@Edge function association is invalid.
+//
+//   * ErrCodeTooManyDistributionsWithFunctionAssociations "TooManyDistributionsWithFunctionAssociations"
+//   You have reached the maximum number of distributions that are associated
+//   with a CloudFront function. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTooManyFunctionAssociations "TooManyFunctionAssociations"
+//   You have reached the maximum number of CloudFront function associations for
+//   this distribution. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeInvalidFunctionAssociation "InvalidFunctionAssociation"
+//   A CloudFront function association is invalid.
 //
 //   * ErrCodeInvalidOriginReadTimeout "InvalidOriginReadTimeout"
 //   The read timeout specified for the origin is not valid.
@@ -726,6 +887,16 @@ func (c *CloudFront) CreateDistributionWithTagsRequest(input *CreateDistribution
 //   cache policy. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
 //   (formerly known as limits) in the Amazon CloudFront Developer Guide.
 //
+//   * ErrCodeNoSuchResponseHeadersPolicy "NoSuchResponseHeadersPolicy"
+//   The response headers policy does not exist.
+//
+//   * ErrCodeTooManyDistributionsAssociatedToResponseHeadersPolicy "TooManyDistributionsAssociatedToResponseHeadersPolicy"
+//   The maximum number of distributions have been associated with the specified
+//   response headers policy.
+//
+//   For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
 //   * ErrCodeNoSuchOriginRequestPolicy "NoSuchOriginRequestPolicy"
 //   The origin request policy does not exist.
 //
@@ -733,6 +904,26 @@ func (c *CloudFront) CreateDistributionWithTagsRequest(input *CreateDistribution
 //   The maximum number of distributions have been associated with the specified
 //   origin request policy. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
 //   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTooManyDistributionsAssociatedToKeyGroup "TooManyDistributionsAssociatedToKeyGroup"
+//   The number of distributions that reference this key group is more than the
+//   maximum allowed. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTooManyKeyGroupsAssociatedToDistribution "TooManyKeyGroupsAssociatedToDistribution"
+//   The number of key groups referenced by this distribution is more than the
+//   maximum allowed. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTrustedKeyGroupDoesNotExist "TrustedKeyGroupDoesNotExist"
+//   The specified key group does not exist.
+//
+//   * ErrCodeNoSuchRealtimeLogConfig "NoSuchRealtimeLogConfig"
+//   The real-time log configuration does not exist.
+//
+//   * ErrCodeRealtimeLogConfigOwnerMismatch "RealtimeLogConfigOwnerMismatch"
+//   The specified real-time log configuration belongs to a different Amazon Web
+//   Services account.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateDistributionWithTags
 func (c *CloudFront) CreateDistributionWithTags(input *CreateDistributionWithTagsInput) (*CreateDistributionWithTagsOutput, error) {
@@ -961,6 +1152,114 @@ func (c *CloudFront) CreateFieldLevelEncryptionProfileWithContext(ctx aws.Contex
 	return out, req.Send()
 }
 
+const opCreateFunction = "CreateFunction2020_05_31"
+
+// CreateFunctionRequest generates a "aws/request.Request" representing the
+// client's request for the CreateFunction operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateFunction for more information on using the CreateFunction
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateFunctionRequest method.
+//    req, resp := client.CreateFunctionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateFunction
+func (c *CloudFront) CreateFunctionRequest(input *CreateFunctionInput) (req *request.Request, output *CreateFunctionOutput) {
+	op := &request.Operation{
+		Name:       opCreateFunction,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2020-05-31/function",
+	}
+
+	if input == nil {
+		input = &CreateFunctionInput{}
+	}
+
+	output = &CreateFunctionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateFunction API operation for Amazon CloudFront.
+//
+// Creates a CloudFront function.
+//
+// To create a function, you provide the function code and some configuration
+// information about the function. The response contains an Amazon Resource
+// Name (ARN) that uniquely identifies the function.
+//
+// When you create a function, it’s in the DEVELOPMENT stage. In this stage,
+// you can test the function with TestFunction, and update it with UpdateFunction.
+//
+// When you’re ready to use your function with a CloudFront distribution,
+// use PublishFunction to copy the function from the DEVELOPMENT stage to LIVE.
+// When it’s live, you can attach the function to a distribution’s cache
+// behavior, using the function’s ARN.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation CreateFunction for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeTooManyFunctions "TooManyFunctions"
+//   You have reached the maximum number of CloudFront functions for this Amazon
+//   Web Services account. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeFunctionAlreadyExists "FunctionAlreadyExists"
+//   A function with the same name already exists in this Amazon Web Services
+//   account. To create a function, you must provide a unique name. To update
+//   an existing function, use UpdateFunction.
+//
+//   * ErrCodeFunctionSizeLimitExceeded "FunctionSizeLimitExceeded"
+//   The function is too large. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeUnsupportedOperation "UnsupportedOperation"
+//   This operation is not supported in this region.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateFunction
+func (c *CloudFront) CreateFunction(input *CreateFunctionInput) (*CreateFunctionOutput, error) {
+	req, out := c.CreateFunctionRequest(input)
+	return out, req.Send()
+}
+
+// CreateFunctionWithContext is the same as CreateFunction with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateFunction for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) CreateFunctionWithContext(ctx aws.Context, input *CreateFunctionInput, opts ...request.Option) (*CreateFunctionOutput, error) {
+	req, out := c.CreateFunctionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opCreateInvalidation = "CreateInvalidation2020_05_31"
 
 // CreateInvalidationRequest generates a "aws/request.Request" representing the
@@ -1060,6 +1359,200 @@ func (c *CloudFront) CreateInvalidationWithContext(ctx aws.Context, input *Creat
 	return out, req.Send()
 }
 
+const opCreateKeyGroup = "CreateKeyGroup2020_05_31"
+
+// CreateKeyGroupRequest generates a "aws/request.Request" representing the
+// client's request for the CreateKeyGroup operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateKeyGroup for more information on using the CreateKeyGroup
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateKeyGroupRequest method.
+//    req, resp := client.CreateKeyGroupRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateKeyGroup
+func (c *CloudFront) CreateKeyGroupRequest(input *CreateKeyGroupInput) (req *request.Request, output *CreateKeyGroupOutput) {
+	op := &request.Operation{
+		Name:       opCreateKeyGroup,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2020-05-31/key-group",
+	}
+
+	if input == nil {
+		input = &CreateKeyGroupInput{}
+	}
+
+	output = &CreateKeyGroupOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateKeyGroup API operation for Amazon CloudFront.
+//
+// Creates a key group that you can use with CloudFront signed URLs and signed
+// cookies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html).
+//
+// To create a key group, you must specify at least one public key for the key
+// group. After you create a key group, you can reference it from one or more
+// cache behaviors. When you reference a key group in a cache behavior, CloudFront
+// requires signed URLs or signed cookies for all requests that match the cache
+// behavior. The URLs or cookies must be signed with a private key whose corresponding
+// public key is in the key group. The signed URL or cookie contains information
+// about which public key CloudFront should use to verify the signature. For
+// more information, see Serving private content (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
+// in the Amazon CloudFront Developer Guide.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation CreateKeyGroup for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeKeyGroupAlreadyExists "KeyGroupAlreadyExists"
+//   A key group with this name already exists. You must provide a unique name.
+//   To modify an existing key group, use UpdateKeyGroup.
+//
+//   * ErrCodeTooManyKeyGroups "TooManyKeyGroups"
+//   You have reached the maximum number of key groups for this Amazon Web Services
+//   account. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTooManyPublicKeysInKeyGroup "TooManyPublicKeysInKeyGroup"
+//   The number of public keys in this key group is more than the maximum allowed.
+//   For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateKeyGroup
+func (c *CloudFront) CreateKeyGroup(input *CreateKeyGroupInput) (*CreateKeyGroupOutput, error) {
+	req, out := c.CreateKeyGroupRequest(input)
+	return out, req.Send()
+}
+
+// CreateKeyGroupWithContext is the same as CreateKeyGroup with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateKeyGroup for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) CreateKeyGroupWithContext(ctx aws.Context, input *CreateKeyGroupInput, opts ...request.Option) (*CreateKeyGroupOutput, error) {
+	req, out := c.CreateKeyGroupRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateMonitoringSubscription = "CreateMonitoringSubscription2020_05_31"
+
+// CreateMonitoringSubscriptionRequest generates a "aws/request.Request" representing the
+// client's request for the CreateMonitoringSubscription operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateMonitoringSubscription for more information on using the CreateMonitoringSubscription
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateMonitoringSubscriptionRequest method.
+//    req, resp := client.CreateMonitoringSubscriptionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateMonitoringSubscription
+func (c *CloudFront) CreateMonitoringSubscriptionRequest(input *CreateMonitoringSubscriptionInput) (req *request.Request, output *CreateMonitoringSubscriptionOutput) {
+	op := &request.Operation{
+		Name:       opCreateMonitoringSubscription,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2020-05-31/distributions/{DistributionId}/monitoring-subscription",
+	}
+
+	if input == nil {
+		input = &CreateMonitoringSubscriptionInput{}
+	}
+
+	output = &CreateMonitoringSubscriptionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateMonitoringSubscription API operation for Amazon CloudFront.
+//
+// Enables additional CloudWatch metrics for the specified CloudFront distribution.
+// The additional metrics incur an additional cost.
+//
+// For more information, see Viewing additional CloudFront distribution metrics
+// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/viewing-cloudfront-metrics.html#monitoring-console.distributions-additional)
+// in the Amazon CloudFront Developer Guide.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation CreateMonitoringSubscription for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+//   * ErrCodeNoSuchDistribution "NoSuchDistribution"
+//   The specified distribution does not exist.
+//
+//   * ErrCodeUnsupportedOperation "UnsupportedOperation"
+//   This operation is not supported in this region.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateMonitoringSubscription
+func (c *CloudFront) CreateMonitoringSubscription(input *CreateMonitoringSubscriptionInput) (*CreateMonitoringSubscriptionOutput, error) {
+	req, out := c.CreateMonitoringSubscriptionRequest(input)
+	return out, req.Send()
+}
+
+// CreateMonitoringSubscriptionWithContext is the same as CreateMonitoringSubscription with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateMonitoringSubscription for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) CreateMonitoringSubscriptionWithContext(ctx aws.Context, input *CreateMonitoringSubscriptionInput, opts ...request.Option) (*CreateMonitoringSubscriptionOutput, error) {
+	req, out := c.CreateMonitoringSubscriptionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opCreateOriginRequestPolicy = "CreateOriginRequestPolicy2020_05_31"
 
 // CreateOriginRequestPolicyRequest generates a "aws/request.Request" representing the
@@ -1125,7 +1618,7 @@ func (c *CloudFront) CreateOriginRequestPolicyRequest(input *CreateOriginRequest
 //
 // CloudFront sends a request when it can’t find a valid object in its cache
 // that matches the request. If you want to send values to the origin and also
-// include them in the cache key, use CreateCachePolicy.
+// include them in the cache key, use CachePolicy.
 //
 // For more information about origin request policies, see Controlling origin
 // requests (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-origin-requests.html)
@@ -1153,8 +1646,8 @@ func (c *CloudFront) CreateOriginRequestPolicyRequest(input *CreateOriginRequest
 //   a unique name. To modify an existing origin request policy, use UpdateOriginRequestPolicy.
 //
 //   * ErrCodeTooManyOriginRequestPolicies "TooManyOriginRequestPolicies"
-//   You have reached the maximum number of origin request policies for this AWS
-//   account. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   You have reached the maximum number of origin request policies for this Amazon
+//   Web Services account. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
 //   (formerly known as limits) in the Amazon CloudFront Developer Guide.
 //
 //   * ErrCodeTooManyHeadersInOriginRequestPolicy "TooManyHeadersInOriginRequestPolicy"
@@ -1238,8 +1731,9 @@ func (c *CloudFront) CreatePublicKeyRequest(input *CreatePublicKeyInput) (req *r
 
 // CreatePublicKey API operation for Amazon CloudFront.
 //
-// Add a new public key to CloudFront to use, for example, for field-level encryption.
-// You can add a maximum of 10 public keys with one AWS account.
+// Uploads a public key to CloudFront that you can use with signed URLs and
+// signed cookies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html),
+// or with field-level encryption (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1276,6 +1770,217 @@ func (c *CloudFront) CreatePublicKey(input *CreatePublicKeyInput) (*CreatePublic
 // for more information on using Contexts.
 func (c *CloudFront) CreatePublicKeyWithContext(ctx aws.Context, input *CreatePublicKeyInput, opts ...request.Option) (*CreatePublicKeyOutput, error) {
 	req, out := c.CreatePublicKeyRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateRealtimeLogConfig = "CreateRealtimeLogConfig2020_05_31"
+
+// CreateRealtimeLogConfigRequest generates a "aws/request.Request" representing the
+// client's request for the CreateRealtimeLogConfig operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateRealtimeLogConfig for more information on using the CreateRealtimeLogConfig
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateRealtimeLogConfigRequest method.
+//    req, resp := client.CreateRealtimeLogConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateRealtimeLogConfig
+func (c *CloudFront) CreateRealtimeLogConfigRequest(input *CreateRealtimeLogConfigInput) (req *request.Request, output *CreateRealtimeLogConfigOutput) {
+	op := &request.Operation{
+		Name:       opCreateRealtimeLogConfig,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2020-05-31/realtime-log-config",
+	}
+
+	if input == nil {
+		input = &CreateRealtimeLogConfigInput{}
+	}
+
+	output = &CreateRealtimeLogConfigOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateRealtimeLogConfig API operation for Amazon CloudFront.
+//
+// Creates a real-time log configuration.
+//
+// After you create a real-time log configuration, you can attach it to one
+// or more cache behaviors to send real-time log data to the specified Amazon
+// Kinesis data stream.
+//
+// For more information about real-time log configurations, see Real-time logs
+// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/real-time-logs.html)
+// in the Amazon CloudFront Developer Guide.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation CreateRealtimeLogConfig for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeRealtimeLogConfigAlreadyExists "RealtimeLogConfigAlreadyExists"
+//   A real-time log configuration with this name already exists. You must provide
+//   a unique name. To modify an existing real-time log configuration, use UpdateRealtimeLogConfig.
+//
+//   * ErrCodeTooManyRealtimeLogConfigs "TooManyRealtimeLogConfigs"
+//   You have reached the maximum number of real-time log configurations for this
+//   Amazon Web Services account. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateRealtimeLogConfig
+func (c *CloudFront) CreateRealtimeLogConfig(input *CreateRealtimeLogConfigInput) (*CreateRealtimeLogConfigOutput, error) {
+	req, out := c.CreateRealtimeLogConfigRequest(input)
+	return out, req.Send()
+}
+
+// CreateRealtimeLogConfigWithContext is the same as CreateRealtimeLogConfig with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateRealtimeLogConfig for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) CreateRealtimeLogConfigWithContext(ctx aws.Context, input *CreateRealtimeLogConfigInput, opts ...request.Option) (*CreateRealtimeLogConfigOutput, error) {
+	req, out := c.CreateRealtimeLogConfigRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateResponseHeadersPolicy = "CreateResponseHeadersPolicy2020_05_31"
+
+// CreateResponseHeadersPolicyRequest generates a "aws/request.Request" representing the
+// client's request for the CreateResponseHeadersPolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateResponseHeadersPolicy for more information on using the CreateResponseHeadersPolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateResponseHeadersPolicyRequest method.
+//    req, resp := client.CreateResponseHeadersPolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateResponseHeadersPolicy
+func (c *CloudFront) CreateResponseHeadersPolicyRequest(input *CreateResponseHeadersPolicyInput) (req *request.Request, output *CreateResponseHeadersPolicyOutput) {
+	op := &request.Operation{
+		Name:       opCreateResponseHeadersPolicy,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2020-05-31/response-headers-policy",
+	}
+
+	if input == nil {
+		input = &CreateResponseHeadersPolicyInput{}
+	}
+
+	output = &CreateResponseHeadersPolicyOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateResponseHeadersPolicy API operation for Amazon CloudFront.
+//
+// Creates a response headers policy.
+//
+// A response headers policy contains information about a set of HTTP response
+// headers and their values. To create a response headers policy, you provide
+// some metadata about the policy, and a set of configurations that specify
+// the response headers.
+//
+// After you create a response headers policy, you can use its ID to attach
+// it to one or more cache behaviors in a CloudFront distribution. When it’s
+// attached to a cache behavior, CloudFront adds the headers in the policy to
+// HTTP responses that it sends for requests that match the cache behavior.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation CreateResponseHeadersPolicy for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+//   * ErrCodeInconsistentQuantities "InconsistentQuantities"
+//   The value of Quantity and the size of Items don't match.
+//
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeResponseHeadersPolicyAlreadyExists "ResponseHeadersPolicyAlreadyExists"
+//   A response headers policy with this name already exists. You must provide
+//   a unique name. To modify an existing response headers policy, use UpdateResponseHeadersPolicy.
+//
+//   * ErrCodeTooManyResponseHeadersPolicies "TooManyResponseHeadersPolicies"
+//   You have reached the maximum number of response headers policies for this
+//   Amazon Web Services account.
+//
+//   For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTooManyCustomHeadersInResponseHeadersPolicy "TooManyCustomHeadersInResponseHeadersPolicy"
+//   The number of custom headers in the response headers policy exceeds the maximum.
+//
+//   For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/CreateResponseHeadersPolicy
+func (c *CloudFront) CreateResponseHeadersPolicy(input *CreateResponseHeadersPolicyInput) (*CreateResponseHeadersPolicyOutput, error) {
+	req, out := c.CreateResponseHeadersPolicyRequest(input)
+	return out, req.Send()
+}
+
+// CreateResponseHeadersPolicyWithContext is the same as CreateResponseHeadersPolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateResponseHeadersPolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) CreateResponseHeadersPolicyWithContext(ctx aws.Context, input *CreateResponseHeadersPolicyInput, opts ...request.Option) (*CreateResponseHeadersPolicyOutput, error) {
+	req, out := c.CreateResponseHeadersPolicyRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -1325,34 +2030,10 @@ func (c *CloudFront) CreateStreamingDistributionRequest(input *CreateStreamingDi
 
 // CreateStreamingDistribution API operation for Amazon CloudFront.
 //
-// Creates a new RTMP distribution. An RTMP distribution is similar to a web
-// distribution, but an RTMP distribution streams media files using the Adobe
-// Real-Time Messaging Protocol (RTMP) instead of serving files using HTTP.
-//
-// To create a new distribution, submit a POST request to the CloudFront API
-// version/distribution resource. The request body must include a document with
-// a StreamingDistributionConfig element. The response echoes the StreamingDistributionConfig
-// element and returns other information about the RTMP distribution.
-//
-// To get the status of your request, use the GET StreamingDistribution API
-// action. When the value of Enabled is true and the value of Status is Deployed,
-// your distribution is ready. A distribution usually deploys in less than 15
-// minutes.
-//
-// For more information about web distributions, see Working with RTMP Distributions
-// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-rtmp.html)
-// in the Amazon CloudFront Developer Guide.
-//
-// Beginning with the 2012-05-05 version of the CloudFront API, we made substantial
-// changes to the format of the XML document that you include in the request
-// body when you create or update a web distribution or an RTMP distribution,
-// and when you invalidate objects. With previous versions of the API, we discovered
-// that it was too easy to accidentally delete one or more values for an element
-// that accepts multiple values, for example, CNAMEs and trusted signers. Our
-// changes for the 2012-05-05 release are intended to prevent these accidental
-// deletions and to notify you when there's a mismatch between the number of
-// values you say you're specifying in the Quantity element and the number of
-// values specified.
+// This API is deprecated. Amazon CloudFront is deprecating real-time messaging
+// protocol (RTMP) distributions on December 31, 2020. For more information,
+// read the announcement (http://forums.aws.amazon.com/ann.jspa?annID=7356)
+// on the Amazon CloudFront discussion forum.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1468,7 +2149,10 @@ func (c *CloudFront) CreateStreamingDistributionWithTagsRequest(input *CreateStr
 
 // CreateStreamingDistributionWithTags API operation for Amazon CloudFront.
 //
-// Create a new streaming distribution with tags.
+// This API is deprecated. Amazon CloudFront is deprecating real-time messaging
+// protocol (RTMP) distributions on December 31, 2020. For more information,
+// read the announcement (http://forums.aws.amazon.com/ann.jspa?annID=7356)
+// on the Amazon CloudFront discussion forum.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1615,8 +2299,7 @@ func (c *CloudFront) DeleteCachePolicyRequest(input *DeleteCachePolicyInput) (re
 //   The cache policy does not exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeIllegalDelete "IllegalDelete"
 //   You cannot delete a managed policy.
@@ -1712,8 +2395,7 @@ func (c *CloudFront) DeleteCloudFrontOriginAccessIdentityRequest(input *DeleteCl
 //   The specified origin access identity does not exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeOriginAccessIdentityInUse "CloudFrontOriginAccessIdentityInUse"
 //   The Origin Access Identity specified is already in use.
@@ -1809,8 +2491,7 @@ func (c *CloudFront) DeleteDistributionRequest(input *DeleteDistributionInput) (
 //   The specified distribution does not exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteDistribution
 func (c *CloudFront) DeleteDistribution(input *DeleteDistributionInput) (*DeleteDistributionOutput, error) {
@@ -1899,8 +2580,7 @@ func (c *CloudFront) DeleteFieldLevelEncryptionConfigRequest(input *DeleteFieldL
 //   The specified configuration for field-level encryption doesn't exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeFieldLevelEncryptionConfigInUse "FieldLevelEncryptionConfigInUse"
 //   The specified configuration for field-level encryption is in use.
@@ -1992,8 +2672,7 @@ func (c *CloudFront) DeleteFieldLevelEncryptionProfileRequest(input *DeleteField
 //   The specified profile for field-level encryption doesn't exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeFieldLevelEncryptionProfileInUse "FieldLevelEncryptionProfileInUse"
 //   The specified profile for field-level encryption is in use.
@@ -2015,6 +2694,288 @@ func (c *CloudFront) DeleteFieldLevelEncryptionProfile(input *DeleteFieldLevelEn
 // for more information on using Contexts.
 func (c *CloudFront) DeleteFieldLevelEncryptionProfileWithContext(ctx aws.Context, input *DeleteFieldLevelEncryptionProfileInput, opts ...request.Option) (*DeleteFieldLevelEncryptionProfileOutput, error) {
 	req, out := c.DeleteFieldLevelEncryptionProfileRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteFunction = "DeleteFunction2020_05_31"
+
+// DeleteFunctionRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteFunction operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteFunction for more information on using the DeleteFunction
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteFunctionRequest method.
+//    req, resp := client.DeleteFunctionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteFunction
+func (c *CloudFront) DeleteFunctionRequest(input *DeleteFunctionInput) (req *request.Request, output *DeleteFunctionOutput) {
+	op := &request.Operation{
+		Name:       opDeleteFunction,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/2020-05-31/function/{Name}",
+	}
+
+	if input == nil {
+		input = &DeleteFunctionInput{}
+	}
+
+	output = &DeleteFunctionOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restxml.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// DeleteFunction API operation for Amazon CloudFront.
+//
+// Deletes a CloudFront function.
+//
+// You cannot delete a function if it’s associated with a cache behavior.
+// First, update your distributions to remove the function association from
+// all cache behaviors, then delete the function.
+//
+// To delete a function, you must provide the function’s name and version
+// (ETag value). To get these values, you can use ListFunctions and DescribeFunction.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation DeleteFunction for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidIfMatchVersion "InvalidIfMatchVersion"
+//   The If-Match version is missing or not valid.
+//
+//   * ErrCodeNoSuchFunctionExists "NoSuchFunctionExists"
+//   The function does not exist.
+//
+//   * ErrCodeFunctionInUse "FunctionInUse"
+//   Cannot delete the function because it’s attached to one or more cache behaviors.
+//
+//   * ErrCodePreconditionFailed "PreconditionFailed"
+//   The precondition in one or more of the request fields evaluated to false.
+//
+//   * ErrCodeUnsupportedOperation "UnsupportedOperation"
+//   This operation is not supported in this region.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteFunction
+func (c *CloudFront) DeleteFunction(input *DeleteFunctionInput) (*DeleteFunctionOutput, error) {
+	req, out := c.DeleteFunctionRequest(input)
+	return out, req.Send()
+}
+
+// DeleteFunctionWithContext is the same as DeleteFunction with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteFunction for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) DeleteFunctionWithContext(ctx aws.Context, input *DeleteFunctionInput, opts ...request.Option) (*DeleteFunctionOutput, error) {
+	req, out := c.DeleteFunctionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteKeyGroup = "DeleteKeyGroup2020_05_31"
+
+// DeleteKeyGroupRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteKeyGroup operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteKeyGroup for more information on using the DeleteKeyGroup
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteKeyGroupRequest method.
+//    req, resp := client.DeleteKeyGroupRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteKeyGroup
+func (c *CloudFront) DeleteKeyGroupRequest(input *DeleteKeyGroupInput) (req *request.Request, output *DeleteKeyGroupOutput) {
+	op := &request.Operation{
+		Name:       opDeleteKeyGroup,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/2020-05-31/key-group/{Id}",
+	}
+
+	if input == nil {
+		input = &DeleteKeyGroupInput{}
+	}
+
+	output = &DeleteKeyGroupOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restxml.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// DeleteKeyGroup API operation for Amazon CloudFront.
+//
+// Deletes a key group.
+//
+// You cannot delete a key group that is referenced in a cache behavior. First
+// update your distributions to remove the key group from all cache behaviors,
+// then delete the key group.
+//
+// To delete a key group, you must provide the key group’s identifier and
+// version. To get these values, use ListKeyGroups followed by GetKeyGroup or
+// GetKeyGroupConfig.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation DeleteKeyGroup for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidIfMatchVersion "InvalidIfMatchVersion"
+//   The If-Match version is missing or not valid.
+//
+//   * ErrCodeNoSuchResource "NoSuchResource"
+//   A resource that was specified is not valid.
+//
+//   * ErrCodePreconditionFailed "PreconditionFailed"
+//   The precondition in one or more of the request fields evaluated to false.
+//
+//   * ErrCodeResourceInUse "ResourceInUse"
+//   Cannot delete this resource because it is in use.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteKeyGroup
+func (c *CloudFront) DeleteKeyGroup(input *DeleteKeyGroupInput) (*DeleteKeyGroupOutput, error) {
+	req, out := c.DeleteKeyGroupRequest(input)
+	return out, req.Send()
+}
+
+// DeleteKeyGroupWithContext is the same as DeleteKeyGroup with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteKeyGroup for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) DeleteKeyGroupWithContext(ctx aws.Context, input *DeleteKeyGroupInput, opts ...request.Option) (*DeleteKeyGroupOutput, error) {
+	req, out := c.DeleteKeyGroupRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteMonitoringSubscription = "DeleteMonitoringSubscription2020_05_31"
+
+// DeleteMonitoringSubscriptionRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteMonitoringSubscription operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteMonitoringSubscription for more information on using the DeleteMonitoringSubscription
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteMonitoringSubscriptionRequest method.
+//    req, resp := client.DeleteMonitoringSubscriptionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteMonitoringSubscription
+func (c *CloudFront) DeleteMonitoringSubscriptionRequest(input *DeleteMonitoringSubscriptionInput) (req *request.Request, output *DeleteMonitoringSubscriptionOutput) {
+	op := &request.Operation{
+		Name:       opDeleteMonitoringSubscription,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/2020-05-31/distributions/{DistributionId}/monitoring-subscription",
+	}
+
+	if input == nil {
+		input = &DeleteMonitoringSubscriptionInput{}
+	}
+
+	output = &DeleteMonitoringSubscriptionOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restxml.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// DeleteMonitoringSubscription API operation for Amazon CloudFront.
+//
+// Disables additional CloudWatch metrics for the specified CloudFront distribution.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation DeleteMonitoringSubscription for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+//   * ErrCodeNoSuchDistribution "NoSuchDistribution"
+//   The specified distribution does not exist.
+//
+//   * ErrCodeUnsupportedOperation "UnsupportedOperation"
+//   This operation is not supported in this region.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteMonitoringSubscription
+func (c *CloudFront) DeleteMonitoringSubscription(input *DeleteMonitoringSubscriptionInput) (*DeleteMonitoringSubscriptionOutput, error) {
+	req, out := c.DeleteMonitoringSubscriptionRequest(input)
+	return out, req.Send()
+}
+
+// DeleteMonitoringSubscriptionWithContext is the same as DeleteMonitoringSubscription with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteMonitoringSubscription for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) DeleteMonitoringSubscriptionWithContext(ctx aws.Context, input *DeleteMonitoringSubscriptionInput, opts ...request.Option) (*DeleteMonitoringSubscriptionOutput, error) {
+	req, out := c.DeleteMonitoringSubscriptionRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -2093,8 +3054,7 @@ func (c *CloudFront) DeleteOriginRequestPolicyRequest(input *DeleteOriginRequest
 //   The origin request policy does not exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeIllegalDelete "IllegalDelete"
 //   You cannot delete a managed policy.
@@ -2193,8 +3153,7 @@ func (c *CloudFront) DeletePublicKeyRequest(input *DeletePublicKeyInput) (req *r
 //   The specified public key doesn't exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeletePublicKey
 func (c *CloudFront) DeletePublicKey(input *DeletePublicKeyInput) (*DeletePublicKeyOutput, error) {
@@ -2213,6 +3172,209 @@ func (c *CloudFront) DeletePublicKey(input *DeletePublicKeyInput) (*DeletePublic
 // for more information on using Contexts.
 func (c *CloudFront) DeletePublicKeyWithContext(ctx aws.Context, input *DeletePublicKeyInput, opts ...request.Option) (*DeletePublicKeyOutput, error) {
 	req, out := c.DeletePublicKeyRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteRealtimeLogConfig = "DeleteRealtimeLogConfig2020_05_31"
+
+// DeleteRealtimeLogConfigRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteRealtimeLogConfig operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteRealtimeLogConfig for more information on using the DeleteRealtimeLogConfig
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteRealtimeLogConfigRequest method.
+//    req, resp := client.DeleteRealtimeLogConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteRealtimeLogConfig
+func (c *CloudFront) DeleteRealtimeLogConfigRequest(input *DeleteRealtimeLogConfigInput) (req *request.Request, output *DeleteRealtimeLogConfigOutput) {
+	op := &request.Operation{
+		Name:       opDeleteRealtimeLogConfig,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2020-05-31/delete-realtime-log-config/",
+	}
+
+	if input == nil {
+		input = &DeleteRealtimeLogConfigInput{}
+	}
+
+	output = &DeleteRealtimeLogConfigOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restxml.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// DeleteRealtimeLogConfig API operation for Amazon CloudFront.
+//
+// Deletes a real-time log configuration.
+//
+// You cannot delete a real-time log configuration if it’s attached to a cache
+// behavior. First update your distributions to remove the real-time log configuration
+// from all cache behaviors, then delete the real-time log configuration.
+//
+// To delete a real-time log configuration, you can provide the configuration’s
+// name or its Amazon Resource Name (ARN). You must provide at least one. If
+// you provide both, CloudFront uses the name to identify the real-time log
+// configuration to delete.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation DeleteRealtimeLogConfig for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeNoSuchRealtimeLogConfig "NoSuchRealtimeLogConfig"
+//   The real-time log configuration does not exist.
+//
+//   * ErrCodeRealtimeLogConfigInUse "RealtimeLogConfigInUse"
+//   Cannot delete the real-time log configuration because it is attached to one
+//   or more cache behaviors.
+//
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteRealtimeLogConfig
+func (c *CloudFront) DeleteRealtimeLogConfig(input *DeleteRealtimeLogConfigInput) (*DeleteRealtimeLogConfigOutput, error) {
+	req, out := c.DeleteRealtimeLogConfigRequest(input)
+	return out, req.Send()
+}
+
+// DeleteRealtimeLogConfigWithContext is the same as DeleteRealtimeLogConfig with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteRealtimeLogConfig for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) DeleteRealtimeLogConfigWithContext(ctx aws.Context, input *DeleteRealtimeLogConfigInput, opts ...request.Option) (*DeleteRealtimeLogConfigOutput, error) {
+	req, out := c.DeleteRealtimeLogConfigRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteResponseHeadersPolicy = "DeleteResponseHeadersPolicy2020_05_31"
+
+// DeleteResponseHeadersPolicyRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteResponseHeadersPolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteResponseHeadersPolicy for more information on using the DeleteResponseHeadersPolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteResponseHeadersPolicyRequest method.
+//    req, resp := client.DeleteResponseHeadersPolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteResponseHeadersPolicy
+func (c *CloudFront) DeleteResponseHeadersPolicyRequest(input *DeleteResponseHeadersPolicyInput) (req *request.Request, output *DeleteResponseHeadersPolicyOutput) {
+	op := &request.Operation{
+		Name:       opDeleteResponseHeadersPolicy,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/2020-05-31/response-headers-policy/{Id}",
+	}
+
+	if input == nil {
+		input = &DeleteResponseHeadersPolicyInput{}
+	}
+
+	output = &DeleteResponseHeadersPolicyOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restxml.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// DeleteResponseHeadersPolicy API operation for Amazon CloudFront.
+//
+// Deletes a response headers policy.
+//
+// You cannot delete a response headers policy if it’s attached to a cache
+// behavior. First update your distributions to remove the response headers
+// policy from all cache behaviors, then delete the response headers policy.
+//
+// To delete a response headers policy, you must provide the policy’s identifier
+// and version. To get these values, you can use ListResponseHeadersPolicies
+// or GetResponseHeadersPolicy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation DeleteResponseHeadersPolicy for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+//   * ErrCodeInvalidIfMatchVersion "InvalidIfMatchVersion"
+//   The If-Match version is missing or not valid.
+//
+//   * ErrCodeNoSuchResponseHeadersPolicy "NoSuchResponseHeadersPolicy"
+//   The response headers policy does not exist.
+//
+//   * ErrCodePreconditionFailed "PreconditionFailed"
+//   The precondition in one or more of the request fields evaluated to false.
+//
+//   * ErrCodeIllegalDelete "IllegalDelete"
+//   You cannot delete a managed policy.
+//
+//   * ErrCodeResponseHeadersPolicyInUse "ResponseHeadersPolicyInUse"
+//   Cannot delete the response headers policy because it is attached to one or
+//   more cache behaviors in a CloudFront distribution.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteResponseHeadersPolicy
+func (c *CloudFront) DeleteResponseHeadersPolicy(input *DeleteResponseHeadersPolicyInput) (*DeleteResponseHeadersPolicyOutput, error) {
+	req, out := c.DeleteResponseHeadersPolicyRequest(input)
+	return out, req.Send()
+}
+
+// DeleteResponseHeadersPolicyWithContext is the same as DeleteResponseHeadersPolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteResponseHeadersPolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) DeleteResponseHeadersPolicyWithContext(ctx aws.Context, input *DeleteResponseHeadersPolicyInput, opts ...request.Option) (*DeleteResponseHeadersPolicyOutput, error) {
+	req, out := c.DeleteResponseHeadersPolicyRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -2322,8 +3484,7 @@ func (c *CloudFront) DeleteStreamingDistributionRequest(input *DeleteStreamingDi
 //   The specified streaming distribution does not exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DeleteStreamingDistribution
 func (c *CloudFront) DeleteStreamingDistribution(input *DeleteStreamingDistributionInput) (*DeleteStreamingDistributionOutput, error) {
@@ -2342,6 +3503,93 @@ func (c *CloudFront) DeleteStreamingDistribution(input *DeleteStreamingDistribut
 // for more information on using Contexts.
 func (c *CloudFront) DeleteStreamingDistributionWithContext(ctx aws.Context, input *DeleteStreamingDistributionInput, opts ...request.Option) (*DeleteStreamingDistributionOutput, error) {
 	req, out := c.DeleteStreamingDistributionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDescribeFunction = "DescribeFunction2020_05_31"
+
+// DescribeFunctionRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeFunction operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DescribeFunction for more information on using the DescribeFunction
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DescribeFunctionRequest method.
+//    req, resp := client.DescribeFunctionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DescribeFunction
+func (c *CloudFront) DescribeFunctionRequest(input *DescribeFunctionInput) (req *request.Request, output *DescribeFunctionOutput) {
+	op := &request.Operation{
+		Name:       opDescribeFunction,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/function/{Name}/describe",
+	}
+
+	if input == nil {
+		input = &DescribeFunctionInput{}
+	}
+
+	output = &DescribeFunctionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DescribeFunction API operation for Amazon CloudFront.
+//
+// Gets configuration information and metadata about a CloudFront function,
+// but not the function’s code. To get a function’s code, use GetFunction.
+//
+// To get configuration information and metadata about a function, you must
+// provide the function’s name and stage. To get these values, you can use
+// ListFunctions.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation DescribeFunction for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeNoSuchFunctionExists "NoSuchFunctionExists"
+//   The function does not exist.
+//
+//   * ErrCodeUnsupportedOperation "UnsupportedOperation"
+//   This operation is not supported in this region.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/DescribeFunction
+func (c *CloudFront) DescribeFunction(input *DescribeFunctionInput) (*DescribeFunctionOutput, error) {
+	req, out := c.DescribeFunctionRequest(input)
+	return out, req.Send()
+}
+
+// DescribeFunctionWithContext is the same as DescribeFunction with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DescribeFunction for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) DescribeFunctionWithContext(ctx aws.Context, input *DescribeFunctionInput, opts ...request.Option) (*DescribeFunctionOutput, error) {
+	req, out := c.DescribeFunctionRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -3183,6 +4431,92 @@ func (c *CloudFront) GetFieldLevelEncryptionProfileConfigWithContext(ctx aws.Con
 	return out, req.Send()
 }
 
+const opGetFunction = "GetFunction2020_05_31"
+
+// GetFunctionRequest generates a "aws/request.Request" representing the
+// client's request for the GetFunction operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetFunction for more information on using the GetFunction
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetFunctionRequest method.
+//    req, resp := client.GetFunctionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetFunction
+func (c *CloudFront) GetFunctionRequest(input *GetFunctionInput) (req *request.Request, output *GetFunctionOutput) {
+	op := &request.Operation{
+		Name:       opGetFunction,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/function/{Name}",
+	}
+
+	if input == nil {
+		input = &GetFunctionInput{}
+	}
+
+	output = &GetFunctionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetFunction API operation for Amazon CloudFront.
+//
+// Gets the code of a CloudFront function. To get configuration information
+// and metadata about a function, use DescribeFunction.
+//
+// To get a function’s code, you must provide the function’s name and stage.
+// To get these values, you can use ListFunctions.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation GetFunction for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeNoSuchFunctionExists "NoSuchFunctionExists"
+//   The function does not exist.
+//
+//   * ErrCodeUnsupportedOperation "UnsupportedOperation"
+//   This operation is not supported in this region.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetFunction
+func (c *CloudFront) GetFunction(input *GetFunctionInput) (*GetFunctionOutput, error) {
+	req, out := c.GetFunctionRequest(input)
+	return out, req.Send()
+}
+
+// GetFunctionWithContext is the same as GetFunction with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetFunction for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) GetFunctionWithContext(ctx aws.Context, input *GetFunctionInput, opts ...request.Option) (*GetFunctionOutput, error) {
+	req, out := c.GetFunctionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opGetInvalidation = "GetInvalidation2020_05_31"
 
 // GetInvalidationRequest generates a "aws/request.Request" representing the
@@ -3263,6 +4597,263 @@ func (c *CloudFront) GetInvalidation(input *GetInvalidationInput) (*GetInvalidat
 // for more information on using Contexts.
 func (c *CloudFront) GetInvalidationWithContext(ctx aws.Context, input *GetInvalidationInput, opts ...request.Option) (*GetInvalidationOutput, error) {
 	req, out := c.GetInvalidationRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetKeyGroup = "GetKeyGroup2020_05_31"
+
+// GetKeyGroupRequest generates a "aws/request.Request" representing the
+// client's request for the GetKeyGroup operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetKeyGroup for more information on using the GetKeyGroup
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetKeyGroupRequest method.
+//    req, resp := client.GetKeyGroupRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetKeyGroup
+func (c *CloudFront) GetKeyGroupRequest(input *GetKeyGroupInput) (req *request.Request, output *GetKeyGroupOutput) {
+	op := &request.Operation{
+		Name:       opGetKeyGroup,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/key-group/{Id}",
+	}
+
+	if input == nil {
+		input = &GetKeyGroupInput{}
+	}
+
+	output = &GetKeyGroupOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetKeyGroup API operation for Amazon CloudFront.
+//
+// Gets a key group, including the date and time when the key group was last
+// modified.
+//
+// To get a key group, you must provide the key group’s identifier. If the
+// key group is referenced in a distribution’s cache behavior, you can get
+// the key group’s identifier using ListDistributions or GetDistribution.
+// If the key group is not referenced in a cache behavior, you can get the identifier
+// using ListKeyGroups.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation GetKeyGroup for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeNoSuchResource "NoSuchResource"
+//   A resource that was specified is not valid.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetKeyGroup
+func (c *CloudFront) GetKeyGroup(input *GetKeyGroupInput) (*GetKeyGroupOutput, error) {
+	req, out := c.GetKeyGroupRequest(input)
+	return out, req.Send()
+}
+
+// GetKeyGroupWithContext is the same as GetKeyGroup with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetKeyGroup for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) GetKeyGroupWithContext(ctx aws.Context, input *GetKeyGroupInput, opts ...request.Option) (*GetKeyGroupOutput, error) {
+	req, out := c.GetKeyGroupRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetKeyGroupConfig = "GetKeyGroupConfig2020_05_31"
+
+// GetKeyGroupConfigRequest generates a "aws/request.Request" representing the
+// client's request for the GetKeyGroupConfig operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetKeyGroupConfig for more information on using the GetKeyGroupConfig
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetKeyGroupConfigRequest method.
+//    req, resp := client.GetKeyGroupConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetKeyGroupConfig
+func (c *CloudFront) GetKeyGroupConfigRequest(input *GetKeyGroupConfigInput) (req *request.Request, output *GetKeyGroupConfigOutput) {
+	op := &request.Operation{
+		Name:       opGetKeyGroupConfig,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/key-group/{Id}/config",
+	}
+
+	if input == nil {
+		input = &GetKeyGroupConfigInput{}
+	}
+
+	output = &GetKeyGroupConfigOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetKeyGroupConfig API operation for Amazon CloudFront.
+//
+// Gets a key group configuration.
+//
+// To get a key group configuration, you must provide the key group’s identifier.
+// If the key group is referenced in a distribution’s cache behavior, you
+// can get the key group’s identifier using ListDistributions or GetDistribution.
+// If the key group is not referenced in a cache behavior, you can get the identifier
+// using ListKeyGroups.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation GetKeyGroupConfig for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeNoSuchResource "NoSuchResource"
+//   A resource that was specified is not valid.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetKeyGroupConfig
+func (c *CloudFront) GetKeyGroupConfig(input *GetKeyGroupConfigInput) (*GetKeyGroupConfigOutput, error) {
+	req, out := c.GetKeyGroupConfigRequest(input)
+	return out, req.Send()
+}
+
+// GetKeyGroupConfigWithContext is the same as GetKeyGroupConfig with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetKeyGroupConfig for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) GetKeyGroupConfigWithContext(ctx aws.Context, input *GetKeyGroupConfigInput, opts ...request.Option) (*GetKeyGroupConfigOutput, error) {
+	req, out := c.GetKeyGroupConfigRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetMonitoringSubscription = "GetMonitoringSubscription2020_05_31"
+
+// GetMonitoringSubscriptionRequest generates a "aws/request.Request" representing the
+// client's request for the GetMonitoringSubscription operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetMonitoringSubscription for more information on using the GetMonitoringSubscription
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetMonitoringSubscriptionRequest method.
+//    req, resp := client.GetMonitoringSubscriptionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetMonitoringSubscription
+func (c *CloudFront) GetMonitoringSubscriptionRequest(input *GetMonitoringSubscriptionInput) (req *request.Request, output *GetMonitoringSubscriptionOutput) {
+	op := &request.Operation{
+		Name:       opGetMonitoringSubscription,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/distributions/{DistributionId}/monitoring-subscription",
+	}
+
+	if input == nil {
+		input = &GetMonitoringSubscriptionInput{}
+	}
+
+	output = &GetMonitoringSubscriptionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetMonitoringSubscription API operation for Amazon CloudFront.
+//
+// Gets information about whether additional CloudWatch metrics are enabled
+// for the specified CloudFront distribution.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation GetMonitoringSubscription for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+//   * ErrCodeNoSuchDistribution "NoSuchDistribution"
+//   The specified distribution does not exist.
+//
+//   * ErrCodeUnsupportedOperation "UnsupportedOperation"
+//   This operation is not supported in this region.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetMonitoringSubscription
+func (c *CloudFront) GetMonitoringSubscription(input *GetMonitoringSubscriptionInput) (*GetMonitoringSubscriptionOutput, error) {
+	req, out := c.GetMonitoringSubscriptionRequest(input)
+	return out, req.Send()
+}
+
+// GetMonitoringSubscriptionWithContext is the same as GetMonitoringSubscription with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetMonitoringSubscription for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) GetMonitoringSubscriptionWithContext(ctx aws.Context, input *GetMonitoringSubscriptionInput, opts ...request.Option) (*GetMonitoringSubscriptionOutput, error) {
+	req, out := c.GetMonitoringSubscriptionRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -3492,7 +5083,7 @@ func (c *CloudFront) GetPublicKeyRequest(input *GetPublicKeyInput) (req *request
 
 // GetPublicKey API operation for Amazon CloudFront.
 //
-// Get the public key information.
+// Gets a public key.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -3574,7 +5165,7 @@ func (c *CloudFront) GetPublicKeyConfigRequest(input *GetPublicKeyConfigInput) (
 
 // GetPublicKeyConfig API operation for Amazon CloudFront.
 //
-// Return public key configuration informaation
+// Gets a public key configuration.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -3607,6 +5198,273 @@ func (c *CloudFront) GetPublicKeyConfig(input *GetPublicKeyConfigInput) (*GetPub
 // for more information on using Contexts.
 func (c *CloudFront) GetPublicKeyConfigWithContext(ctx aws.Context, input *GetPublicKeyConfigInput, opts ...request.Option) (*GetPublicKeyConfigOutput, error) {
 	req, out := c.GetPublicKeyConfigRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetRealtimeLogConfig = "GetRealtimeLogConfig2020_05_31"
+
+// GetRealtimeLogConfigRequest generates a "aws/request.Request" representing the
+// client's request for the GetRealtimeLogConfig operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetRealtimeLogConfig for more information on using the GetRealtimeLogConfig
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetRealtimeLogConfigRequest method.
+//    req, resp := client.GetRealtimeLogConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetRealtimeLogConfig
+func (c *CloudFront) GetRealtimeLogConfigRequest(input *GetRealtimeLogConfigInput) (req *request.Request, output *GetRealtimeLogConfigOutput) {
+	op := &request.Operation{
+		Name:       opGetRealtimeLogConfig,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2020-05-31/get-realtime-log-config/",
+	}
+
+	if input == nil {
+		input = &GetRealtimeLogConfigInput{}
+	}
+
+	output = &GetRealtimeLogConfigOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetRealtimeLogConfig API operation for Amazon CloudFront.
+//
+// Gets a real-time log configuration.
+//
+// To get a real-time log configuration, you can provide the configuration’s
+// name or its Amazon Resource Name (ARN). You must provide at least one. If
+// you provide both, CloudFront uses the name to identify the real-time log
+// configuration to get.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation GetRealtimeLogConfig for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeNoSuchRealtimeLogConfig "NoSuchRealtimeLogConfig"
+//   The real-time log configuration does not exist.
+//
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetRealtimeLogConfig
+func (c *CloudFront) GetRealtimeLogConfig(input *GetRealtimeLogConfigInput) (*GetRealtimeLogConfigOutput, error) {
+	req, out := c.GetRealtimeLogConfigRequest(input)
+	return out, req.Send()
+}
+
+// GetRealtimeLogConfigWithContext is the same as GetRealtimeLogConfig with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetRealtimeLogConfig for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) GetRealtimeLogConfigWithContext(ctx aws.Context, input *GetRealtimeLogConfigInput, opts ...request.Option) (*GetRealtimeLogConfigOutput, error) {
+	req, out := c.GetRealtimeLogConfigRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetResponseHeadersPolicy = "GetResponseHeadersPolicy2020_05_31"
+
+// GetResponseHeadersPolicyRequest generates a "aws/request.Request" representing the
+// client's request for the GetResponseHeadersPolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetResponseHeadersPolicy for more information on using the GetResponseHeadersPolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetResponseHeadersPolicyRequest method.
+//    req, resp := client.GetResponseHeadersPolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetResponseHeadersPolicy
+func (c *CloudFront) GetResponseHeadersPolicyRequest(input *GetResponseHeadersPolicyInput) (req *request.Request, output *GetResponseHeadersPolicyOutput) {
+	op := &request.Operation{
+		Name:       opGetResponseHeadersPolicy,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/response-headers-policy/{Id}",
+	}
+
+	if input == nil {
+		input = &GetResponseHeadersPolicyInput{}
+	}
+
+	output = &GetResponseHeadersPolicyOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetResponseHeadersPolicy API operation for Amazon CloudFront.
+//
+// Gets a response headers policy, including metadata (the policy’s identifier
+// and the date and time when the policy was last modified).
+//
+// To get a response headers policy, you must provide the policy’s identifier.
+// If the response headers policy is attached to a distribution’s cache behavior,
+// you can get the policy’s identifier using ListDistributions or GetDistribution.
+// If the response headers policy is not attached to a cache behavior, you can
+// get the identifier using ListResponseHeadersPolicies.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation GetResponseHeadersPolicy for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+//   * ErrCodeNoSuchResponseHeadersPolicy "NoSuchResponseHeadersPolicy"
+//   The response headers policy does not exist.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetResponseHeadersPolicy
+func (c *CloudFront) GetResponseHeadersPolicy(input *GetResponseHeadersPolicyInput) (*GetResponseHeadersPolicyOutput, error) {
+	req, out := c.GetResponseHeadersPolicyRequest(input)
+	return out, req.Send()
+}
+
+// GetResponseHeadersPolicyWithContext is the same as GetResponseHeadersPolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetResponseHeadersPolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) GetResponseHeadersPolicyWithContext(ctx aws.Context, input *GetResponseHeadersPolicyInput, opts ...request.Option) (*GetResponseHeadersPolicyOutput, error) {
+	req, out := c.GetResponseHeadersPolicyRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetResponseHeadersPolicyConfig = "GetResponseHeadersPolicyConfig2020_05_31"
+
+// GetResponseHeadersPolicyConfigRequest generates a "aws/request.Request" representing the
+// client's request for the GetResponseHeadersPolicyConfig operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetResponseHeadersPolicyConfig for more information on using the GetResponseHeadersPolicyConfig
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetResponseHeadersPolicyConfigRequest method.
+//    req, resp := client.GetResponseHeadersPolicyConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetResponseHeadersPolicyConfig
+func (c *CloudFront) GetResponseHeadersPolicyConfigRequest(input *GetResponseHeadersPolicyConfigInput) (req *request.Request, output *GetResponseHeadersPolicyConfigOutput) {
+	op := &request.Operation{
+		Name:       opGetResponseHeadersPolicyConfig,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/response-headers-policy/{Id}/config",
+	}
+
+	if input == nil {
+		input = &GetResponseHeadersPolicyConfigInput{}
+	}
+
+	output = &GetResponseHeadersPolicyConfigOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetResponseHeadersPolicyConfig API operation for Amazon CloudFront.
+//
+// Gets a response headers policy configuration.
+//
+// To get a response headers policy configuration, you must provide the policy’s
+// identifier. If the response headers policy is attached to a distribution’s
+// cache behavior, you can get the policy’s identifier using ListDistributions
+// or GetDistribution. If the response headers policy is not attached to a cache
+// behavior, you can get the identifier using ListResponseHeadersPolicies.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation GetResponseHeadersPolicyConfig for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+//   * ErrCodeNoSuchResponseHeadersPolicy "NoSuchResponseHeadersPolicy"
+//   The response headers policy does not exist.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/GetResponseHeadersPolicyConfig
+func (c *CloudFront) GetResponseHeadersPolicyConfig(input *GetResponseHeadersPolicyConfigInput) (*GetResponseHeadersPolicyConfigOutput, error) {
+	req, out := c.GetResponseHeadersPolicyConfigRequest(input)
+	return out, req.Send()
+}
+
+// GetResponseHeadersPolicyConfigWithContext is the same as GetResponseHeadersPolicyConfig with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetResponseHeadersPolicyConfig for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) GetResponseHeadersPolicyConfigWithContext(ctx aws.Context, input *GetResponseHeadersPolicyConfigInput, opts ...request.Option) (*GetResponseHeadersPolicyConfigOutput, error) {
+	req, out := c.GetResponseHeadersPolicyConfigRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -3824,7 +5682,8 @@ func (c *CloudFront) ListCachePoliciesRequest(input *ListCachePoliciesInput) (re
 // Gets a list of cache policies.
 //
 // You can optionally apply a filter to return only the managed policies created
-// by AWS, or only the custom policies created in your AWS account.
+// by Amazon Web Services, or only the custom policies created in your Amazon
+// Web Services account.
 //
 // You can optionally specify the maximum number of items to receive in the
 // response. If the total number of items in the list exceeds the maximum that
@@ -4006,6 +5865,114 @@ func (c *CloudFront) ListCloudFrontOriginAccessIdentitiesPagesWithContext(ctx aw
 	}
 
 	return p.Err()
+}
+
+const opListConflictingAliases = "ListConflictingAliases2020_05_31"
+
+// ListConflictingAliasesRequest generates a "aws/request.Request" representing the
+// client's request for the ListConflictingAliases operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListConflictingAliases for more information on using the ListConflictingAliases
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListConflictingAliasesRequest method.
+//    req, resp := client.ListConflictingAliasesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListConflictingAliases
+func (c *CloudFront) ListConflictingAliasesRequest(input *ListConflictingAliasesInput) (req *request.Request, output *ListConflictingAliasesOutput) {
+	op := &request.Operation{
+		Name:       opListConflictingAliases,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/conflicting-alias",
+	}
+
+	if input == nil {
+		input = &ListConflictingAliasesInput{}
+	}
+
+	output = &ListConflictingAliasesOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListConflictingAliases API operation for Amazon CloudFront.
+//
+// Gets a list of aliases (also called CNAMEs or alternate domain names) that
+// conflict or overlap with the provided alias, and the associated CloudFront
+// distributions and Amazon Web Services accounts for each conflicting alias.
+// In the returned list, the distribution and account IDs are partially hidden,
+// which allows you to identify the distributions and accounts that you own,
+// but helps to protect the information of ones that you don’t own.
+//
+// Use this operation to find aliases that are in use in CloudFront that conflict
+// or overlap with the provided alias. For example, if you provide www.example.com
+// as input, the returned list can include www.example.com and the overlapping
+// wildcard alternate domain name (*.example.com), if they exist. If you provide
+// *.example.com as input, the returned list can include *.example.com and any
+// alternate domain names covered by that wildcard (for example, www.example.com,
+// test.example.com, dev.example.com, and so on), if they exist.
+//
+// To list conflicting aliases, you provide the alias to search and the ID of
+// a distribution in your account that has an attached SSL/TLS certificate that
+// includes the provided alias. For more information, including how to set up
+// the distribution and certificate, see Moving an alternate domain name to
+// a different distribution (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/CNAMEs.html#alternate-domain-names-move)
+// in the Amazon CloudFront Developer Guide.
+//
+// You can optionally specify the maximum number of items to receive in the
+// response. If the total number of items in the list exceeds the maximum that
+// you specify, or the default maximum, the response is paginated. To get the
+// next page of items, send a subsequent request that specifies the NextMarker
+// value from the current response as the Marker value in the subsequent request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation ListConflictingAliases for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeNoSuchDistribution "NoSuchDistribution"
+//   The specified distribution does not exist.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListConflictingAliases
+func (c *CloudFront) ListConflictingAliases(input *ListConflictingAliasesInput) (*ListConflictingAliasesOutput, error) {
+	req, out := c.ListConflictingAliasesRequest(input)
+	return out, req.Send()
+}
+
+// ListConflictingAliasesWithContext is the same as ListConflictingAliases with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListConflictingAliases for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) ListConflictingAliasesWithContext(ctx aws.Context, input *ListConflictingAliasesInput, opts ...request.Option) (*ListConflictingAliasesOutput, error) {
+	req, out := c.ListConflictingAliasesRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
 }
 
 const opListDistributions = "ListDistributions2020_05_31"
@@ -4237,6 +6204,95 @@ func (c *CloudFront) ListDistributionsByCachePolicyIdWithContext(ctx aws.Context
 	return out, req.Send()
 }
 
+const opListDistributionsByKeyGroup = "ListDistributionsByKeyGroup2020_05_31"
+
+// ListDistributionsByKeyGroupRequest generates a "aws/request.Request" representing the
+// client's request for the ListDistributionsByKeyGroup operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListDistributionsByKeyGroup for more information on using the ListDistributionsByKeyGroup
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListDistributionsByKeyGroupRequest method.
+//    req, resp := client.ListDistributionsByKeyGroupRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByKeyGroup
+func (c *CloudFront) ListDistributionsByKeyGroupRequest(input *ListDistributionsByKeyGroupInput) (req *request.Request, output *ListDistributionsByKeyGroupOutput) {
+	op := &request.Operation{
+		Name:       opListDistributionsByKeyGroup,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/distributionsByKeyGroupId/{KeyGroupId}",
+	}
+
+	if input == nil {
+		input = &ListDistributionsByKeyGroupInput{}
+	}
+
+	output = &ListDistributionsByKeyGroupOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListDistributionsByKeyGroup API operation for Amazon CloudFront.
+//
+// Gets a list of distribution IDs for distributions that have a cache behavior
+// that references the specified key group.
+//
+// You can optionally specify the maximum number of items to receive in the
+// response. If the total number of items in the list exceeds the maximum that
+// you specify, or the default maximum, the response is paginated. To get the
+// next page of items, send a subsequent request that specifies the NextMarker
+// value from the current response as the Marker value in the subsequent request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation ListDistributionsByKeyGroup for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeNoSuchResource "NoSuchResource"
+//   A resource that was specified is not valid.
+//
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByKeyGroup
+func (c *CloudFront) ListDistributionsByKeyGroup(input *ListDistributionsByKeyGroupInput) (*ListDistributionsByKeyGroupOutput, error) {
+	req, out := c.ListDistributionsByKeyGroupRequest(input)
+	return out, req.Send()
+}
+
+// ListDistributionsByKeyGroupWithContext is the same as ListDistributionsByKeyGroup with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListDistributionsByKeyGroup for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) ListDistributionsByKeyGroupWithContext(ctx aws.Context, input *ListDistributionsByKeyGroupInput, opts ...request.Option) (*ListDistributionsByKeyGroupOutput, error) {
+	req, out := c.ListDistributionsByKeyGroupRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opListDistributionsByOriginRequestPolicyId = "ListDistributionsByOriginRequestPolicyId2020_05_31"
 
 // ListDistributionsByOriginRequestPolicyIdRequest generates a "aws/request.Request" representing the
@@ -4329,6 +6385,189 @@ func (c *CloudFront) ListDistributionsByOriginRequestPolicyIdWithContext(ctx aws
 	return out, req.Send()
 }
 
+const opListDistributionsByRealtimeLogConfig = "ListDistributionsByRealtimeLogConfig2020_05_31"
+
+// ListDistributionsByRealtimeLogConfigRequest generates a "aws/request.Request" representing the
+// client's request for the ListDistributionsByRealtimeLogConfig operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListDistributionsByRealtimeLogConfig for more information on using the ListDistributionsByRealtimeLogConfig
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListDistributionsByRealtimeLogConfigRequest method.
+//    req, resp := client.ListDistributionsByRealtimeLogConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByRealtimeLogConfig
+func (c *CloudFront) ListDistributionsByRealtimeLogConfigRequest(input *ListDistributionsByRealtimeLogConfigInput) (req *request.Request, output *ListDistributionsByRealtimeLogConfigOutput) {
+	op := &request.Operation{
+		Name:       opListDistributionsByRealtimeLogConfig,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2020-05-31/distributionsByRealtimeLogConfig/",
+	}
+
+	if input == nil {
+		input = &ListDistributionsByRealtimeLogConfigInput{}
+	}
+
+	output = &ListDistributionsByRealtimeLogConfigOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListDistributionsByRealtimeLogConfig API operation for Amazon CloudFront.
+//
+// Gets a list of distributions that have a cache behavior that’s associated
+// with the specified real-time log configuration.
+//
+// You can specify the real-time log configuration by its name or its Amazon
+// Resource Name (ARN). You must provide at least one. If you provide both,
+// CloudFront uses the name to identify the real-time log configuration to list
+// distributions for.
+//
+// You can optionally specify the maximum number of items to receive in the
+// response. If the total number of items in the list exceeds the maximum that
+// you specify, or the default maximum, the response is paginated. To get the
+// next page of items, send a subsequent request that specifies the NextMarker
+// value from the current response as the Marker value in the subsequent request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation ListDistributionsByRealtimeLogConfig for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByRealtimeLogConfig
+func (c *CloudFront) ListDistributionsByRealtimeLogConfig(input *ListDistributionsByRealtimeLogConfigInput) (*ListDistributionsByRealtimeLogConfigOutput, error) {
+	req, out := c.ListDistributionsByRealtimeLogConfigRequest(input)
+	return out, req.Send()
+}
+
+// ListDistributionsByRealtimeLogConfigWithContext is the same as ListDistributionsByRealtimeLogConfig with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListDistributionsByRealtimeLogConfig for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) ListDistributionsByRealtimeLogConfigWithContext(ctx aws.Context, input *ListDistributionsByRealtimeLogConfigInput, opts ...request.Option) (*ListDistributionsByRealtimeLogConfigOutput, error) {
+	req, out := c.ListDistributionsByRealtimeLogConfigRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opListDistributionsByResponseHeadersPolicyId = "ListDistributionsByResponseHeadersPolicyId2020_05_31"
+
+// ListDistributionsByResponseHeadersPolicyIdRequest generates a "aws/request.Request" representing the
+// client's request for the ListDistributionsByResponseHeadersPolicyId operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListDistributionsByResponseHeadersPolicyId for more information on using the ListDistributionsByResponseHeadersPolicyId
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListDistributionsByResponseHeadersPolicyIdRequest method.
+//    req, resp := client.ListDistributionsByResponseHeadersPolicyIdRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByResponseHeadersPolicyId
+func (c *CloudFront) ListDistributionsByResponseHeadersPolicyIdRequest(input *ListDistributionsByResponseHeadersPolicyIdInput) (req *request.Request, output *ListDistributionsByResponseHeadersPolicyIdOutput) {
+	op := &request.Operation{
+		Name:       opListDistributionsByResponseHeadersPolicyId,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/distributionsByResponseHeadersPolicyId/{ResponseHeadersPolicyId}",
+	}
+
+	if input == nil {
+		input = &ListDistributionsByResponseHeadersPolicyIdInput{}
+	}
+
+	output = &ListDistributionsByResponseHeadersPolicyIdOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListDistributionsByResponseHeadersPolicyId API operation for Amazon CloudFront.
+//
+// Gets a list of distribution IDs for distributions that have a cache behavior
+// that’s associated with the specified response headers policy.
+//
+// You can optionally specify the maximum number of items to receive in the
+// response. If the total number of items in the list exceeds the maximum that
+// you specify, or the default maximum, the response is paginated. To get the
+// next page of items, send a subsequent request that specifies the NextMarker
+// value from the current response as the Marker value in the subsequent request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation ListDistributionsByResponseHeadersPolicyId for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeNoSuchResponseHeadersPolicy "NoSuchResponseHeadersPolicy"
+//   The response headers policy does not exist.
+//
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByResponseHeadersPolicyId
+func (c *CloudFront) ListDistributionsByResponseHeadersPolicyId(input *ListDistributionsByResponseHeadersPolicyIdInput) (*ListDistributionsByResponseHeadersPolicyIdOutput, error) {
+	req, out := c.ListDistributionsByResponseHeadersPolicyIdRequest(input)
+	return out, req.Send()
+}
+
+// ListDistributionsByResponseHeadersPolicyIdWithContext is the same as ListDistributionsByResponseHeadersPolicyId with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListDistributionsByResponseHeadersPolicyId for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) ListDistributionsByResponseHeadersPolicyIdWithContext(ctx aws.Context, input *ListDistributionsByResponseHeadersPolicyIdInput, opts ...request.Option) (*ListDistributionsByResponseHeadersPolicyIdOutput, error) {
+	req, out := c.ListDistributionsByResponseHeadersPolicyIdRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opListDistributionsByWebACLId = "ListDistributionsByWebACLId2020_05_31"
 
 // ListDistributionsByWebACLIdRequest generates a "aws/request.Request" representing the
@@ -4373,7 +6612,7 @@ func (c *CloudFront) ListDistributionsByWebACLIdRequest(input *ListDistributions
 
 // ListDistributionsByWebACLId API operation for Amazon CloudFront.
 //
-// List the distributions that are associated with a specified AWS WAF web ACL.
+// List the distributions that are associated with a specified WAF web ACL.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -4388,8 +6627,8 @@ func (c *CloudFront) ListDistributionsByWebACLIdRequest(input *ListDistributions
 //
 //   * ErrCodeInvalidWebACLId "InvalidWebACLId"
 //   A web ACL ID specified is not valid. To specify a web ACL created using the
-//   latest version of AWS WAF, use the ACL ARN, for example arn:aws:wafv2:us-east-1:123456789012:global/webacl/ExampleWebACL/473e64fd-f30b-4765-81a0-62ad96dd167a.
-//   To specify a web ACL created using AWS WAF Classic, use the ACL ID, for example
+//   latest version of WAF, use the ACL ARN, for example arn:aws:wafv2:us-east-1:123456789012:global/webacl/ExampleWebACL/473e64fd-f30b-4765-81a0-62ad96dd167a.
+//   To specify a web ACL created using WAF Classic, use the ACL ID, for example
 //   473e64fd-f30b-4765-81a0-62ad96dd167a.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListDistributionsByWebACLId
@@ -4574,6 +6813,97 @@ func (c *CloudFront) ListFieldLevelEncryptionProfilesWithContext(ctx aws.Context
 	return out, req.Send()
 }
 
+const opListFunctions = "ListFunctions2020_05_31"
+
+// ListFunctionsRequest generates a "aws/request.Request" representing the
+// client's request for the ListFunctions operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListFunctions for more information on using the ListFunctions
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListFunctionsRequest method.
+//    req, resp := client.ListFunctionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListFunctions
+func (c *CloudFront) ListFunctionsRequest(input *ListFunctionsInput) (req *request.Request, output *ListFunctionsOutput) {
+	op := &request.Operation{
+		Name:       opListFunctions,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/function",
+	}
+
+	if input == nil {
+		input = &ListFunctionsInput{}
+	}
+
+	output = &ListFunctionsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListFunctions API operation for Amazon CloudFront.
+//
+// Gets a list of all CloudFront functions in your Amazon Web Services account.
+//
+// You can optionally apply a filter to return only the functions that are in
+// the specified stage, either DEVELOPMENT or LIVE.
+//
+// You can optionally specify the maximum number of items to receive in the
+// response. If the total number of items in the list exceeds the maximum that
+// you specify, or the default maximum, the response is paginated. To get the
+// next page of items, send a subsequent request that specifies the NextMarker
+// value from the current response as the Marker value in the subsequent request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation ListFunctions for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeUnsupportedOperation "UnsupportedOperation"
+//   This operation is not supported in this region.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListFunctions
+func (c *CloudFront) ListFunctions(input *ListFunctionsInput) (*ListFunctionsOutput, error) {
+	req, out := c.ListFunctionsRequest(input)
+	return out, req.Send()
+}
+
+// ListFunctionsWithContext is the same as ListFunctions with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListFunctions for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) ListFunctionsWithContext(ctx aws.Context, input *ListFunctionsInput, opts ...request.Option) (*ListFunctionsOutput, error) {
+	req, out := c.ListFunctionsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opListInvalidations = "ListInvalidations2020_05_31"
 
 // ListInvalidationsRequest generates a "aws/request.Request" representing the
@@ -4717,6 +7047,91 @@ func (c *CloudFront) ListInvalidationsPagesWithContext(ctx aws.Context, input *L
 	return p.Err()
 }
 
+const opListKeyGroups = "ListKeyGroups2020_05_31"
+
+// ListKeyGroupsRequest generates a "aws/request.Request" representing the
+// client's request for the ListKeyGroups operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListKeyGroups for more information on using the ListKeyGroups
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListKeyGroupsRequest method.
+//    req, resp := client.ListKeyGroupsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListKeyGroups
+func (c *CloudFront) ListKeyGroupsRequest(input *ListKeyGroupsInput) (req *request.Request, output *ListKeyGroupsOutput) {
+	op := &request.Operation{
+		Name:       opListKeyGroups,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/key-group",
+	}
+
+	if input == nil {
+		input = &ListKeyGroupsInput{}
+	}
+
+	output = &ListKeyGroupsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListKeyGroups API operation for Amazon CloudFront.
+//
+// Gets a list of key groups.
+//
+// You can optionally specify the maximum number of items to receive in the
+// response. If the total number of items in the list exceeds the maximum that
+// you specify, or the default maximum, the response is paginated. To get the
+// next page of items, send a subsequent request that specifies the NextMarker
+// value from the current response as the Marker value in the subsequent request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation ListKeyGroups for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListKeyGroups
+func (c *CloudFront) ListKeyGroups(input *ListKeyGroupsInput) (*ListKeyGroupsOutput, error) {
+	req, out := c.ListKeyGroupsRequest(input)
+	return out, req.Send()
+}
+
+// ListKeyGroupsWithContext is the same as ListKeyGroups with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListKeyGroups for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) ListKeyGroupsWithContext(ctx aws.Context, input *ListKeyGroupsInput, opts ...request.Option) (*ListKeyGroupsOutput, error) {
+	req, out := c.ListKeyGroupsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opListOriginRequestPolicies = "ListOriginRequestPolicies2020_05_31"
 
 // ListOriginRequestPoliciesRequest generates a "aws/request.Request" representing the
@@ -4764,7 +7179,8 @@ func (c *CloudFront) ListOriginRequestPoliciesRequest(input *ListOriginRequestPo
 // Gets a list of origin request policies.
 //
 // You can optionally apply a filter to return only the managed policies created
-// by AWS, or only the custom policies created in your AWS account.
+// by Amazon Web Services, or only the custom policies created in your Amazon
+// Web Services account.
 //
 // You can optionally specify the maximum number of items to receive in the
 // response. If the total number of items in the list exceeds the maximum that
@@ -4885,6 +7301,192 @@ func (c *CloudFront) ListPublicKeys(input *ListPublicKeysInput) (*ListPublicKeys
 // for more information on using Contexts.
 func (c *CloudFront) ListPublicKeysWithContext(ctx aws.Context, input *ListPublicKeysInput, opts ...request.Option) (*ListPublicKeysOutput, error) {
 	req, out := c.ListPublicKeysRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opListRealtimeLogConfigs = "ListRealtimeLogConfigs2020_05_31"
+
+// ListRealtimeLogConfigsRequest generates a "aws/request.Request" representing the
+// client's request for the ListRealtimeLogConfigs operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListRealtimeLogConfigs for more information on using the ListRealtimeLogConfigs
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListRealtimeLogConfigsRequest method.
+//    req, resp := client.ListRealtimeLogConfigsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListRealtimeLogConfigs
+func (c *CloudFront) ListRealtimeLogConfigsRequest(input *ListRealtimeLogConfigsInput) (req *request.Request, output *ListRealtimeLogConfigsOutput) {
+	op := &request.Operation{
+		Name:       opListRealtimeLogConfigs,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/realtime-log-config",
+	}
+
+	if input == nil {
+		input = &ListRealtimeLogConfigsInput{}
+	}
+
+	output = &ListRealtimeLogConfigsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListRealtimeLogConfigs API operation for Amazon CloudFront.
+//
+// Gets a list of real-time log configurations.
+//
+// You can optionally specify the maximum number of items to receive in the
+// response. If the total number of items in the list exceeds the maximum that
+// you specify, or the default maximum, the response is paginated. To get the
+// next page of items, send a subsequent request that specifies the NextMarker
+// value from the current response as the Marker value in the subsequent request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation ListRealtimeLogConfigs for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+//   * ErrCodeNoSuchRealtimeLogConfig "NoSuchRealtimeLogConfig"
+//   The real-time log configuration does not exist.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListRealtimeLogConfigs
+func (c *CloudFront) ListRealtimeLogConfigs(input *ListRealtimeLogConfigsInput) (*ListRealtimeLogConfigsOutput, error) {
+	req, out := c.ListRealtimeLogConfigsRequest(input)
+	return out, req.Send()
+}
+
+// ListRealtimeLogConfigsWithContext is the same as ListRealtimeLogConfigs with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListRealtimeLogConfigs for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) ListRealtimeLogConfigsWithContext(ctx aws.Context, input *ListRealtimeLogConfigsInput, opts ...request.Option) (*ListRealtimeLogConfigsOutput, error) {
+	req, out := c.ListRealtimeLogConfigsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opListResponseHeadersPolicies = "ListResponseHeadersPolicies2020_05_31"
+
+// ListResponseHeadersPoliciesRequest generates a "aws/request.Request" representing the
+// client's request for the ListResponseHeadersPolicies operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListResponseHeadersPolicies for more information on using the ListResponseHeadersPolicies
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListResponseHeadersPoliciesRequest method.
+//    req, resp := client.ListResponseHeadersPoliciesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListResponseHeadersPolicies
+func (c *CloudFront) ListResponseHeadersPoliciesRequest(input *ListResponseHeadersPoliciesInput) (req *request.Request, output *ListResponseHeadersPoliciesOutput) {
+	op := &request.Operation{
+		Name:       opListResponseHeadersPolicies,
+		HTTPMethod: "GET",
+		HTTPPath:   "/2020-05-31/response-headers-policy",
+	}
+
+	if input == nil {
+		input = &ListResponseHeadersPoliciesInput{}
+	}
+
+	output = &ListResponseHeadersPoliciesOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListResponseHeadersPolicies API operation for Amazon CloudFront.
+//
+// Gets a list of response headers policies.
+//
+// You can optionally apply a filter to get only the managed policies created
+// by Amazon Web Services, or only the custom policies created in your Amazon
+// Web Services account.
+//
+// You can optionally specify the maximum number of items to receive in the
+// response. If the total number of items in the list exceeds the maximum that
+// you specify, or the default maximum, the response is paginated. To get the
+// next page of items, send a subsequent request that specifies the NextMarker
+// value from the current response as the Marker value in the subsequent request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation ListResponseHeadersPolicies for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+//   * ErrCodeNoSuchResponseHeadersPolicy "NoSuchResponseHeadersPolicy"
+//   The response headers policy does not exist.
+//
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/ListResponseHeadersPolicies
+func (c *CloudFront) ListResponseHeadersPolicies(input *ListResponseHeadersPoliciesInput) (*ListResponseHeadersPoliciesOutput, error) {
+	req, out := c.ListResponseHeadersPoliciesRequest(input)
+	return out, req.Send()
+}
+
+// ListResponseHeadersPoliciesWithContext is the same as ListResponseHeadersPolicies with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListResponseHeadersPolicies for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) ListResponseHeadersPoliciesWithContext(ctx aws.Context, input *ListResponseHeadersPoliciesInput, opts ...request.Option) (*ListResponseHeadersPoliciesOutput, error) {
+	req, out := c.ListResponseHeadersPoliciesRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -5115,6 +7717,106 @@ func (c *CloudFront) ListTagsForResourceWithContext(ctx aws.Context, input *List
 	return out, req.Send()
 }
 
+const opPublishFunction = "PublishFunction2020_05_31"
+
+// PublishFunctionRequest generates a "aws/request.Request" representing the
+// client's request for the PublishFunction operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See PublishFunction for more information on using the PublishFunction
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the PublishFunctionRequest method.
+//    req, resp := client.PublishFunctionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/PublishFunction
+func (c *CloudFront) PublishFunctionRequest(input *PublishFunctionInput) (req *request.Request, output *PublishFunctionOutput) {
+	op := &request.Operation{
+		Name:       opPublishFunction,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2020-05-31/function/{Name}/publish",
+	}
+
+	if input == nil {
+		input = &PublishFunctionInput{}
+	}
+
+	output = &PublishFunctionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// PublishFunction API operation for Amazon CloudFront.
+//
+// Publishes a CloudFront function by copying the function code from the DEVELOPMENT
+// stage to LIVE. This automatically updates all cache behaviors that are using
+// this function to use the newly published copy in the LIVE stage.
+//
+// When a function is published to the LIVE stage, you can attach the function
+// to a distribution’s cache behavior, using the function’s Amazon Resource
+// Name (ARN).
+//
+// To publish a function, you must provide the function’s name and version
+// (ETag value). To get these values, you can use ListFunctions and DescribeFunction.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation PublishFunction for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeInvalidIfMatchVersion "InvalidIfMatchVersion"
+//   The If-Match version is missing or not valid.
+//
+//   * ErrCodeNoSuchFunctionExists "NoSuchFunctionExists"
+//   The function does not exist.
+//
+//   * ErrCodePreconditionFailed "PreconditionFailed"
+//   The precondition in one or more of the request fields evaluated to false.
+//
+//   * ErrCodeUnsupportedOperation "UnsupportedOperation"
+//   This operation is not supported in this region.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/PublishFunction
+func (c *CloudFront) PublishFunction(input *PublishFunctionInput) (*PublishFunctionOutput, error) {
+	req, out := c.PublishFunctionRequest(input)
+	return out, req.Send()
+}
+
+// PublishFunctionWithContext is the same as PublishFunction with the addition of
+// the ability to pass a context and additional request options.
+//
+// See PublishFunction for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) PublishFunctionWithContext(ctx aws.Context, input *PublishFunctionInput, opts ...request.Option) (*PublishFunctionOutput, error) {
+	req, out := c.PublishFunctionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opTagResource = "TagResource2020_05_31"
 
 // TagResourceRequest generates a "aws/request.Request" representing the
@@ -5199,6 +7901,109 @@ func (c *CloudFront) TagResource(input *TagResourceInput) (*TagResourceOutput, e
 // for more information on using Contexts.
 func (c *CloudFront) TagResourceWithContext(ctx aws.Context, input *TagResourceInput, opts ...request.Option) (*TagResourceOutput, error) {
 	req, out := c.TagResourceRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opTestFunction = "TestFunction2020_05_31"
+
+// TestFunctionRequest generates a "aws/request.Request" representing the
+// client's request for the TestFunction operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See TestFunction for more information on using the TestFunction
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the TestFunctionRequest method.
+//    req, resp := client.TestFunctionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/TestFunction
+func (c *CloudFront) TestFunctionRequest(input *TestFunctionInput) (req *request.Request, output *TestFunctionOutput) {
+	op := &request.Operation{
+		Name:       opTestFunction,
+		HTTPMethod: "POST",
+		HTTPPath:   "/2020-05-31/function/{Name}/test",
+	}
+
+	if input == nil {
+		input = &TestFunctionInput{}
+	}
+
+	output = &TestFunctionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// TestFunction API operation for Amazon CloudFront.
+//
+// Tests a CloudFront function.
+//
+// To test a function, you provide an event object that represents an HTTP request
+// or response that your CloudFront distribution could receive in production.
+// CloudFront runs the function, passing it the event object that you provided,
+// and returns the function’s result (the modified event object) in the response.
+// The response also contains function logs and error messages, if any exist.
+// For more information about testing functions, see Testing functions (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/managing-functions.html#test-function)
+// in the Amazon CloudFront Developer Guide.
+//
+// To test a function, you provide the function’s name and version (ETag value)
+// along with the event object. To get the function’s name and version, you
+// can use ListFunctions and DescribeFunction.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation TestFunction for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeInvalidIfMatchVersion "InvalidIfMatchVersion"
+//   The If-Match version is missing or not valid.
+//
+//   * ErrCodeNoSuchFunctionExists "NoSuchFunctionExists"
+//   The function does not exist.
+//
+//   * ErrCodeTestFunctionFailed "TestFunctionFailed"
+//   The CloudFront function failed.
+//
+//   * ErrCodeUnsupportedOperation "UnsupportedOperation"
+//   This operation is not supported in this region.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/TestFunction
+func (c *CloudFront) TestFunction(input *TestFunctionInput) (*TestFunctionOutput, error) {
+	req, out := c.TestFunctionRequest(input)
+	return out, req.Send()
+}
+
+// TestFunctionWithContext is the same as TestFunction with the addition of
+// the ability to pass a context and additional request options.
+//
+// See TestFunction for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) TestFunctionWithContext(ctx aws.Context, input *TestFunctionInput, opts ...request.Option) (*TestFunctionOutput, error) {
+	req, out := c.TestFunctionRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -5378,8 +8183,7 @@ func (c *CloudFront) UpdateCachePolicyRequest(input *UpdateCachePolicyInput) (re
 //   The cache policy does not exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeCachePolicyAlreadyExists "CachePolicyAlreadyExists"
 //   A cache policy with this name already exists. You must provide a unique name.
@@ -5493,8 +8297,7 @@ func (c *CloudFront) UpdateCloudFrontOriginAccessIdentityRequest(input *UpdateCl
 //   The specified origin access identity does not exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeInvalidArgument "InvalidArgument"
 //   An argument is invalid.
@@ -5661,8 +8464,7 @@ func (c *CloudFront) UpdateDistributionRequest(input *UpdateDistributionInput) (
 //   The specified distribution does not exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeTooManyDistributionCNAMEs "TooManyDistributionCNAMEs"
 //   Your request contains more CNAMEs than are allowed per distribution.
@@ -5749,8 +8551,8 @@ func (c *CloudFront) UpdateDistributionRequest(input *UpdateDistributionInput) (
 //
 //   * ErrCodeInvalidWebACLId "InvalidWebACLId"
 //   A web ACL ID specified is not valid. To specify a web ACL created using the
-//   latest version of AWS WAF, use the ACL ARN, for example arn:aws:wafv2:us-east-1:123456789012:global/webacl/ExampleWebACL/473e64fd-f30b-4765-81a0-62ad96dd167a.
-//   To specify a web ACL created using AWS WAF Classic, use the ACL ID, for example
+//   latest version of WAF, use the ACL ARN, for example arn:aws:wafv2:us-east-1:123456789012:global/webacl/ExampleWebACL/473e64fd-f30b-4765-81a0-62ad96dd167a.
+//   To specify a web ACL created using WAF Classic, use the ACL ID, for example
 //   473e64fd-f30b-4765-81a0-62ad96dd167a.
 //
 //   * ErrCodeTooManyOriginCustomHeaders "TooManyOriginCustomHeaders"
@@ -5764,18 +8566,31 @@ func (c *CloudFront) UpdateDistributionRequest(input *UpdateDistributionInput) (
 //
 //   * ErrCodeTooManyDistributionsWithLambdaAssociations "TooManyDistributionsWithLambdaAssociations"
 //   Processing your request would cause the maximum number of distributions with
-//   Lambda function associations per owner to be exceeded.
+//   Lambda@Edge function associations per owner to be exceeded.
 //
 //   * ErrCodeTooManyDistributionsWithSingleFunctionARN "TooManyDistributionsWithSingleFunctionARN"
 //   The maximum number of distributions have been associated with the specified
-//   Lambda function.
+//   Lambda@Edge function.
 //
 //   * ErrCodeTooManyLambdaFunctionAssociations "TooManyLambdaFunctionAssociations"
-//   Your request contains more Lambda function associations than are allowed
+//   Your request contains more Lambda@Edge function associations than are allowed
 //   per distribution.
 //
 //   * ErrCodeInvalidLambdaFunctionAssociation "InvalidLambdaFunctionAssociation"
-//   The specified Lambda function association is invalid.
+//   The specified Lambda@Edge function association is invalid.
+//
+//   * ErrCodeTooManyDistributionsWithFunctionAssociations "TooManyDistributionsWithFunctionAssociations"
+//   You have reached the maximum number of distributions that are associated
+//   with a CloudFront function. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTooManyFunctionAssociations "TooManyFunctionAssociations"
+//   You have reached the maximum number of CloudFront function associations for
+//   this distribution. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeInvalidFunctionAssociation "InvalidFunctionAssociation"
+//   A CloudFront function association is invalid.
 //
 //   * ErrCodeInvalidOriginReadTimeout "InvalidOriginReadTimeout"
 //   The read timeout specified for the origin is not valid.
@@ -5802,6 +8617,16 @@ func (c *CloudFront) UpdateDistributionRequest(input *UpdateDistributionInput) (
 //   cache policy. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
 //   (formerly known as limits) in the Amazon CloudFront Developer Guide.
 //
+//   * ErrCodeNoSuchResponseHeadersPolicy "NoSuchResponseHeadersPolicy"
+//   The response headers policy does not exist.
+//
+//   * ErrCodeTooManyDistributionsAssociatedToResponseHeadersPolicy "TooManyDistributionsAssociatedToResponseHeadersPolicy"
+//   The maximum number of distributions have been associated with the specified
+//   response headers policy.
+//
+//   For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
 //   * ErrCodeNoSuchOriginRequestPolicy "NoSuchOriginRequestPolicy"
 //   The origin request policy does not exist.
 //
@@ -5809,6 +8634,26 @@ func (c *CloudFront) UpdateDistributionRequest(input *UpdateDistributionInput) (
 //   The maximum number of distributions have been associated with the specified
 //   origin request policy. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
 //   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTooManyDistributionsAssociatedToKeyGroup "TooManyDistributionsAssociatedToKeyGroup"
+//   The number of distributions that reference this key group is more than the
+//   maximum allowed. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTooManyKeyGroupsAssociatedToDistribution "TooManyKeyGroupsAssociatedToDistribution"
+//   The number of key groups referenced by this distribution is more than the
+//   maximum allowed. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeTrustedKeyGroupDoesNotExist "TrustedKeyGroupDoesNotExist"
+//   The specified key group does not exist.
+//
+//   * ErrCodeNoSuchRealtimeLogConfig "NoSuchRealtimeLogConfig"
+//   The real-time log configuration does not exist.
+//
+//   * ErrCodeRealtimeLogConfigOwnerMismatch "RealtimeLogConfigOwnerMismatch"
+//   The specified real-time log configuration belongs to a different Amazon Web
+//   Services account.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateDistribution
 func (c *CloudFront) UpdateDistribution(input *UpdateDistributionInput) (*UpdateDistributionOutput, error) {
@@ -5908,8 +8753,7 @@ func (c *CloudFront) UpdateFieldLevelEncryptionConfigRequest(input *UpdateFieldL
 //   The specified configuration for field-level encryption doesn't exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeTooManyFieldLevelEncryptionQueryArgProfiles "TooManyFieldLevelEncryptionQueryArgProfiles"
 //   The maximum number of query arg profiles for field-level encryption have
@@ -6023,8 +8867,7 @@ func (c *CloudFront) UpdateFieldLevelEncryptionProfileRequest(input *UpdateField
 //   The specified profile for field-level encryption doesn't exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeFieldLevelEncryptionProfileSizeExceeded "FieldLevelEncryptionProfileSizeExceeded"
 //   The maximum size of a profile for field-level encryption was exceeded.
@@ -6054,6 +8897,217 @@ func (c *CloudFront) UpdateFieldLevelEncryptionProfile(input *UpdateFieldLevelEn
 // for more information on using Contexts.
 func (c *CloudFront) UpdateFieldLevelEncryptionProfileWithContext(ctx aws.Context, input *UpdateFieldLevelEncryptionProfileInput, opts ...request.Option) (*UpdateFieldLevelEncryptionProfileOutput, error) {
 	req, out := c.UpdateFieldLevelEncryptionProfileRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opUpdateFunction = "UpdateFunction2020_05_31"
+
+// UpdateFunctionRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateFunction operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateFunction for more information on using the UpdateFunction
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateFunctionRequest method.
+//    req, resp := client.UpdateFunctionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateFunction
+func (c *CloudFront) UpdateFunctionRequest(input *UpdateFunctionInput) (req *request.Request, output *UpdateFunctionOutput) {
+	op := &request.Operation{
+		Name:       opUpdateFunction,
+		HTTPMethod: "PUT",
+		HTTPPath:   "/2020-05-31/function/{Name}",
+	}
+
+	if input == nil {
+		input = &UpdateFunctionInput{}
+	}
+
+	output = &UpdateFunctionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateFunction API operation for Amazon CloudFront.
+//
+// Updates a CloudFront function.
+//
+// You can update a function’s code or the comment that describes the function.
+// You cannot update a function’s name.
+//
+// To update a function, you provide the function’s name and version (ETag
+// value) along with the updated function code. To get the name and version,
+// you can use ListFunctions and DescribeFunction.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation UpdateFunction for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeInvalidIfMatchVersion "InvalidIfMatchVersion"
+//   The If-Match version is missing or not valid.
+//
+//   * ErrCodeNoSuchFunctionExists "NoSuchFunctionExists"
+//   The function does not exist.
+//
+//   * ErrCodePreconditionFailed "PreconditionFailed"
+//   The precondition in one or more of the request fields evaluated to false.
+//
+//   * ErrCodeFunctionSizeLimitExceeded "FunctionSizeLimitExceeded"
+//   The function is too large. For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+//   * ErrCodeUnsupportedOperation "UnsupportedOperation"
+//   This operation is not supported in this region.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateFunction
+func (c *CloudFront) UpdateFunction(input *UpdateFunctionInput) (*UpdateFunctionOutput, error) {
+	req, out := c.UpdateFunctionRequest(input)
+	return out, req.Send()
+}
+
+// UpdateFunctionWithContext is the same as UpdateFunction with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateFunction for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) UpdateFunctionWithContext(ctx aws.Context, input *UpdateFunctionInput, opts ...request.Option) (*UpdateFunctionOutput, error) {
+	req, out := c.UpdateFunctionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opUpdateKeyGroup = "UpdateKeyGroup2020_05_31"
+
+// UpdateKeyGroupRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateKeyGroup operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateKeyGroup for more information on using the UpdateKeyGroup
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateKeyGroupRequest method.
+//    req, resp := client.UpdateKeyGroupRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateKeyGroup
+func (c *CloudFront) UpdateKeyGroupRequest(input *UpdateKeyGroupInput) (req *request.Request, output *UpdateKeyGroupOutput) {
+	op := &request.Operation{
+		Name:       opUpdateKeyGroup,
+		HTTPMethod: "PUT",
+		HTTPPath:   "/2020-05-31/key-group/{Id}",
+	}
+
+	if input == nil {
+		input = &UpdateKeyGroupInput{}
+	}
+
+	output = &UpdateKeyGroupOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateKeyGroup API operation for Amazon CloudFront.
+//
+// Updates a key group.
+//
+// When you update a key group, all the fields are updated with the values provided
+// in the request. You cannot update some fields independent of others. To update
+// a key group:
+//
+// Get the current key group with GetKeyGroup or GetKeyGroupConfig.
+//
+// Locally modify the fields in the key group that you want to update. For example,
+// add or remove public key IDs.
+//
+// Call UpdateKeyGroup with the entire key group object, including the fields
+// that you modified and those that you didn’t.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation UpdateKeyGroup for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeInvalidIfMatchVersion "InvalidIfMatchVersion"
+//   The If-Match version is missing or not valid.
+//
+//   * ErrCodeNoSuchResource "NoSuchResource"
+//   A resource that was specified is not valid.
+//
+//   * ErrCodePreconditionFailed "PreconditionFailed"
+//   The precondition in one or more of the request fields evaluated to false.
+//
+//   * ErrCodeKeyGroupAlreadyExists "KeyGroupAlreadyExists"
+//   A key group with this name already exists. You must provide a unique name.
+//   To modify an existing key group, use UpdateKeyGroup.
+//
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeTooManyPublicKeysInKeyGroup "TooManyPublicKeysInKeyGroup"
+//   The number of public keys in this key group is more than the maximum allowed.
+//   For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateKeyGroup
+func (c *CloudFront) UpdateKeyGroup(input *UpdateKeyGroupInput) (*UpdateKeyGroupOutput, error) {
+	req, out := c.UpdateKeyGroupRequest(input)
+	return out, req.Send()
+}
+
+// UpdateKeyGroupWithContext is the same as UpdateKeyGroup with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateKeyGroup for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) UpdateKeyGroupWithContext(ctx aws.Context, input *UpdateKeyGroupInput, opts ...request.Option) (*UpdateKeyGroupOutput, error) {
+	req, out := c.UpdateKeyGroupRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -6145,8 +9199,7 @@ func (c *CloudFront) UpdateOriginRequestPolicyRequest(input *UpdateOriginRequest
 //   The origin request policy does not exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeOriginRequestPolicyAlreadyExists "OriginRequestPolicyAlreadyExists"
 //   An origin request policy with this name already exists. You must provide
@@ -6263,8 +9316,7 @@ func (c *CloudFront) UpdatePublicKeyRequest(input *UpdatePublicKeyInput) (req *r
 //   The specified public key doesn't exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdatePublicKey
 func (c *CloudFront) UpdatePublicKey(input *UpdatePublicKeyInput) (*UpdatePublicKeyOutput, error) {
@@ -6283,6 +9335,226 @@ func (c *CloudFront) UpdatePublicKey(input *UpdatePublicKeyInput) (*UpdatePublic
 // for more information on using Contexts.
 func (c *CloudFront) UpdatePublicKeyWithContext(ctx aws.Context, input *UpdatePublicKeyInput, opts ...request.Option) (*UpdatePublicKeyOutput, error) {
 	req, out := c.UpdatePublicKeyRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opUpdateRealtimeLogConfig = "UpdateRealtimeLogConfig2020_05_31"
+
+// UpdateRealtimeLogConfigRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateRealtimeLogConfig operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateRealtimeLogConfig for more information on using the UpdateRealtimeLogConfig
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateRealtimeLogConfigRequest method.
+//    req, resp := client.UpdateRealtimeLogConfigRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateRealtimeLogConfig
+func (c *CloudFront) UpdateRealtimeLogConfigRequest(input *UpdateRealtimeLogConfigInput) (req *request.Request, output *UpdateRealtimeLogConfigOutput) {
+	op := &request.Operation{
+		Name:       opUpdateRealtimeLogConfig,
+		HTTPMethod: "PUT",
+		HTTPPath:   "/2020-05-31/realtime-log-config/",
+	}
+
+	if input == nil {
+		input = &UpdateRealtimeLogConfigInput{}
+	}
+
+	output = &UpdateRealtimeLogConfigOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateRealtimeLogConfig API operation for Amazon CloudFront.
+//
+// Updates a real-time log configuration.
+//
+// When you update a real-time log configuration, all the parameters are updated
+// with the values provided in the request. You cannot update some parameters
+// independent of others. To update a real-time log configuration:
+//
+// Call GetRealtimeLogConfig to get the current real-time log configuration.
+//
+// Locally modify the parameters in the real-time log configuration that you
+// want to update.
+//
+// Call this API (UpdateRealtimeLogConfig) by providing the entire real-time
+// log configuration, including the parameters that you modified and those that
+// you didn’t.
+//
+// You cannot update a real-time log configuration’s Name or ARN.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation UpdateRealtimeLogConfig for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeNoSuchRealtimeLogConfig "NoSuchRealtimeLogConfig"
+//   The real-time log configuration does not exist.
+//
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateRealtimeLogConfig
+func (c *CloudFront) UpdateRealtimeLogConfig(input *UpdateRealtimeLogConfigInput) (*UpdateRealtimeLogConfigOutput, error) {
+	req, out := c.UpdateRealtimeLogConfigRequest(input)
+	return out, req.Send()
+}
+
+// UpdateRealtimeLogConfigWithContext is the same as UpdateRealtimeLogConfig with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateRealtimeLogConfig for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) UpdateRealtimeLogConfigWithContext(ctx aws.Context, input *UpdateRealtimeLogConfigInput, opts ...request.Option) (*UpdateRealtimeLogConfigOutput, error) {
+	req, out := c.UpdateRealtimeLogConfigRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opUpdateResponseHeadersPolicy = "UpdateResponseHeadersPolicy2020_05_31"
+
+// UpdateResponseHeadersPolicyRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateResponseHeadersPolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateResponseHeadersPolicy for more information on using the UpdateResponseHeadersPolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateResponseHeadersPolicyRequest method.
+//    req, resp := client.UpdateResponseHeadersPolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateResponseHeadersPolicy
+func (c *CloudFront) UpdateResponseHeadersPolicyRequest(input *UpdateResponseHeadersPolicyInput) (req *request.Request, output *UpdateResponseHeadersPolicyOutput) {
+	op := &request.Operation{
+		Name:       opUpdateResponseHeadersPolicy,
+		HTTPMethod: "PUT",
+		HTTPPath:   "/2020-05-31/response-headers-policy/{Id}",
+	}
+
+	if input == nil {
+		input = &UpdateResponseHeadersPolicyInput{}
+	}
+
+	output = &UpdateResponseHeadersPolicyOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateResponseHeadersPolicy API operation for Amazon CloudFront.
+//
+// Updates a response headers policy.
+//
+// When you update a response headers policy, the entire policy is replaced.
+// You cannot update some policy fields independent of others. To update a response
+// headers policy configuration:
+//
+// Use GetResponseHeadersPolicyConfig to get the current policy’s configuration.
+//
+// Modify the fields in the response headers policy configuration that you want
+// to update.
+//
+// Call UpdateResponseHeadersPolicy, providing the entire response headers policy
+// configuration, including the fields that you modified and those that you
+// didn’t.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CloudFront's
+// API operation UpdateResponseHeadersPolicy for usage and error information.
+//
+// Returned Error Codes:
+//   * ErrCodeAccessDenied "AccessDenied"
+//   Access denied.
+//
+//   * ErrCodeIllegalUpdate "IllegalUpdate"
+//   The update contains modifications that are not allowed.
+//
+//   * ErrCodeInconsistentQuantities "InconsistentQuantities"
+//   The value of Quantity and the size of Items don't match.
+//
+//   * ErrCodeInvalidArgument "InvalidArgument"
+//   An argument is invalid.
+//
+//   * ErrCodeInvalidIfMatchVersion "InvalidIfMatchVersion"
+//   The If-Match version is missing or not valid.
+//
+//   * ErrCodeNoSuchResponseHeadersPolicy "NoSuchResponseHeadersPolicy"
+//   The response headers policy does not exist.
+//
+//   * ErrCodePreconditionFailed "PreconditionFailed"
+//   The precondition in one or more of the request fields evaluated to false.
+//
+//   * ErrCodeResponseHeadersPolicyAlreadyExists "ResponseHeadersPolicyAlreadyExists"
+//   A response headers policy with this name already exists. You must provide
+//   a unique name. To modify an existing response headers policy, use UpdateResponseHeadersPolicy.
+//
+//   * ErrCodeTooManyCustomHeadersInResponseHeadersPolicy "TooManyCustomHeadersInResponseHeadersPolicy"
+//   The number of custom headers in the response headers policy exceeds the maximum.
+//
+//   For more information, see Quotas (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html)
+//   (formerly known as limits) in the Amazon CloudFront Developer Guide.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/cloudfront-2020-05-31/UpdateResponseHeadersPolicy
+func (c *CloudFront) UpdateResponseHeadersPolicy(input *UpdateResponseHeadersPolicyInput) (*UpdateResponseHeadersPolicyOutput, error) {
+	req, out := c.UpdateResponseHeadersPolicyRequest(input)
+	return out, req.Send()
+}
+
+// UpdateResponseHeadersPolicyWithContext is the same as UpdateResponseHeadersPolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateResponseHeadersPolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CloudFront) UpdateResponseHeadersPolicyWithContext(ctx aws.Context, input *UpdateResponseHeadersPolicyInput, opts ...request.Option) (*UpdateResponseHeadersPolicyOutput, error) {
+	req, out := c.UpdateResponseHeadersPolicyRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -6362,8 +9634,7 @@ func (c *CloudFront) UpdateStreamingDistributionRequest(input *UpdateStreamingDi
 //   The specified streaming distribution does not exist.
 //
 //   * ErrCodePreconditionFailed "PreconditionFailed"
-//   The precondition given in one or more of the request header fields evaluated
-//   to false.
+//   The precondition in one or more of the request fields evaluated to false.
 //
 //   * ErrCodeTooManyStreamingDistributionCNAMEs "TooManyStreamingDistributionCNAMEs"
 //   Your request contains more CNAMEs than are allowed per distribution.
@@ -6405,44 +9676,103 @@ func (c *CloudFront) UpdateStreamingDistributionWithContext(ctx aws.Context, inp
 	return out, req.Send()
 }
 
-// A complex type that lists the AWS accounts, if any, that you included in
-// the TrustedSigners complex type for this distribution. These are the accounts
-// that you want to allow to create signed URLs for private content.
-//
-// The Signer complex type lists the AWS account number of the trusted signer
-// or self if the signer is the AWS account that created the distribution. The
-// Signer element also includes the IDs of any active CloudFront key pairs that
-// are associated with the trusted signer's AWS account. If no KeyPairId element
-// appears for a Signer, that signer can't create signed URLs.
-//
-// For more information, see Serving Private Content through CloudFront (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
-// in the Amazon CloudFront Developer Guide.
-type ActiveTrustedSigners struct {
+// A list of key groups, and the public keys in each key group, that CloudFront
+// can use to verify the signatures of signed URLs and signed cookies.
+type ActiveTrustedKeyGroups struct {
 	_ struct{} `type:"structure"`
 
-	// Enabled is true if any of the AWS accounts listed in the TrustedSigners complex
-	// type for this distribution have active CloudFront key pairs. If not, Enabled
-	// is false.
+	// This field is true if any of the key groups have public keys that CloudFront
+	// can use to verify the signatures of signed URLs and signed cookies. If not,
+	// this field is false.
 	//
 	// Enabled is a required field
 	Enabled *bool `type:"boolean" required:"true"`
 
-	// A complex type that contains one Signer complex type for each trusted signer
-	// that is specified in the TrustedSigners complex type.
-	Items []*Signer `locationNameList:"Signer" type:"list"`
+	// A list of key groups, including the identifiers of the public keys in each
+	// key group that CloudFront can use to verify the signatures of signed URLs
+	// and signed cookies.
+	Items []*KGKeyPairIds `locationNameList:"KeyGroup" type:"list"`
 
-	// The number of trusted signers specified in the TrustedSigners complex type.
+	// The number of key groups in the list.
 	//
 	// Quantity is a required field
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ActiveTrustedKeyGroups) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ActiveTrustedKeyGroups) GoString() string {
+	return s.String()
+}
+
+// SetEnabled sets the Enabled field's value.
+func (s *ActiveTrustedKeyGroups) SetEnabled(v bool) *ActiveTrustedKeyGroups {
+	s.Enabled = &v
+	return s
+}
+
+// SetItems sets the Items field's value.
+func (s *ActiveTrustedKeyGroups) SetItems(v []*KGKeyPairIds) *ActiveTrustedKeyGroups {
+	s.Items = v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *ActiveTrustedKeyGroups) SetQuantity(v int64) *ActiveTrustedKeyGroups {
+	s.Quantity = &v
+	return s
+}
+
+// A list of Amazon Web Services accounts and the active CloudFront key pairs
+// in each account that CloudFront can use to verify the signatures of signed
+// URLs and signed cookies.
+type ActiveTrustedSigners struct {
+	_ struct{} `type:"structure"`
+
+	// This field is true if any of the Amazon Web Services accounts in the list
+	// have active CloudFront key pairs that CloudFront can use to verify the signatures
+	// of signed URLs and signed cookies. If not, this field is false.
+	//
+	// Enabled is a required field
+	Enabled *bool `type:"boolean" required:"true"`
+
+	// A list of Amazon Web Services accounts and the identifiers of active CloudFront
+	// key pairs in each account that CloudFront can use to verify the signatures
+	// of signed URLs and signed cookies.
+	Items []*Signer `locationNameList:"Signer" type:"list"`
+
+	// The number of Amazon Web Services accounts in the list.
+	//
+	// Quantity is a required field
+	Quantity *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ActiveTrustedSigners) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ActiveTrustedSigners) GoString() string {
 	return s.String()
 }
@@ -6465,16 +9795,16 @@ func (s *ActiveTrustedSigners) SetQuantity(v int64) *ActiveTrustedSigners {
 	return s
 }
 
-// AWS services in China customers must file for an Internet Content Provider
-// (ICP) recordal if they want to serve content publicly on an alternate domain
-// name, also known as a CNAME, that they've added to CloudFront. AliasICPRecordal
-// provides the ICP recordal status for CNAMEs associated with distributions.
-// The status is returned in the CloudFront response; you can't configure it
-// yourself.
+// Amazon Web Services services in China customers must file for an Internet
+// Content Provider (ICP) recordal if they want to serve content publicly on
+// an alternate domain name, also known as a CNAME, that they've added to CloudFront.
+// AliasICPRecordal provides the ICP recordal status for CNAMEs associated with
+// distributions. The status is returned in the CloudFront response; you can't
+// configure it yourself.
 //
 // For more information about ICP recordals, see Signup, Accounts, and Credentials
 // (https://docs.amazonaws.cn/en_us/aws/latest/userguide/accounts-and-credentials.html)
-// in Getting Started with AWS services in China.
+// in Getting Started with Amazon Web Services services in China.
 type AliasICPRecordal struct {
 	_ struct{} `type:"structure"`
 
@@ -6503,12 +9833,20 @@ type AliasICPRecordal struct {
 	ICPRecordalStatus *string `type:"string" enum:"ICPRecordalStatus"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AliasICPRecordal) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AliasICPRecordal) GoString() string {
 	return s.String()
 }
@@ -6541,12 +9879,20 @@ type Aliases struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Aliases) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Aliases) GoString() string {
 	return s.String()
 }
@@ -6620,12 +9966,20 @@ type AllowedMethods struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AllowedMethods) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AllowedMethods) GoString() string {
 	return s.String()
 }
@@ -6667,6 +10021,91 @@ func (s *AllowedMethods) SetItems(v []*string) *AllowedMethods {
 func (s *AllowedMethods) SetQuantity(v int64) *AllowedMethods {
 	s.Quantity = &v
 	return s
+}
+
+type AssociateAliasInput struct {
+	_ struct{} `locationName:"AssociateAliasRequest" type:"structure"`
+
+	// The alias (also known as a CNAME) to add to the target distribution.
+	//
+	// Alias is a required field
+	Alias *string `location:"querystring" locationName:"Alias" type:"string" required:"true"`
+
+	// The ID of the distribution that you’re associating the alias with.
+	//
+	// TargetDistributionId is a required field
+	TargetDistributionId *string `location:"uri" locationName:"TargetDistributionId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateAliasInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateAliasInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AssociateAliasInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AssociateAliasInput"}
+	if s.Alias == nil {
+		invalidParams.Add(request.NewErrParamRequired("Alias"))
+	}
+	if s.TargetDistributionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("TargetDistributionId"))
+	}
+	if s.TargetDistributionId != nil && len(*s.TargetDistributionId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TargetDistributionId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAlias sets the Alias field's value.
+func (s *AssociateAliasInput) SetAlias(v string) *AssociateAliasInput {
+	s.Alias = &v
+	return s
+}
+
+// SetTargetDistributionId sets the TargetDistributionId field's value.
+func (s *AssociateAliasInput) SetTargetDistributionId(v string) *AssociateAliasInput {
+	s.TargetDistributionId = &v
+	return s
+}
+
+type AssociateAliasOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateAliasOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateAliasOutput) GoString() string {
+	return s.String()
 }
 
 // A complex type that describes how CloudFront processes requests.
@@ -6719,6 +10158,9 @@ type CacheBehavior struct {
 	// behavior. For more information, see Creating cache policies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html#cache-key-create-cache-policy)
 	// or Using the managed cache policies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html)
 	// in the Amazon CloudFront Developer Guide.
+	//
+	// A CacheBehavior must include either a CachePolicyId or ForwardedValues. We
+	// recommend that you use a CachePolicyId.
 	CachePolicyId *string `type:"string"`
 
 	// Whether you want CloudFront to automatically compress certain files for this
@@ -6764,14 +10206,22 @@ type CacheBehavior struct {
 	// or Using the managed origin request policies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html)
 	// in the Amazon CloudFront Developer Guide.
 	//
+	// A CacheBehavior must include either a CachePolicyId or ForwardedValues. We
+	// recommend that you use a CachePolicyId.
+	//
 	// A complex type that specifies how CloudFront handles query strings, cookies,
 	// and HTTP headers.
 	//
 	// Deprecated: ForwardedValues has been deprecated
 	ForwardedValues *ForwardedValues `deprecated:"true" type:"structure"`
 
-	// A complex type that contains zero or more Lambda function associations for
-	// a cache behavior.
+	// A list of CloudFront functions that are associated with this cache behavior.
+	// CloudFront functions must be published to the LIVE stage to associate them
+	// with a cache behavior.
+	FunctionAssociations *FunctionAssociations `type:"structure"`
+
+	// A complex type that contains zero or more Lambda@Edge function associations
+	// for a cache behavior.
 	LambdaFunctionAssociations *LambdaFunctionAssociations `type:"structure"`
 
 	// This field is deprecated. We recommend that you use the MaxTTL field in a
@@ -6836,6 +10286,15 @@ type CacheBehavior struct {
 	// PathPattern is a required field
 	PathPattern *string `type:"string" required:"true"`
 
+	// The Amazon Resource Name (ARN) of the real-time log configuration that is
+	// attached to this cache behavior. For more information, see Real-time logs
+	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/real-time-logs.html)
+	// in the Amazon CloudFront Developer Guide.
+	RealtimeLogConfigArn *string `type:"string"`
+
+	// The identifier for a response headers policy.
+	ResponseHeadersPolicyId *string `type:"string"`
+
 	// Indicates whether you want to distribute media files in the Microsoft Smooth
 	// Streaming format using the origin that is associated with this cache behavior.
 	// If so, specify true; if not, specify false. If you specify true for SmoothStreaming,
@@ -6849,25 +10308,33 @@ type CacheBehavior struct {
 	// TargetOriginId is a required field
 	TargetOriginId *string `type:"string" required:"true"`
 
-	// A complex type that specifies the AWS accounts, if any, that you want to
-	// allow to create signed URLs for private content.
+	// A list of key groups that CloudFront can use to validate signed URLs or signed
+	// cookies.
 	//
-	// If you want to require signed URLs in requests for objects in the target
-	// origin that match the PathPattern for this cache behavior, specify true for
-	// Enabled, and specify the applicable values for Quantity and Items. For more
-	// information, see Serving Private Content with Signed URLs and Signed Cookies
+	// When a cache behavior contains trusted key groups, CloudFront requires signed
+	// URLs or signed cookies for all requests that match the cache behavior. The
+	// URLs or cookies must be signed with a private key whose corresponding public
+	// key is in the key group. The signed URL or cookie contains information about
+	// which public key CloudFront should use to verify the signature. For more
+	// information, see Serving private content (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
+	// in the Amazon CloudFront Developer Guide.
+	TrustedKeyGroups *TrustedKeyGroups `type:"structure"`
+
+	//
+	// We recommend using TrustedKeyGroups instead of TrustedSigners.
+	//
+	// A list of Amazon Web Services account IDs whose public keys CloudFront can
+	// use to validate signed URLs or signed cookies.
+	//
+	// When a cache behavior contains trusted signers, CloudFront requires signed
+	// URLs or signed cookies for all requests that match the cache behavior. The
+	// URLs or cookies must be signed with the private key of a CloudFront key pair
+	// in the trusted signer’s Amazon Web Services account. The signed URL or
+	// cookie contains information about which public key CloudFront should use
+	// to verify the signature. For more information, see Serving private content
 	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
 	// in the Amazon CloudFront Developer Guide.
-	//
-	// If you don’t want to require signed URLs in requests for objects that match
-	// PathPattern, specify false for Enabled and 0 for Quantity. Omit Items.
-	//
-	// To add, change, or remove one or more trusted signers, change Enabled to
-	// true (if it’s currently false), change Quantity as applicable, and specify
-	// all of the trusted signers that you want to include in the updated distribution.
-	//
-	// TrustedSigners is a required field
-	TrustedSigners *TrustedSigners `type:"structure" required:"true"`
+	TrustedSigners *TrustedSigners `type:"structure"`
 
 	// The protocol that viewers can use to access the files in the origin specified
 	// by TargetOriginId when a request matches the path pattern in PathPattern.
@@ -6899,12 +10366,20 @@ type CacheBehavior struct {
 	ViewerProtocolPolicy *string `type:"string" required:"true" enum:"ViewerProtocolPolicy"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CacheBehavior) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CacheBehavior) GoString() string {
 	return s.String()
 }
@@ -6917,9 +10392,6 @@ func (s *CacheBehavior) Validate() error {
 	}
 	if s.TargetOriginId == nil {
 		invalidParams.Add(request.NewErrParamRequired("TargetOriginId"))
-	}
-	if s.TrustedSigners == nil {
-		invalidParams.Add(request.NewErrParamRequired("TrustedSigners"))
 	}
 	if s.ViewerProtocolPolicy == nil {
 		invalidParams.Add(request.NewErrParamRequired("ViewerProtocolPolicy"))
@@ -6934,9 +10406,19 @@ func (s *CacheBehavior) Validate() error {
 			invalidParams.AddNested("ForwardedValues", err.(request.ErrInvalidParams))
 		}
 	}
+	if s.FunctionAssociations != nil {
+		if err := s.FunctionAssociations.Validate(); err != nil {
+			invalidParams.AddNested("FunctionAssociations", err.(request.ErrInvalidParams))
+		}
+	}
 	if s.LambdaFunctionAssociations != nil {
 		if err := s.LambdaFunctionAssociations.Validate(); err != nil {
 			invalidParams.AddNested("LambdaFunctionAssociations", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TrustedKeyGroups != nil {
+		if err := s.TrustedKeyGroups.Validate(); err != nil {
+			invalidParams.AddNested("TrustedKeyGroups", err.(request.ErrInvalidParams))
 		}
 	}
 	if s.TrustedSigners != nil {
@@ -6987,6 +10469,12 @@ func (s *CacheBehavior) SetForwardedValues(v *ForwardedValues) *CacheBehavior {
 	return s
 }
 
+// SetFunctionAssociations sets the FunctionAssociations field's value.
+func (s *CacheBehavior) SetFunctionAssociations(v *FunctionAssociations) *CacheBehavior {
+	s.FunctionAssociations = v
+	return s
+}
+
 // SetLambdaFunctionAssociations sets the LambdaFunctionAssociations field's value.
 func (s *CacheBehavior) SetLambdaFunctionAssociations(v *LambdaFunctionAssociations) *CacheBehavior {
 	s.LambdaFunctionAssociations = v
@@ -7017,6 +10505,18 @@ func (s *CacheBehavior) SetPathPattern(v string) *CacheBehavior {
 	return s
 }
 
+// SetRealtimeLogConfigArn sets the RealtimeLogConfigArn field's value.
+func (s *CacheBehavior) SetRealtimeLogConfigArn(v string) *CacheBehavior {
+	s.RealtimeLogConfigArn = &v
+	return s
+}
+
+// SetResponseHeadersPolicyId sets the ResponseHeadersPolicyId field's value.
+func (s *CacheBehavior) SetResponseHeadersPolicyId(v string) *CacheBehavior {
+	s.ResponseHeadersPolicyId = &v
+	return s
+}
+
 // SetSmoothStreaming sets the SmoothStreaming field's value.
 func (s *CacheBehavior) SetSmoothStreaming(v bool) *CacheBehavior {
 	s.SmoothStreaming = &v
@@ -7026,6 +10526,12 @@ func (s *CacheBehavior) SetSmoothStreaming(v bool) *CacheBehavior {
 // SetTargetOriginId sets the TargetOriginId field's value.
 func (s *CacheBehavior) SetTargetOriginId(v string) *CacheBehavior {
 	s.TargetOriginId = &v
+	return s
+}
+
+// SetTrustedKeyGroups sets the TrustedKeyGroups field's value.
+func (s *CacheBehavior) SetTrustedKeyGroups(v *TrustedKeyGroups) *CacheBehavior {
+	s.TrustedKeyGroups = v
 	return s
 }
 
@@ -7055,12 +10561,20 @@ type CacheBehaviors struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CacheBehaviors) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CacheBehaviors) GoString() string {
 	return s.String()
 }
@@ -7137,12 +10651,20 @@ type CachePolicy struct {
 	LastModifiedTime *time.Time `type:"timestamp" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicy) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicy) GoString() string {
 	return s.String()
 }
@@ -7185,7 +10707,8 @@ func (s *CachePolicy) SetLastModifiedTime(v time.Time) *CachePolicy {
 type CachePolicyConfig struct {
 	_ struct{} `type:"structure"`
 
-	// A comment to describe the cache policy.
+	// A comment to describe the cache policy. The comment cannot be longer than
+	// 128 characters.
 	Comment *string `type:"string"`
 
 	// The default amount of time, in seconds, that you want objects to stay in
@@ -7233,12 +10756,20 @@ type CachePolicyConfig struct {
 	ParametersInCacheKeyAndForwardedToOrigin *ParametersInCacheKeyAndForwardedToOrigin `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicyConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicyConfig) GoString() string {
 	return s.String()
 }
@@ -7334,12 +10865,20 @@ type CachePolicyCookiesConfig struct {
 	Cookies *CookieNames `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicyCookiesConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicyCookiesConfig) GoString() string {
 	return s.String()
 }
@@ -7399,12 +10938,20 @@ type CachePolicyHeadersConfig struct {
 	Headers *Headers `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicyHeadersConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicyHeadersConfig) GoString() string {
 	return s.String()
 }
@@ -7463,12 +11010,20 @@ type CachePolicyList struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicyList) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicyList) GoString() string {
 	return s.String()
 }
@@ -7536,12 +11091,20 @@ type CachePolicyQueryStringsConfig struct {
 	QueryStrings *QueryStringNames `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicyQueryStringsConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicyQueryStringsConfig) GoString() string {
 	return s.String()
 }
@@ -7585,19 +11148,27 @@ type CachePolicySummary struct {
 	// CachePolicy is a required field
 	CachePolicy *CachePolicy `type:"structure" required:"true"`
 
-	// The type of cache policy, either managed (created by AWS) or custom (created
-	// in this AWS account).
+	// The type of cache policy, either managed (created by Amazon Web Services)
+	// or custom (created in this Amazon Web Services account).
 	//
 	// Type is a required field
 	Type *string `type:"string" required:"true" enum:"CachePolicyType"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicySummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachePolicySummary) GoString() string {
 	return s.String()
 }
@@ -7641,12 +11212,20 @@ type CachedMethods struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachedMethods) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachedMethods) GoString() string {
 	return s.String()
 }
@@ -7679,6 +11258,128 @@ func (s *CachedMethods) SetQuantity(v int64) *CachedMethods {
 	return s
 }
 
+// An alias (also called a CNAME) and the CloudFront distribution and Amazon
+// Web Services account ID that it’s associated with. The distribution and
+// account IDs are partially hidden, which allows you to identify the distributions
+// and accounts that you own, but helps to protect the information of ones that
+// you don’t own.
+type ConflictingAlias struct {
+	_ struct{} `type:"structure"`
+
+	// The (partially hidden) ID of the Amazon Web Services account that owns the
+	// distribution that’s associated with the alias.
+	AccountId *string `type:"string"`
+
+	// An alias (also called a CNAME).
+	Alias *string `type:"string"`
+
+	// The (partially hidden) ID of the CloudFront distribution associated with
+	// the alias.
+	DistributionId *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConflictingAlias) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConflictingAlias) GoString() string {
+	return s.String()
+}
+
+// SetAccountId sets the AccountId field's value.
+func (s *ConflictingAlias) SetAccountId(v string) *ConflictingAlias {
+	s.AccountId = &v
+	return s
+}
+
+// SetAlias sets the Alias field's value.
+func (s *ConflictingAlias) SetAlias(v string) *ConflictingAlias {
+	s.Alias = &v
+	return s
+}
+
+// SetDistributionId sets the DistributionId field's value.
+func (s *ConflictingAlias) SetDistributionId(v string) *ConflictingAlias {
+	s.DistributionId = &v
+	return s
+}
+
+// A list of aliases (also called CNAMEs) and the CloudFront distributions and
+// Amazon Web Services accounts that they are associated with. In the list,
+// the distribution and account IDs are partially hidden, which allows you to
+// identify the distributions and accounts that you own, but helps to protect
+// the information of ones that you don’t own.
+type ConflictingAliasesList struct {
+	_ struct{} `type:"structure"`
+
+	// Contains the conflicting aliases in the list.
+	Items []*ConflictingAlias `locationNameList:"ConflictingAlias" type:"list"`
+
+	// The maximum number of conflicting aliases requested.
+	MaxItems *int64 `type:"integer"`
+
+	// If there are more items in the list than are in this response, this element
+	// is present. It contains the value that you should use in the Marker field
+	// of a subsequent request to continue listing conflicting aliases where you
+	// left off.
+	NextMarker *string `type:"string"`
+
+	// The number of conflicting aliases returned in the response.
+	Quantity *int64 `type:"integer"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConflictingAliasesList) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConflictingAliasesList) GoString() string {
+	return s.String()
+}
+
+// SetItems sets the Items field's value.
+func (s *ConflictingAliasesList) SetItems(v []*ConflictingAlias) *ConflictingAliasesList {
+	s.Items = v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *ConflictingAliasesList) SetMaxItems(v int64) *ConflictingAliasesList {
+	s.MaxItems = &v
+	return s
+}
+
+// SetNextMarker sets the NextMarker field's value.
+func (s *ConflictingAliasesList) SetNextMarker(v string) *ConflictingAliasesList {
+	s.NextMarker = &v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *ConflictingAliasesList) SetQuantity(v int64) *ConflictingAliasesList {
+	s.Quantity = &v
+	return s
+}
+
 // A field-level encryption content type profile.
 type ContentTypeProfile struct {
 	_ struct{} `type:"structure"`
@@ -7697,12 +11398,20 @@ type ContentTypeProfile struct {
 	ProfileId *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ContentTypeProfile) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ContentTypeProfile) GoString() string {
 	return s.String()
 }
@@ -7758,12 +11467,20 @@ type ContentTypeProfileConfig struct {
 	ForwardWhenContentTypeIsUnknown *bool `type:"boolean" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ContentTypeProfileConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ContentTypeProfileConfig) GoString() string {
 	return s.String()
 }
@@ -7811,12 +11528,20 @@ type ContentTypeProfiles struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ContentTypeProfiles) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ContentTypeProfiles) GoString() string {
 	return s.String()
 }
@@ -7869,12 +11594,20 @@ type CookieNames struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CookieNames) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CookieNames) GoString() string {
 	return s.String()
 }
@@ -7908,10 +11641,10 @@ func (s *CookieNames) SetQuantity(v int64) *CookieNames {
 // origin request policy instead of this field.
 //
 // If you want to include cookies in the cache key, use CookiesConfig in a cache
-// policy. See CreateCachePolicy.
+// policy. See CachePolicy.
 //
 // If you want to send cookies to the origin but not include them in the cache
-// key, use CookiesConfig in an origin request policy. See CreateOriginRequestPolicy.
+// key, use CookiesConfig in an origin request policy. See OriginRequestPolicy.
 //
 // A complex type that specifies whether you want CloudFront to forward cookies
 // to the origin and, if so, which ones. For more information about forwarding
@@ -7966,16 +11699,24 @@ type CookiePreference struct {
 	//
 	// For the current limit on the number of cookie names that you can whitelist
 	// for each cache behavior, see CloudFront Limits (https://docs.aws.amazon.com/general/latest/gr/xrefaws_service_limits.html#limits_cloudfront)
-	// in the AWS General Reference.
+	// in the Amazon Web Services General Reference.
 	WhitelistedNames *CookieNames `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CookiePreference) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CookiePreference) GoString() string {
 	return s.String()
 }
@@ -8019,12 +11760,20 @@ type CreateCachePolicyInput struct {
 	CachePolicyConfig *CachePolicyConfig `locationName:"CachePolicyConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCachePolicyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCachePolicyInput) GoString() string {
 	return s.String()
 }
@@ -8066,12 +11815,20 @@ type CreateCachePolicyOutput struct {
 	Location *string `location:"header" locationName:"Location" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCachePolicyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCachePolicyOutput) GoString() string {
 	return s.String()
 }
@@ -8109,12 +11866,20 @@ type CreateCloudFrontOriginAccessIdentityInput struct {
 	CloudFrontOriginAccessIdentityConfig *OriginAccessIdentityConfig `locationName:"CloudFrontOriginAccessIdentityConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCloudFrontOriginAccessIdentityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCloudFrontOriginAccessIdentityInput) GoString() string {
 	return s.String()
 }
@@ -8157,12 +11922,20 @@ type CreateCloudFrontOriginAccessIdentityOutput struct {
 	Location *string `location:"header" locationName:"Location" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCloudFrontOriginAccessIdentityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCloudFrontOriginAccessIdentityOutput) GoString() string {
 	return s.String()
 }
@@ -8195,12 +11968,20 @@ type CreateDistributionInput struct {
 	DistributionConfig *DistributionConfig `locationName:"DistributionConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDistributionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDistributionInput) GoString() string {
 	return s.String()
 }
@@ -8243,12 +12024,20 @@ type CreateDistributionOutput struct {
 	Location *string `location:"header" locationName:"Location" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDistributionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDistributionOutput) GoString() string {
 	return s.String()
 }
@@ -8281,12 +12070,20 @@ type CreateDistributionWithTagsInput struct {
 	DistributionConfigWithTags *DistributionConfigWithTags `locationName:"DistributionConfigWithTags" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDistributionWithTagsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDistributionWithTagsInput) GoString() string {
 	return s.String()
 }
@@ -8329,12 +12126,20 @@ type CreateDistributionWithTagsOutput struct {
 	Location *string `location:"header" locationName:"Location" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDistributionWithTagsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDistributionWithTagsOutput) GoString() string {
 	return s.String()
 }
@@ -8366,12 +12171,20 @@ type CreateFieldLevelEncryptionConfigInput struct {
 	FieldLevelEncryptionConfig *FieldLevelEncryptionConfig `locationName:"FieldLevelEncryptionConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFieldLevelEncryptionConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFieldLevelEncryptionConfigInput) GoString() string {
 	return s.String()
 }
@@ -8414,12 +12227,20 @@ type CreateFieldLevelEncryptionConfigOutput struct {
 	Location *string `location:"header" locationName:"Location" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFieldLevelEncryptionConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFieldLevelEncryptionConfigOutput) GoString() string {
 	return s.String()
 }
@@ -8451,12 +12272,20 @@ type CreateFieldLevelEncryptionProfileInput struct {
 	FieldLevelEncryptionProfileConfig *FieldLevelEncryptionProfileConfig `locationName:"FieldLevelEncryptionProfileConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFieldLevelEncryptionProfileInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFieldLevelEncryptionProfileInput) GoString() string {
 	return s.String()
 }
@@ -8498,12 +12327,20 @@ type CreateFieldLevelEncryptionProfileOutput struct {
 	Location *string `location:"header" locationName:"Location" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFieldLevelEncryptionProfileOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFieldLevelEncryptionProfileOutput) GoString() string {
 	return s.String()
 }
@@ -8526,6 +12363,150 @@ func (s *CreateFieldLevelEncryptionProfileOutput) SetLocation(v string) *CreateF
 	return s
 }
 
+type CreateFunctionInput struct {
+	_ struct{} `locationName:"CreateFunctionRequest" type:"structure" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+
+	// The function code. For more information about writing a CloudFront function,
+	// see Writing function code for CloudFront Functions (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/writing-function-code.html)
+	// in the Amazon CloudFront Developer Guide.
+	//
+	// FunctionCode is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by CreateFunctionInput's
+	// String and GoString methods.
+	//
+	// FunctionCode is automatically base64 encoded/decoded by the SDK.
+	//
+	// FunctionCode is a required field
+	FunctionCode []byte `min:"1" type:"blob" required:"true" sensitive:"true"`
+
+	// Configuration information about the function, including an optional comment
+	// and the function’s runtime.
+	//
+	// FunctionConfig is a required field
+	FunctionConfig *FunctionConfig `type:"structure" required:"true"`
+
+	// A name to identify the function.
+	//
+	// Name is a required field
+	Name *string `min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateFunctionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateFunctionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateFunctionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateFunctionInput"}
+	if s.FunctionCode == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionCode"))
+	}
+	if s.FunctionCode != nil && len(s.FunctionCode) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionCode", 1))
+	}
+	if s.FunctionConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionConfig"))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.FunctionConfig != nil {
+		if err := s.FunctionConfig.Validate(); err != nil {
+			invalidParams.AddNested("FunctionConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFunctionCode sets the FunctionCode field's value.
+func (s *CreateFunctionInput) SetFunctionCode(v []byte) *CreateFunctionInput {
+	s.FunctionCode = v
+	return s
+}
+
+// SetFunctionConfig sets the FunctionConfig field's value.
+func (s *CreateFunctionInput) SetFunctionConfig(v *FunctionConfig) *CreateFunctionInput {
+	s.FunctionConfig = v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *CreateFunctionInput) SetName(v string) *CreateFunctionInput {
+	s.Name = &v
+	return s
+}
+
+type CreateFunctionOutput struct {
+	_ struct{} `type:"structure" payload:"FunctionSummary"`
+
+	// The version identifier for the current version of the CloudFront function.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// Contains configuration information and metadata about a CloudFront function.
+	FunctionSummary *FunctionSummary `type:"structure"`
+
+	// The URL of the CloudFront function. Use the URL to manage the function with
+	// the CloudFront API.
+	Location *string `location:"header" locationName:"Location" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateFunctionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateFunctionOutput) GoString() string {
+	return s.String()
+}
+
+// SetETag sets the ETag field's value.
+func (s *CreateFunctionOutput) SetETag(v string) *CreateFunctionOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetFunctionSummary sets the FunctionSummary field's value.
+func (s *CreateFunctionOutput) SetFunctionSummary(v *FunctionSummary) *CreateFunctionOutput {
+	s.FunctionSummary = v
+	return s
+}
+
+// SetLocation sets the Location field's value.
+func (s *CreateFunctionOutput) SetLocation(v string) *CreateFunctionOutput {
+	s.Location = &v
+	return s
+}
+
 // The request to create an invalidation.
 type CreateInvalidationInput struct {
 	_ struct{} `locationName:"CreateInvalidationRequest" type:"structure" payload:"InvalidationBatch"`
@@ -8541,12 +12522,20 @@ type CreateInvalidationInput struct {
 	InvalidationBatch *InvalidationBatch `locationName:"InvalidationBatch" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateInvalidationInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateInvalidationInput) GoString() string {
 	return s.String()
 }
@@ -8599,12 +12588,20 @@ type CreateInvalidationOutput struct {
 	Location *string `location:"header" locationName:"Location" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateInvalidationOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateInvalidationOutput) GoString() string {
 	return s.String()
 }
@@ -8621,6 +12618,207 @@ func (s *CreateInvalidationOutput) SetLocation(v string) *CreateInvalidationOutp
 	return s
 }
 
+type CreateKeyGroupInput struct {
+	_ struct{} `locationName:"CreateKeyGroupRequest" type:"structure" payload:"KeyGroupConfig"`
+
+	// A key group configuration.
+	//
+	// KeyGroupConfig is a required field
+	KeyGroupConfig *KeyGroupConfig `locationName:"KeyGroupConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateKeyGroupInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateKeyGroupInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateKeyGroupInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateKeyGroupInput"}
+	if s.KeyGroupConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("KeyGroupConfig"))
+	}
+	if s.KeyGroupConfig != nil {
+		if err := s.KeyGroupConfig.Validate(); err != nil {
+			invalidParams.AddNested("KeyGroupConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetKeyGroupConfig sets the KeyGroupConfig field's value.
+func (s *CreateKeyGroupInput) SetKeyGroupConfig(v *KeyGroupConfig) *CreateKeyGroupInput {
+	s.KeyGroupConfig = v
+	return s
+}
+
+type CreateKeyGroupOutput struct {
+	_ struct{} `type:"structure" payload:"KeyGroup"`
+
+	// The identifier for this version of the key group.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// The key group that was just created.
+	KeyGroup *KeyGroup `type:"structure"`
+
+	// The URL of the key group.
+	Location *string `location:"header" locationName:"Location" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateKeyGroupOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateKeyGroupOutput) GoString() string {
+	return s.String()
+}
+
+// SetETag sets the ETag field's value.
+func (s *CreateKeyGroupOutput) SetETag(v string) *CreateKeyGroupOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetKeyGroup sets the KeyGroup field's value.
+func (s *CreateKeyGroupOutput) SetKeyGroup(v *KeyGroup) *CreateKeyGroupOutput {
+	s.KeyGroup = v
+	return s
+}
+
+// SetLocation sets the Location field's value.
+func (s *CreateKeyGroupOutput) SetLocation(v string) *CreateKeyGroupOutput {
+	s.Location = &v
+	return s
+}
+
+type CreateMonitoringSubscriptionInput struct {
+	_ struct{} `locationName:"CreateMonitoringSubscriptionRequest" type:"structure" payload:"MonitoringSubscription"`
+
+	// The ID of the distribution that you are enabling metrics for.
+	//
+	// DistributionId is a required field
+	DistributionId *string `location:"uri" locationName:"DistributionId" type:"string" required:"true"`
+
+	// A monitoring subscription. This structure contains information about whether
+	// additional CloudWatch metrics are enabled for a given CloudFront distribution.
+	//
+	// MonitoringSubscription is a required field
+	MonitoringSubscription *MonitoringSubscription `locationName:"MonitoringSubscription" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateMonitoringSubscriptionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateMonitoringSubscriptionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateMonitoringSubscriptionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateMonitoringSubscriptionInput"}
+	if s.DistributionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DistributionId"))
+	}
+	if s.DistributionId != nil && len(*s.DistributionId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DistributionId", 1))
+	}
+	if s.MonitoringSubscription == nil {
+		invalidParams.Add(request.NewErrParamRequired("MonitoringSubscription"))
+	}
+	if s.MonitoringSubscription != nil {
+		if err := s.MonitoringSubscription.Validate(); err != nil {
+			invalidParams.AddNested("MonitoringSubscription", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDistributionId sets the DistributionId field's value.
+func (s *CreateMonitoringSubscriptionInput) SetDistributionId(v string) *CreateMonitoringSubscriptionInput {
+	s.DistributionId = &v
+	return s
+}
+
+// SetMonitoringSubscription sets the MonitoringSubscription field's value.
+func (s *CreateMonitoringSubscriptionInput) SetMonitoringSubscription(v *MonitoringSubscription) *CreateMonitoringSubscriptionInput {
+	s.MonitoringSubscription = v
+	return s
+}
+
+type CreateMonitoringSubscriptionOutput struct {
+	_ struct{} `type:"structure" payload:"MonitoringSubscription"`
+
+	// A monitoring subscription. This structure contains information about whether
+	// additional CloudWatch metrics are enabled for a given CloudFront distribution.
+	MonitoringSubscription *MonitoringSubscription `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateMonitoringSubscriptionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateMonitoringSubscriptionOutput) GoString() string {
+	return s.String()
+}
+
+// SetMonitoringSubscription sets the MonitoringSubscription field's value.
+func (s *CreateMonitoringSubscriptionOutput) SetMonitoringSubscription(v *MonitoringSubscription) *CreateMonitoringSubscriptionOutput {
+	s.MonitoringSubscription = v
+	return s
+}
+
 type CreateOriginRequestPolicyInput struct {
 	_ struct{} `locationName:"CreateOriginRequestPolicyRequest" type:"structure" payload:"OriginRequestPolicyConfig"`
 
@@ -8630,12 +12828,20 @@ type CreateOriginRequestPolicyInput struct {
 	OriginRequestPolicyConfig *OriginRequestPolicyConfig `locationName:"OriginRequestPolicyConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateOriginRequestPolicyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateOriginRequestPolicyInput) GoString() string {
 	return s.String()
 }
@@ -8677,12 +12883,20 @@ type CreateOriginRequestPolicyOutput struct {
 	OriginRequestPolicy *OriginRequestPolicy `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateOriginRequestPolicyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateOriginRequestPolicyOutput) GoString() string {
 	return s.String()
 }
@@ -8708,18 +12922,26 @@ func (s *CreateOriginRequestPolicyOutput) SetOriginRequestPolicy(v *OriginReques
 type CreatePublicKeyInput struct {
 	_ struct{} `locationName:"CreatePublicKeyRequest" type:"structure" payload:"PublicKeyConfig"`
 
-	// The request to add a public key to CloudFront.
+	// A CloudFront public key configuration.
 	//
 	// PublicKeyConfig is a required field
 	PublicKeyConfig *PublicKeyConfig `locationName:"PublicKeyConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePublicKeyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePublicKeyInput) GoString() string {
 	return s.String()
 }
@@ -8751,22 +12973,30 @@ func (s *CreatePublicKeyInput) SetPublicKeyConfig(v *PublicKeyConfig) *CreatePub
 type CreatePublicKeyOutput struct {
 	_ struct{} `type:"structure" payload:"PublicKey"`
 
-	// The current version of the public key. For example: E2QWRUHAPOMQZL.
+	// The identifier for this version of the public key.
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 
-	// The fully qualified URI of the new public key resource just created.
+	// The URL of the public key.
 	Location *string `location:"header" locationName:"Location" type:"string"`
 
-	// Returned when you add a public key.
+	// The public key.
 	PublicKey *PublicKey `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePublicKeyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePublicKeyOutput) GoString() string {
 	return s.String()
 }
@@ -8789,6 +13019,243 @@ func (s *CreatePublicKeyOutput) SetPublicKey(v *PublicKey) *CreatePublicKeyOutpu
 	return s
 }
 
+type CreateRealtimeLogConfigInput struct {
+	_ struct{} `locationName:"CreateRealtimeLogConfigRequest" type:"structure" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+
+	// Contains information about the Amazon Kinesis data stream where you are sending
+	// real-time log data.
+	//
+	// EndPoints is a required field
+	EndPoints []*EndPoint `type:"list" required:"true"`
+
+	// A list of fields to include in each real-time log record.
+	//
+	// For more information about fields, see Real-time log configuration fields
+	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/real-time-logs.html#understand-real-time-log-config-fields)
+	// in the Amazon CloudFront Developer Guide.
+	//
+	// Fields is a required field
+	Fields []*string `locationNameList:"Field" type:"list" required:"true"`
+
+	// A unique name to identify this real-time log configuration.
+	//
+	// Name is a required field
+	Name *string `type:"string" required:"true"`
+
+	// The sampling rate for this real-time log configuration. The sampling rate
+	// determines the percentage of viewer requests that are represented in the
+	// real-time log data. You must provide an integer between 1 and 100, inclusive.
+	//
+	// SamplingRate is a required field
+	SamplingRate *int64 `type:"long" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateRealtimeLogConfigInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateRealtimeLogConfigInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateRealtimeLogConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateRealtimeLogConfigInput"}
+	if s.EndPoints == nil {
+		invalidParams.Add(request.NewErrParamRequired("EndPoints"))
+	}
+	if s.Fields == nil {
+		invalidParams.Add(request.NewErrParamRequired("Fields"))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.SamplingRate == nil {
+		invalidParams.Add(request.NewErrParamRequired("SamplingRate"))
+	}
+	if s.EndPoints != nil {
+		for i, v := range s.EndPoints {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "EndPoints", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetEndPoints sets the EndPoints field's value.
+func (s *CreateRealtimeLogConfigInput) SetEndPoints(v []*EndPoint) *CreateRealtimeLogConfigInput {
+	s.EndPoints = v
+	return s
+}
+
+// SetFields sets the Fields field's value.
+func (s *CreateRealtimeLogConfigInput) SetFields(v []*string) *CreateRealtimeLogConfigInput {
+	s.Fields = v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *CreateRealtimeLogConfigInput) SetName(v string) *CreateRealtimeLogConfigInput {
+	s.Name = &v
+	return s
+}
+
+// SetSamplingRate sets the SamplingRate field's value.
+func (s *CreateRealtimeLogConfigInput) SetSamplingRate(v int64) *CreateRealtimeLogConfigInput {
+	s.SamplingRate = &v
+	return s
+}
+
+type CreateRealtimeLogConfigOutput struct {
+	_ struct{} `type:"structure"`
+
+	// A real-time log configuration.
+	RealtimeLogConfig *RealtimeLogConfig `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateRealtimeLogConfigOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateRealtimeLogConfigOutput) GoString() string {
+	return s.String()
+}
+
+// SetRealtimeLogConfig sets the RealtimeLogConfig field's value.
+func (s *CreateRealtimeLogConfigOutput) SetRealtimeLogConfig(v *RealtimeLogConfig) *CreateRealtimeLogConfigOutput {
+	s.RealtimeLogConfig = v
+	return s
+}
+
+type CreateResponseHeadersPolicyInput struct {
+	_ struct{} `locationName:"CreateResponseHeadersPolicyRequest" type:"structure" payload:"ResponseHeadersPolicyConfig"`
+
+	// Contains metadata about the response headers policy, and a set of configurations
+	// that specify the response headers.
+	//
+	// ResponseHeadersPolicyConfig is a required field
+	ResponseHeadersPolicyConfig *ResponseHeadersPolicyConfig `locationName:"ResponseHeadersPolicyConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateResponseHeadersPolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateResponseHeadersPolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateResponseHeadersPolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateResponseHeadersPolicyInput"}
+	if s.ResponseHeadersPolicyConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResponseHeadersPolicyConfig"))
+	}
+	if s.ResponseHeadersPolicyConfig != nil {
+		if err := s.ResponseHeadersPolicyConfig.Validate(); err != nil {
+			invalidParams.AddNested("ResponseHeadersPolicyConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetResponseHeadersPolicyConfig sets the ResponseHeadersPolicyConfig field's value.
+func (s *CreateResponseHeadersPolicyInput) SetResponseHeadersPolicyConfig(v *ResponseHeadersPolicyConfig) *CreateResponseHeadersPolicyInput {
+	s.ResponseHeadersPolicyConfig = v
+	return s
+}
+
+type CreateResponseHeadersPolicyOutput struct {
+	_ struct{} `type:"structure" payload:"ResponseHeadersPolicy"`
+
+	// The version identifier for the current version of the response headers policy.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// The URL of the response headers policy.
+	Location *string `location:"header" locationName:"Location" type:"string"`
+
+	// Contains a response headers policy.
+	ResponseHeadersPolicy *ResponseHeadersPolicy `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateResponseHeadersPolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateResponseHeadersPolicyOutput) GoString() string {
+	return s.String()
+}
+
+// SetETag sets the ETag field's value.
+func (s *CreateResponseHeadersPolicyOutput) SetETag(v string) *CreateResponseHeadersPolicyOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetLocation sets the Location field's value.
+func (s *CreateResponseHeadersPolicyOutput) SetLocation(v string) *CreateResponseHeadersPolicyOutput {
+	s.Location = &v
+	return s
+}
+
+// SetResponseHeadersPolicy sets the ResponseHeadersPolicy field's value.
+func (s *CreateResponseHeadersPolicyOutput) SetResponseHeadersPolicy(v *ResponseHeadersPolicy) *CreateResponseHeadersPolicyOutput {
+	s.ResponseHeadersPolicy = v
+	return s
+}
+
 // The request to create a new streaming distribution.
 type CreateStreamingDistributionInput struct {
 	_ struct{} `locationName:"CreateStreamingDistributionRequest" type:"structure" payload:"StreamingDistributionConfig"`
@@ -8799,12 +13266,20 @@ type CreateStreamingDistributionInput struct {
 	StreamingDistributionConfig *StreamingDistributionConfig `locationName:"StreamingDistributionConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStreamingDistributionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStreamingDistributionInput) GoString() string {
 	return s.String()
 }
@@ -8847,12 +13322,20 @@ type CreateStreamingDistributionOutput struct {
 	StreamingDistribution *StreamingDistribution `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStreamingDistributionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStreamingDistributionOutput) GoString() string {
 	return s.String()
 }
@@ -8885,12 +13368,20 @@ type CreateStreamingDistributionWithTagsInput struct {
 	StreamingDistributionConfigWithTags *StreamingDistributionConfigWithTags `locationName:"StreamingDistributionConfigWithTags" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStreamingDistributionWithTagsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStreamingDistributionWithTagsInput) GoString() string {
 	return s.String()
 }
@@ -8933,12 +13424,20 @@ type CreateStreamingDistributionWithTagsOutput struct {
 	StreamingDistribution *StreamingDistribution `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStreamingDistributionWithTagsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStreamingDistributionWithTagsOutput) GoString() string {
 	return s.String()
 }
@@ -9035,12 +13534,20 @@ type CustomErrorResponse struct {
 	ResponsePagePath *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CustomErrorResponse) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CustomErrorResponse) GoString() string {
 	return s.String()
 }
@@ -9107,12 +13614,20 @@ type CustomErrorResponses struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CustomErrorResponses) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CustomErrorResponses) GoString() string {
 	return s.String()
 }
@@ -9167,12 +13682,20 @@ type CustomHeaders struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CustomHeaders) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CustomHeaders) GoString() string {
 	return s.String()
 }
@@ -9270,12 +13793,20 @@ type CustomOriginConfig struct {
 	OriginSslProtocols *OriginSslProtocols `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CustomOriginConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CustomOriginConfig) GoString() string {
 	return s.String()
 }
@@ -9368,6 +13899,9 @@ type DefaultCacheBehavior struct {
 	// cache behavior. For more information, see Creating cache policies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html#cache-key-create-cache-policy)
 	// or Using the managed cache policies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-cache-policies.html)
 	// in the Amazon CloudFront Developer Guide.
+	//
+	// A DefaultCacheBehavior must include either a CachePolicyId or ForwardedValues.
+	// We recommend that you use a CachePolicyId.
 	CachePolicyId *string `type:"string"`
 
 	// Whether you want CloudFront to automatically compress certain files for this
@@ -9414,14 +13948,22 @@ type DefaultCacheBehavior struct {
 	// or Using the managed origin request policies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/using-managed-origin-request-policies.html)
 	// in the Amazon CloudFront Developer Guide.
 	//
+	// A DefaultCacheBehavior must include either a CachePolicyId or ForwardedValues.
+	// We recommend that you use a CachePolicyId.
+	//
 	// A complex type that specifies how CloudFront handles query strings, cookies,
 	// and HTTP headers.
 	//
 	// Deprecated: ForwardedValues has been deprecated
 	ForwardedValues *ForwardedValues `deprecated:"true" type:"structure"`
 
-	// A complex type that contains zero or more Lambda function associations for
-	// a cache behavior.
+	// A list of CloudFront functions that are associated with this cache behavior.
+	// CloudFront functions must be published to the LIVE stage to associate them
+	// with a cache behavior.
+	FunctionAssociations *FunctionAssociations `type:"structure"`
+
+	// A complex type that contains zero or more Lambda@Edge function associations
+	// for a cache behavior.
 	LambdaFunctionAssociations *LambdaFunctionAssociations `type:"structure"`
 
 	// This field is deprecated. We recommend that you use the MaxTTL field in a
@@ -9467,6 +14009,15 @@ type DefaultCacheBehavior struct {
 	// in the Amazon CloudFront Developer Guide.
 	OriginRequestPolicyId *string `type:"string"`
 
+	// The Amazon Resource Name (ARN) of the real-time log configuration that is
+	// attached to this cache behavior. For more information, see Real-time logs
+	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/real-time-logs.html)
+	// in the Amazon CloudFront Developer Guide.
+	RealtimeLogConfigArn *string `type:"string"`
+
+	// The identifier for a response headers policy.
+	ResponseHeadersPolicyId *string `type:"string"`
+
 	// Indicates whether you want to distribute media files in the Microsoft Smooth
 	// Streaming format using the origin that is associated with this cache behavior.
 	// If so, specify true; if not, specify false. If you specify true for SmoothStreaming,
@@ -9480,25 +14031,32 @@ type DefaultCacheBehavior struct {
 	// TargetOriginId is a required field
 	TargetOriginId *string `type:"string" required:"true"`
 
-	// A complex type that specifies the AWS accounts, if any, that you want to
-	// allow to create signed URLs for private content.
+	// A list of key groups that CloudFront can use to validate signed URLs or signed
+	// cookies.
 	//
-	// If you want to require signed URLs in requests for objects in the target
-	// origin that match the PathPattern for this cache behavior, specify true for
-	// Enabled, and specify the applicable values for Quantity and Items. For more
-	// information, see Serving Private Content with Signed URLs and Signed Cookies
-	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
+	// When a cache behavior contains trusted key groups, CloudFront requires signed
+	// URLs or signed cookies for all requests that match the cache behavior. The
+	// URLs or cookies must be signed with a private key whose corresponding public
+	// key is in the key group. The signed URL or cookie contains information about
+	// which public key CloudFront should use to verify the signature. For more
+	// information, see Serving private content (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
 	// in the Amazon CloudFront Developer Guide.
+	TrustedKeyGroups *TrustedKeyGroups `type:"structure"`
+
 	//
-	// If you don’t want to require signed URLs in requests for objects that match
-	// PathPattern, specify false for Enabled and 0 for Quantity. Omit Items.
+	// We recommend using TrustedKeyGroups instead of TrustedSigners.
 	//
-	// To add, change, or remove one or more trusted signers, change Enabled to
-	// true (if it’s currently false), change Quantity as applicable, and specify
-	// all of the trusted signers that you want to include in the updated distribution.
+	// A list of Amazon Web Services account IDs whose public keys CloudFront can
+	// use to validate signed URLs or signed cookies.
 	//
-	// TrustedSigners is a required field
-	TrustedSigners *TrustedSigners `type:"structure" required:"true"`
+	// When a cache behavior contains trusted signers, CloudFront requires signed
+	// URLs or signed cookies for all requests that match the cache behavior. The
+	// URLs or cookies must be signed with the private key of a CloudFront key pair
+	// in a trusted signer’s Amazon Web Services account. The signed URL or cookie
+	// contains information about which public key CloudFront should use to verify
+	// the signature. For more information, see Serving private content (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
+	// in the Amazon CloudFront Developer Guide.
+	TrustedSigners *TrustedSigners `type:"structure"`
 
 	// The protocol that viewers can use to access the files in the origin specified
 	// by TargetOriginId when a request matches the path pattern in PathPattern.
@@ -9530,12 +14088,20 @@ type DefaultCacheBehavior struct {
 	ViewerProtocolPolicy *string `type:"string" required:"true" enum:"ViewerProtocolPolicy"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DefaultCacheBehavior) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DefaultCacheBehavior) GoString() string {
 	return s.String()
 }
@@ -9545,9 +14111,6 @@ func (s *DefaultCacheBehavior) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "DefaultCacheBehavior"}
 	if s.TargetOriginId == nil {
 		invalidParams.Add(request.NewErrParamRequired("TargetOriginId"))
-	}
-	if s.TrustedSigners == nil {
-		invalidParams.Add(request.NewErrParamRequired("TrustedSigners"))
 	}
 	if s.ViewerProtocolPolicy == nil {
 		invalidParams.Add(request.NewErrParamRequired("ViewerProtocolPolicy"))
@@ -9562,9 +14125,19 @@ func (s *DefaultCacheBehavior) Validate() error {
 			invalidParams.AddNested("ForwardedValues", err.(request.ErrInvalidParams))
 		}
 	}
+	if s.FunctionAssociations != nil {
+		if err := s.FunctionAssociations.Validate(); err != nil {
+			invalidParams.AddNested("FunctionAssociations", err.(request.ErrInvalidParams))
+		}
+	}
 	if s.LambdaFunctionAssociations != nil {
 		if err := s.LambdaFunctionAssociations.Validate(); err != nil {
 			invalidParams.AddNested("LambdaFunctionAssociations", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TrustedKeyGroups != nil {
+		if err := s.TrustedKeyGroups.Validate(); err != nil {
+			invalidParams.AddNested("TrustedKeyGroups", err.(request.ErrInvalidParams))
 		}
 	}
 	if s.TrustedSigners != nil {
@@ -9615,6 +14188,12 @@ func (s *DefaultCacheBehavior) SetForwardedValues(v *ForwardedValues) *DefaultCa
 	return s
 }
 
+// SetFunctionAssociations sets the FunctionAssociations field's value.
+func (s *DefaultCacheBehavior) SetFunctionAssociations(v *FunctionAssociations) *DefaultCacheBehavior {
+	s.FunctionAssociations = v
+	return s
+}
+
 // SetLambdaFunctionAssociations sets the LambdaFunctionAssociations field's value.
 func (s *DefaultCacheBehavior) SetLambdaFunctionAssociations(v *LambdaFunctionAssociations) *DefaultCacheBehavior {
 	s.LambdaFunctionAssociations = v
@@ -9639,6 +14218,18 @@ func (s *DefaultCacheBehavior) SetOriginRequestPolicyId(v string) *DefaultCacheB
 	return s
 }
 
+// SetRealtimeLogConfigArn sets the RealtimeLogConfigArn field's value.
+func (s *DefaultCacheBehavior) SetRealtimeLogConfigArn(v string) *DefaultCacheBehavior {
+	s.RealtimeLogConfigArn = &v
+	return s
+}
+
+// SetResponseHeadersPolicyId sets the ResponseHeadersPolicyId field's value.
+func (s *DefaultCacheBehavior) SetResponseHeadersPolicyId(v string) *DefaultCacheBehavior {
+	s.ResponseHeadersPolicyId = &v
+	return s
+}
+
 // SetSmoothStreaming sets the SmoothStreaming field's value.
 func (s *DefaultCacheBehavior) SetSmoothStreaming(v bool) *DefaultCacheBehavior {
 	s.SmoothStreaming = &v
@@ -9648,6 +14239,12 @@ func (s *DefaultCacheBehavior) SetSmoothStreaming(v bool) *DefaultCacheBehavior 
 // SetTargetOriginId sets the TargetOriginId field's value.
 func (s *DefaultCacheBehavior) SetTargetOriginId(v string) *DefaultCacheBehavior {
 	s.TargetOriginId = &v
+	return s
+}
+
+// SetTrustedKeyGroups sets the TrustedKeyGroups field's value.
+func (s *DefaultCacheBehavior) SetTrustedKeyGroups(v *TrustedKeyGroups) *DefaultCacheBehavior {
+	s.TrustedKeyGroups = v
 	return s
 }
 
@@ -9678,12 +14275,20 @@ type DeleteCachePolicyInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCachePolicyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCachePolicyInput) GoString() string {
 	return s.String()
 }
@@ -9720,12 +14325,20 @@ type DeleteCachePolicyOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCachePolicyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCachePolicyOutput) GoString() string {
 	return s.String()
 }
@@ -9744,12 +14357,20 @@ type DeleteCloudFrontOriginAccessIdentityInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCloudFrontOriginAccessIdentityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCloudFrontOriginAccessIdentityInput) GoString() string {
 	return s.String()
 }
@@ -9786,12 +14407,20 @@ type DeleteCloudFrontOriginAccessIdentityOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCloudFrontOriginAccessIdentityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCloudFrontOriginAccessIdentityOutput) GoString() string {
 	return s.String()
 }
@@ -9844,12 +14473,20 @@ type DeleteDistributionInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDistributionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDistributionInput) GoString() string {
 	return s.String()
 }
@@ -9886,12 +14523,20 @@ type DeleteDistributionOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDistributionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDistributionOutput) GoString() string {
 	return s.String()
 }
@@ -9909,12 +14554,20 @@ type DeleteFieldLevelEncryptionConfigInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFieldLevelEncryptionConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFieldLevelEncryptionConfigInput) GoString() string {
 	return s.String()
 }
@@ -9951,12 +14604,20 @@ type DeleteFieldLevelEncryptionConfigOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFieldLevelEncryptionConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFieldLevelEncryptionConfigOutput) GoString() string {
 	return s.String()
 }
@@ -9974,12 +14635,20 @@ type DeleteFieldLevelEncryptionProfileInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFieldLevelEncryptionProfileInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFieldLevelEncryptionProfileInput) GoString() string {
 	return s.String()
 }
@@ -10016,13 +14685,260 @@ type DeleteFieldLevelEncryptionProfileOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFieldLevelEncryptionProfileOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFieldLevelEncryptionProfileOutput) GoString() string {
+	return s.String()
+}
+
+type DeleteFunctionInput struct {
+	_ struct{} `locationName:"DeleteFunctionRequest" type:"structure"`
+
+	// The current version (ETag value) of the function that you are deleting, which
+	// you can get using DescribeFunction.
+	//
+	// IfMatch is a required field
+	IfMatch *string `location:"header" locationName:"If-Match" type:"string" required:"true"`
+
+	// The name of the function that you are deleting.
+	//
+	// Name is a required field
+	Name *string `location:"uri" locationName:"Name" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteFunctionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteFunctionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteFunctionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteFunctionInput"}
+	if s.IfMatch == nil {
+		invalidParams.Add(request.NewErrParamRequired("IfMatch"))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetIfMatch sets the IfMatch field's value.
+func (s *DeleteFunctionInput) SetIfMatch(v string) *DeleteFunctionInput {
+	s.IfMatch = &v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *DeleteFunctionInput) SetName(v string) *DeleteFunctionInput {
+	s.Name = &v
+	return s
+}
+
+type DeleteFunctionOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteFunctionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteFunctionOutput) GoString() string {
+	return s.String()
+}
+
+type DeleteKeyGroupInput struct {
+	_ struct{} `locationName:"DeleteKeyGroupRequest" type:"structure"`
+
+	// The identifier of the key group that you are deleting. To get the identifier,
+	// use ListKeyGroups.
+	//
+	// Id is a required field
+	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
+
+	// The version of the key group that you are deleting. The version is the key
+	// group’s ETag value. To get the ETag, use GetKeyGroup or GetKeyGroupConfig.
+	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteKeyGroupInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteKeyGroupInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteKeyGroupInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteKeyGroupInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetId sets the Id field's value.
+func (s *DeleteKeyGroupInput) SetId(v string) *DeleteKeyGroupInput {
+	s.Id = &v
+	return s
+}
+
+// SetIfMatch sets the IfMatch field's value.
+func (s *DeleteKeyGroupInput) SetIfMatch(v string) *DeleteKeyGroupInput {
+	s.IfMatch = &v
+	return s
+}
+
+type DeleteKeyGroupOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteKeyGroupOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteKeyGroupOutput) GoString() string {
+	return s.String()
+}
+
+type DeleteMonitoringSubscriptionInput struct {
+	_ struct{} `locationName:"DeleteMonitoringSubscriptionRequest" type:"structure"`
+
+	// The ID of the distribution that you are disabling metrics for.
+	//
+	// DistributionId is a required field
+	DistributionId *string `location:"uri" locationName:"DistributionId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteMonitoringSubscriptionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteMonitoringSubscriptionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteMonitoringSubscriptionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteMonitoringSubscriptionInput"}
+	if s.DistributionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DistributionId"))
+	}
+	if s.DistributionId != nil && len(*s.DistributionId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DistributionId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDistributionId sets the DistributionId field's value.
+func (s *DeleteMonitoringSubscriptionInput) SetDistributionId(v string) *DeleteMonitoringSubscriptionInput {
+	s.DistributionId = &v
+	return s
+}
+
+type DeleteMonitoringSubscriptionOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteMonitoringSubscriptionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteMonitoringSubscriptionOutput) GoString() string {
 	return s.String()
 }
 
@@ -10041,12 +14957,20 @@ type DeleteOriginRequestPolicyInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteOriginRequestPolicyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteOriginRequestPolicyInput) GoString() string {
 	return s.String()
 }
@@ -10083,12 +15007,20 @@ type DeleteOriginRequestPolicyOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteOriginRequestPolicyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteOriginRequestPolicyOutput) GoString() string {
 	return s.String()
 }
@@ -10106,12 +15038,20 @@ type DeletePublicKeyInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePublicKeyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePublicKeyInput) GoString() string {
 	return s.String()
 }
@@ -10148,13 +15088,168 @@ type DeletePublicKeyOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePublicKeyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePublicKeyOutput) GoString() string {
+	return s.String()
+}
+
+type DeleteRealtimeLogConfigInput struct {
+	_ struct{} `locationName:"DeleteRealtimeLogConfigRequest" type:"structure" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+
+	// The Amazon Resource Name (ARN) of the real-time log configuration to delete.
+	ARN *string `type:"string"`
+
+	// The name of the real-time log configuration to delete.
+	Name *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteRealtimeLogConfigInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteRealtimeLogConfigInput) GoString() string {
+	return s.String()
+}
+
+// SetARN sets the ARN field's value.
+func (s *DeleteRealtimeLogConfigInput) SetARN(v string) *DeleteRealtimeLogConfigInput {
+	s.ARN = &v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *DeleteRealtimeLogConfigInput) SetName(v string) *DeleteRealtimeLogConfigInput {
+	s.Name = &v
+	return s
+}
+
+type DeleteRealtimeLogConfigOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteRealtimeLogConfigOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteRealtimeLogConfigOutput) GoString() string {
+	return s.String()
+}
+
+type DeleteResponseHeadersPolicyInput struct {
+	_ struct{} `locationName:"DeleteResponseHeadersPolicyRequest" type:"structure"`
+
+	// The identifier for the response headers policy that you are deleting.
+	//
+	// To get the identifier, you can use ListResponseHeadersPolicies.
+	//
+	// Id is a required field
+	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
+
+	// The version of the response headers policy that you are deleting.
+	//
+	// The version is the response headers policy’s ETag value, which you can
+	// get using ListResponseHeadersPolicies, GetResponseHeadersPolicy, or GetResponseHeadersPolicyConfig.
+	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResponseHeadersPolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResponseHeadersPolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteResponseHeadersPolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteResponseHeadersPolicyInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetId sets the Id field's value.
+func (s *DeleteResponseHeadersPolicyInput) SetId(v string) *DeleteResponseHeadersPolicyInput {
+	s.Id = &v
+	return s
+}
+
+// SetIfMatch sets the IfMatch field's value.
+func (s *DeleteResponseHeadersPolicyInput) SetIfMatch(v string) *DeleteResponseHeadersPolicyInput {
+	s.IfMatch = &v
+	return s
+}
+
+type DeleteResponseHeadersPolicyOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResponseHeadersPolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResponseHeadersPolicyOutput) GoString() string {
 	return s.String()
 }
 
@@ -10172,12 +15267,20 @@ type DeleteStreamingDistributionInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteStreamingDistributionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteStreamingDistributionInput) GoString() string {
 	return s.String()
 }
@@ -10214,14 +15317,120 @@ type DeleteStreamingDistributionOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteStreamingDistributionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteStreamingDistributionOutput) GoString() string {
 	return s.String()
+}
+
+type DescribeFunctionInput struct {
+	_ struct{} `locationName:"DescribeFunctionRequest" type:"structure"`
+
+	// The name of the function that you are getting information about.
+	//
+	// Name is a required field
+	Name *string `location:"uri" locationName:"Name" type:"string" required:"true"`
+
+	// The function’s stage, either DEVELOPMENT or LIVE.
+	Stage *string `location:"querystring" locationName:"Stage" type:"string" enum:"FunctionStage"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeFunctionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeFunctionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeFunctionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeFunctionInput"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetName sets the Name field's value.
+func (s *DescribeFunctionInput) SetName(v string) *DescribeFunctionInput {
+	s.Name = &v
+	return s
+}
+
+// SetStage sets the Stage field's value.
+func (s *DescribeFunctionInput) SetStage(v string) *DescribeFunctionInput {
+	s.Stage = &v
+	return s
+}
+
+type DescribeFunctionOutput struct {
+	_ struct{} `type:"structure" payload:"FunctionSummary"`
+
+	// The version identifier for the current version of the CloudFront function.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// Contains configuration information and metadata about a CloudFront function.
+	FunctionSummary *FunctionSummary `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeFunctionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeFunctionOutput) GoString() string {
+	return s.String()
+}
+
+// SetETag sets the ETag field's value.
+func (s *DescribeFunctionOutput) SetETag(v string) *DescribeFunctionOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetFunctionSummary sets the FunctionSummary field's value.
+func (s *DescribeFunctionOutput) SetFunctionSummary(v *FunctionSummary) *DescribeFunctionOutput {
+	s.FunctionSummary = v
+	return s
 }
 
 // A distribution tells CloudFront where you want content to be delivered from,
@@ -10230,31 +15439,37 @@ type Distribution struct {
 	_ struct{} `type:"structure"`
 
 	// The ARN (Amazon Resource Name) for the distribution. For example: arn:aws:cloudfront::123456789012:distribution/EDFDVBD632BHDS5,
-	// where 123456789012 is your AWS account ID.
+	// where 123456789012 is your Amazon Web Services account ID.
 	//
 	// ARN is a required field
 	ARN *string `type:"string" required:"true"`
 
-	// CloudFront automatically adds this element to the response only if you've
-	// set up the distribution to serve private content with signed URLs. The element
-	// lists the key pair IDs that CloudFront is aware of for each trusted signer.
-	// The Signer child element lists the AWS account number of the trusted signer
-	// (or an empty Self element if the signer is you). The Signer element also
-	// includes the IDs of any active key pairs associated with the trusted signer's
-	// AWS account. If no KeyPairId element appears for a Signer, that signer can't
-	// create working signed URLs.
-	//
-	// ActiveTrustedSigners is a required field
-	ActiveTrustedSigners *ActiveTrustedSigners `type:"structure" required:"true"`
+	// CloudFront automatically adds this field to the response if you’ve configured
+	// a cache behavior in this distribution to serve private content using key
+	// groups. This field contains a list of key groups and the public keys in each
+	// key group that CloudFront can use to verify the signatures of signed URLs
+	// or signed cookies.
+	ActiveTrustedKeyGroups *ActiveTrustedKeyGroups `type:"structure"`
 
-	// AWS services in China customers must file for an Internet Content Provider
-	// (ICP) recordal if they want to serve content publicly on an alternate domain
-	// name, also known as a CNAME, that they've added to CloudFront. AliasICPRecordal
-	// provides the ICP recordal status for CNAMEs associated with distributions.
+	//
+	// We recommend using TrustedKeyGroups instead of TrustedSigners.
+	//
+	// CloudFront automatically adds this field to the response if you’ve configured
+	// a cache behavior in this distribution to serve private content using trusted
+	// signers. This field contains a list of Amazon Web Services account IDs and
+	// the active CloudFront key pairs in each account that CloudFront can use to
+	// verify the signatures of signed URLs or signed cookies.
+	ActiveTrustedSigners *ActiveTrustedSigners `type:"structure"`
+
+	// Amazon Web Services services in China customers must file for an Internet
+	// Content Provider (ICP) recordal if they want to serve content publicly on
+	// an alternate domain name, also known as a CNAME, that they've added to CloudFront.
+	// AliasICPRecordal provides the ICP recordal status for CNAMEs associated with
+	// distributions.
 	//
 	// For more information about ICP recordals, see Signup, Accounts, and Credentials
 	// (https://docs.amazonaws.cn/en_us/aws/latest/userguide/accounts-and-credentials.html)
-	// in Getting Started with AWS services in China.
+	// in Getting Started with Amazon Web Services services in China.
 	AliasICPRecordals []*AliasICPRecordal `locationNameList:"AliasICPRecordal" type:"list"`
 
 	// The current configuration information for the distribution. Send a GET request
@@ -10291,12 +15506,20 @@ type Distribution struct {
 	Status *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Distribution) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Distribution) GoString() string {
 	return s.String()
 }
@@ -10304,6 +15527,12 @@ func (s Distribution) GoString() string {
 // SetARN sets the ARN field's value.
 func (s *Distribution) SetARN(v string) *Distribution {
 	s.ARN = &v
+	return s
+}
+
+// SetActiveTrustedKeyGroups sets the ActiveTrustedKeyGroups field's value.
+func (s *Distribution) SetActiveTrustedKeyGroups(v *ActiveTrustedKeyGroups) *Distribution {
+	s.ActiveTrustedKeyGroups = v
 	return s
 }
 
@@ -10379,15 +15608,12 @@ type DistributionConfig struct {
 	// CallerReference is a required field
 	CallerReference *string `type:"string" required:"true"`
 
-	// Any comments you want to include about the distribution.
+	// An optional comment to describe the distribution. The comment cannot be longer
+	// than 128 characters.
 	//
-	// If you don't want to specify a comment, include an empty Comment element.
-	//
-	// To delete an existing comment, update the distribution configuration and
-	// include an empty Comment element.
-	//
-	// To add or change a comment, update the distribution configuration and specify
-	// the new comment.
+	// Comment is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by DistributionConfig's
+	// String and GoString methods.
 	//
 	// Comment is a required field
 	Comment *string `type:"string" required:"true" sensitive:"true"`
@@ -10467,9 +15693,10 @@ type DistributionConfig struct {
 	// For more information, see Creating a Signed URL Using a Custom Policy (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/private-content-creating-signed-url-custom-policy.html)
 	// in the Amazon CloudFront Developer Guide.
 	//
-	// If you're using an Amazon Route 53 alias resource record set to route traffic
-	// to your CloudFront distribution, you need to create a second alias resource
-	// record set when both of the following are true:
+	// If you're using an Route 53 Amazon Web Services Integration alias resource
+	// record set to route traffic to your CloudFront distribution, you need to
+	// create a second alias resource record set when both of the following are
+	// true:
 	//
 	//    * You enable IPv6 for the distribution
 	//
@@ -10477,12 +15704,12 @@ type DistributionConfig struct {
 	//
 	// For more information, see Routing Traffic to an Amazon CloudFront Web Distribution
 	// by Using Your Domain Name (https://docs.aws.amazon.com/Route53/latest/DeveloperGuide/routing-to-cloudfront-distribution.html)
-	// in the Amazon Route 53 Developer Guide.
+	// in the Route 53 Amazon Web Services Integration Developer Guide.
 	//
-	// If you created a CNAME resource record set, either with Amazon Route 53 or
-	// with another DNS service, you don't need to make any changes. A CNAME record
-	// will route traffic to your distribution regardless of the IP address format
-	// of the viewer request.
+	// If you created a CNAME resource record set, either with Route 53 Amazon Web
+	// Services Integration or with another DNS service, you don't need to make
+	// any changes. A CNAME record will route traffic to your distribution regardless
+	// of the IP address format of the viewer request.
 	IsIPV6Enabled *bool `type:"boolean"`
 
 	// A complex type that controls whether access logs are written for the distribution.
@@ -10514,8 +15741,6 @@ type DistributionConfig struct {
 	// in the Amazon CloudFront Developer Guide. For information about CloudFront
 	// pricing, including how price classes (such as Price Class 100) map to CloudFront
 	// regions, see Amazon CloudFront Pricing (http://aws.amazon.com/cloudfront/pricing/).
-	// For price class information, scroll down to see the table at the bottom of
-	// the page.
 	PriceClass *string `type:"string" enum:"PriceClass"`
 
 	// A complex type that identifies ways in which you want to restrict distribution
@@ -10526,29 +15751,37 @@ type DistributionConfig struct {
 	// for communicating with viewers.
 	ViewerCertificate *ViewerCertificate `type:"structure"`
 
-	// A unique identifier that specifies the AWS WAF web ACL, if any, to associate
+	// A unique identifier that specifies the WAF web ACL, if any, to associate
 	// with this distribution. To specify a web ACL created using the latest version
-	// of AWS WAF, use the ACL ARN, for example arn:aws:wafv2:us-east-1:123456789012:global/webacl/ExampleWebACL/473e64fd-f30b-4765-81a0-62ad96dd167a.
-	// To specify a web ACL created using AWS WAF Classic, use the ACL ID, for example
+	// of WAF, use the ACL ARN, for example arn:aws:wafv2:us-east-1:123456789012:global/webacl/ExampleWebACL/473e64fd-f30b-4765-81a0-62ad96dd167a.
+	// To specify a web ACL created using WAF Classic, use the ACL ID, for example
 	// 473e64fd-f30b-4765-81a0-62ad96dd167a.
 	//
-	// AWS WAF is a web application firewall that lets you monitor the HTTP and
-	// HTTPS requests that are forwarded to CloudFront, and lets you control access
-	// to your content. Based on conditions that you specify, such as the IP addresses
+	// WAF is a web application firewall that lets you monitor the HTTP and HTTPS
+	// requests that are forwarded to CloudFront, and lets you control access to
+	// your content. Based on conditions that you specify, such as the IP addresses
 	// that requests originate from or the values of query strings, CloudFront responds
 	// to requests either with the requested content or with an HTTP 403 status
 	// code (Forbidden). You can also configure CloudFront to return a custom error
-	// page when a request is blocked. For more information about AWS WAF, see the
-	// AWS WAF Developer Guide (https://docs.aws.amazon.com/waf/latest/developerguide/what-is-aws-waf.html).
+	// page when a request is blocked. For more information about WAF, see the WAF
+	// Developer Guide (https://docs.aws.amazon.com/waf/latest/developerguide/what-is-aws-waf.html).
 	WebACLId *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DistributionConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DistributionConfig) GoString() string {
 	return s.String()
 }
@@ -10736,12 +15969,20 @@ type DistributionConfigWithTags struct {
 	Tags *Tags `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DistributionConfigWithTags) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DistributionConfigWithTags) GoString() string {
 	return s.String()
 }
@@ -10818,12 +16059,20 @@ type DistributionIdList struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DistributionIdList) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DistributionIdList) GoString() string {
 	return s.String()
 }
@@ -10877,7 +16126,7 @@ type DistributionList struct {
 	IsTruncated *bool `type:"boolean" required:"true"`
 
 	// A complex type that contains one DistributionSummary element for each distribution
-	// that was created by the current AWS account.
+	// that was created by the current Amazon Web Services account.
 	Items []*DistributionSummary `locationNameList:"DistributionSummary" type:"list"`
 
 	// The value you provided for the Marker request parameter.
@@ -10895,18 +16144,27 @@ type DistributionList struct {
 	// where they left off.
 	NextMarker *string `type:"string"`
 
-	// The number of distributions that were created by the current AWS account.
+	// The number of distributions that were created by the current Amazon Web Services
+	// account.
 	//
 	// Quantity is a required field
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DistributionList) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DistributionList) GoString() string {
 	return s.String()
 }
@@ -10952,19 +16210,20 @@ type DistributionSummary struct {
 	_ struct{} `type:"structure"`
 
 	// The ARN (Amazon Resource Name) for the distribution. For example: arn:aws:cloudfront::123456789012:distribution/EDFDVBD632BHDS5,
-	// where 123456789012 is your AWS account ID.
+	// where 123456789012 is your Amazon Web Services account ID.
 	//
 	// ARN is a required field
 	ARN *string `type:"string" required:"true"`
 
-	// AWS services in China customers must file for an Internet Content Provider
-	// (ICP) recordal if they want to serve content publicly on an alternate domain
-	// name, also known as a CNAME, that they've added to CloudFront. AliasICPRecordal
-	// provides the ICP recordal status for CNAMEs associated with distributions.
+	// Amazon Web Services services in China customers must file for an Internet
+	// Content Provider (ICP) recordal if they want to serve content publicly on
+	// an alternate domain name, also known as a CNAME, that they've added to CloudFront.
+	// AliasICPRecordal provides the ICP recordal status for CNAMEs associated with
+	// distributions.
 	//
 	// For more information about ICP recordals, see Signup, Accounts, and Credentials
 	// (https://docs.amazonaws.cn/en_us/aws/latest/userguide/accounts-and-credentials.html)
-	// in Getting Started with AWS services in China.
+	// in Getting Started with Amazon Web Services services in China.
 	AliasICPRecordals []*AliasICPRecordal `locationNameList:"AliasICPRecordal" type:"list"`
 
 	// A complex type that contains information about CNAMEs (alternate domain names),
@@ -11066,12 +16325,20 @@ type DistributionSummary struct {
 	WebACLId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DistributionSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DistributionSummary) GoString() string {
 	return s.String()
 }
@@ -11212,12 +16479,20 @@ type EncryptionEntities struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EncryptionEntities) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EncryptionEntities) GoString() string {
 	return s.String()
 }
@@ -11285,12 +16560,20 @@ type EncryptionEntity struct {
 	PublicKeyId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EncryptionEntity) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EncryptionEntity) GoString() string {
 	return s.String()
 }
@@ -11337,6 +16620,70 @@ func (s *EncryptionEntity) SetPublicKeyId(v string) *EncryptionEntity {
 	return s
 }
 
+// Contains information about the Amazon Kinesis data stream where you are sending
+// real-time log data in a real-time log configuration.
+type EndPoint struct {
+	_ struct{} `type:"structure"`
+
+	// Contains information about the Amazon Kinesis data stream where you are sending
+	// real-time log data.
+	KinesisStreamConfig *KinesisStreamConfig `type:"structure"`
+
+	// The type of data stream where you are sending real-time log data. The only
+	// valid value is Kinesis.
+	//
+	// StreamType is a required field
+	StreamType *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EndPoint) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EndPoint) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *EndPoint) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "EndPoint"}
+	if s.StreamType == nil {
+		invalidParams.Add(request.NewErrParamRequired("StreamType"))
+	}
+	if s.KinesisStreamConfig != nil {
+		if err := s.KinesisStreamConfig.Validate(); err != nil {
+			invalidParams.AddNested("KinesisStreamConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetKinesisStreamConfig sets the KinesisStreamConfig field's value.
+func (s *EndPoint) SetKinesisStreamConfig(v *KinesisStreamConfig) *EndPoint {
+	s.KinesisStreamConfig = v
+	return s
+}
+
+// SetStreamType sets the StreamType field's value.
+func (s *EndPoint) SetStreamType(v string) *EndPoint {
+	s.StreamType = &v
+	return s
+}
+
 // A complex data type that includes the profile configurations and other options
 // specified for field-level encryption.
 type FieldLevelEncryption struct {
@@ -11361,12 +16708,20 @@ type FieldLevelEncryption struct {
 	LastModifiedTime *time.Time `type:"timestamp" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryption) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryption) GoString() string {
 	return s.String()
 }
@@ -11399,7 +16754,8 @@ type FieldLevelEncryptionConfig struct {
 	// CallerReference is a required field
 	CallerReference *string `type:"string" required:"true"`
 
-	// An optional comment about the configuration.
+	// An optional comment about the configuration. The comment cannot be longer
+	// than 128 characters.
 	Comment *string `type:"string"`
 
 	// A complex data type that specifies when to forward content if a content type
@@ -11412,12 +16768,20 @@ type FieldLevelEncryptionConfig struct {
 	QueryArgProfileConfig *QueryArgProfileConfig `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionConfig) GoString() string {
 	return s.String()
 }
@@ -11492,12 +16856,20 @@ type FieldLevelEncryptionList struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionList) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionList) GoString() string {
 	return s.String()
 }
@@ -11549,12 +16921,20 @@ type FieldLevelEncryptionProfile struct {
 	LastModifiedTime *time.Time `type:"timestamp" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionProfile) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionProfile) GoString() string {
 	return s.String()
 }
@@ -11586,7 +16966,8 @@ type FieldLevelEncryptionProfileConfig struct {
 	// CallerReference is a required field
 	CallerReference *string `type:"string" required:"true"`
 
-	// An optional comment for the field-level encryption profile.
+	// An optional comment for the field-level encryption profile. The comment cannot
+	// be longer than 128 characters.
 	Comment *string `type:"string"`
 
 	// A complex data type of encryption entities for the field-level encryption
@@ -11602,12 +16983,20 @@ type FieldLevelEncryptionProfileConfig struct {
 	Name *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionProfileConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionProfileConfig) GoString() string {
 	return s.String()
 }
@@ -11684,12 +17073,20 @@ type FieldLevelEncryptionProfileList struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionProfileList) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionProfileList) GoString() string {
 	return s.String()
 }
@@ -11722,7 +17119,8 @@ func (s *FieldLevelEncryptionProfileList) SetQuantity(v int64) *FieldLevelEncryp
 type FieldLevelEncryptionProfileSummary struct {
 	_ struct{} `type:"structure"`
 
-	// An optional comment for the field-level encryption profile summary.
+	// An optional comment for the field-level encryption profile summary. The comment
+	// cannot be longer than 128 characters.
 	Comment *string `type:"string"`
 
 	// A complex data type of encryption entities for the field-level encryption
@@ -11748,12 +17146,20 @@ type FieldLevelEncryptionProfileSummary struct {
 	Name *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionProfileSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionProfileSummary) GoString() string {
 	return s.String()
 }
@@ -11792,7 +17198,8 @@ func (s *FieldLevelEncryptionProfileSummary) SetName(v string) *FieldLevelEncryp
 type FieldLevelEncryptionSummary struct {
 	_ struct{} `type:"structure"`
 
-	// An optional comment about the field-level encryption item.
+	// An optional comment about the field-level encryption item. The comment cannot
+	// be longer than 128 characters.
 	Comment *string `type:"string"`
 
 	// A summary of a content type-profile mapping.
@@ -11812,12 +17219,20 @@ type FieldLevelEncryptionSummary struct {
 	QueryArgProfileConfig *QueryArgProfileConfig `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldLevelEncryptionSummary) GoString() string {
 	return s.String()
 }
@@ -11866,12 +17281,20 @@ type FieldPatterns struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldPatterns) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FieldPatterns) GoString() string {
 	return s.String()
 }
@@ -12016,12 +17439,20 @@ type ForwardedValues struct {
 	QueryStringCacheKeys *QueryStringCacheKeys `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ForwardedValues) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ForwardedValues) GoString() string {
 	return s.String()
 }
@@ -12081,6 +17512,401 @@ func (s *ForwardedValues) SetQueryStringCacheKeys(v *QueryStringCacheKeys) *Forw
 	return s
 }
 
+// A CloudFront function that is associated with a cache behavior in a CloudFront
+// distribution.
+type FunctionAssociation struct {
+	_ struct{} `type:"structure"`
+
+	// The event type of the function, either viewer-request or viewer-response.
+	// You cannot use origin-facing event types (origin-request and origin-response)
+	// with a CloudFront function.
+	//
+	// EventType is a required field
+	EventType *string `type:"string" required:"true" enum:"EventType"`
+
+	// The Amazon Resource Name (ARN) of the function.
+	//
+	// FunctionARN is a required field
+	FunctionARN *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionAssociation) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionAssociation) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *FunctionAssociation) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "FunctionAssociation"}
+	if s.EventType == nil {
+		invalidParams.Add(request.NewErrParamRequired("EventType"))
+	}
+	if s.FunctionARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionARN"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetEventType sets the EventType field's value.
+func (s *FunctionAssociation) SetEventType(v string) *FunctionAssociation {
+	s.EventType = &v
+	return s
+}
+
+// SetFunctionARN sets the FunctionARN field's value.
+func (s *FunctionAssociation) SetFunctionARN(v string) *FunctionAssociation {
+	s.FunctionARN = &v
+	return s
+}
+
+// A list of CloudFront functions that are associated with a cache behavior
+// in a CloudFront distribution. CloudFront functions must be published to the
+// LIVE stage to associate them with a cache behavior.
+type FunctionAssociations struct {
+	_ struct{} `type:"structure"`
+
+	// The CloudFront functions that are associated with a cache behavior in a CloudFront
+	// distribution. CloudFront functions must be published to the LIVE stage to
+	// associate them with a cache behavior.
+	Items []*FunctionAssociation `locationNameList:"FunctionAssociation" type:"list"`
+
+	// The number of CloudFront functions in the list.
+	//
+	// Quantity is a required field
+	Quantity *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionAssociations) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionAssociations) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *FunctionAssociations) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "FunctionAssociations"}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+	if s.Items != nil {
+		for i, v := range s.Items {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Items", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetItems sets the Items field's value.
+func (s *FunctionAssociations) SetItems(v []*FunctionAssociation) *FunctionAssociations {
+	s.Items = v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *FunctionAssociations) SetQuantity(v int64) *FunctionAssociations {
+	s.Quantity = &v
+	return s
+}
+
+// Contains configuration information about a CloudFront function.
+type FunctionConfig struct {
+	_ struct{} `type:"structure"`
+
+	// A comment to describe the function.
+	//
+	// Comment is a required field
+	Comment *string `type:"string" required:"true"`
+
+	// The function’s runtime environment. The only valid value is cloudfront-js-1.0.
+	//
+	// Runtime is a required field
+	Runtime *string `type:"string" required:"true" enum:"FunctionRuntime"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *FunctionConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "FunctionConfig"}
+	if s.Comment == nil {
+		invalidParams.Add(request.NewErrParamRequired("Comment"))
+	}
+	if s.Runtime == nil {
+		invalidParams.Add(request.NewErrParamRequired("Runtime"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetComment sets the Comment field's value.
+func (s *FunctionConfig) SetComment(v string) *FunctionConfig {
+	s.Comment = &v
+	return s
+}
+
+// SetRuntime sets the Runtime field's value.
+func (s *FunctionConfig) SetRuntime(v string) *FunctionConfig {
+	s.Runtime = &v
+	return s
+}
+
+// A list of CloudFront functions.
+type FunctionList struct {
+	_ struct{} `type:"structure"`
+
+	// Contains the functions in the list.
+	Items []*FunctionSummary `locationNameList:"FunctionSummary" type:"list"`
+
+	// The maximum number of functions requested.
+	//
+	// MaxItems is a required field
+	MaxItems *int64 `type:"integer" required:"true"`
+
+	// If there are more items in the list than are in this response, this element
+	// is present. It contains the value that you should use in the Marker field
+	// of a subsequent request to continue listing functions where you left off.
+	NextMarker *string `type:"string"`
+
+	// The number of functions returned in the response.
+	//
+	// Quantity is a required field
+	Quantity *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionList) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionList) GoString() string {
+	return s.String()
+}
+
+// SetItems sets the Items field's value.
+func (s *FunctionList) SetItems(v []*FunctionSummary) *FunctionList {
+	s.Items = v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *FunctionList) SetMaxItems(v int64) *FunctionList {
+	s.MaxItems = &v
+	return s
+}
+
+// SetNextMarker sets the NextMarker field's value.
+func (s *FunctionList) SetNextMarker(v string) *FunctionList {
+	s.NextMarker = &v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *FunctionList) SetQuantity(v int64) *FunctionList {
+	s.Quantity = &v
+	return s
+}
+
+// Contains metadata about a CloudFront function.
+type FunctionMetadata struct {
+	_ struct{} `type:"structure"`
+
+	// The date and time when the function was created.
+	CreatedTime *time.Time `type:"timestamp"`
+
+	// The Amazon Resource Name (ARN) of the function. The ARN uniquely identifies
+	// the function.
+	//
+	// FunctionARN is a required field
+	FunctionARN *string `type:"string" required:"true"`
+
+	// The date and time when the function was most recently updated.
+	//
+	// LastModifiedTime is a required field
+	LastModifiedTime *time.Time `type:"timestamp" required:"true"`
+
+	// The stage that the function is in, either DEVELOPMENT or LIVE.
+	//
+	// When a function is in the DEVELOPMENT stage, you can test the function with
+	// TestFunction, and update it with UpdateFunction.
+	//
+	// When a function is in the LIVE stage, you can attach the function to a distribution’s
+	// cache behavior, using the function’s ARN.
+	Stage *string `type:"string" enum:"FunctionStage"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionMetadata) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionMetadata) GoString() string {
+	return s.String()
+}
+
+// SetCreatedTime sets the CreatedTime field's value.
+func (s *FunctionMetadata) SetCreatedTime(v time.Time) *FunctionMetadata {
+	s.CreatedTime = &v
+	return s
+}
+
+// SetFunctionARN sets the FunctionARN field's value.
+func (s *FunctionMetadata) SetFunctionARN(v string) *FunctionMetadata {
+	s.FunctionARN = &v
+	return s
+}
+
+// SetLastModifiedTime sets the LastModifiedTime field's value.
+func (s *FunctionMetadata) SetLastModifiedTime(v time.Time) *FunctionMetadata {
+	s.LastModifiedTime = &v
+	return s
+}
+
+// SetStage sets the Stage field's value.
+func (s *FunctionMetadata) SetStage(v string) *FunctionMetadata {
+	s.Stage = &v
+	return s
+}
+
+// Contains configuration information and metadata about a CloudFront function.
+type FunctionSummary struct {
+	_ struct{} `type:"structure"`
+
+	// Contains configuration information about a CloudFront function.
+	//
+	// FunctionConfig is a required field
+	FunctionConfig *FunctionConfig `type:"structure" required:"true"`
+
+	// Contains metadata about a CloudFront function.
+	//
+	// FunctionMetadata is a required field
+	FunctionMetadata *FunctionMetadata `type:"structure" required:"true"`
+
+	// The name of the CloudFront function.
+	//
+	// Name is a required field
+	Name *string `min:"1" type:"string" required:"true"`
+
+	// The status of the CloudFront function.
+	Status *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionSummary) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FunctionSummary) GoString() string {
+	return s.String()
+}
+
+// SetFunctionConfig sets the FunctionConfig field's value.
+func (s *FunctionSummary) SetFunctionConfig(v *FunctionConfig) *FunctionSummary {
+	s.FunctionConfig = v
+	return s
+}
+
+// SetFunctionMetadata sets the FunctionMetadata field's value.
+func (s *FunctionSummary) SetFunctionMetadata(v *FunctionMetadata) *FunctionSummary {
+	s.FunctionMetadata = v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *FunctionSummary) SetName(v string) *FunctionSummary {
+	s.Name = &v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *FunctionSummary) SetStatus(v string) *FunctionSummary {
+	s.Status = &v
+	return s
+}
+
 // A complex type that controls the countries in which your content is distributed.
 // CloudFront determines the location of your users using MaxMind GeoIP databases.
 type GeoRestriction struct {
@@ -12124,12 +17950,20 @@ type GeoRestriction struct {
 	RestrictionType *string `type:"string" required:"true" enum:"GeoRestrictionType"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GeoRestriction) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GeoRestriction) GoString() string {
 	return s.String()
 }
@@ -12180,12 +18014,20 @@ type GetCachePolicyConfigInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCachePolicyConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCachePolicyConfigInput) GoString() string {
 	return s.String()
 }
@@ -12222,12 +18064,20 @@ type GetCachePolicyConfigOutput struct {
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCachePolicyConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCachePolicyConfigOutput) GoString() string {
 	return s.String()
 }
@@ -12256,12 +18106,20 @@ type GetCachePolicyInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCachePolicyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCachePolicyInput) GoString() string {
 	return s.String()
 }
@@ -12298,12 +18156,20 @@ type GetCachePolicyOutput struct {
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCachePolicyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCachePolicyOutput) GoString() string {
 	return s.String()
 }
@@ -12331,12 +18197,20 @@ type GetCloudFrontOriginAccessIdentityConfigInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCloudFrontOriginAccessIdentityConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCloudFrontOriginAccessIdentityConfigInput) GoString() string {
 	return s.String()
 }
@@ -12374,12 +18248,20 @@ type GetCloudFrontOriginAccessIdentityConfigOutput struct {
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCloudFrontOriginAccessIdentityConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCloudFrontOriginAccessIdentityConfigOutput) GoString() string {
 	return s.String()
 }
@@ -12406,12 +18288,20 @@ type GetCloudFrontOriginAccessIdentityInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCloudFrontOriginAccessIdentityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCloudFrontOriginAccessIdentityInput) GoString() string {
 	return s.String()
 }
@@ -12450,12 +18340,20 @@ type GetCloudFrontOriginAccessIdentityOutput struct {
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCloudFrontOriginAccessIdentityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCloudFrontOriginAccessIdentityOutput) GoString() string {
 	return s.String()
 }
@@ -12483,12 +18381,20 @@ type GetDistributionConfigInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDistributionConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDistributionConfigInput) GoString() string {
 	return s.String()
 }
@@ -12526,12 +18432,20 @@ type GetDistributionConfigOutput struct {
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDistributionConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDistributionConfigOutput) GoString() string {
 	return s.String()
 }
@@ -12559,12 +18473,20 @@ type GetDistributionInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDistributionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDistributionInput) GoString() string {
 	return s.String()
 }
@@ -12602,12 +18524,20 @@ type GetDistributionOutput struct {
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDistributionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDistributionOutput) GoString() string {
 	return s.String()
 }
@@ -12633,12 +18563,20 @@ type GetFieldLevelEncryptionConfigInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionConfigInput) GoString() string {
 	return s.String()
 }
@@ -12676,12 +18614,20 @@ type GetFieldLevelEncryptionConfigOutput struct {
 	FieldLevelEncryptionConfig *FieldLevelEncryptionConfig `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionConfigOutput) GoString() string {
 	return s.String()
 }
@@ -12707,12 +18653,20 @@ type GetFieldLevelEncryptionInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionInput) GoString() string {
 	return s.String()
 }
@@ -12750,12 +18704,20 @@ type GetFieldLevelEncryptionOutput struct {
 	FieldLevelEncryption *FieldLevelEncryption `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionOutput) GoString() string {
 	return s.String()
 }
@@ -12781,12 +18743,20 @@ type GetFieldLevelEncryptionProfileConfigInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionProfileConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionProfileConfigInput) GoString() string {
 	return s.String()
 }
@@ -12824,12 +18794,20 @@ type GetFieldLevelEncryptionProfileConfigOutput struct {
 	FieldLevelEncryptionProfileConfig *FieldLevelEncryptionProfileConfig `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionProfileConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionProfileConfigOutput) GoString() string {
 	return s.String()
 }
@@ -12855,12 +18833,20 @@ type GetFieldLevelEncryptionProfileInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionProfileInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionProfileInput) GoString() string {
 	return s.String()
 }
@@ -12897,12 +18883,20 @@ type GetFieldLevelEncryptionProfileOutput struct {
 	FieldLevelEncryptionProfile *FieldLevelEncryptionProfile `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionProfileOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetFieldLevelEncryptionProfileOutput) GoString() string {
 	return s.String()
 }
@@ -12916,6 +18910,117 @@ func (s *GetFieldLevelEncryptionProfileOutput) SetETag(v string) *GetFieldLevelE
 // SetFieldLevelEncryptionProfile sets the FieldLevelEncryptionProfile field's value.
 func (s *GetFieldLevelEncryptionProfileOutput) SetFieldLevelEncryptionProfile(v *FieldLevelEncryptionProfile) *GetFieldLevelEncryptionProfileOutput {
 	s.FieldLevelEncryptionProfile = v
+	return s
+}
+
+type GetFunctionInput struct {
+	_ struct{} `locationName:"GetFunctionRequest" type:"structure"`
+
+	// The name of the function whose code you are getting.
+	//
+	// Name is a required field
+	Name *string `location:"uri" locationName:"Name" type:"string" required:"true"`
+
+	// The function’s stage, either DEVELOPMENT or LIVE.
+	Stage *string `location:"querystring" locationName:"Stage" type:"string" enum:"FunctionStage"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetFunctionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetFunctionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetFunctionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetFunctionInput"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetName sets the Name field's value.
+func (s *GetFunctionInput) SetName(v string) *GetFunctionInput {
+	s.Name = &v
+	return s
+}
+
+// SetStage sets the Stage field's value.
+func (s *GetFunctionInput) SetStage(v string) *GetFunctionInput {
+	s.Stage = &v
+	return s
+}
+
+type GetFunctionOutput struct {
+	_ struct{} `type:"structure" payload:"FunctionCode"`
+
+	// The content type (media type) of the response.
+	ContentType *string `location:"header" locationName:"Content-Type" type:"string"`
+
+	// The version identifier for the current version of the CloudFront function.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// The function code of a CloudFront function.
+	//
+	// FunctionCode is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by GetFunctionOutput's
+	// String and GoString methods.
+	FunctionCode []byte `min:"1" type:"blob" sensitive:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetFunctionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetFunctionOutput) GoString() string {
+	return s.String()
+}
+
+// SetContentType sets the ContentType field's value.
+func (s *GetFunctionOutput) SetContentType(v string) *GetFunctionOutput {
+	s.ContentType = &v
+	return s
+}
+
+// SetETag sets the ETag field's value.
+func (s *GetFunctionOutput) SetETag(v string) *GetFunctionOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetFunctionCode sets the FunctionCode field's value.
+func (s *GetFunctionOutput) SetFunctionCode(v []byte) *GetFunctionOutput {
+	s.FunctionCode = v
 	return s
 }
 
@@ -12934,12 +19039,20 @@ type GetInvalidationInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetInvalidationInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetInvalidationInput) GoString() string {
 	return s.String()
 }
@@ -12987,12 +19100,20 @@ type GetInvalidationOutput struct {
 	Invalidation *Invalidation `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetInvalidationOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetInvalidationOutput) GoString() string {
 	return s.String()
 }
@@ -13000,6 +19121,267 @@ func (s GetInvalidationOutput) GoString() string {
 // SetInvalidation sets the Invalidation field's value.
 func (s *GetInvalidationOutput) SetInvalidation(v *Invalidation) *GetInvalidationOutput {
 	s.Invalidation = v
+	return s
+}
+
+type GetKeyGroupConfigInput struct {
+	_ struct{} `locationName:"GetKeyGroupConfigRequest" type:"structure"`
+
+	// The identifier of the key group whose configuration you are getting. To get
+	// the identifier, use ListKeyGroups.
+	//
+	// Id is a required field
+	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetKeyGroupConfigInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetKeyGroupConfigInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetKeyGroupConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetKeyGroupConfigInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetId sets the Id field's value.
+func (s *GetKeyGroupConfigInput) SetId(v string) *GetKeyGroupConfigInput {
+	s.Id = &v
+	return s
+}
+
+type GetKeyGroupConfigOutput struct {
+	_ struct{} `type:"structure" payload:"KeyGroupConfig"`
+
+	// The identifier for this version of the key group.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// The key group configuration.
+	KeyGroupConfig *KeyGroupConfig `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetKeyGroupConfigOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetKeyGroupConfigOutput) GoString() string {
+	return s.String()
+}
+
+// SetETag sets the ETag field's value.
+func (s *GetKeyGroupConfigOutput) SetETag(v string) *GetKeyGroupConfigOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetKeyGroupConfig sets the KeyGroupConfig field's value.
+func (s *GetKeyGroupConfigOutput) SetKeyGroupConfig(v *KeyGroupConfig) *GetKeyGroupConfigOutput {
+	s.KeyGroupConfig = v
+	return s
+}
+
+type GetKeyGroupInput struct {
+	_ struct{} `locationName:"GetKeyGroupRequest" type:"structure"`
+
+	// The identifier of the key group that you are getting. To get the identifier,
+	// use ListKeyGroups.
+	//
+	// Id is a required field
+	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetKeyGroupInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetKeyGroupInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetKeyGroupInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetKeyGroupInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetId sets the Id field's value.
+func (s *GetKeyGroupInput) SetId(v string) *GetKeyGroupInput {
+	s.Id = &v
+	return s
+}
+
+type GetKeyGroupOutput struct {
+	_ struct{} `type:"structure" payload:"KeyGroup"`
+
+	// The identifier for this version of the key group.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// The key group.
+	KeyGroup *KeyGroup `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetKeyGroupOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetKeyGroupOutput) GoString() string {
+	return s.String()
+}
+
+// SetETag sets the ETag field's value.
+func (s *GetKeyGroupOutput) SetETag(v string) *GetKeyGroupOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetKeyGroup sets the KeyGroup field's value.
+func (s *GetKeyGroupOutput) SetKeyGroup(v *KeyGroup) *GetKeyGroupOutput {
+	s.KeyGroup = v
+	return s
+}
+
+type GetMonitoringSubscriptionInput struct {
+	_ struct{} `locationName:"GetMonitoringSubscriptionRequest" type:"structure"`
+
+	// The ID of the distribution that you are getting metrics information for.
+	//
+	// DistributionId is a required field
+	DistributionId *string `location:"uri" locationName:"DistributionId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetMonitoringSubscriptionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetMonitoringSubscriptionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetMonitoringSubscriptionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetMonitoringSubscriptionInput"}
+	if s.DistributionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DistributionId"))
+	}
+	if s.DistributionId != nil && len(*s.DistributionId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DistributionId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDistributionId sets the DistributionId field's value.
+func (s *GetMonitoringSubscriptionInput) SetDistributionId(v string) *GetMonitoringSubscriptionInput {
+	s.DistributionId = &v
+	return s
+}
+
+type GetMonitoringSubscriptionOutput struct {
+	_ struct{} `type:"structure" payload:"MonitoringSubscription"`
+
+	// A monitoring subscription. This structure contains information about whether
+	// additional CloudWatch metrics are enabled for a given CloudFront distribution.
+	MonitoringSubscription *MonitoringSubscription `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetMonitoringSubscriptionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetMonitoringSubscriptionOutput) GoString() string {
+	return s.String()
+}
+
+// SetMonitoringSubscription sets the MonitoringSubscription field's value.
+func (s *GetMonitoringSubscriptionOutput) SetMonitoringSubscription(v *MonitoringSubscription) *GetMonitoringSubscriptionOutput {
+	s.MonitoringSubscription = v
 	return s
 }
 
@@ -13016,12 +19398,20 @@ type GetOriginRequestPolicyConfigInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOriginRequestPolicyConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOriginRequestPolicyConfigInput) GoString() string {
 	return s.String()
 }
@@ -13058,12 +19448,20 @@ type GetOriginRequestPolicyConfigOutput struct {
 	OriginRequestPolicyConfig *OriginRequestPolicyConfig `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOriginRequestPolicyConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOriginRequestPolicyConfigOutput) GoString() string {
 	return s.String()
 }
@@ -13093,12 +19491,20 @@ type GetOriginRequestPolicyInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOriginRequestPolicyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOriginRequestPolicyInput) GoString() string {
 	return s.String()
 }
@@ -13135,12 +19541,20 @@ type GetOriginRequestPolicyOutput struct {
 	OriginRequestPolicy *OriginRequestPolicy `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOriginRequestPolicyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetOriginRequestPolicyOutput) GoString() string {
 	return s.String()
 }
@@ -13160,18 +19574,26 @@ func (s *GetOriginRequestPolicyOutput) SetOriginRequestPolicy(v *OriginRequestPo
 type GetPublicKeyConfigInput struct {
 	_ struct{} `locationName:"GetPublicKeyConfigRequest" type:"structure"`
 
-	// Request the ID for the public key configuration.
+	// The identifier of the public key whose configuration you are getting.
 	//
 	// Id is a required field
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPublicKeyConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPublicKeyConfigInput) GoString() string {
 	return s.String()
 }
@@ -13201,19 +19623,27 @@ func (s *GetPublicKeyConfigInput) SetId(v string) *GetPublicKeyConfigInput {
 type GetPublicKeyConfigOutput struct {
 	_ struct{} `type:"structure" payload:"PublicKeyConfig"`
 
-	// The current version of the public key configuration. For example: E2QWRUHAPOMQZL.
+	// The identifier for this version of the public key configuration.
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 
-	// Return the result for the public key configuration.
+	// A public key configuration.
 	PublicKeyConfig *PublicKeyConfig `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPublicKeyConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPublicKeyConfigOutput) GoString() string {
 	return s.String()
 }
@@ -13233,18 +19663,26 @@ func (s *GetPublicKeyConfigOutput) SetPublicKeyConfig(v *PublicKeyConfig) *GetPu
 type GetPublicKeyInput struct {
 	_ struct{} `locationName:"GetPublicKeyRequest" type:"structure"`
 
-	// Request the ID for the public key.
+	// The identifier of the public key you are getting.
 	//
 	// Id is a required field
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPublicKeyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPublicKeyInput) GoString() string {
 	return s.String()
 }
@@ -13274,19 +19712,27 @@ func (s *GetPublicKeyInput) SetId(v string) *GetPublicKeyInput {
 type GetPublicKeyOutput struct {
 	_ struct{} `type:"structure" payload:"PublicKey"`
 
-	// The current version of the public key. For example: E2QWRUHAPOMQZL.
+	// The identifier for this version of the public key.
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 
-	// Return the public key.
+	// The public key.
 	PublicKey *PublicKey `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPublicKeyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPublicKeyOutput) GoString() string {
 	return s.String()
 }
@@ -13303,6 +19749,265 @@ func (s *GetPublicKeyOutput) SetPublicKey(v *PublicKey) *GetPublicKeyOutput {
 	return s
 }
 
+type GetRealtimeLogConfigInput struct {
+	_ struct{} `locationName:"GetRealtimeLogConfigRequest" type:"structure" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+
+	// The Amazon Resource Name (ARN) of the real-time log configuration to get.
+	ARN *string `type:"string"`
+
+	// The name of the real-time log configuration to get.
+	Name *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRealtimeLogConfigInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRealtimeLogConfigInput) GoString() string {
+	return s.String()
+}
+
+// SetARN sets the ARN field's value.
+func (s *GetRealtimeLogConfigInput) SetARN(v string) *GetRealtimeLogConfigInput {
+	s.ARN = &v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *GetRealtimeLogConfigInput) SetName(v string) *GetRealtimeLogConfigInput {
+	s.Name = &v
+	return s
+}
+
+type GetRealtimeLogConfigOutput struct {
+	_ struct{} `type:"structure"`
+
+	// A real-time log configuration.
+	RealtimeLogConfig *RealtimeLogConfig `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRealtimeLogConfigOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRealtimeLogConfigOutput) GoString() string {
+	return s.String()
+}
+
+// SetRealtimeLogConfig sets the RealtimeLogConfig field's value.
+func (s *GetRealtimeLogConfigOutput) SetRealtimeLogConfig(v *RealtimeLogConfig) *GetRealtimeLogConfigOutput {
+	s.RealtimeLogConfig = v
+	return s
+}
+
+type GetResponseHeadersPolicyConfigInput struct {
+	_ struct{} `locationName:"GetResponseHeadersPolicyConfigRequest" type:"structure"`
+
+	// The identifier for the response headers policy.
+	//
+	// If the response headers policy is attached to a distribution’s cache behavior,
+	// you can get the policy’s identifier using ListDistributions or GetDistribution.
+	// If the response headers policy is not attached to a cache behavior, you can
+	// get the identifier using ListResponseHeadersPolicies.
+	//
+	// Id is a required field
+	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResponseHeadersPolicyConfigInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResponseHeadersPolicyConfigInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetResponseHeadersPolicyConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetResponseHeadersPolicyConfigInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetId sets the Id field's value.
+func (s *GetResponseHeadersPolicyConfigInput) SetId(v string) *GetResponseHeadersPolicyConfigInput {
+	s.Id = &v
+	return s
+}
+
+type GetResponseHeadersPolicyConfigOutput struct {
+	_ struct{} `type:"structure" payload:"ResponseHeadersPolicyConfig"`
+
+	// The version identifier for the current version of the response headers policy.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// Contains a response headers policy.
+	ResponseHeadersPolicyConfig *ResponseHeadersPolicyConfig `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResponseHeadersPolicyConfigOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResponseHeadersPolicyConfigOutput) GoString() string {
+	return s.String()
+}
+
+// SetETag sets the ETag field's value.
+func (s *GetResponseHeadersPolicyConfigOutput) SetETag(v string) *GetResponseHeadersPolicyConfigOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetResponseHeadersPolicyConfig sets the ResponseHeadersPolicyConfig field's value.
+func (s *GetResponseHeadersPolicyConfigOutput) SetResponseHeadersPolicyConfig(v *ResponseHeadersPolicyConfig) *GetResponseHeadersPolicyConfigOutput {
+	s.ResponseHeadersPolicyConfig = v
+	return s
+}
+
+type GetResponseHeadersPolicyInput struct {
+	_ struct{} `locationName:"GetResponseHeadersPolicyRequest" type:"structure"`
+
+	// The identifier for the response headers policy.
+	//
+	// If the response headers policy is attached to a distribution’s cache behavior,
+	// you can get the policy’s identifier using ListDistributions or GetDistribution.
+	// If the response headers policy is not attached to a cache behavior, you can
+	// get the identifier using ListResponseHeadersPolicies.
+	//
+	// Id is a required field
+	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResponseHeadersPolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResponseHeadersPolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetResponseHeadersPolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetResponseHeadersPolicyInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetId sets the Id field's value.
+func (s *GetResponseHeadersPolicyInput) SetId(v string) *GetResponseHeadersPolicyInput {
+	s.Id = &v
+	return s
+}
+
+type GetResponseHeadersPolicyOutput struct {
+	_ struct{} `type:"structure" payload:"ResponseHeadersPolicy"`
+
+	// The version identifier for the current version of the response headers policy.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// Contains a response headers policy.
+	ResponseHeadersPolicy *ResponseHeadersPolicy `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResponseHeadersPolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResponseHeadersPolicyOutput) GoString() string {
+	return s.String()
+}
+
+// SetETag sets the ETag field's value.
+func (s *GetResponseHeadersPolicyOutput) SetETag(v string) *GetResponseHeadersPolicyOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetResponseHeadersPolicy sets the ResponseHeadersPolicy field's value.
+func (s *GetResponseHeadersPolicyOutput) SetResponseHeadersPolicy(v *ResponseHeadersPolicy) *GetResponseHeadersPolicyOutput {
+	s.ResponseHeadersPolicy = v
+	return s
+}
+
 // To request to get a streaming distribution configuration.
 type GetStreamingDistributionConfigInput struct {
 	_ struct{} `locationName:"GetStreamingDistributionConfigRequest" type:"structure"`
@@ -13313,12 +20018,20 @@ type GetStreamingDistributionConfigInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStreamingDistributionConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStreamingDistributionConfigInput) GoString() string {
 	return s.String()
 }
@@ -13356,12 +20069,20 @@ type GetStreamingDistributionConfigOutput struct {
 	StreamingDistributionConfig *StreamingDistributionConfig `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStreamingDistributionConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStreamingDistributionConfigOutput) GoString() string {
 	return s.String()
 }
@@ -13388,12 +20109,20 @@ type GetStreamingDistributionInput struct {
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStreamingDistributionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStreamingDistributionInput) GoString() string {
 	return s.String()
 }
@@ -13432,12 +20161,20 @@ type GetStreamingDistributionOutput struct {
 	StreamingDistribution *StreamingDistribution `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStreamingDistributionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStreamingDistributionOutput) GoString() string {
 	return s.String()
 }
@@ -13467,12 +20204,20 @@ type Headers struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Headers) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Headers) GoString() string {
 	return s.String()
 }
@@ -13528,12 +20273,20 @@ type Invalidation struct {
 	Status *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Invalidation) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Invalidation) GoString() string {
 	return s.String()
 }
@@ -13594,12 +20347,20 @@ type InvalidationBatch struct {
 	Paths *Paths `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidationBatch) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidationBatch) GoString() string {
 	return s.String()
 }
@@ -13653,7 +20414,7 @@ type InvalidationList struct {
 	IsTruncated *bool `type:"boolean" required:"true"`
 
 	// A complex type that contains one InvalidationSummary element for each invalidation
-	// batch created by the current AWS account.
+	// batch created by the current Amazon Web Services account.
 	Items []*InvalidationSummary `locationNameList:"InvalidationSummary" type:"list"`
 
 	// The value that you provided for the Marker request parameter.
@@ -13671,18 +20432,27 @@ type InvalidationList struct {
 	// batches where they left off.
 	NextMarker *string `type:"string"`
 
-	// The number of invalidation batches that were created by the current AWS account.
+	// The number of invalidation batches that were created by the current Amazon
+	// Web Services account.
 	//
 	// Quantity is a required field
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidationList) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidationList) GoString() string {
 	return s.String()
 }
@@ -13743,12 +20513,20 @@ type InvalidationSummary struct {
 	Status *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidationSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidationSummary) GoString() string {
 	return s.String()
 }
@@ -13771,33 +20549,307 @@ func (s *InvalidationSummary) SetStatus(v string) *InvalidationSummary {
 	return s
 }
 
-// A complex type that lists the active CloudFront key pairs, if any, that are
-// associated with AwsAccountNumber.
-//
-// For more information, see ActiveTrustedSigners (https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ActiveTrustedSigners.html).
-type KeyPairIds struct {
+// A list of identifiers for the public keys that CloudFront can use to verify
+// the signatures of signed URLs and signed cookies.
+type KGKeyPairIds struct {
 	_ struct{} `type:"structure"`
 
-	// A complex type that lists the active CloudFront key pairs, if any, that are
-	// associated with AwsAccountNumber.
-	//
-	// For more information, see ActiveTrustedSigners (https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ActiveTrustedSigners.html).
-	Items []*string `locationNameList:"KeyPairId" type:"list"`
+	// The identifier of the key group that contains the public keys.
+	KeyGroupId *string `type:"string"`
 
-	// The number of active CloudFront key pairs for AwsAccountNumber.
+	// A list of CloudFront key pair identifiers.
+	KeyPairIds *KeyPairIds `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KGKeyPairIds) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KGKeyPairIds) GoString() string {
+	return s.String()
+}
+
+// SetKeyGroupId sets the KeyGroupId field's value.
+func (s *KGKeyPairIds) SetKeyGroupId(v string) *KGKeyPairIds {
+	s.KeyGroupId = &v
+	return s
+}
+
+// SetKeyPairIds sets the KeyPairIds field's value.
+func (s *KGKeyPairIds) SetKeyPairIds(v *KeyPairIds) *KGKeyPairIds {
+	s.KeyPairIds = v
+	return s
+}
+
+// A key group.
+//
+// A key group contains a list of public keys that you can use with CloudFront
+// signed URLs and signed cookies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html).
+type KeyGroup struct {
+	_ struct{} `type:"structure"`
+
+	// The identifier for the key group.
 	//
-	// For more information, see ActiveTrustedSigners (https://docs.aws.amazon.com/cloudfront/latest/APIReference/API_ActiveTrustedSigners.html).
+	// Id is a required field
+	Id *string `type:"string" required:"true"`
+
+	// The key group configuration.
+	//
+	// KeyGroupConfig is a required field
+	KeyGroupConfig *KeyGroupConfig `type:"structure" required:"true"`
+
+	// The date and time when the key group was last modified.
+	//
+	// LastModifiedTime is a required field
+	LastModifiedTime *time.Time `type:"timestamp" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KeyGroup) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KeyGroup) GoString() string {
+	return s.String()
+}
+
+// SetId sets the Id field's value.
+func (s *KeyGroup) SetId(v string) *KeyGroup {
+	s.Id = &v
+	return s
+}
+
+// SetKeyGroupConfig sets the KeyGroupConfig field's value.
+func (s *KeyGroup) SetKeyGroupConfig(v *KeyGroupConfig) *KeyGroup {
+	s.KeyGroupConfig = v
+	return s
+}
+
+// SetLastModifiedTime sets the LastModifiedTime field's value.
+func (s *KeyGroup) SetLastModifiedTime(v time.Time) *KeyGroup {
+	s.LastModifiedTime = &v
+	return s
+}
+
+// A key group configuration.
+//
+// A key group contains a list of public keys that you can use with CloudFront
+// signed URLs and signed cookies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html).
+type KeyGroupConfig struct {
+	_ struct{} `type:"structure"`
+
+	// A comment to describe the key group. The comment cannot be longer than 128
+	// characters.
+	Comment *string `type:"string"`
+
+	// A list of the identifiers of the public keys in the key group.
+	//
+	// Items is a required field
+	Items []*string `locationNameList:"PublicKey" type:"list" required:"true"`
+
+	// A name to identify the key group.
+	//
+	// Name is a required field
+	Name *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KeyGroupConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KeyGroupConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *KeyGroupConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "KeyGroupConfig"}
+	if s.Items == nil {
+		invalidParams.Add(request.NewErrParamRequired("Items"))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetComment sets the Comment field's value.
+func (s *KeyGroupConfig) SetComment(v string) *KeyGroupConfig {
+	s.Comment = &v
+	return s
+}
+
+// SetItems sets the Items field's value.
+func (s *KeyGroupConfig) SetItems(v []*string) *KeyGroupConfig {
+	s.Items = v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *KeyGroupConfig) SetName(v string) *KeyGroupConfig {
+	s.Name = &v
+	return s
+}
+
+// A list of key groups.
+type KeyGroupList struct {
+	_ struct{} `type:"structure"`
+
+	// A list of key groups.
+	Items []*KeyGroupSummary `locationNameList:"KeyGroupSummary" type:"list"`
+
+	// The maximum number of key groups requested.
+	//
+	// MaxItems is a required field
+	MaxItems *int64 `type:"integer" required:"true"`
+
+	// If there are more items in the list than are in this response, this element
+	// is present. It contains the value that you should use in the Marker field
+	// of a subsequent request to continue listing key groups.
+	NextMarker *string `type:"string"`
+
+	// The number of key groups returned in the response.
 	//
 	// Quantity is a required field
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KeyGroupList) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KeyGroupList) GoString() string {
+	return s.String()
+}
+
+// SetItems sets the Items field's value.
+func (s *KeyGroupList) SetItems(v []*KeyGroupSummary) *KeyGroupList {
+	s.Items = v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *KeyGroupList) SetMaxItems(v int64) *KeyGroupList {
+	s.MaxItems = &v
+	return s
+}
+
+// SetNextMarker sets the NextMarker field's value.
+func (s *KeyGroupList) SetNextMarker(v string) *KeyGroupList {
+	s.NextMarker = &v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *KeyGroupList) SetQuantity(v int64) *KeyGroupList {
+	s.Quantity = &v
+	return s
+}
+
+// Contains information about a key group.
+type KeyGroupSummary struct {
+	_ struct{} `type:"structure"`
+
+	// A key group.
+	//
+	// KeyGroup is a required field
+	KeyGroup *KeyGroup `type:"structure" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KeyGroupSummary) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KeyGroupSummary) GoString() string {
+	return s.String()
+}
+
+// SetKeyGroup sets the KeyGroup field's value.
+func (s *KeyGroupSummary) SetKeyGroup(v *KeyGroup) *KeyGroupSummary {
+	s.KeyGroup = v
+	return s
+}
+
+// A list of CloudFront key pair identifiers.
+type KeyPairIds struct {
+	_ struct{} `type:"structure"`
+
+	// A list of CloudFront key pair identifiers.
+	Items []*string `locationNameList:"KeyPairId" type:"list"`
+
+	// The number of key pair identifiers in the list.
+	//
+	// Quantity is a required field
+	Quantity *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s KeyPairIds) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s KeyPairIds) GoString() string {
 	return s.String()
 }
@@ -13814,12 +20866,81 @@ func (s *KeyPairIds) SetQuantity(v int64) *KeyPairIds {
 	return s
 }
 
-// A complex type that contains a Lambda function association.
+// Contains information about the Amazon Kinesis data stream where you are sending
+// real-time log data.
+type KinesisStreamConfig struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of an Identity and Access Management (IAM)
+	// role that CloudFront can use to send real-time log data to your Kinesis data
+	// stream.
+	//
+	// For more information the IAM role, see Real-time log configuration IAM role
+	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/real-time-logs.html#understand-real-time-log-config-iam-role)
+	// in the Amazon CloudFront Developer Guide.
+	//
+	// RoleARN is a required field
+	RoleARN *string `type:"string" required:"true"`
+
+	// The Amazon Resource Name (ARN) of the Kinesis data stream where you are sending
+	// real-time log data.
+	//
+	// StreamARN is a required field
+	StreamARN *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KinesisStreamConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KinesisStreamConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *KinesisStreamConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "KinesisStreamConfig"}
+	if s.RoleARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("RoleARN"))
+	}
+	if s.StreamARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("StreamARN"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetRoleARN sets the RoleARN field's value.
+func (s *KinesisStreamConfig) SetRoleARN(v string) *KinesisStreamConfig {
+	s.RoleARN = &v
+	return s
+}
+
+// SetStreamARN sets the StreamARN field's value.
+func (s *KinesisStreamConfig) SetStreamARN(v string) *KinesisStreamConfig {
+	s.StreamARN = &v
+	return s
+}
+
+// A complex type that contains a Lambda@Edge function association.
 type LambdaFunctionAssociation struct {
 	_ struct{} `type:"structure"`
 
-	// Specifies the event type that triggers a Lambda function invocation. You
-	// can specify the following values:
+	// Specifies the event type that triggers a Lambda@Edge function invocation.
+	// You can specify the following values:
 	//
 	//    * viewer-request: The function executes when CloudFront receives a request
 	//    from a viewer and before it checks to see whether the requested object
@@ -13841,25 +20962,33 @@ type LambdaFunctionAssociation struct {
 	// EventType is a required field
 	EventType *string `type:"string" required:"true" enum:"EventType"`
 
-	// A flag that allows a Lambda function to have read access to the body content.
-	// For more information, see Accessing the Request Body by Choosing the Include
-	// Body Option (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-include-body-access.html)
+	// A flag that allows a Lambda@Edge function to have read access to the body
+	// content. For more information, see Accessing the Request Body by Choosing
+	// the Include Body Option (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/lambda-include-body-access.html)
 	// in the Amazon CloudFront Developer Guide.
 	IncludeBody *bool `type:"boolean"`
 
-	// The ARN of the Lambda function. You must specify the ARN of a function version;
-	// you can't specify a Lambda alias or $LATEST.
+	// The ARN of the Lambda@Edge function. You must specify the ARN of a function
+	// version; you can't specify an alias or $LATEST.
 	//
 	// LambdaFunctionARN is a required field
 	LambdaFunctionARN *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LambdaFunctionAssociation) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LambdaFunctionAssociation) GoString() string {
 	return s.String()
 }
@@ -13898,17 +21027,17 @@ func (s *LambdaFunctionAssociation) SetLambdaFunctionARN(v string) *LambdaFuncti
 	return s
 }
 
-// A complex type that specifies a list of Lambda functions associations for
-// a cache behavior.
+// A complex type that specifies a list of Lambda@Edge functions associations
+// for a cache behavior.
 //
-// If you want to invoke one or more Lambda functions triggered by requests
+// If you want to invoke one or more Lambda@Edge functions triggered by requests
 // that match the PathPattern of the cache behavior, specify the applicable
 // values for Quantity and Items. Note that there can be up to 4 LambdaFunctionAssociation
 // items in this list (one for each possible value of EventType) and each EventType
-// can be associated with the Lambda function only once.
+// can be associated with only one function.
 //
-// If you don't want to invoke any Lambda functions for the requests that match
-// PathPattern, specify 0 for Quantity and omit Items.
+// If you don't want to invoke any Lambda@Edge functions for the requests that
+// match PathPattern, specify 0 for Quantity and omit Items.
 type LambdaFunctionAssociations struct {
 	_ struct{} `type:"structure"`
 
@@ -13916,18 +21045,26 @@ type LambdaFunctionAssociations struct {
 	// this cache behavior. If Quantity is 0, you can omit Items.
 	Items []*LambdaFunctionAssociation `locationNameList:"LambdaFunctionAssociation" type:"list"`
 
-	// The number of Lambda function associations for this cache behavior.
+	// The number of Lambda@Edge function associations for this cache behavior.
 	//
 	// Quantity is a required field
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LambdaFunctionAssociations) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LambdaFunctionAssociations) GoString() string {
 	return s.String()
 }
@@ -13982,18 +21119,28 @@ type ListCachePoliciesInput struct {
 	// A filter to return only the specified kinds of cache policies. Valid values
 	// are:
 	//
-	//    * managed – Returns only the managed policies created by AWS.
+	//    * managed – Returns only the managed policies created by Amazon Web
+	//    Services.
 	//
-	//    * custom – Returns only the custom policies created in your AWS account.
+	//    * custom – Returns only the custom policies created in your Amazon Web
+	//    Services account.
 	Type *string `location:"querystring" locationName:"Type" type:"string" enum:"CachePolicyType"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCachePoliciesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCachePoliciesInput) GoString() string {
 	return s.String()
 }
@@ -14023,12 +21170,20 @@ type ListCachePoliciesOutput struct {
 	CachePolicyList *CachePolicyList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCachePoliciesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCachePoliciesOutput) GoString() string {
 	return s.String()
 }
@@ -14054,12 +21209,20 @@ type ListCloudFrontOriginAccessIdentitiesInput struct {
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCloudFrontOriginAccessIdentitiesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCloudFrontOriginAccessIdentitiesInput) GoString() string {
 	return s.String()
 }
@@ -14084,12 +21247,20 @@ type ListCloudFrontOriginAccessIdentitiesOutput struct {
 	CloudFrontOriginAccessIdentityList *OriginAccessIdentityList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCloudFrontOriginAccessIdentitiesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCloudFrontOriginAccessIdentitiesOutput) GoString() string {
 	return s.String()
 }
@@ -14097,6 +21268,120 @@ func (s ListCloudFrontOriginAccessIdentitiesOutput) GoString() string {
 // SetCloudFrontOriginAccessIdentityList sets the CloudFrontOriginAccessIdentityList field's value.
 func (s *ListCloudFrontOriginAccessIdentitiesOutput) SetCloudFrontOriginAccessIdentityList(v *OriginAccessIdentityList) *ListCloudFrontOriginAccessIdentitiesOutput {
 	s.CloudFrontOriginAccessIdentityList = v
+	return s
+}
+
+type ListConflictingAliasesInput struct {
+	_ struct{} `locationName:"ListConflictingAliasesRequest" type:"structure"`
+
+	// The alias (also called a CNAME) to search for conflicting aliases.
+	//
+	// Alias is a required field
+	Alias *string `location:"querystring" locationName:"Alias" type:"string" required:"true"`
+
+	// The ID of a distribution in your account that has an attached SSL/TLS certificate
+	// that includes the provided alias.
+	//
+	// DistributionId is a required field
+	DistributionId *string `location:"querystring" locationName:"DistributionId" type:"string" required:"true"`
+
+	// Use this field when paginating results to indicate where to begin in the
+	// list of conflicting aliases. The response includes conflicting aliases in
+	// the list that occur after the marker. To get the next page of the list, set
+	// this field’s value to the value of NextMarker from the current page’s
+	// response.
+	Marker *string `location:"querystring" locationName:"Marker" type:"string"`
+
+	// The maximum number of conflicting aliases that you want in the response.
+	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListConflictingAliasesInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListConflictingAliasesInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListConflictingAliasesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListConflictingAliasesInput"}
+	if s.Alias == nil {
+		invalidParams.Add(request.NewErrParamRequired("Alias"))
+	}
+	if s.DistributionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DistributionId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAlias sets the Alias field's value.
+func (s *ListConflictingAliasesInput) SetAlias(v string) *ListConflictingAliasesInput {
+	s.Alias = &v
+	return s
+}
+
+// SetDistributionId sets the DistributionId field's value.
+func (s *ListConflictingAliasesInput) SetDistributionId(v string) *ListConflictingAliasesInput {
+	s.DistributionId = &v
+	return s
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListConflictingAliasesInput) SetMarker(v string) *ListConflictingAliasesInput {
+	s.Marker = &v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *ListConflictingAliasesInput) SetMaxItems(v int64) *ListConflictingAliasesInput {
+	s.MaxItems = &v
+	return s
+}
+
+type ListConflictingAliasesOutput struct {
+	_ struct{} `type:"structure" payload:"ConflictingAliasesList"`
+
+	// A list of conflicting aliases.
+	ConflictingAliasesList *ConflictingAliasesList `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListConflictingAliasesOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListConflictingAliasesOutput) GoString() string {
+	return s.String()
+}
+
+// SetConflictingAliasesList sets the ConflictingAliasesList field's value.
+func (s *ListConflictingAliasesOutput) SetConflictingAliasesList(v *ConflictingAliasesList) *ListConflictingAliasesOutput {
+	s.ConflictingAliasesList = v
 	return s
 }
 
@@ -14119,12 +21404,20 @@ type ListDistributionsByCachePolicyIdInput struct {
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByCachePolicyIdInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByCachePolicyIdInput) GoString() string {
 	return s.String()
 }
@@ -14170,18 +21463,127 @@ type ListDistributionsByCachePolicyIdOutput struct {
 	DistributionIdList *DistributionIdList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByCachePolicyIdOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByCachePolicyIdOutput) GoString() string {
 	return s.String()
 }
 
 // SetDistributionIdList sets the DistributionIdList field's value.
 func (s *ListDistributionsByCachePolicyIdOutput) SetDistributionIdList(v *DistributionIdList) *ListDistributionsByCachePolicyIdOutput {
+	s.DistributionIdList = v
+	return s
+}
+
+type ListDistributionsByKeyGroupInput struct {
+	_ struct{} `locationName:"ListDistributionsByKeyGroupRequest" type:"structure"`
+
+	// The ID of the key group whose associated distribution IDs you are listing.
+	//
+	// KeyGroupId is a required field
+	KeyGroupId *string `location:"uri" locationName:"KeyGroupId" type:"string" required:"true"`
+
+	// Use this field when paginating results to indicate where to begin in your
+	// list of distribution IDs. The response includes distribution IDs in the list
+	// that occur after the marker. To get the next page of the list, set this field’s
+	// value to the value of NextMarker from the current page’s response.
+	Marker *string `location:"querystring" locationName:"Marker" type:"string"`
+
+	// The maximum number of distribution IDs that you want in the response.
+	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByKeyGroupInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByKeyGroupInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListDistributionsByKeyGroupInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListDistributionsByKeyGroupInput"}
+	if s.KeyGroupId == nil {
+		invalidParams.Add(request.NewErrParamRequired("KeyGroupId"))
+	}
+	if s.KeyGroupId != nil && len(*s.KeyGroupId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("KeyGroupId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetKeyGroupId sets the KeyGroupId field's value.
+func (s *ListDistributionsByKeyGroupInput) SetKeyGroupId(v string) *ListDistributionsByKeyGroupInput {
+	s.KeyGroupId = &v
+	return s
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListDistributionsByKeyGroupInput) SetMarker(v string) *ListDistributionsByKeyGroupInput {
+	s.Marker = &v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *ListDistributionsByKeyGroupInput) SetMaxItems(v int64) *ListDistributionsByKeyGroupInput {
+	s.MaxItems = &v
+	return s
+}
+
+type ListDistributionsByKeyGroupOutput struct {
+	_ struct{} `type:"structure" payload:"DistributionIdList"`
+
+	// A list of distribution IDs.
+	DistributionIdList *DistributionIdList `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByKeyGroupOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByKeyGroupOutput) GoString() string {
+	return s.String()
+}
+
+// SetDistributionIdList sets the DistributionIdList field's value.
+func (s *ListDistributionsByKeyGroupOutput) SetDistributionIdList(v *DistributionIdList) *ListDistributionsByKeyGroupOutput {
 	s.DistributionIdList = v
 	return s
 }
@@ -14205,12 +21607,20 @@ type ListDistributionsByOriginRequestPolicyIdInput struct {
 	OriginRequestPolicyId *string `location:"uri" locationName:"OriginRequestPolicyId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByOriginRequestPolicyIdInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByOriginRequestPolicyIdInput) GoString() string {
 	return s.String()
 }
@@ -14256,12 +21666,20 @@ type ListDistributionsByOriginRequestPolicyIdOutput struct {
 	DistributionIdList *DistributionIdList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByOriginRequestPolicyIdOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByOriginRequestPolicyIdOutput) GoString() string {
 	return s.String()
 }
@@ -14272,8 +21690,204 @@ func (s *ListDistributionsByOriginRequestPolicyIdOutput) SetDistributionIdList(v
 	return s
 }
 
-// The request to list distributions that are associated with a specified AWS
-// WAF web ACL.
+type ListDistributionsByRealtimeLogConfigInput struct {
+	_ struct{} `locationName:"ListDistributionsByRealtimeLogConfigRequest" type:"structure" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+
+	// Use this field when paginating results to indicate where to begin in your
+	// list of distributions. The response includes distributions in the list that
+	// occur after the marker. To get the next page of the list, set this field’s
+	// value to the value of NextMarker from the current page’s response.
+	Marker *string `type:"string"`
+
+	// The maximum number of distributions that you want in the response.
+	MaxItems *int64 `type:"integer"`
+
+	// The Amazon Resource Name (ARN) of the real-time log configuration whose associated
+	// distributions you want to list.
+	RealtimeLogConfigArn *string `type:"string"`
+
+	// The name of the real-time log configuration whose associated distributions
+	// you want to list.
+	RealtimeLogConfigName *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByRealtimeLogConfigInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByRealtimeLogConfigInput) GoString() string {
+	return s.String()
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListDistributionsByRealtimeLogConfigInput) SetMarker(v string) *ListDistributionsByRealtimeLogConfigInput {
+	s.Marker = &v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *ListDistributionsByRealtimeLogConfigInput) SetMaxItems(v int64) *ListDistributionsByRealtimeLogConfigInput {
+	s.MaxItems = &v
+	return s
+}
+
+// SetRealtimeLogConfigArn sets the RealtimeLogConfigArn field's value.
+func (s *ListDistributionsByRealtimeLogConfigInput) SetRealtimeLogConfigArn(v string) *ListDistributionsByRealtimeLogConfigInput {
+	s.RealtimeLogConfigArn = &v
+	return s
+}
+
+// SetRealtimeLogConfigName sets the RealtimeLogConfigName field's value.
+func (s *ListDistributionsByRealtimeLogConfigInput) SetRealtimeLogConfigName(v string) *ListDistributionsByRealtimeLogConfigInput {
+	s.RealtimeLogConfigName = &v
+	return s
+}
+
+type ListDistributionsByRealtimeLogConfigOutput struct {
+	_ struct{} `type:"structure" payload:"DistributionList"`
+
+	// A distribution list.
+	DistributionList *DistributionList `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByRealtimeLogConfigOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByRealtimeLogConfigOutput) GoString() string {
+	return s.String()
+}
+
+// SetDistributionList sets the DistributionList field's value.
+func (s *ListDistributionsByRealtimeLogConfigOutput) SetDistributionList(v *DistributionList) *ListDistributionsByRealtimeLogConfigOutput {
+	s.DistributionList = v
+	return s
+}
+
+type ListDistributionsByResponseHeadersPolicyIdInput struct {
+	_ struct{} `locationName:"ListDistributionsByResponseHeadersPolicyIdRequest" type:"structure"`
+
+	// Use this field when paginating results to indicate where to begin in your
+	// list of distribution IDs. The response includes distribution IDs in the list
+	// that occur after the marker. To get the next page of the list, set this field’s
+	// value to the value of NextMarker from the current page’s response.
+	Marker *string `location:"querystring" locationName:"Marker" type:"string"`
+
+	// The maximum number of distribution IDs that you want to get in the response.
+	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
+
+	// The ID of the response headers policy whose associated distribution IDs you
+	// want to list.
+	//
+	// ResponseHeadersPolicyId is a required field
+	ResponseHeadersPolicyId *string `location:"uri" locationName:"ResponseHeadersPolicyId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByResponseHeadersPolicyIdInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByResponseHeadersPolicyIdInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListDistributionsByResponseHeadersPolicyIdInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListDistributionsByResponseHeadersPolicyIdInput"}
+	if s.ResponseHeadersPolicyId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResponseHeadersPolicyId"))
+	}
+	if s.ResponseHeadersPolicyId != nil && len(*s.ResponseHeadersPolicyId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ResponseHeadersPolicyId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListDistributionsByResponseHeadersPolicyIdInput) SetMarker(v string) *ListDistributionsByResponseHeadersPolicyIdInput {
+	s.Marker = &v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *ListDistributionsByResponseHeadersPolicyIdInput) SetMaxItems(v int64) *ListDistributionsByResponseHeadersPolicyIdInput {
+	s.MaxItems = &v
+	return s
+}
+
+// SetResponseHeadersPolicyId sets the ResponseHeadersPolicyId field's value.
+func (s *ListDistributionsByResponseHeadersPolicyIdInput) SetResponseHeadersPolicyId(v string) *ListDistributionsByResponseHeadersPolicyIdInput {
+	s.ResponseHeadersPolicyId = &v
+	return s
+}
+
+type ListDistributionsByResponseHeadersPolicyIdOutput struct {
+	_ struct{} `type:"structure" payload:"DistributionIdList"`
+
+	// A list of distribution IDs.
+	DistributionIdList *DistributionIdList `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByResponseHeadersPolicyIdOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListDistributionsByResponseHeadersPolicyIdOutput) GoString() string {
+	return s.String()
+}
+
+// SetDistributionIdList sets the DistributionIdList field's value.
+func (s *ListDistributionsByResponseHeadersPolicyIdOutput) SetDistributionIdList(v *DistributionIdList) *ListDistributionsByResponseHeadersPolicyIdOutput {
+	s.DistributionIdList = v
+	return s
+}
+
+// The request to list distributions that are associated with a specified WAF
+// web ACL.
 type ListDistributionsByWebACLIdInput struct {
 	_ struct{} `locationName:"ListDistributionsByWebACLIdRequest" type:"structure"`
 
@@ -14288,7 +21902,7 @@ type ListDistributionsByWebACLIdInput struct {
 	// the response body. The maximum and default values are both 100.
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
 
-	// The ID of the AWS WAF web ACL that you want to list the associated distributions.
+	// The ID of the WAF web ACL that you want to list the associated distributions.
 	// If you specify "null" for the ID, the request returns a list of the distributions
 	// that aren't associated with a web ACL.
 	//
@@ -14296,12 +21910,20 @@ type ListDistributionsByWebACLIdInput struct {
 	WebACLId *string `location:"uri" locationName:"WebACLId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByWebACLIdInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByWebACLIdInput) GoString() string {
 	return s.String()
 }
@@ -14341,7 +21963,7 @@ func (s *ListDistributionsByWebACLIdInput) SetWebACLId(v string) *ListDistributi
 }
 
 // The response to a request to list the distributions that are associated with
-// a specified AWS WAF web ACL.
+// a specified WAF web ACL.
 type ListDistributionsByWebACLIdOutput struct {
 	_ struct{} `type:"structure" payload:"DistributionList"`
 
@@ -14349,12 +21971,20 @@ type ListDistributionsByWebACLIdOutput struct {
 	DistributionList *DistributionList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByWebACLIdOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsByWebACLIdOutput) GoString() string {
 	return s.String()
 }
@@ -14380,12 +22010,20 @@ type ListDistributionsInput struct {
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsInput) GoString() string {
 	return s.String()
 }
@@ -14410,12 +22048,20 @@ type ListDistributionsOutput struct {
 	DistributionList *DistributionList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDistributionsOutput) GoString() string {
 	return s.String()
 }
@@ -14441,12 +22087,20 @@ type ListFieldLevelEncryptionConfigsInput struct {
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFieldLevelEncryptionConfigsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFieldLevelEncryptionConfigsInput) GoString() string {
 	return s.String()
 }
@@ -14471,12 +22125,20 @@ type ListFieldLevelEncryptionConfigsOutput struct {
 	FieldLevelEncryptionList *FieldLevelEncryptionList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFieldLevelEncryptionConfigsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFieldLevelEncryptionConfigsOutput) GoString() string {
 	return s.String()
 }
@@ -14502,12 +22164,20 @@ type ListFieldLevelEncryptionProfilesInput struct {
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFieldLevelEncryptionProfilesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFieldLevelEncryptionProfilesInput) GoString() string {
 	return s.String()
 }
@@ -14532,12 +22202,20 @@ type ListFieldLevelEncryptionProfilesOutput struct {
 	FieldLevelEncryptionProfileList *FieldLevelEncryptionProfileList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFieldLevelEncryptionProfilesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFieldLevelEncryptionProfilesOutput) GoString() string {
 	return s.String()
 }
@@ -14545,6 +22223,90 @@ func (s ListFieldLevelEncryptionProfilesOutput) GoString() string {
 // SetFieldLevelEncryptionProfileList sets the FieldLevelEncryptionProfileList field's value.
 func (s *ListFieldLevelEncryptionProfilesOutput) SetFieldLevelEncryptionProfileList(v *FieldLevelEncryptionProfileList) *ListFieldLevelEncryptionProfilesOutput {
 	s.FieldLevelEncryptionProfileList = v
+	return s
+}
+
+type ListFunctionsInput struct {
+	_ struct{} `locationName:"ListFunctionsRequest" type:"structure"`
+
+	// Use this field when paginating results to indicate where to begin in your
+	// list of functions. The response includes functions in the list that occur
+	// after the marker. To get the next page of the list, set this field’s value
+	// to the value of NextMarker from the current page’s response.
+	Marker *string `location:"querystring" locationName:"Marker" type:"string"`
+
+	// The maximum number of functions that you want in the response.
+	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
+
+	// An optional filter to return only the functions that are in the specified
+	// stage, either DEVELOPMENT or LIVE.
+	Stage *string `location:"querystring" locationName:"Stage" type:"string" enum:"FunctionStage"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListFunctionsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListFunctionsInput) GoString() string {
+	return s.String()
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListFunctionsInput) SetMarker(v string) *ListFunctionsInput {
+	s.Marker = &v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *ListFunctionsInput) SetMaxItems(v int64) *ListFunctionsInput {
+	s.MaxItems = &v
+	return s
+}
+
+// SetStage sets the Stage field's value.
+func (s *ListFunctionsInput) SetStage(v string) *ListFunctionsInput {
+	s.Stage = &v
+	return s
+}
+
+type ListFunctionsOutput struct {
+	_ struct{} `type:"structure" payload:"FunctionList"`
+
+	// A list of CloudFront functions.
+	FunctionList *FunctionList `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListFunctionsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListFunctionsOutput) GoString() string {
+	return s.String()
+}
+
+// SetFunctionList sets the FunctionList field's value.
+func (s *ListFunctionsOutput) SetFunctionList(v *FunctionList) *ListFunctionsOutput {
+	s.FunctionList = v
 	return s
 }
 
@@ -14571,12 +22333,20 @@ type ListInvalidationsInput struct {
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListInvalidationsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListInvalidationsInput) GoString() string {
 	return s.String()
 }
@@ -14623,12 +22393,20 @@ type ListInvalidationsOutput struct {
 	InvalidationList *InvalidationList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListInvalidationsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListInvalidationsOutput) GoString() string {
 	return s.String()
 }
@@ -14636,6 +22414,80 @@ func (s ListInvalidationsOutput) GoString() string {
 // SetInvalidationList sets the InvalidationList field's value.
 func (s *ListInvalidationsOutput) SetInvalidationList(v *InvalidationList) *ListInvalidationsOutput {
 	s.InvalidationList = v
+	return s
+}
+
+type ListKeyGroupsInput struct {
+	_ struct{} `locationName:"ListKeyGroupsRequest" type:"structure"`
+
+	// Use this field when paginating results to indicate where to begin in your
+	// list of key groups. The response includes key groups in the list that occur
+	// after the marker. To get the next page of the list, set this field’s value
+	// to the value of NextMarker from the current page’s response.
+	Marker *string `location:"querystring" locationName:"Marker" type:"string"`
+
+	// The maximum number of key groups that you want in the response.
+	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListKeyGroupsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListKeyGroupsInput) GoString() string {
+	return s.String()
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListKeyGroupsInput) SetMarker(v string) *ListKeyGroupsInput {
+	s.Marker = &v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *ListKeyGroupsInput) SetMaxItems(v int64) *ListKeyGroupsInput {
+	s.MaxItems = &v
+	return s
+}
+
+type ListKeyGroupsOutput struct {
+	_ struct{} `type:"structure" payload:"KeyGroupList"`
+
+	// A list of key groups.
+	KeyGroupList *KeyGroupList `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListKeyGroupsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListKeyGroupsOutput) GoString() string {
+	return s.String()
+}
+
+// SetKeyGroupList sets the KeyGroupList field's value.
+func (s *ListKeyGroupsOutput) SetKeyGroupList(v *KeyGroupList) *ListKeyGroupsOutput {
+	s.KeyGroupList = v
 	return s
 }
 
@@ -14655,18 +22507,28 @@ type ListOriginRequestPoliciesInput struct {
 	// A filter to return only the specified kinds of origin request policies. Valid
 	// values are:
 	//
-	//    * managed – Returns only the managed policies created by AWS.
+	//    * managed – Returns only the managed policies created by Amazon Web
+	//    Services.
 	//
-	//    * custom – Returns only the custom policies created in your AWS account.
+	//    * custom – Returns only the custom policies created in your Amazon Web
+	//    Services account.
 	Type *string `location:"querystring" locationName:"Type" type:"string" enum:"OriginRequestPolicyType"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListOriginRequestPoliciesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListOriginRequestPoliciesInput) GoString() string {
 	return s.String()
 }
@@ -14696,12 +22558,20 @@ type ListOriginRequestPoliciesOutput struct {
 	OriginRequestPolicyList *OriginRequestPolicyList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListOriginRequestPoliciesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListOriginRequestPoliciesOutput) GoString() string {
 	return s.String()
 }
@@ -14726,12 +22596,20 @@ type ListPublicKeysInput struct {
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPublicKeysInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPublicKeysInput) GoString() string {
 	return s.String()
 }
@@ -14756,12 +22634,20 @@ type ListPublicKeysOutput struct {
 	PublicKeyList *PublicKeyList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPublicKeysOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPublicKeysOutput) GoString() string {
 	return s.String()
 }
@@ -14769,6 +22655,172 @@ func (s ListPublicKeysOutput) GoString() string {
 // SetPublicKeyList sets the PublicKeyList field's value.
 func (s *ListPublicKeysOutput) SetPublicKeyList(v *PublicKeyList) *ListPublicKeysOutput {
 	s.PublicKeyList = v
+	return s
+}
+
+type ListRealtimeLogConfigsInput struct {
+	_ struct{} `locationName:"ListRealtimeLogConfigsRequest" type:"structure"`
+
+	// Use this field when paginating results to indicate where to begin in your
+	// list of real-time log configurations. The response includes real-time log
+	// configurations in the list that occur after the marker. To get the next page
+	// of the list, set this field’s value to the value of NextMarker from the
+	// current page’s response.
+	Marker *string `location:"querystring" locationName:"Marker" type:"string"`
+
+	// The maximum number of real-time log configurations that you want in the response.
+	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListRealtimeLogConfigsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListRealtimeLogConfigsInput) GoString() string {
+	return s.String()
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListRealtimeLogConfigsInput) SetMarker(v string) *ListRealtimeLogConfigsInput {
+	s.Marker = &v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *ListRealtimeLogConfigsInput) SetMaxItems(v int64) *ListRealtimeLogConfigsInput {
+	s.MaxItems = &v
+	return s
+}
+
+type ListRealtimeLogConfigsOutput struct {
+	_ struct{} `type:"structure" payload:"RealtimeLogConfigs"`
+
+	// A list of real-time log configurations.
+	RealtimeLogConfigs *RealtimeLogConfigs `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListRealtimeLogConfigsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListRealtimeLogConfigsOutput) GoString() string {
+	return s.String()
+}
+
+// SetRealtimeLogConfigs sets the RealtimeLogConfigs field's value.
+func (s *ListRealtimeLogConfigsOutput) SetRealtimeLogConfigs(v *RealtimeLogConfigs) *ListRealtimeLogConfigsOutput {
+	s.RealtimeLogConfigs = v
+	return s
+}
+
+type ListResponseHeadersPoliciesInput struct {
+	_ struct{} `locationName:"ListResponseHeadersPoliciesRequest" type:"structure"`
+
+	// Use this field when paginating results to indicate where to begin in your
+	// list of response headers policies. The response includes response headers
+	// policies in the list that occur after the marker. To get the next page of
+	// the list, set this field’s value to the value of NextMarker from the current
+	// page’s response.
+	Marker *string `location:"querystring" locationName:"Marker" type:"string"`
+
+	// The maximum number of response headers policies that you want to get in the
+	// response.
+	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
+
+	// A filter to get only the specified kind of response headers policies. Valid
+	// values are:
+	//
+	//    * managed – Gets only the managed policies created by Amazon Web Services.
+	//
+	//    * custom – Gets only the custom policies created in your Amazon Web
+	//    Services account.
+	Type *string `location:"querystring" locationName:"Type" type:"string" enum:"ResponseHeadersPolicyType"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListResponseHeadersPoliciesInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListResponseHeadersPoliciesInput) GoString() string {
+	return s.String()
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListResponseHeadersPoliciesInput) SetMarker(v string) *ListResponseHeadersPoliciesInput {
+	s.Marker = &v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *ListResponseHeadersPoliciesInput) SetMaxItems(v int64) *ListResponseHeadersPoliciesInput {
+	s.MaxItems = &v
+	return s
+}
+
+// SetType sets the Type field's value.
+func (s *ListResponseHeadersPoliciesInput) SetType(v string) *ListResponseHeadersPoliciesInput {
+	s.Type = &v
+	return s
+}
+
+type ListResponseHeadersPoliciesOutput struct {
+	_ struct{} `type:"structure" payload:"ResponseHeadersPolicyList"`
+
+	// A list of response headers policies.
+	ResponseHeadersPolicyList *ResponseHeadersPolicyList `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListResponseHeadersPoliciesOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListResponseHeadersPoliciesOutput) GoString() string {
+	return s.String()
+}
+
+// SetResponseHeadersPolicyList sets the ResponseHeadersPolicyList field's value.
+func (s *ListResponseHeadersPoliciesOutput) SetResponseHeadersPolicyList(v *ResponseHeadersPolicyList) *ListResponseHeadersPoliciesOutput {
+	s.ResponseHeadersPolicyList = v
 	return s
 }
 
@@ -14783,12 +22835,20 @@ type ListStreamingDistributionsInput struct {
 	MaxItems *int64 `location:"querystring" locationName:"MaxItems" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListStreamingDistributionsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListStreamingDistributionsInput) GoString() string {
 	return s.String()
 }
@@ -14813,12 +22873,20 @@ type ListStreamingDistributionsOutput struct {
 	StreamingDistributionList *StreamingDistributionList `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListStreamingDistributionsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListStreamingDistributionsOutput) GoString() string {
 	return s.String()
 }
@@ -14839,12 +22907,20 @@ type ListTagsForResourceInput struct {
 	Resource *string `location:"querystring" locationName:"Resource" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) GoString() string {
 	return s.String()
 }
@@ -14878,12 +22954,20 @@ type ListTagsForResourceOutput struct {
 	Tags *Tags `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) GoString() string {
 	return s.String()
 }
@@ -14932,12 +23016,20 @@ type LoggingConfig struct {
 	Prefix *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LoggingConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LoggingConfig) GoString() string {
 	return s.String()
 }
@@ -14988,20 +23080,67 @@ func (s *LoggingConfig) SetPrefix(v string) *LoggingConfig {
 	return s
 }
 
+// A monitoring subscription. This structure contains information about whether
+// additional CloudWatch metrics are enabled for a given CloudFront distribution.
+type MonitoringSubscription struct {
+	_ struct{} `type:"structure"`
+
+	// A subscription configuration for additional CloudWatch metrics.
+	RealtimeMetricsSubscriptionConfig *RealtimeMetricsSubscriptionConfig `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MonitoringSubscription) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MonitoringSubscription) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *MonitoringSubscription) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "MonitoringSubscription"}
+	if s.RealtimeMetricsSubscriptionConfig != nil {
+		if err := s.RealtimeMetricsSubscriptionConfig.Validate(); err != nil {
+			invalidParams.AddNested("RealtimeMetricsSubscriptionConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetRealtimeMetricsSubscriptionConfig sets the RealtimeMetricsSubscriptionConfig field's value.
+func (s *MonitoringSubscription) SetRealtimeMetricsSubscriptionConfig(v *RealtimeMetricsSubscriptionConfig) *MonitoringSubscription {
+	s.RealtimeMetricsSubscriptionConfig = v
+	return s
+}
+
 // An origin.
 //
 // An origin is the location where content is stored, and from which CloudFront
 // gets content to serve to viewers. To specify an origin:
 //
-//    * Use the S3OriginConfig type to specify an Amazon S3 bucket that is not
-//    configured with static website hosting.
+//    * Use S3OriginConfig to specify an Amazon S3 bucket that is not configured
+//    with static website hosting.
 //
-//    * Use the CustomOriginConfig type to specify various other kinds of content
-//    containers or HTTP servers, including: An Amazon S3 bucket that is configured
-//    with static website hosting An Elastic Load Balancing load balancer An
-//    AWS Elemental MediaPackage origin An AWS Elemental MediaStore container
-//    Any other HTTP server, running on an Amazon EC2 instance or any other
-//    kind of host
+//    * Use CustomOriginConfig to specify all other kinds of origins, including:
+//    An Amazon S3 bucket that is configured with static website hosting An
+//    Elastic Load Balancing load balancer An AWS Elemental MediaPackage endpoint
+//    An AWS Elemental MediaStore container Any other HTTP server, running on
+//    an Amazon EC2 instance or any other kind of host
 //
 // For the current maximum number of origins that you can specify per distribution,
 // see General Quotas on Web Distributions (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/cloudfront-limits.html#limits-web-distributions)
@@ -15031,17 +23170,17 @@ type Origin struct {
 	// in the Amazon CloudFront Developer Guide.
 	ConnectionTimeout *int64 `type:"integer"`
 
-	// A list of HTTP header names and values that CloudFront adds to requests it
-	// sends to the origin.
+	// A list of HTTP header names and values that CloudFront adds to the requests
+	// that it sends to the origin.
 	//
 	// For more information, see Adding Custom Headers to Origin Requests (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/add-origin-custom-headers.html)
 	// in the Amazon CloudFront Developer Guide.
 	CustomHeaders *CustomHeaders `type:"structure"`
 
-	// Use this type to specify an origin that is a content container or HTTP server,
-	// including an Amazon S3 bucket that is configured with static website hosting.
-	// To specify an Amazon S3 bucket that is not configured with static website
-	// hosting, use the S3OriginConfig type instead.
+	// Use this type to specify an origin that is not an Amazon S3 bucket, with
+	// one exception. If the Amazon S3 bucket is configured with static website
+	// hosting, use this type. If the Amazon S3 bucket is not configured with static
+	// website hosting, use the S3OriginConfig type instead.
 	CustomOriginConfig *CustomOriginConfig `type:"structure"`
 
 	// The domain name for the origin.
@@ -15067,6 +23206,13 @@ type Origin struct {
 	// in the Amazon CloudFront Developer Guide.
 	OriginPath *string `type:"string"`
 
+	// CloudFront Origin Shield. Using Origin Shield can help reduce the load on
+	// your origin.
+	//
+	// For more information, see Using Origin Shield (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/origin-shield.html)
+	// in the Amazon CloudFront Developer Guide.
+	OriginShield *OriginShield `type:"structure"`
+
 	// Use this type to specify an origin that is an Amazon S3 bucket that is not
 	// configured with static website hosting. To specify any other type of origin,
 	// including an Amazon S3 bucket that is configured with static website hosting,
@@ -15074,12 +23220,20 @@ type Origin struct {
 	S3OriginConfig *S3OriginConfig `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Origin) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Origin) GoString() string {
 	return s.String()
 }
@@ -15101,6 +23255,11 @@ func (s *Origin) Validate() error {
 	if s.CustomOriginConfig != nil {
 		if err := s.CustomOriginConfig.Validate(); err != nil {
 			invalidParams.AddNested("CustomOriginConfig", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.OriginShield != nil {
+		if err := s.OriginShield.Validate(); err != nil {
+			invalidParams.AddNested("OriginShield", err.(request.ErrInvalidParams))
 		}
 	}
 	if s.S3OriginConfig != nil {
@@ -15157,6 +23316,12 @@ func (s *Origin) SetOriginPath(v string) *Origin {
 	return s
 }
 
+// SetOriginShield sets the OriginShield field's value.
+func (s *Origin) SetOriginShield(v *OriginShield) *Origin {
+	s.OriginShield = v
+	return s
+}
+
 // SetS3OriginConfig sets the S3OriginConfig field's value.
 func (s *Origin) SetS3OriginConfig(v *S3OriginConfig) *Origin {
 	s.S3OriginConfig = v
@@ -15183,12 +23348,20 @@ type OriginAccessIdentity struct {
 	S3CanonicalUserId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginAccessIdentity) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginAccessIdentity) GoString() string {
 	return s.String()
 }
@@ -15236,18 +23409,27 @@ type OriginAccessIdentityConfig struct {
 	// CallerReference is a required field
 	CallerReference *string `type:"string" required:"true"`
 
-	// Any comments you want to include about the origin access identity.
+	// A comment to describe the origin access identity. The comment cannot be longer
+	// than 128 characters.
 	//
 	// Comment is a required field
 	Comment *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginAccessIdentityConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginAccessIdentityConfig) GoString() string {
 	return s.String()
 }
@@ -15298,7 +23480,8 @@ type OriginAccessIdentityList struct {
 	IsTruncated *bool `type:"boolean" required:"true"`
 
 	// A complex type that contains one CloudFrontOriginAccessIdentitySummary element
-	// for each origin access identity that was created by the current AWS account.
+	// for each origin access identity that was created by the current Amazon Web
+	// Services account.
 	Items []*OriginAccessIdentitySummary `locationNameList:"CloudFrontOriginAccessIdentitySummary" type:"list"`
 
 	// Use this when paginating results to indicate where to begin in your list
@@ -15321,18 +23504,26 @@ type OriginAccessIdentityList struct {
 	NextMarker *string `type:"string"`
 
 	// The number of CloudFront origin access identities that were created by the
-	// current AWS account.
+	// current Amazon Web Services account.
 	//
 	// Quantity is a required field
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginAccessIdentityList) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginAccessIdentityList) GoString() string {
 	return s.String()
 }
@@ -15396,12 +23587,20 @@ type OriginAccessIdentitySummary struct {
 	S3CanonicalUserId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginAccessIdentitySummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginAccessIdentitySummary) GoString() string {
 	return s.String()
 }
@@ -15438,16 +23637,28 @@ type OriginCustomHeader struct {
 
 	// The value for the header that you specified in the HeaderName field.
 	//
+	// HeaderValue is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by OriginCustomHeader's
+	// String and GoString methods.
+	//
 	// HeaderValue is a required field
-	HeaderValue *string `type:"string" required:"true"`
+	HeaderValue *string `type:"string" required:"true" sensitive:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginCustomHeader) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginCustomHeader) GoString() string {
 	return s.String()
 }
@@ -15506,12 +23717,20 @@ type OriginGroup struct {
 	Members *OriginGroupMembers `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginGroup) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginGroup) GoString() string {
 	return s.String()
 }
@@ -15576,12 +23795,20 @@ type OriginGroupFailoverCriteria struct {
 	StatusCodes *StatusCodes `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginGroupFailoverCriteria) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginGroupFailoverCriteria) GoString() string {
 	return s.String()
 }
@@ -15620,12 +23847,20 @@ type OriginGroupMember struct {
 	OriginId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginGroupMember) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginGroupMember) GoString() string {
 	return s.String()
 }
@@ -15664,12 +23899,20 @@ type OriginGroupMembers struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginGroupMembers) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginGroupMembers) GoString() string {
 	return s.String()
 }
@@ -15728,12 +23971,20 @@ type OriginGroups struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginGroups) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginGroups) GoString() string {
 	return s.String()
 }
@@ -15792,7 +24043,7 @@ func (s *OriginGroups) SetQuantity(v int64) *OriginGroups {
 //
 // CloudFront sends a request when it can’t find an object in its cache that
 // matches the request. If you want to send values to the origin and also include
-// them in the cache key, use CreateCachePolicy.
+// them in the cache key, use CachePolicy.
 type OriginRequestPolicy struct {
 	_ struct{} `type:"structure"`
 
@@ -15812,12 +24063,20 @@ type OriginRequestPolicy struct {
 	OriginRequestPolicyConfig *OriginRequestPolicyConfig `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicy) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicy) GoString() string {
 	return s.String()
 }
@@ -15859,11 +24118,12 @@ func (s *OriginRequestPolicy) SetOriginRequestPolicyConfig(v *OriginRequestPolic
 //
 // CloudFront sends a request when it can’t find an object in its cache that
 // matches the request. If you want to send values to the origin and also include
-// them in the cache key, use CreateCachePolicy.
+// them in the cache key, use CachePolicy.
 type OriginRequestPolicyConfig struct {
 	_ struct{} `type:"structure"`
 
-	// A comment to describe the origin request policy.
+	// A comment to describe the origin request policy. The comment cannot be longer
+	// than 128 characters.
 	Comment *string `type:"string"`
 
 	// The cookies from viewer requests to include in origin requests.
@@ -15888,12 +24148,20 @@ type OriginRequestPolicyConfig struct {
 	QueryStringsConfig *OriginRequestPolicyQueryStringsConfig `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicyConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicyConfig) GoString() string {
 	return s.String()
 }
@@ -15992,12 +24260,20 @@ type OriginRequestPolicyCookiesConfig struct {
 	Cookies *CookieNames `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicyCookiesConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicyCookiesConfig) GoString() string {
 	return s.String()
 }
@@ -16062,12 +24338,20 @@ type OriginRequestPolicyHeadersConfig struct {
 	Headers *Headers `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicyHeadersConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicyHeadersConfig) GoString() string {
 	return s.String()
 }
@@ -16126,12 +24410,20 @@ type OriginRequestPolicyList struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicyList) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicyList) GoString() string {
 	return s.String()
 }
@@ -16189,12 +24481,20 @@ type OriginRequestPolicyQueryStringsConfig struct {
 	QueryStrings *QueryStringNames `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicyQueryStringsConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicyQueryStringsConfig) GoString() string {
 	return s.String()
 }
@@ -16238,19 +24538,27 @@ type OriginRequestPolicySummary struct {
 	// OriginRequestPolicy is a required field
 	OriginRequestPolicy *OriginRequestPolicy `type:"structure" required:"true"`
 
-	// The type of origin request policy, either managed (created by AWS) or custom
-	// (created in this AWS account).
+	// The type of origin request policy, either managed (created by Amazon Web
+	// Services) or custom (created in this Amazon Web Services account).
 	//
 	// Type is a required field
 	Type *string `type:"string" required:"true" enum:"OriginRequestPolicyType"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicySummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginRequestPolicySummary) GoString() string {
 	return s.String()
 }
@@ -16264,6 +24572,84 @@ func (s *OriginRequestPolicySummary) SetOriginRequestPolicy(v *OriginRequestPoli
 // SetType sets the Type field's value.
 func (s *OriginRequestPolicySummary) SetType(v string) *OriginRequestPolicySummary {
 	s.Type = &v
+	return s
+}
+
+// CloudFront Origin Shield.
+//
+// Using Origin Shield can help reduce the load on your origin. For more information,
+// see Using Origin Shield (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/origin-shield.html)
+// in the Amazon CloudFront Developer Guide.
+type OriginShield struct {
+	_ struct{} `type:"structure"`
+
+	// A flag that specifies whether Origin Shield is enabled.
+	//
+	// When it’s enabled, CloudFront routes all requests through Origin Shield,
+	// which can help protect your origin. When it’s disabled, CloudFront might
+	// send requests directly to your origin from multiple edge locations or regional
+	// edge caches.
+	//
+	// Enabled is a required field
+	Enabled *bool `type:"boolean" required:"true"`
+
+	// The Amazon Web Services Region for Origin Shield.
+	//
+	// Specify the Amazon Web Services Region that has the lowest latency to your
+	// origin. To specify a region, use the region code, not the region name. For
+	// example, specify the US East (Ohio) region as us-east-2.
+	//
+	// When you enable CloudFront Origin Shield, you must specify the Amazon Web
+	// Services Region for Origin Shield. For the list of Amazon Web Services Regions
+	// that you can specify, and for help choosing the best Region for your origin,
+	// see Choosing the Amazon Web Services Region for Origin Shield (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/origin-shield.html#choose-origin-shield-region)
+	// in the Amazon CloudFront Developer Guide.
+	OriginShieldRegion *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s OriginShield) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s OriginShield) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *OriginShield) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "OriginShield"}
+	if s.Enabled == nil {
+		invalidParams.Add(request.NewErrParamRequired("Enabled"))
+	}
+	if s.OriginShieldRegion != nil && len(*s.OriginShieldRegion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("OriginShieldRegion", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetEnabled sets the Enabled field's value.
+func (s *OriginShield) SetEnabled(v bool) *OriginShield {
+	s.Enabled = &v
+	return s
+}
+
+// SetOriginShieldRegion sets the OriginShieldRegion field's value.
+func (s *OriginShield) SetOriginShieldRegion(v string) *OriginShield {
+	s.OriginShieldRegion = &v
 	return s
 }
 
@@ -16284,12 +24670,20 @@ type OriginSslProtocols struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginSslProtocols) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s OriginSslProtocols) GoString() string {
 	return s.String()
 }
@@ -16322,28 +24716,35 @@ func (s *OriginSslProtocols) SetQuantity(v int64) *OriginSslProtocols {
 	return s
 }
 
-// A complex type that contains information about origins and origin groups
-// for this distribution.
+// Contains information about the origins for this distribution.
 type Origins struct {
 	_ struct{} `type:"structure"`
 
-	// A complex type that contains origins or origin groups for this distribution.
+	// A list of origins.
 	//
 	// Items is a required field
 	Items []*Origin `locationNameList:"Origin" min:"1" type:"list" required:"true"`
 
-	// The number of origins or origin groups for this distribution.
+	// The number of origins for this distribution.
 	//
 	// Quantity is a required field
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Origins) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Origins) GoString() string {
 	return s.String()
 }
@@ -16398,7 +24799,7 @@ func (s *Origins) SetQuantity(v int64) *Origins {
 // are automatically included in requests that CloudFront sends to the origin.
 // CloudFront sends a request when it can’t find an object in its cache that
 // matches the request’s cache key. If you want to send values to the origin
-// but not include them in the cache key, use CreateOriginRequestPolicy.
+// but not include them in the cache key, use OriginRequestPolicy.
 type ParametersInCacheKeyAndForwardedToOrigin struct {
 	_ struct{} `type:"structure"`
 
@@ -16409,34 +24810,64 @@ type ParametersInCacheKeyAndForwardedToOrigin struct {
 	// CookiesConfig is a required field
 	CookiesConfig *CachePolicyCookiesConfig `type:"structure" required:"true"`
 
-	// A flag that determines whether the Accept-Encoding HTTP header is included
+	// A flag that can affect whether the Accept-Encoding HTTP header is included
 	// in the cache key and included in requests that CloudFront sends to the origin.
 	//
-	// If this field is true and the viewer request includes the Accept-Encoding
-	// header, then CloudFront normalizes the value of the viewer’s Accept-Encoding
-	// header to one of the following:
+	// This field is related to the EnableAcceptEncodingGzip field. If one or both
+	// of these fields is true and the viewer request includes the Accept-Encoding
+	// header, then CloudFront does the following:
 	//
-	//    * Accept-Encoding: gzip (if gzip is in the viewer’s Accept-Encoding
-	//    header)
+	//    * Normalizes the value of the viewer’s Accept-Encoding header
 	//
-	//    * Accept-Encoding: identity (if gzip is not in the viewer’s Accept-Encoding
-	//    header)
+	//    * Includes the normalized header in the cache key
 	//
-	// CloudFront includes the normalized header in the cache key and includes it
-	// in requests that CloudFront sends to the origin.
+	//    * Includes the normalized header in the request to the origin, if a request
+	//    is necessary
 	//
-	// If this field is false, then CloudFront treats the Accept-Encoding header
-	// the same as any other HTTP header in the viewer request. By default, it’s
-	// not included in the cache key and it’s not included in origin requests.
-	// You can manually add Accept-Encoding to the headers whitelist like any other
-	// HTTP header.
-	//
-	// When this field is true, you should not whitelist the Accept-Encoding header
-	// in the cache policy or in an origin request policy attached to the same cache
-	// behavior.
-	//
-	// For more information, see Cache compressed objects (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html#cache-policy-compressed-objects)
+	// For more information, see Compression support (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html#cache-policy-compressed-objects)
 	// in the Amazon CloudFront Developer Guide.
+	//
+	// If you set this value to true, and this cache behavior also has an origin
+	// request policy attached, do not include the Accept-Encoding header in the
+	// origin request policy. CloudFront always includes the Accept-Encoding header
+	// in origin requests when the value of this field is true, so including this
+	// header in an origin request policy has no effect.
+	//
+	// If both of these fields are false, then CloudFront treats the Accept-Encoding
+	// header the same as any other HTTP header in the viewer request. By default,
+	// it’s not included in the cache key and it’s not included in origin requests.
+	// In this case, you can manually add Accept-Encoding to the headers whitelist
+	// like any other HTTP header.
+	EnableAcceptEncodingBrotli *bool `type:"boolean"`
+
+	// A flag that can affect whether the Accept-Encoding HTTP header is included
+	// in the cache key and included in requests that CloudFront sends to the origin.
+	//
+	// This field is related to the EnableAcceptEncodingBrotli field. If one or
+	// both of these fields is true and the viewer request includes the Accept-Encoding
+	// header, then CloudFront does the following:
+	//
+	//    * Normalizes the value of the viewer’s Accept-Encoding header
+	//
+	//    * Includes the normalized header in the cache key
+	//
+	//    * Includes the normalized header in the request to the origin, if a request
+	//    is necessary
+	//
+	// For more information, see Compression support (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/controlling-the-cache-key.html#cache-policy-compressed-objects)
+	// in the Amazon CloudFront Developer Guide.
+	//
+	// If you set this value to true, and this cache behavior also has an origin
+	// request policy attached, do not include the Accept-Encoding header in the
+	// origin request policy. CloudFront always includes the Accept-Encoding header
+	// in origin requests when the value of this field is true, so including this
+	// header in an origin request policy has no effect.
+	//
+	// If both of these fields are false, then CloudFront treats the Accept-Encoding
+	// header the same as any other HTTP header in the viewer request. By default,
+	// it’s not included in the cache key and it’s not included in origin requests.
+	// In this case, you can manually add Accept-Encoding to the headers whitelist
+	// like any other HTTP header.
 	//
 	// EnableAcceptEncodingGzip is a required field
 	EnableAcceptEncodingGzip *bool `type:"boolean" required:"true"`
@@ -16456,12 +24887,20 @@ type ParametersInCacheKeyAndForwardedToOrigin struct {
 	QueryStringsConfig *CachePolicyQueryStringsConfig `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ParametersInCacheKeyAndForwardedToOrigin) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ParametersInCacheKeyAndForwardedToOrigin) GoString() string {
 	return s.String()
 }
@@ -16509,6 +24948,12 @@ func (s *ParametersInCacheKeyAndForwardedToOrigin) SetCookiesConfig(v *CachePoli
 	return s
 }
 
+// SetEnableAcceptEncodingBrotli sets the EnableAcceptEncodingBrotli field's value.
+func (s *ParametersInCacheKeyAndForwardedToOrigin) SetEnableAcceptEncodingBrotli(v bool) *ParametersInCacheKeyAndForwardedToOrigin {
+	s.EnableAcceptEncodingBrotli = &v
+	return s
+}
+
 // SetEnableAcceptEncodingGzip sets the EnableAcceptEncodingGzip field's value.
 func (s *ParametersInCacheKeyAndForwardedToOrigin) SetEnableAcceptEncodingGzip(v bool) *ParametersInCacheKeyAndForwardedToOrigin {
 	s.EnableAcceptEncodingGzip = &v
@@ -16544,12 +24989,20 @@ type Paths struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Paths) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Paths) GoString() string {
 	return s.String()
 }
@@ -16579,34 +25032,43 @@ func (s *Paths) SetQuantity(v int64) *Paths {
 	return s
 }
 
-// A complex data type of public keys you add to CloudFront to use with features
-// like field-level encryption.
+// A public key that you can use with signed URLs and signed cookies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html),
+// or with field-level encryption (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html).
 type PublicKey struct {
 	_ struct{} `type:"structure"`
 
-	// A time you added a public key to CloudFront.
+	// The date and time when the public key was uploaded.
 	//
 	// CreatedTime is a required field
 	CreatedTime *time.Time `type:"timestamp" required:"true"`
 
-	// A unique ID assigned to a public key you've added to CloudFront.
+	// The identifier of the public key.
 	//
 	// Id is a required field
 	Id *string `type:"string" required:"true"`
 
-	// A complex data type for a public key you add to CloudFront to use with features
-	// like field-level encryption.
+	// Configuration information about a public key that you can use with signed
+	// URLs and signed cookies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html),
+	// or with field-level encryption (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html).
 	//
 	// PublicKeyConfig is a required field
 	PublicKeyConfig *PublicKeyConfig `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PublicKey) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PublicKey) GoString() string {
 	return s.String()
 }
@@ -16629,38 +25091,48 @@ func (s *PublicKey) SetPublicKeyConfig(v *PublicKeyConfig) *PublicKey {
 	return s
 }
 
-// Information about a public key you add to CloudFront to use with features
-// like field-level encryption.
+// Configuration information about a public key that you can use with signed
+// URLs and signed cookies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html),
+// or with field-level encryption (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html).
 type PublicKeyConfig struct {
 	_ struct{} `type:"structure"`
 
-	// A unique number that ensures that the request can't be replayed.
+	// A string included in the request to help make sure that the request can’t
+	// be replayed.
 	//
 	// CallerReference is a required field
 	CallerReference *string `type:"string" required:"true"`
 
-	// An optional comment about a public key.
+	// A comment to describe the public key. The comment cannot be longer than 128
+	// characters.
 	Comment *string `type:"string"`
 
-	// The encoded public key that you want to add to CloudFront to use with features
-	// like field-level encryption.
+	// The public key that you can use with signed URLs and signed cookies (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html),
+	// or with field-level encryption (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html).
 	//
 	// EncodedKey is a required field
 	EncodedKey *string `type:"string" required:"true"`
 
-	// The name for a public key you add to CloudFront to use with features like
-	// field-level encryption.
+	// A name to help identify the public key.
 	//
 	// Name is a required field
 	Name *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PublicKeyConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PublicKeyConfig) GoString() string {
 	return s.String()
 }
@@ -16708,16 +25180,16 @@ func (s *PublicKeyConfig) SetName(v string) *PublicKeyConfig {
 	return s
 }
 
-// A list of public keys you've added to CloudFront to use with features like
-// field-level encryption.
+// A list of public keys that you can use with signed URLs and signed cookies
+// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html),
+// or with field-level encryption (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/field-level-encryption.html).
 type PublicKeyList struct {
 	_ struct{} `type:"structure"`
 
-	// An array of information about a public key you add to CloudFront to use with
-	// features like field-level encryption.
+	// A list of public keys.
 	Items []*PublicKeySummary `locationNameList:"PublicKeySummary" type:"list"`
 
-	// The maximum number of public keys you want in the response body.
+	// The maximum number of public keys you want in the response.
 	//
 	// MaxItems is a required field
 	MaxItems *int64 `type:"integer" required:"true"`
@@ -16727,19 +25199,26 @@ type PublicKeyList struct {
 	// your public keys where you left off.
 	NextMarker *string `type:"string"`
 
-	// The number of public keys you added to CloudFront to use with features like
-	// field-level encryption.
+	// The number of public keys in the list.
 	//
 	// Quantity is a required field
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PublicKeyList) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PublicKeyList) GoString() string {
 	return s.String()
 }
@@ -16768,40 +25247,49 @@ func (s *PublicKeyList) SetQuantity(v int64) *PublicKeyList {
 	return s
 }
 
-// A complex data type for public key information.
+// Contains information about a public key.
 type PublicKeySummary struct {
 	_ struct{} `type:"structure"`
 
-	// Comment for public key information summary.
+	// A comment to describe the public key. The comment cannot be longer than 128
+	// characters.
 	Comment *string `type:"string"`
 
-	// Creation time for public key information summary.
+	// The date and time when the public key was uploaded.
 	//
 	// CreatedTime is a required field
 	CreatedTime *time.Time `type:"timestamp" required:"true"`
 
-	// Encoded key for public key information summary.
+	// The public key.
 	//
 	// EncodedKey is a required field
 	EncodedKey *string `type:"string" required:"true"`
 
-	// ID for public key information summary.
+	// The identifier of the public key.
 	//
 	// Id is a required field
 	Id *string `type:"string" required:"true"`
 
-	// Name for public key information summary.
+	// A name to help identify the public key.
 	//
 	// Name is a required field
 	Name *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PublicKeySummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PublicKeySummary) GoString() string {
 	return s.String()
 }
@@ -16836,6 +25324,101 @@ func (s *PublicKeySummary) SetName(v string) *PublicKeySummary {
 	return s
 }
 
+type PublishFunctionInput struct {
+	_ struct{} `locationName:"PublishFunctionRequest" type:"structure"`
+
+	// The current version (ETag value) of the function that you are publishing,
+	// which you can get using DescribeFunction.
+	//
+	// IfMatch is a required field
+	IfMatch *string `location:"header" locationName:"If-Match" type:"string" required:"true"`
+
+	// The name of the function that you are publishing.
+	//
+	// Name is a required field
+	Name *string `location:"uri" locationName:"Name" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PublishFunctionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PublishFunctionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PublishFunctionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PublishFunctionInput"}
+	if s.IfMatch == nil {
+		invalidParams.Add(request.NewErrParamRequired("IfMatch"))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetIfMatch sets the IfMatch field's value.
+func (s *PublishFunctionInput) SetIfMatch(v string) *PublishFunctionInput {
+	s.IfMatch = &v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *PublishFunctionInput) SetName(v string) *PublishFunctionInput {
+	s.Name = &v
+	return s
+}
+
+type PublishFunctionOutput struct {
+	_ struct{} `type:"structure" payload:"FunctionSummary"`
+
+	// Contains configuration information and metadata about a CloudFront function.
+	FunctionSummary *FunctionSummary `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PublishFunctionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PublishFunctionOutput) GoString() string {
+	return s.String()
+}
+
+// SetFunctionSummary sets the FunctionSummary field's value.
+func (s *PublishFunctionOutput) SetFunctionSummary(v *FunctionSummary) *PublishFunctionOutput {
+	s.FunctionSummary = v
+	return s
+}
+
 // Query argument-profile mapping for field-level encryption.
 type QueryArgProfile struct {
 	_ struct{} `type:"structure"`
@@ -16851,12 +25434,20 @@ type QueryArgProfile struct {
 	QueryArg *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s QueryArgProfile) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s QueryArgProfile) GoString() string {
 	return s.String()
 }
@@ -16904,12 +25495,20 @@ type QueryArgProfileConfig struct {
 	QueryArgProfiles *QueryArgProfiles `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s QueryArgProfileConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s QueryArgProfileConfig) GoString() string {
 	return s.String()
 }
@@ -16957,12 +25556,20 @@ type QueryArgProfiles struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s QueryArgProfiles) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s QueryArgProfiles) GoString() string {
 	return s.String()
 }
@@ -17006,10 +25613,10 @@ func (s *QueryArgProfiles) SetQuantity(v int64) *QueryArgProfiles {
 // origin request policy instead of this field.
 //
 // If you want to include query strings in the cache key, use QueryStringsConfig
-// in a cache policy. See CreateCachePolicy.
+// in a cache policy. See CachePolicy.
 //
 // If you want to send query strings to the origin but not include them in the
-// cache key, use QueryStringsConfig in an origin request policy. See CreateOriginRequestPolicy.
+// cache key, use QueryStringsConfig in an origin request policy. See OriginRequestPolicy.
 //
 // A complex type that contains information about the query string parameters
 // that you want CloudFront to use for caching for a cache behavior.
@@ -17027,12 +25634,20 @@ type QueryStringCacheKeys struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s QueryStringCacheKeys) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s QueryStringCacheKeys) GoString() string {
 	return s.String()
 }
@@ -17075,12 +25690,20 @@ type QueryStringNames struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s QueryStringNames) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s QueryStringNames) GoString() string {
 	return s.String()
 }
@@ -17110,6 +25733,1739 @@ func (s *QueryStringNames) SetQuantity(v int64) *QueryStringNames {
 	return s
 }
 
+// A real-time log configuration.
+type RealtimeLogConfig struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of this real-time log configuration.
+	//
+	// ARN is a required field
+	ARN *string `type:"string" required:"true"`
+
+	// Contains information about the Amazon Kinesis data stream where you are sending
+	// real-time log data for this real-time log configuration.
+	//
+	// EndPoints is a required field
+	EndPoints []*EndPoint `type:"list" required:"true"`
+
+	// A list of fields that are included in each real-time log record. In an API
+	// response, the fields are provided in the same order in which they are sent
+	// to the Amazon Kinesis data stream.
+	//
+	// For more information about fields, see Real-time log configuration fields
+	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/real-time-logs.html#understand-real-time-log-config-fields)
+	// in the Amazon CloudFront Developer Guide.
+	//
+	// Fields is a required field
+	Fields []*string `locationNameList:"Field" type:"list" required:"true"`
+
+	// The unique name of this real-time log configuration.
+	//
+	// Name is a required field
+	Name *string `type:"string" required:"true"`
+
+	// The sampling rate for this real-time log configuration. The sampling rate
+	// determines the percentage of viewer requests that are represented in the
+	// real-time log data. The sampling rate is an integer between 1 and 100, inclusive.
+	//
+	// SamplingRate is a required field
+	SamplingRate *int64 `type:"long" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RealtimeLogConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RealtimeLogConfig) GoString() string {
+	return s.String()
+}
+
+// SetARN sets the ARN field's value.
+func (s *RealtimeLogConfig) SetARN(v string) *RealtimeLogConfig {
+	s.ARN = &v
+	return s
+}
+
+// SetEndPoints sets the EndPoints field's value.
+func (s *RealtimeLogConfig) SetEndPoints(v []*EndPoint) *RealtimeLogConfig {
+	s.EndPoints = v
+	return s
+}
+
+// SetFields sets the Fields field's value.
+func (s *RealtimeLogConfig) SetFields(v []*string) *RealtimeLogConfig {
+	s.Fields = v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *RealtimeLogConfig) SetName(v string) *RealtimeLogConfig {
+	s.Name = &v
+	return s
+}
+
+// SetSamplingRate sets the SamplingRate field's value.
+func (s *RealtimeLogConfig) SetSamplingRate(v int64) *RealtimeLogConfig {
+	s.SamplingRate = &v
+	return s
+}
+
+// A list of real-time log configurations.
+type RealtimeLogConfigs struct {
+	_ struct{} `type:"structure"`
+
+	// A flag that indicates whether there are more real-time log configurations
+	// than are contained in this list.
+	//
+	// IsTruncated is a required field
+	IsTruncated *bool `type:"boolean" required:"true"`
+
+	// Contains the list of real-time log configurations.
+	Items []*RealtimeLogConfig `type:"list"`
+
+	// This parameter indicates where this list of real-time log configurations
+	// begins. This list includes real-time log configurations that occur after
+	// the marker.
+	//
+	// Marker is a required field
+	Marker *string `type:"string" required:"true"`
+
+	// The maximum number of real-time log configurations requested.
+	//
+	// MaxItems is a required field
+	MaxItems *int64 `type:"integer" required:"true"`
+
+	// If there are more items in the list than are in this response, this element
+	// is present. It contains the value that you should use in the Marker field
+	// of a subsequent request to continue listing real-time log configurations
+	// where you left off.
+	NextMarker *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RealtimeLogConfigs) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RealtimeLogConfigs) GoString() string {
+	return s.String()
+}
+
+// SetIsTruncated sets the IsTruncated field's value.
+func (s *RealtimeLogConfigs) SetIsTruncated(v bool) *RealtimeLogConfigs {
+	s.IsTruncated = &v
+	return s
+}
+
+// SetItems sets the Items field's value.
+func (s *RealtimeLogConfigs) SetItems(v []*RealtimeLogConfig) *RealtimeLogConfigs {
+	s.Items = v
+	return s
+}
+
+// SetMarker sets the Marker field's value.
+func (s *RealtimeLogConfigs) SetMarker(v string) *RealtimeLogConfigs {
+	s.Marker = &v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *RealtimeLogConfigs) SetMaxItems(v int64) *RealtimeLogConfigs {
+	s.MaxItems = &v
+	return s
+}
+
+// SetNextMarker sets the NextMarker field's value.
+func (s *RealtimeLogConfigs) SetNextMarker(v string) *RealtimeLogConfigs {
+	s.NextMarker = &v
+	return s
+}
+
+// A subscription configuration for additional CloudWatch metrics.
+type RealtimeMetricsSubscriptionConfig struct {
+	_ struct{} `type:"structure"`
+
+	// A flag that indicates whether additional CloudWatch metrics are enabled for
+	// a given CloudFront distribution.
+	//
+	// RealtimeMetricsSubscriptionStatus is a required field
+	RealtimeMetricsSubscriptionStatus *string `type:"string" required:"true" enum:"RealtimeMetricsSubscriptionStatus"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RealtimeMetricsSubscriptionConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RealtimeMetricsSubscriptionConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RealtimeMetricsSubscriptionConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RealtimeMetricsSubscriptionConfig"}
+	if s.RealtimeMetricsSubscriptionStatus == nil {
+		invalidParams.Add(request.NewErrParamRequired("RealtimeMetricsSubscriptionStatus"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetRealtimeMetricsSubscriptionStatus sets the RealtimeMetricsSubscriptionStatus field's value.
+func (s *RealtimeMetricsSubscriptionConfig) SetRealtimeMetricsSubscriptionStatus(v string) *RealtimeMetricsSubscriptionConfig {
+	s.RealtimeMetricsSubscriptionStatus = &v
+	return s
+}
+
+// A response headers policy.
+//
+// A response headers policy contains information about a set of HTTP response
+// headers and their values.
+//
+// After you create a response headers policy, you can use its ID to attach
+// it to one or more cache behaviors in a CloudFront distribution. When it’s
+// attached to a cache behavior, CloudFront adds the headers in the policy to
+// HTTP responses that it sends for requests that match the cache behavior.
+//
+// For more information, see Adding HTTP headers to CloudFront responses (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/adding-response-headers.html)
+// in the Amazon CloudFront Developer Guide.
+type ResponseHeadersPolicy struct {
+	_ struct{} `type:"structure"`
+
+	// The identifier for the response headers policy.
+	//
+	// Id is a required field
+	Id *string `type:"string" required:"true"`
+
+	// The date and time when the response headers policy was last modified.
+	//
+	// LastModifiedTime is a required field
+	LastModifiedTime *time.Time `type:"timestamp" required:"true"`
+
+	// A response headers policy configuration.
+	//
+	// A response headers policy contains information about a set of HTTP response
+	// headers and their values. CloudFront adds the headers in the policy to HTTP
+	// responses that it sends for requests that match a cache behavior that’s
+	// associated with the policy.
+	//
+	// ResponseHeadersPolicyConfig is a required field
+	ResponseHeadersPolicyConfig *ResponseHeadersPolicyConfig `type:"structure" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicy) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicy) GoString() string {
+	return s.String()
+}
+
+// SetId sets the Id field's value.
+func (s *ResponseHeadersPolicy) SetId(v string) *ResponseHeadersPolicy {
+	s.Id = &v
+	return s
+}
+
+// SetLastModifiedTime sets the LastModifiedTime field's value.
+func (s *ResponseHeadersPolicy) SetLastModifiedTime(v time.Time) *ResponseHeadersPolicy {
+	s.LastModifiedTime = &v
+	return s
+}
+
+// SetResponseHeadersPolicyConfig sets the ResponseHeadersPolicyConfig field's value.
+func (s *ResponseHeadersPolicy) SetResponseHeadersPolicyConfig(v *ResponseHeadersPolicyConfig) *ResponseHeadersPolicy {
+	s.ResponseHeadersPolicyConfig = v
+	return s
+}
+
+// A list of HTTP header names that CloudFront includes as values for the Access-Control-Allow-Headers
+// HTTP response header.
+//
+// For more information about the Access-Control-Allow-Headers HTTP response
+// header, see Access-Control-Allow-Headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers)
+// in the MDN Web Docs.
+type ResponseHeadersPolicyAccessControlAllowHeaders struct {
+	_ struct{} `type:"structure"`
+
+	// The list of HTTP header names. You can specify * to allow all headers.
+	//
+	// Items is a required field
+	Items []*string `locationNameList:"Header" type:"list" required:"true"`
+
+	// The number of HTTP header names in the list.
+	//
+	// Quantity is a required field
+	Quantity *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyAccessControlAllowHeaders) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyAccessControlAllowHeaders) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyAccessControlAllowHeaders) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyAccessControlAllowHeaders"}
+	if s.Items == nil {
+		invalidParams.Add(request.NewErrParamRequired("Items"))
+	}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetItems sets the Items field's value.
+func (s *ResponseHeadersPolicyAccessControlAllowHeaders) SetItems(v []*string) *ResponseHeadersPolicyAccessControlAllowHeaders {
+	s.Items = v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *ResponseHeadersPolicyAccessControlAllowHeaders) SetQuantity(v int64) *ResponseHeadersPolicyAccessControlAllowHeaders {
+	s.Quantity = &v
+	return s
+}
+
+// A list of HTTP methods that CloudFront includes as values for the Access-Control-Allow-Methods
+// HTTP response header.
+//
+// For more information about the Access-Control-Allow-Methods HTTP response
+// header, see Access-Control-Allow-Methods (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods)
+// in the MDN Web Docs.
+type ResponseHeadersPolicyAccessControlAllowMethods struct {
+	_ struct{} `type:"structure"`
+
+	// The list of HTTP methods. Valid values are:
+	//
+	//    * GET
+	//
+	//    * DELETE
+	//
+	//    * HEAD
+	//
+	//    * OPTIONS
+	//
+	//    * PATCH
+	//
+	//    * POST
+	//
+	//    * PUT
+	//
+	//    * ALL
+	//
+	// ALL is a special value that includes all of the listed HTTP methods.
+	//
+	// Items is a required field
+	Items []*string `locationNameList:"Method" type:"list" required:"true"`
+
+	// The number of HTTP methods in the list.
+	//
+	// Quantity is a required field
+	Quantity *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyAccessControlAllowMethods) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyAccessControlAllowMethods) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyAccessControlAllowMethods) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyAccessControlAllowMethods"}
+	if s.Items == nil {
+		invalidParams.Add(request.NewErrParamRequired("Items"))
+	}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetItems sets the Items field's value.
+func (s *ResponseHeadersPolicyAccessControlAllowMethods) SetItems(v []*string) *ResponseHeadersPolicyAccessControlAllowMethods {
+	s.Items = v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *ResponseHeadersPolicyAccessControlAllowMethods) SetQuantity(v int64) *ResponseHeadersPolicyAccessControlAllowMethods {
+	s.Quantity = &v
+	return s
+}
+
+// A list of origins (domain names) that CloudFront can use as the value for
+// the Access-Control-Allow-Origin HTTP response header.
+//
+// For more information about the Access-Control-Allow-Origin HTTP response
+// header, see Access-Control-Allow-Origin (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin)
+// in the MDN Web Docs.
+type ResponseHeadersPolicyAccessControlAllowOrigins struct {
+	_ struct{} `type:"structure"`
+
+	// The list of origins (domain names). You can specify * to allow all origins.
+	//
+	// Items is a required field
+	Items []*string `locationNameList:"Origin" type:"list" required:"true"`
+
+	// The number of origins in the list.
+	//
+	// Quantity is a required field
+	Quantity *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyAccessControlAllowOrigins) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyAccessControlAllowOrigins) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyAccessControlAllowOrigins) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyAccessControlAllowOrigins"}
+	if s.Items == nil {
+		invalidParams.Add(request.NewErrParamRequired("Items"))
+	}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetItems sets the Items field's value.
+func (s *ResponseHeadersPolicyAccessControlAllowOrigins) SetItems(v []*string) *ResponseHeadersPolicyAccessControlAllowOrigins {
+	s.Items = v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *ResponseHeadersPolicyAccessControlAllowOrigins) SetQuantity(v int64) *ResponseHeadersPolicyAccessControlAllowOrigins {
+	s.Quantity = &v
+	return s
+}
+
+// A list of HTTP headers that CloudFront includes as values for the Access-Control-Expose-Headers
+// HTTP response header.
+//
+// For more information about the Access-Control-Expose-Headers HTTP response
+// header, see Access-Control-Expose-Headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers)
+// in the MDN Web Docs.
+type ResponseHeadersPolicyAccessControlExposeHeaders struct {
+	_ struct{} `type:"structure"`
+
+	// The list of HTTP headers. You can specify * to expose all headers.
+	Items []*string `locationNameList:"Header" type:"list"`
+
+	// The number of HTTP headers in the list.
+	//
+	// Quantity is a required field
+	Quantity *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyAccessControlExposeHeaders) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyAccessControlExposeHeaders) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyAccessControlExposeHeaders) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyAccessControlExposeHeaders"}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetItems sets the Items field's value.
+func (s *ResponseHeadersPolicyAccessControlExposeHeaders) SetItems(v []*string) *ResponseHeadersPolicyAccessControlExposeHeaders {
+	s.Items = v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *ResponseHeadersPolicyAccessControlExposeHeaders) SetQuantity(v int64) *ResponseHeadersPolicyAccessControlExposeHeaders {
+	s.Quantity = &v
+	return s
+}
+
+// A response headers policy configuration.
+//
+// A response headers policy configuration contains metadata about the response
+// headers policy, and configurations for sets of HTTP response headers and
+// their values. CloudFront adds the headers in the policy to HTTP responses
+// that it sends for requests that match a cache behavior associated with the
+// policy.
+type ResponseHeadersPolicyConfig struct {
+	_ struct{} `type:"structure"`
+
+	// A comment to describe the response headers policy.
+	//
+	// The comment cannot be longer than 128 characters.
+	Comment *string `type:"string"`
+
+	// A configuration for a set of HTTP response headers that are used for cross-origin
+	// resource sharing (CORS).
+	CorsConfig *ResponseHeadersPolicyCorsConfig `type:"structure"`
+
+	// A configuration for a set of custom HTTP response headers.
+	CustomHeadersConfig *ResponseHeadersPolicyCustomHeadersConfig `type:"structure"`
+
+	// A name to identify the response headers policy.
+	//
+	// The name must be unique for response headers policies in this Amazon Web
+	// Services account.
+	//
+	// Name is a required field
+	Name *string `type:"string" required:"true"`
+
+	// A configuration for a set of security-related HTTP response headers.
+	SecurityHeadersConfig *ResponseHeadersPolicySecurityHeadersConfig `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyConfig"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.CorsConfig != nil {
+		if err := s.CorsConfig.Validate(); err != nil {
+			invalidParams.AddNested("CorsConfig", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.CustomHeadersConfig != nil {
+		if err := s.CustomHeadersConfig.Validate(); err != nil {
+			invalidParams.AddNested("CustomHeadersConfig", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.SecurityHeadersConfig != nil {
+		if err := s.SecurityHeadersConfig.Validate(); err != nil {
+			invalidParams.AddNested("SecurityHeadersConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetComment sets the Comment field's value.
+func (s *ResponseHeadersPolicyConfig) SetComment(v string) *ResponseHeadersPolicyConfig {
+	s.Comment = &v
+	return s
+}
+
+// SetCorsConfig sets the CorsConfig field's value.
+func (s *ResponseHeadersPolicyConfig) SetCorsConfig(v *ResponseHeadersPolicyCorsConfig) *ResponseHeadersPolicyConfig {
+	s.CorsConfig = v
+	return s
+}
+
+// SetCustomHeadersConfig sets the CustomHeadersConfig field's value.
+func (s *ResponseHeadersPolicyConfig) SetCustomHeadersConfig(v *ResponseHeadersPolicyCustomHeadersConfig) *ResponseHeadersPolicyConfig {
+	s.CustomHeadersConfig = v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *ResponseHeadersPolicyConfig) SetName(v string) *ResponseHeadersPolicyConfig {
+	s.Name = &v
+	return s
+}
+
+// SetSecurityHeadersConfig sets the SecurityHeadersConfig field's value.
+func (s *ResponseHeadersPolicyConfig) SetSecurityHeadersConfig(v *ResponseHeadersPolicySecurityHeadersConfig) *ResponseHeadersPolicyConfig {
+	s.SecurityHeadersConfig = v
+	return s
+}
+
+// The policy directives and their values that CloudFront includes as values
+// for the Content-Security-Policy HTTP response header.
+//
+// For more information about the Content-Security-Policy HTTP response header,
+// see Content-Security-Policy (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy)
+// in the MDN Web Docs.
+type ResponseHeadersPolicyContentSecurityPolicy struct {
+	_ struct{} `type:"structure"`
+
+	// The policy directives and their values that CloudFront includes as values
+	// for the Content-Security-Policy HTTP response header.
+	//
+	// ContentSecurityPolicy is a required field
+	ContentSecurityPolicy *string `type:"string" required:"true"`
+
+	// A Boolean that determines whether CloudFront overrides the Content-Security-Policy
+	// HTTP response header received from the origin with the one specified in this
+	// response headers policy.
+	//
+	// Override is a required field
+	Override *bool `type:"boolean" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyContentSecurityPolicy) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyContentSecurityPolicy) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyContentSecurityPolicy) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyContentSecurityPolicy"}
+	if s.ContentSecurityPolicy == nil {
+		invalidParams.Add(request.NewErrParamRequired("ContentSecurityPolicy"))
+	}
+	if s.Override == nil {
+		invalidParams.Add(request.NewErrParamRequired("Override"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetContentSecurityPolicy sets the ContentSecurityPolicy field's value.
+func (s *ResponseHeadersPolicyContentSecurityPolicy) SetContentSecurityPolicy(v string) *ResponseHeadersPolicyContentSecurityPolicy {
+	s.ContentSecurityPolicy = &v
+	return s
+}
+
+// SetOverride sets the Override field's value.
+func (s *ResponseHeadersPolicyContentSecurityPolicy) SetOverride(v bool) *ResponseHeadersPolicyContentSecurityPolicy {
+	s.Override = &v
+	return s
+}
+
+// Determines whether CloudFront includes the X-Content-Type-Options HTTP response
+// header with its value set to nosniff.
+//
+// For more information about the X-Content-Type-Options HTTP response header,
+// see X-Content-Type-Options (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options)
+// in the MDN Web Docs.
+type ResponseHeadersPolicyContentTypeOptions struct {
+	_ struct{} `type:"structure"`
+
+	// A Boolean that determines whether CloudFront overrides the X-Content-Type-Options
+	// HTTP response header received from the origin with the one specified in this
+	// response headers policy.
+	//
+	// Override is a required field
+	Override *bool `type:"boolean" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyContentTypeOptions) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyContentTypeOptions) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyContentTypeOptions) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyContentTypeOptions"}
+	if s.Override == nil {
+		invalidParams.Add(request.NewErrParamRequired("Override"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetOverride sets the Override field's value.
+func (s *ResponseHeadersPolicyContentTypeOptions) SetOverride(v bool) *ResponseHeadersPolicyContentTypeOptions {
+	s.Override = &v
+	return s
+}
+
+// A configuration for a set of HTTP response headers that are used for cross-origin
+// resource sharing (CORS). CloudFront adds these headers to HTTP responses
+// that it sends for CORS requests that match a cache behavior associated with
+// this response headers policy.
+//
+// For more information about CORS, see Cross-Origin Resource Sharing (CORS)
+// (https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS) in the MDN Web Docs.
+type ResponseHeadersPolicyCorsConfig struct {
+	_ struct{} `type:"structure"`
+
+	// A Boolean that CloudFront uses as the value for the Access-Control-Allow-Credentials
+	// HTTP response header.
+	//
+	// For more information about the Access-Control-Allow-Credentials HTTP response
+	// header, see Access-Control-Allow-Credentials (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Credentials)
+	// in the MDN Web Docs.
+	//
+	// AccessControlAllowCredentials is a required field
+	AccessControlAllowCredentials *bool `type:"boolean" required:"true"`
+
+	// A list of HTTP header names that CloudFront includes as values for the Access-Control-Allow-Headers
+	// HTTP response header.
+	//
+	// For more information about the Access-Control-Allow-Headers HTTP response
+	// header, see Access-Control-Allow-Headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Headers)
+	// in the MDN Web Docs.
+	//
+	// AccessControlAllowHeaders is a required field
+	AccessControlAllowHeaders *ResponseHeadersPolicyAccessControlAllowHeaders `type:"structure" required:"true"`
+
+	// A list of HTTP methods that CloudFront includes as values for the Access-Control-Allow-Methods
+	// HTTP response header.
+	//
+	// For more information about the Access-Control-Allow-Methods HTTP response
+	// header, see Access-Control-Allow-Methods (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Methods)
+	// in the MDN Web Docs.
+	//
+	// AccessControlAllowMethods is a required field
+	AccessControlAllowMethods *ResponseHeadersPolicyAccessControlAllowMethods `type:"structure" required:"true"`
+
+	// A list of origins (domain names) that CloudFront can use as the value for
+	// the Access-Control-Allow-Origin HTTP response header.
+	//
+	// For more information about the Access-Control-Allow-Origin HTTP response
+	// header, see Access-Control-Allow-Origin (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Allow-Origin)
+	// in the MDN Web Docs.
+	//
+	// AccessControlAllowOrigins is a required field
+	AccessControlAllowOrigins *ResponseHeadersPolicyAccessControlAllowOrigins `type:"structure" required:"true"`
+
+	// A list of HTTP headers that CloudFront includes as values for the Access-Control-Expose-Headers
+	// HTTP response header.
+	//
+	// For more information about the Access-Control-Expose-Headers HTTP response
+	// header, see Access-Control-Expose-Headers (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Expose-Headers)
+	// in the MDN Web Docs.
+	AccessControlExposeHeaders *ResponseHeadersPolicyAccessControlExposeHeaders `type:"structure"`
+
+	// A number that CloudFront uses as the value for the Access-Control-Max-Age
+	// HTTP response header.
+	//
+	// For more information about the Access-Control-Max-Age HTTP response header,
+	// see Access-Control-Max-Age (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Access-Control-Max-Age)
+	// in the MDN Web Docs.
+	AccessControlMaxAgeSec *int64 `type:"integer"`
+
+	// A Boolean that determines whether CloudFront overrides HTTP response headers
+	// received from the origin with the ones specified in this response headers
+	// policy.
+	//
+	// OriginOverride is a required field
+	OriginOverride *bool `type:"boolean" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyCorsConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyCorsConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyCorsConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyCorsConfig"}
+	if s.AccessControlAllowCredentials == nil {
+		invalidParams.Add(request.NewErrParamRequired("AccessControlAllowCredentials"))
+	}
+	if s.AccessControlAllowHeaders == nil {
+		invalidParams.Add(request.NewErrParamRequired("AccessControlAllowHeaders"))
+	}
+	if s.AccessControlAllowMethods == nil {
+		invalidParams.Add(request.NewErrParamRequired("AccessControlAllowMethods"))
+	}
+	if s.AccessControlAllowOrigins == nil {
+		invalidParams.Add(request.NewErrParamRequired("AccessControlAllowOrigins"))
+	}
+	if s.OriginOverride == nil {
+		invalidParams.Add(request.NewErrParamRequired("OriginOverride"))
+	}
+	if s.AccessControlAllowHeaders != nil {
+		if err := s.AccessControlAllowHeaders.Validate(); err != nil {
+			invalidParams.AddNested("AccessControlAllowHeaders", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.AccessControlAllowMethods != nil {
+		if err := s.AccessControlAllowMethods.Validate(); err != nil {
+			invalidParams.AddNested("AccessControlAllowMethods", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.AccessControlAllowOrigins != nil {
+		if err := s.AccessControlAllowOrigins.Validate(); err != nil {
+			invalidParams.AddNested("AccessControlAllowOrigins", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.AccessControlExposeHeaders != nil {
+		if err := s.AccessControlExposeHeaders.Validate(); err != nil {
+			invalidParams.AddNested("AccessControlExposeHeaders", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAccessControlAllowCredentials sets the AccessControlAllowCredentials field's value.
+func (s *ResponseHeadersPolicyCorsConfig) SetAccessControlAllowCredentials(v bool) *ResponseHeadersPolicyCorsConfig {
+	s.AccessControlAllowCredentials = &v
+	return s
+}
+
+// SetAccessControlAllowHeaders sets the AccessControlAllowHeaders field's value.
+func (s *ResponseHeadersPolicyCorsConfig) SetAccessControlAllowHeaders(v *ResponseHeadersPolicyAccessControlAllowHeaders) *ResponseHeadersPolicyCorsConfig {
+	s.AccessControlAllowHeaders = v
+	return s
+}
+
+// SetAccessControlAllowMethods sets the AccessControlAllowMethods field's value.
+func (s *ResponseHeadersPolicyCorsConfig) SetAccessControlAllowMethods(v *ResponseHeadersPolicyAccessControlAllowMethods) *ResponseHeadersPolicyCorsConfig {
+	s.AccessControlAllowMethods = v
+	return s
+}
+
+// SetAccessControlAllowOrigins sets the AccessControlAllowOrigins field's value.
+func (s *ResponseHeadersPolicyCorsConfig) SetAccessControlAllowOrigins(v *ResponseHeadersPolicyAccessControlAllowOrigins) *ResponseHeadersPolicyCorsConfig {
+	s.AccessControlAllowOrigins = v
+	return s
+}
+
+// SetAccessControlExposeHeaders sets the AccessControlExposeHeaders field's value.
+func (s *ResponseHeadersPolicyCorsConfig) SetAccessControlExposeHeaders(v *ResponseHeadersPolicyAccessControlExposeHeaders) *ResponseHeadersPolicyCorsConfig {
+	s.AccessControlExposeHeaders = v
+	return s
+}
+
+// SetAccessControlMaxAgeSec sets the AccessControlMaxAgeSec field's value.
+func (s *ResponseHeadersPolicyCorsConfig) SetAccessControlMaxAgeSec(v int64) *ResponseHeadersPolicyCorsConfig {
+	s.AccessControlMaxAgeSec = &v
+	return s
+}
+
+// SetOriginOverride sets the OriginOverride field's value.
+func (s *ResponseHeadersPolicyCorsConfig) SetOriginOverride(v bool) *ResponseHeadersPolicyCorsConfig {
+	s.OriginOverride = &v
+	return s
+}
+
+// An HTTP response header name and its value. CloudFront includes this header
+// in HTTP responses that it sends for requests that match a cache behavior
+// that’s associated with this response headers policy.
+type ResponseHeadersPolicyCustomHeader struct {
+	_ struct{} `type:"structure"`
+
+	// The HTTP response header name.
+	//
+	// Header is a required field
+	Header *string `type:"string" required:"true"`
+
+	// A Boolean that determines whether CloudFront overrides a response header
+	// with the same name received from the origin with the header specified here.
+	//
+	// Override is a required field
+	Override *bool `type:"boolean" required:"true"`
+
+	// The value for the HTTP response header.
+	//
+	// Value is a required field
+	Value *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyCustomHeader) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyCustomHeader) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyCustomHeader) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyCustomHeader"}
+	if s.Header == nil {
+		invalidParams.Add(request.NewErrParamRequired("Header"))
+	}
+	if s.Override == nil {
+		invalidParams.Add(request.NewErrParamRequired("Override"))
+	}
+	if s.Value == nil {
+		invalidParams.Add(request.NewErrParamRequired("Value"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetHeader sets the Header field's value.
+func (s *ResponseHeadersPolicyCustomHeader) SetHeader(v string) *ResponseHeadersPolicyCustomHeader {
+	s.Header = &v
+	return s
+}
+
+// SetOverride sets the Override field's value.
+func (s *ResponseHeadersPolicyCustomHeader) SetOverride(v bool) *ResponseHeadersPolicyCustomHeader {
+	s.Override = &v
+	return s
+}
+
+// SetValue sets the Value field's value.
+func (s *ResponseHeadersPolicyCustomHeader) SetValue(v string) *ResponseHeadersPolicyCustomHeader {
+	s.Value = &v
+	return s
+}
+
+// A list of HTTP response header names and their values. CloudFront includes
+// these headers in HTTP responses that it sends for requests that match a cache
+// behavior that’s associated with this response headers policy.
+type ResponseHeadersPolicyCustomHeadersConfig struct {
+	_ struct{} `type:"structure"`
+
+	// The list of HTTP response headers and their values.
+	Items []*ResponseHeadersPolicyCustomHeader `locationNameList:"ResponseHeadersPolicyCustomHeader" type:"list"`
+
+	// The number of HTTP response headers in the list.
+	//
+	// Quantity is a required field
+	Quantity *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyCustomHeadersConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyCustomHeadersConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyCustomHeadersConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyCustomHeadersConfig"}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+	if s.Items != nil {
+		for i, v := range s.Items {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Items", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetItems sets the Items field's value.
+func (s *ResponseHeadersPolicyCustomHeadersConfig) SetItems(v []*ResponseHeadersPolicyCustomHeader) *ResponseHeadersPolicyCustomHeadersConfig {
+	s.Items = v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *ResponseHeadersPolicyCustomHeadersConfig) SetQuantity(v int64) *ResponseHeadersPolicyCustomHeadersConfig {
+	s.Quantity = &v
+	return s
+}
+
+// Determines whether CloudFront includes the X-Frame-Options HTTP response
+// header and the header’s value.
+//
+// For more information about the X-Frame-Options HTTP response header, see
+// X-Frame-Options (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options)
+// in the MDN Web Docs.
+type ResponseHeadersPolicyFrameOptions struct {
+	_ struct{} `type:"structure"`
+
+	// The value of the X-Frame-Options HTTP response header. Valid values are DENY
+	// and SAMEORIGIN.
+	//
+	// For more information about these values, see X-Frame-Options (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options)
+	// in the MDN Web Docs.
+	//
+	// FrameOption is a required field
+	FrameOption *string `type:"string" required:"true" enum:"FrameOptionsList"`
+
+	// A Boolean that determines whether CloudFront overrides the X-Frame-Options
+	// HTTP response header received from the origin with the one specified in this
+	// response headers policy.
+	//
+	// Override is a required field
+	Override *bool `type:"boolean" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyFrameOptions) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyFrameOptions) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyFrameOptions) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyFrameOptions"}
+	if s.FrameOption == nil {
+		invalidParams.Add(request.NewErrParamRequired("FrameOption"))
+	}
+	if s.Override == nil {
+		invalidParams.Add(request.NewErrParamRequired("Override"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFrameOption sets the FrameOption field's value.
+func (s *ResponseHeadersPolicyFrameOptions) SetFrameOption(v string) *ResponseHeadersPolicyFrameOptions {
+	s.FrameOption = &v
+	return s
+}
+
+// SetOverride sets the Override field's value.
+func (s *ResponseHeadersPolicyFrameOptions) SetOverride(v bool) *ResponseHeadersPolicyFrameOptions {
+	s.Override = &v
+	return s
+}
+
+// A list of response headers policies.
+type ResponseHeadersPolicyList struct {
+	_ struct{} `type:"structure"`
+
+	// The response headers policies in the list.
+	Items []*ResponseHeadersPolicySummary `locationNameList:"ResponseHeadersPolicySummary" type:"list"`
+
+	// The maximum number of response headers policies requested.
+	//
+	// MaxItems is a required field
+	MaxItems *int64 `type:"integer" required:"true"`
+
+	// If there are more items in the list than are in this response, this element
+	// is present. It contains the value that you should use in the Marker field
+	// of a subsequent request to continue listing response headers policies where
+	// you left off.
+	NextMarker *string `type:"string"`
+
+	// The number of response headers policies returned.
+	//
+	// Quantity is a required field
+	Quantity *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyList) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyList) GoString() string {
+	return s.String()
+}
+
+// SetItems sets the Items field's value.
+func (s *ResponseHeadersPolicyList) SetItems(v []*ResponseHeadersPolicySummary) *ResponseHeadersPolicyList {
+	s.Items = v
+	return s
+}
+
+// SetMaxItems sets the MaxItems field's value.
+func (s *ResponseHeadersPolicyList) SetMaxItems(v int64) *ResponseHeadersPolicyList {
+	s.MaxItems = &v
+	return s
+}
+
+// SetNextMarker sets the NextMarker field's value.
+func (s *ResponseHeadersPolicyList) SetNextMarker(v string) *ResponseHeadersPolicyList {
+	s.NextMarker = &v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *ResponseHeadersPolicyList) SetQuantity(v int64) *ResponseHeadersPolicyList {
+	s.Quantity = &v
+	return s
+}
+
+// Determines whether CloudFront includes the Referrer-Policy HTTP response
+// header and the header’s value.
+//
+// For more information about the Referrer-Policy HTTP response header, see
+// Referrer-Policy (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy)
+// in the MDN Web Docs.
+type ResponseHeadersPolicyReferrerPolicy struct {
+	_ struct{} `type:"structure"`
+
+	// A Boolean that determines whether CloudFront overrides the Referrer-Policy
+	// HTTP response header received from the origin with the one specified in this
+	// response headers policy.
+	//
+	// Override is a required field
+	Override *bool `type:"boolean" required:"true"`
+
+	// The value of the Referrer-Policy HTTP response header. Valid values are:
+	//
+	//    * no-referrer
+	//
+	//    * no-referrer-when-downgrade
+	//
+	//    * origin
+	//
+	//    * origin-when-cross-origin
+	//
+	//    * same-origin
+	//
+	//    * strict-origin
+	//
+	//    * strict-origin-when-cross-origin
+	//
+	//    * unsafe-url
+	//
+	// For more information about these values, see Referrer-Policy (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy)
+	// in the MDN Web Docs.
+	//
+	// ReferrerPolicy is a required field
+	ReferrerPolicy *string `type:"string" required:"true" enum:"ReferrerPolicyList"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyReferrerPolicy) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyReferrerPolicy) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyReferrerPolicy) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyReferrerPolicy"}
+	if s.Override == nil {
+		invalidParams.Add(request.NewErrParamRequired("Override"))
+	}
+	if s.ReferrerPolicy == nil {
+		invalidParams.Add(request.NewErrParamRequired("ReferrerPolicy"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetOverride sets the Override field's value.
+func (s *ResponseHeadersPolicyReferrerPolicy) SetOverride(v bool) *ResponseHeadersPolicyReferrerPolicy {
+	s.Override = &v
+	return s
+}
+
+// SetReferrerPolicy sets the ReferrerPolicy field's value.
+func (s *ResponseHeadersPolicyReferrerPolicy) SetReferrerPolicy(v string) *ResponseHeadersPolicyReferrerPolicy {
+	s.ReferrerPolicy = &v
+	return s
+}
+
+// A configuration for a set of security-related HTTP response headers. CloudFront
+// adds these headers to HTTP responses that it sends for requests that match
+// a cache behavior associated with this response headers policy.
+type ResponseHeadersPolicySecurityHeadersConfig struct {
+	_ struct{} `type:"structure"`
+
+	// The policy directives and their values that CloudFront includes as values
+	// for the Content-Security-Policy HTTP response header.
+	//
+	// For more information about the Content-Security-Policy HTTP response header,
+	// see Content-Security-Policy (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Content-Security-Policy)
+	// in the MDN Web Docs.
+	ContentSecurityPolicy *ResponseHeadersPolicyContentSecurityPolicy `type:"structure"`
+
+	// Determines whether CloudFront includes the X-Content-Type-Options HTTP response
+	// header with its value set to nosniff.
+	//
+	// For more information about the X-Content-Type-Options HTTP response header,
+	// see X-Content-Type-Options (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Content-Type-Options)
+	// in the MDN Web Docs.
+	ContentTypeOptions *ResponseHeadersPolicyContentTypeOptions `type:"structure"`
+
+	// Determines whether CloudFront includes the X-Frame-Options HTTP response
+	// header and the header’s value.
+	//
+	// For more information about the X-Frame-Options HTTP response header, see
+	// X-Frame-Options (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options)
+	// in the MDN Web Docs.
+	FrameOptions *ResponseHeadersPolicyFrameOptions `type:"structure"`
+
+	// Determines whether CloudFront includes the Referrer-Policy HTTP response
+	// header and the header’s value.
+	//
+	// For more information about the Referrer-Policy HTTP response header, see
+	// Referrer-Policy (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referrer-Policy)
+	// in the MDN Web Docs.
+	ReferrerPolicy *ResponseHeadersPolicyReferrerPolicy `type:"structure"`
+
+	// Determines whether CloudFront includes the Strict-Transport-Security HTTP
+	// response header and the header’s value.
+	//
+	// For more information about the Strict-Transport-Security HTTP response header,
+	// see Strict-Transport-Security (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security)
+	// in the MDN Web Docs.
+	StrictTransportSecurity *ResponseHeadersPolicyStrictTransportSecurity `type:"structure"`
+
+	// Determines whether CloudFront includes the X-XSS-Protection HTTP response
+	// header and the header’s value.
+	//
+	// For more information about the X-XSS-Protection HTTP response header, see
+	// X-XSS-Protection (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection)
+	// in the MDN Web Docs.
+	XSSProtection *ResponseHeadersPolicyXSSProtection `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicySecurityHeadersConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicySecurityHeadersConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicySecurityHeadersConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicySecurityHeadersConfig"}
+	if s.ContentSecurityPolicy != nil {
+		if err := s.ContentSecurityPolicy.Validate(); err != nil {
+			invalidParams.AddNested("ContentSecurityPolicy", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ContentTypeOptions != nil {
+		if err := s.ContentTypeOptions.Validate(); err != nil {
+			invalidParams.AddNested("ContentTypeOptions", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.FrameOptions != nil {
+		if err := s.FrameOptions.Validate(); err != nil {
+			invalidParams.AddNested("FrameOptions", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ReferrerPolicy != nil {
+		if err := s.ReferrerPolicy.Validate(); err != nil {
+			invalidParams.AddNested("ReferrerPolicy", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.StrictTransportSecurity != nil {
+		if err := s.StrictTransportSecurity.Validate(); err != nil {
+			invalidParams.AddNested("StrictTransportSecurity", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.XSSProtection != nil {
+		if err := s.XSSProtection.Validate(); err != nil {
+			invalidParams.AddNested("XSSProtection", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetContentSecurityPolicy sets the ContentSecurityPolicy field's value.
+func (s *ResponseHeadersPolicySecurityHeadersConfig) SetContentSecurityPolicy(v *ResponseHeadersPolicyContentSecurityPolicy) *ResponseHeadersPolicySecurityHeadersConfig {
+	s.ContentSecurityPolicy = v
+	return s
+}
+
+// SetContentTypeOptions sets the ContentTypeOptions field's value.
+func (s *ResponseHeadersPolicySecurityHeadersConfig) SetContentTypeOptions(v *ResponseHeadersPolicyContentTypeOptions) *ResponseHeadersPolicySecurityHeadersConfig {
+	s.ContentTypeOptions = v
+	return s
+}
+
+// SetFrameOptions sets the FrameOptions field's value.
+func (s *ResponseHeadersPolicySecurityHeadersConfig) SetFrameOptions(v *ResponseHeadersPolicyFrameOptions) *ResponseHeadersPolicySecurityHeadersConfig {
+	s.FrameOptions = v
+	return s
+}
+
+// SetReferrerPolicy sets the ReferrerPolicy field's value.
+func (s *ResponseHeadersPolicySecurityHeadersConfig) SetReferrerPolicy(v *ResponseHeadersPolicyReferrerPolicy) *ResponseHeadersPolicySecurityHeadersConfig {
+	s.ReferrerPolicy = v
+	return s
+}
+
+// SetStrictTransportSecurity sets the StrictTransportSecurity field's value.
+func (s *ResponseHeadersPolicySecurityHeadersConfig) SetStrictTransportSecurity(v *ResponseHeadersPolicyStrictTransportSecurity) *ResponseHeadersPolicySecurityHeadersConfig {
+	s.StrictTransportSecurity = v
+	return s
+}
+
+// SetXSSProtection sets the XSSProtection field's value.
+func (s *ResponseHeadersPolicySecurityHeadersConfig) SetXSSProtection(v *ResponseHeadersPolicyXSSProtection) *ResponseHeadersPolicySecurityHeadersConfig {
+	s.XSSProtection = v
+	return s
+}
+
+// Determines whether CloudFront includes the Strict-Transport-Security HTTP
+// response header and the header’s value.
+//
+// For more information about the Strict-Transport-Security HTTP response header,
+// see Strict-Transport-Security (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Strict-Transport-Security)
+// in the MDN Web Docs.
+type ResponseHeadersPolicyStrictTransportSecurity struct {
+	_ struct{} `type:"structure"`
+
+	// A number that CloudFront uses as the value for the max-age directive in the
+	// Strict-Transport-Security HTTP response header.
+	//
+	// AccessControlMaxAgeSec is a required field
+	AccessControlMaxAgeSec *int64 `type:"integer" required:"true"`
+
+	// A Boolean that determines whether CloudFront includes the includeSubDomains
+	// directive in the Strict-Transport-Security HTTP response header.
+	IncludeSubdomains *bool `type:"boolean"`
+
+	// A Boolean that determines whether CloudFront overrides the Strict-Transport-Security
+	// HTTP response header received from the origin with the one specified in this
+	// response headers policy.
+	//
+	// Override is a required field
+	Override *bool `type:"boolean" required:"true"`
+
+	// A Boolean that determines whether CloudFront includes the preload directive
+	// in the Strict-Transport-Security HTTP response header.
+	Preload *bool `type:"boolean"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyStrictTransportSecurity) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyStrictTransportSecurity) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyStrictTransportSecurity) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyStrictTransportSecurity"}
+	if s.AccessControlMaxAgeSec == nil {
+		invalidParams.Add(request.NewErrParamRequired("AccessControlMaxAgeSec"))
+	}
+	if s.Override == nil {
+		invalidParams.Add(request.NewErrParamRequired("Override"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAccessControlMaxAgeSec sets the AccessControlMaxAgeSec field's value.
+func (s *ResponseHeadersPolicyStrictTransportSecurity) SetAccessControlMaxAgeSec(v int64) *ResponseHeadersPolicyStrictTransportSecurity {
+	s.AccessControlMaxAgeSec = &v
+	return s
+}
+
+// SetIncludeSubdomains sets the IncludeSubdomains field's value.
+func (s *ResponseHeadersPolicyStrictTransportSecurity) SetIncludeSubdomains(v bool) *ResponseHeadersPolicyStrictTransportSecurity {
+	s.IncludeSubdomains = &v
+	return s
+}
+
+// SetOverride sets the Override field's value.
+func (s *ResponseHeadersPolicyStrictTransportSecurity) SetOverride(v bool) *ResponseHeadersPolicyStrictTransportSecurity {
+	s.Override = &v
+	return s
+}
+
+// SetPreload sets the Preload field's value.
+func (s *ResponseHeadersPolicyStrictTransportSecurity) SetPreload(v bool) *ResponseHeadersPolicyStrictTransportSecurity {
+	s.Preload = &v
+	return s
+}
+
+// Contains a response headers policy.
+type ResponseHeadersPolicySummary struct {
+	_ struct{} `type:"structure"`
+
+	// The response headers policy.
+	//
+	// ResponseHeadersPolicy is a required field
+	ResponseHeadersPolicy *ResponseHeadersPolicy `type:"structure" required:"true"`
+
+	// The type of response headers policy, either managed (created by Amazon Web
+	// Services) or custom (created in this Amazon Web Services account).
+	//
+	// Type is a required field
+	Type *string `type:"string" required:"true" enum:"ResponseHeadersPolicyType"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicySummary) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicySummary) GoString() string {
+	return s.String()
+}
+
+// SetResponseHeadersPolicy sets the ResponseHeadersPolicy field's value.
+func (s *ResponseHeadersPolicySummary) SetResponseHeadersPolicy(v *ResponseHeadersPolicy) *ResponseHeadersPolicySummary {
+	s.ResponseHeadersPolicy = v
+	return s
+}
+
+// SetType sets the Type field's value.
+func (s *ResponseHeadersPolicySummary) SetType(v string) *ResponseHeadersPolicySummary {
+	s.Type = &v
+	return s
+}
+
+// Determines whether CloudFront includes the X-XSS-Protection HTTP response
+// header and the header’s value.
+//
+// For more information about the X-XSS-Protection HTTP response header, see
+// X-XSS-Protection (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection)
+// in the MDN Web Docs.
+type ResponseHeadersPolicyXSSProtection struct {
+	_ struct{} `type:"structure"`
+
+	// A Boolean that determines whether CloudFront includes the mode=block directive
+	// in the X-XSS-Protection header.
+	//
+	// For more information about this directive, see X-XSS-Protection (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection)
+	// in the MDN Web Docs.
+	ModeBlock *bool `type:"boolean"`
+
+	// A Boolean that determines whether CloudFront overrides the X-XSS-Protection
+	// HTTP response header received from the origin with the one specified in this
+	// response headers policy.
+	//
+	// Override is a required field
+	Override *bool `type:"boolean" required:"true"`
+
+	// A Boolean that determines the value of the X-XSS-Protection HTTP response
+	// header. When this setting is true, the value of the X-XSS-Protection header
+	// is 1. When this setting is false, the value of the X-XSS-Protection header
+	// is 0.
+	//
+	// For more information about these settings, see X-XSS-Protection (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection)
+	// in the MDN Web Docs.
+	//
+	// Protection is a required field
+	Protection *bool `type:"boolean" required:"true"`
+
+	// A reporting URI, which CloudFront uses as the value of the report directive
+	// in the X-XSS-Protection header.
+	//
+	// You cannot specify a ReportUri when ModeBlock is true.
+	//
+	// For more information about using a reporting URL, see X-XSS-Protection (https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-XSS-Protection)
+	// in the MDN Web Docs.
+	ReportUri *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyXSSProtection) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResponseHeadersPolicyXSSProtection) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResponseHeadersPolicyXSSProtection) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResponseHeadersPolicyXSSProtection"}
+	if s.Override == nil {
+		invalidParams.Add(request.NewErrParamRequired("Override"))
+	}
+	if s.Protection == nil {
+		invalidParams.Add(request.NewErrParamRequired("Protection"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetModeBlock sets the ModeBlock field's value.
+func (s *ResponseHeadersPolicyXSSProtection) SetModeBlock(v bool) *ResponseHeadersPolicyXSSProtection {
+	s.ModeBlock = &v
+	return s
+}
+
+// SetOverride sets the Override field's value.
+func (s *ResponseHeadersPolicyXSSProtection) SetOverride(v bool) *ResponseHeadersPolicyXSSProtection {
+	s.Override = &v
+	return s
+}
+
+// SetProtection sets the Protection field's value.
+func (s *ResponseHeadersPolicyXSSProtection) SetProtection(v bool) *ResponseHeadersPolicyXSSProtection {
+	s.Protection = &v
+	return s
+}
+
+// SetReportUri sets the ReportUri field's value.
+func (s *ResponseHeadersPolicyXSSProtection) SetReportUri(v string) *ResponseHeadersPolicyXSSProtection {
+	s.ReportUri = &v
+	return s
+}
+
 // A complex type that identifies ways in which you want to restrict distribution
 // of your content.
 type Restrictions struct {
@@ -17122,12 +27478,20 @@ type Restrictions struct {
 	GeoRestriction *GeoRestriction `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Restrictions) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Restrictions) GoString() string {
 	return s.String()
 }
@@ -17188,12 +27552,20 @@ type S3Origin struct {
 	OriginAccessIdentity *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s S3Origin) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s S3Origin) GoString() string {
 	return s.String()
 }
@@ -17260,12 +27632,20 @@ type S3OriginConfig struct {
 	OriginAccessIdentity *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s S3OriginConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s S3OriginConfig) GoString() string {
 	return s.String()
 }
@@ -17289,30 +27669,37 @@ func (s *S3OriginConfig) SetOriginAccessIdentity(v string) *S3OriginConfig {
 	return s
 }
 
-// A complex type that lists the AWS accounts that were included in the TrustedSigners
-// complex type, as well as their active CloudFront key pair IDs, if any.
+// A list of Amazon Web Services accounts and the active CloudFront key pairs
+// in each account that CloudFront can use to verify the signatures of signed
+// URLs and signed cookies.
 type Signer struct {
 	_ struct{} `type:"structure"`
 
-	// An AWS account that is included in the TrustedSigners complex type for this
-	// distribution. Valid values include:
-	//
-	//    * self, which is the AWS account used to create the distribution.
-	//
-	//    * An AWS account number.
+	// An Amazon Web Services account number that contains active CloudFront key
+	// pairs that CloudFront can use to verify the signatures of signed URLs and
+	// signed cookies. If the Amazon Web Services account that owns the key pairs
+	// is the same account that owns the CloudFront distribution, the value of this
+	// field is self.
 	AwsAccountNumber *string `type:"string"`
 
-	// A complex type that lists the active CloudFront key pairs, if any, that are
-	// associated with AwsAccountNumber.
+	// A list of CloudFront key pair identifiers.
 	KeyPairIds *KeyPairIds `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Signer) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Signer) GoString() string {
 	return s.String()
 }
@@ -17345,12 +27732,20 @@ type StatusCodes struct {
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StatusCodes) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StatusCodes) GoString() string {
 	return s.String()
 }
@@ -17393,20 +27788,22 @@ type StreamingDistribution struct {
 	_ struct{} `type:"structure"`
 
 	// The ARN (Amazon Resource Name) for the distribution. For example: arn:aws:cloudfront::123456789012:distribution/EDFDVBD632BHDS5,
-	// where 123456789012 is your AWS account ID.
+	// where 123456789012 is your Amazon Web Services account ID.
 	//
 	// ARN is a required field
 	ARN *string `type:"string" required:"true"`
 
-	// A complex type that lists the AWS accounts, if any, that you included in
-	// the TrustedSigners complex type for this distribution. These are the accounts
-	// that you want to allow to create signed URLs for private content.
+	// A complex type that lists the Amazon Web Services accounts, if any, that
+	// you included in the TrustedSigners complex type for this distribution. These
+	// are the accounts that you want to allow to create signed URLs for private
+	// content.
 	//
-	// The Signer complex type lists the AWS account number of the trusted signer
-	// or self if the signer is the AWS account that created the distribution. The
-	// Signer element also includes the IDs of any active CloudFront key pairs that
-	// are associated with the trusted signer's AWS account. If no KeyPairId element
-	// appears for a Signer, that signer can't create signed URLs.
+	// The Signer complex type lists the Amazon Web Services account number of the
+	// trusted signer or self if the signer is the Amazon Web Services account that
+	// created the distribution. The Signer element also includes the IDs of any
+	// active CloudFront key pairs that are associated with the trusted signer's
+	// Amazon Web Services account. If no KeyPairId element appears for a Signer,
+	// that signer can't create signed URLs.
 	//
 	// For more information, see Serving Private Content through CloudFront (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
 	// in the Amazon CloudFront Developer Guide.
@@ -17440,12 +27837,20 @@ type StreamingDistribution struct {
 	StreamingDistributionConfig *StreamingDistributionConfig `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingDistribution) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingDistribution) GoString() string {
 	return s.String()
 }
@@ -17538,23 +27943,31 @@ type StreamingDistributionConfig struct {
 	// S3Origin is a required field
 	S3Origin *S3Origin `type:"structure" required:"true"`
 
-	// A complex type that specifies any AWS accounts that you want to permit to
-	// create signed URLs for private content. If you want the distribution to use
-	// signed URLs, include this element; if you want the distribution to use public
-	// URLs, remove this element. For more information, see Serving Private Content
-	// through CloudFront (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
+	// A complex type that specifies any Amazon Web Services accounts that you want
+	// to permit to create signed URLs for private content. If you want the distribution
+	// to use signed URLs, include this element; if you want the distribution to
+	// use public URLs, remove this element. For more information, see Serving Private
+	// Content through CloudFront (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
 	// in the Amazon CloudFront Developer Guide.
 	//
 	// TrustedSigners is a required field
 	TrustedSigners *TrustedSigners `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingDistributionConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingDistributionConfig) GoString() string {
 	return s.String()
 }
@@ -17668,12 +28081,20 @@ type StreamingDistributionConfigWithTags struct {
 	Tags *Tags `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingDistributionConfigWithTags) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingDistributionConfigWithTags) GoString() string {
 	return s.String()
 }
@@ -17729,7 +28150,7 @@ type StreamingDistributionList struct {
 	IsTruncated *bool `type:"boolean" required:"true"`
 
 	// A complex type that contains one StreamingDistributionSummary element for
-	// each distribution that was created by the current AWS account.
+	// each distribution that was created by the current Amazon Web Services account.
 	Items []*StreamingDistributionSummary `locationNameList:"StreamingDistributionSummary" type:"list"`
 
 	// The value you provided for the Marker request parameter.
@@ -17747,19 +28168,27 @@ type StreamingDistributionList struct {
 	// where they left off.
 	NextMarker *string `type:"string"`
 
-	// The number of streaming distributions that were created by the current AWS
-	// account.
+	// The number of streaming distributions that were created by the current Amazon
+	// Web Services account.
 	//
 	// Quantity is a required field
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingDistributionList) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingDistributionList) GoString() string {
 	return s.String()
 }
@@ -17806,7 +28235,7 @@ type StreamingDistributionSummary struct {
 
 	// The ARN (Amazon Resource Name) for the streaming distribution. For example:
 	// arn:aws:cloudfront::123456789012:streaming-distribution/EDFDVBD632BHDS5,
-	// where 123456789012 is your AWS account ID.
+	// where 123456789012 is your Amazon Web Services account ID.
 	//
 	// ARN is a required field
 	ARN *string `type:"string" required:"true"`
@@ -17861,16 +28290,16 @@ type StreamingDistributionSummary struct {
 	// Status is a required field
 	Status *string `type:"string" required:"true"`
 
-	// A complex type that specifies the AWS accounts, if any, that you want to
-	// allow to create signed URLs for private content. If you want to require signed
-	// URLs in requests for objects in the target origin that match the PathPattern
-	// for this cache behavior, specify true for Enabled, and specify the applicable
-	// values for Quantity and Items.If you don't want to require signed URLs in
-	// requests for objects that match PathPattern, specify false for Enabled and
-	// 0 for Quantity. Omit Items. To add, change, or remove one or more trusted
-	// signers, change Enabled to true (if it's currently false), change Quantity
-	// as applicable, and specify all of the trusted signers that you want to include
-	// in the updated distribution.
+	// A complex type that specifies the Amazon Web Services accounts, if any, that
+	// you want to allow to create signed URLs for private content. If you want
+	// to require signed URLs in requests for objects in the target origin that
+	// match the PathPattern for this cache behavior, specify true for Enabled,
+	// and specify the applicable values for Quantity and Items.If you don't want
+	// to require signed URLs in requests for objects that match PathPattern, specify
+	// false for Enabled and 0 for Quantity. Omit Items. To add, change, or remove
+	// one or more trusted signers, change Enabled to true (if it's currently false),
+	// change Quantity as applicable, and specify all of the trusted signers that
+	// you want to include in the updated distribution.
 	//
 	// For more information, see Serving Private Content through CloudFront (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
 	// in the Amazon CloudFront Developer Guide.
@@ -17879,12 +28308,20 @@ type StreamingDistributionSummary struct {
 	TrustedSigners *TrustedSigners `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingDistributionSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingDistributionSummary) GoString() string {
 	return s.String()
 }
@@ -17984,12 +28421,20 @@ type StreamingLoggingConfig struct {
 	Prefix *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingLoggingConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StreamingLoggingConfig) GoString() string {
 	return s.String()
 }
@@ -18050,12 +28495,20 @@ type Tag struct {
 	Value *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) GoString() string {
 	return s.String()
 }
@@ -18096,12 +28549,20 @@ type TagKeys struct {
 	Items []*string `locationNameList:"Key" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagKeys) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagKeys) GoString() string {
 	return s.String()
 }
@@ -18127,12 +28588,20 @@ type TagResourceInput struct {
 	Tags *Tags `locationName:"Tags" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) GoString() string {
 	return s.String()
 }
@@ -18174,12 +28643,20 @@ type TagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) GoString() string {
 	return s.String()
 }
@@ -18192,12 +28669,20 @@ type Tags struct {
 	Items []*Tag `locationNameList:"Tag" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tags) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tags) GoString() string {
 	return s.String()
 }
@@ -18228,50 +28713,328 @@ func (s *Tags) SetItems(v []*Tag) *Tags {
 	return s
 }
 
-// A complex type that specifies the AWS accounts, if any, that you want to
-// allow to create signed URLs for private content.
+type TestFunctionInput struct {
+	_ struct{} `locationName:"TestFunctionRequest" type:"structure" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+
+	// The event object to test the function with. For more information about the
+	// structure of the event object, see Testing functions (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/managing-functions.html#test-function)
+	// in the Amazon CloudFront Developer Guide.
+	//
+	// EventObject is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by TestFunctionInput's
+	// String and GoString methods.
+	//
+	// EventObject is automatically base64 encoded/decoded by the SDK.
+	//
+	// EventObject is a required field
+	EventObject []byte `type:"blob" required:"true" sensitive:"true"`
+
+	// The current version (ETag value) of the function that you are testing, which
+	// you can get using DescribeFunction.
+	//
+	// IfMatch is a required field
+	IfMatch *string `location:"header" locationName:"If-Match" type:"string" required:"true"`
+
+	// The name of the function that you are testing.
+	//
+	// Name is a required field
+	Name *string `location:"uri" locationName:"Name" type:"string" required:"true"`
+
+	// The stage of the function that you are testing, either DEVELOPMENT or LIVE.
+	Stage *string `type:"string" enum:"FunctionStage"`
+}
+
+// String returns the string representation.
 //
-// If you want to require signed URLs in requests for objects in the target
-// origin that match the PathPattern for this cache behavior, specify true for
-// Enabled, and specify the applicable values for Quantity and Items. For more
-// information, see Serving Private Content through CloudFront (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/PrivateContent.html)
-// in the Amazon CloudFront Developer Guide.
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TestFunctionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
 //
-// If you don't want to require signed URLs in requests for objects that match
-// PathPattern, specify false for Enabled and 0 for Quantity. Omit Items.
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TestFunctionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *TestFunctionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "TestFunctionInput"}
+	if s.EventObject == nil {
+		invalidParams.Add(request.NewErrParamRequired("EventObject"))
+	}
+	if s.IfMatch == nil {
+		invalidParams.Add(request.NewErrParamRequired("IfMatch"))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetEventObject sets the EventObject field's value.
+func (s *TestFunctionInput) SetEventObject(v []byte) *TestFunctionInput {
+	s.EventObject = v
+	return s
+}
+
+// SetIfMatch sets the IfMatch field's value.
+func (s *TestFunctionInput) SetIfMatch(v string) *TestFunctionInput {
+	s.IfMatch = &v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *TestFunctionInput) SetName(v string) *TestFunctionInput {
+	s.Name = &v
+	return s
+}
+
+// SetStage sets the Stage field's value.
+func (s *TestFunctionInput) SetStage(v string) *TestFunctionInput {
+	s.Stage = &v
+	return s
+}
+
+type TestFunctionOutput struct {
+	_ struct{} `type:"structure" payload:"TestResult"`
+
+	// An object that represents the result of running the function with the provided
+	// event object.
+	TestResult *TestResult `type:"structure"`
+}
+
+// String returns the string representation.
 //
-// To add, change, or remove one or more trusted signers, change Enabled to
-// true (if it's currently false), change Quantity as applicable, and specify
-// all of the trusted signers that you want to include in the updated distribution.
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TestFunctionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
 //
-// For more information about updating the distribution configuration, see DistributionConfig
-// (https://docs.aws.amazon.com/cloudfront/latest/APIReference/DistributionConfig.html)
-// in the Amazon CloudFront API Reference.
-type TrustedSigners struct {
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TestFunctionOutput) GoString() string {
+	return s.String()
+}
+
+// SetTestResult sets the TestResult field's value.
+func (s *TestFunctionOutput) SetTestResult(v *TestResult) *TestFunctionOutput {
+	s.TestResult = v
+	return s
+}
+
+// Contains the result of testing a CloudFront function with TestFunction.
+type TestResult struct {
 	_ struct{} `type:"structure"`
 
-	// Specifies whether you want to require viewers to use signed URLs to access
-	// the files specified by PathPattern and TargetOriginId.
+	// The amount of time that the function took to run as a percentage of the maximum
+	// allowed time. For example, a compute utilization of 35 means that the function
+	// completed in 35% of the maximum allowed time.
+	ComputeUtilization *string `type:"string"`
+
+	// If the result of testing the function was an error, this field contains the
+	// error message.
+	//
+	// FunctionErrorMessage is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by TestResult's
+	// String and GoString methods.
+	FunctionErrorMessage *string `type:"string" sensitive:"true"`
+
+	// Contains the log lines that the function wrote (if any) when running the
+	// test.
+	//
+	// FunctionExecutionLogs is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by TestResult's
+	// String and GoString methods.
+	FunctionExecutionLogs []*string `type:"list" sensitive:"true"`
+
+	// The event object returned by the function. For more information about the
+	// structure of the event object, see Event object structure (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/functions-event-structure.html)
+	// in the Amazon CloudFront Developer Guide.
+	//
+	// FunctionOutput is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by TestResult's
+	// String and GoString methods.
+	FunctionOutput *string `type:"string" sensitive:"true"`
+
+	// Contains configuration information and metadata about the CloudFront function
+	// that was tested.
+	FunctionSummary *FunctionSummary `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TestResult) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TestResult) GoString() string {
+	return s.String()
+}
+
+// SetComputeUtilization sets the ComputeUtilization field's value.
+func (s *TestResult) SetComputeUtilization(v string) *TestResult {
+	s.ComputeUtilization = &v
+	return s
+}
+
+// SetFunctionErrorMessage sets the FunctionErrorMessage field's value.
+func (s *TestResult) SetFunctionErrorMessage(v string) *TestResult {
+	s.FunctionErrorMessage = &v
+	return s
+}
+
+// SetFunctionExecutionLogs sets the FunctionExecutionLogs field's value.
+func (s *TestResult) SetFunctionExecutionLogs(v []*string) *TestResult {
+	s.FunctionExecutionLogs = v
+	return s
+}
+
+// SetFunctionOutput sets the FunctionOutput field's value.
+func (s *TestResult) SetFunctionOutput(v string) *TestResult {
+	s.FunctionOutput = &v
+	return s
+}
+
+// SetFunctionSummary sets the FunctionSummary field's value.
+func (s *TestResult) SetFunctionSummary(v *FunctionSummary) *TestResult {
+	s.FunctionSummary = v
+	return s
+}
+
+// A list of key groups whose public keys CloudFront can use to verify the signatures
+// of signed URLs and signed cookies.
+type TrustedKeyGroups struct {
+	_ struct{} `type:"structure"`
+
+	// This field is true if any of the key groups in the list have public keys
+	// that CloudFront can use to verify the signatures of signed URLs and signed
+	// cookies. If not, this field is false.
 	//
 	// Enabled is a required field
 	Enabled *bool `type:"boolean" required:"true"`
 
-	// Optional: A complex type that contains trusted signers for this cache behavior.
-	// If Quantity is 0, you can omit Items.
-	Items []*string `locationNameList:"AwsAccountNumber" type:"list"`
+	// A list of key groups identifiers.
+	Items []*string `locationNameList:"KeyGroup" type:"list"`
 
-	// The number of trusted signers for this cache behavior.
+	// The number of key groups in the list.
 	//
 	// Quantity is a required field
 	Quantity *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TrustedKeyGroups) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TrustedKeyGroups) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *TrustedKeyGroups) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "TrustedKeyGroups"}
+	if s.Enabled == nil {
+		invalidParams.Add(request.NewErrParamRequired("Enabled"))
+	}
+	if s.Quantity == nil {
+		invalidParams.Add(request.NewErrParamRequired("Quantity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetEnabled sets the Enabled field's value.
+func (s *TrustedKeyGroups) SetEnabled(v bool) *TrustedKeyGroups {
+	s.Enabled = &v
+	return s
+}
+
+// SetItems sets the Items field's value.
+func (s *TrustedKeyGroups) SetItems(v []*string) *TrustedKeyGroups {
+	s.Items = v
+	return s
+}
+
+// SetQuantity sets the Quantity field's value.
+func (s *TrustedKeyGroups) SetQuantity(v int64) *TrustedKeyGroups {
+	s.Quantity = &v
+	return s
+}
+
+// A list of Amazon Web Services accounts whose public keys CloudFront can use
+// to verify the signatures of signed URLs and signed cookies.
+type TrustedSigners struct {
+	_ struct{} `type:"structure"`
+
+	// This field is true if any of the Amazon Web Services accounts have public
+	// keys that CloudFront can use to verify the signatures of signed URLs and
+	// signed cookies. If not, this field is false.
+	//
+	// Enabled is a required field
+	Enabled *bool `type:"boolean" required:"true"`
+
+	// A list of Amazon Web Services account identifiers.
+	Items []*string `locationNameList:"AwsAccountNumber" type:"list"`
+
+	// The number of Amazon Web Services accounts in the list.
+	//
+	// Quantity is a required field
+	Quantity *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedSigners) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TrustedSigners) GoString() string {
 	return s.String()
 }
@@ -18325,12 +29088,20 @@ type UntagResourceInput struct {
 	TagKeys *TagKeys `locationName:"TagKeys" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) GoString() string {
 	return s.String()
 }
@@ -18367,12 +29138,20 @@ type UntagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) GoString() string {
 	return s.String()
 }
@@ -18397,12 +29176,20 @@ type UpdateCachePolicyInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCachePolicyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCachePolicyInput) GoString() string {
 	return s.String()
 }
@@ -18459,12 +29246,20 @@ type UpdateCachePolicyOutput struct {
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCachePolicyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCachePolicyOutput) GoString() string {
 	return s.String()
 }
@@ -18500,12 +29295,20 @@ type UpdateCloudFrontOriginAccessIdentityInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCloudFrontOriginAccessIdentityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCloudFrontOriginAccessIdentityInput) GoString() string {
 	return s.String()
 }
@@ -18563,12 +29366,20 @@ type UpdateCloudFrontOriginAccessIdentityOutput struct {
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCloudFrontOriginAccessIdentityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCloudFrontOriginAccessIdentityOutput) GoString() string {
 	return s.String()
 }
@@ -18604,12 +29415,20 @@ type UpdateDistributionInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDistributionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDistributionInput) GoString() string {
 	return s.String()
 }
@@ -18667,12 +29486,20 @@ type UpdateDistributionOutput struct {
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDistributionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDistributionOutput) GoString() string {
 	return s.String()
 }
@@ -18707,12 +29534,20 @@ type UpdateFieldLevelEncryptionConfigInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFieldLevelEncryptionConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFieldLevelEncryptionConfigInput) GoString() string {
 	return s.String()
 }
@@ -18770,12 +29605,20 @@ type UpdateFieldLevelEncryptionConfigOutput struct {
 	FieldLevelEncryption *FieldLevelEncryption `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFieldLevelEncryptionConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFieldLevelEncryptionConfigOutput) GoString() string {
 	return s.String()
 }
@@ -18810,12 +29653,20 @@ type UpdateFieldLevelEncryptionProfileInput struct {
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFieldLevelEncryptionProfileInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFieldLevelEncryptionProfileInput) GoString() string {
 	return s.String()
 }
@@ -18872,12 +29723,20 @@ type UpdateFieldLevelEncryptionProfileOutput struct {
 	FieldLevelEncryptionProfile *FieldLevelEncryptionProfile `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFieldLevelEncryptionProfileOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFieldLevelEncryptionProfileOutput) GoString() string {
 	return s.String()
 }
@@ -18891,6 +29750,272 @@ func (s *UpdateFieldLevelEncryptionProfileOutput) SetETag(v string) *UpdateField
 // SetFieldLevelEncryptionProfile sets the FieldLevelEncryptionProfile field's value.
 func (s *UpdateFieldLevelEncryptionProfileOutput) SetFieldLevelEncryptionProfile(v *FieldLevelEncryptionProfile) *UpdateFieldLevelEncryptionProfileOutput {
 	s.FieldLevelEncryptionProfile = v
+	return s
+}
+
+type UpdateFunctionInput struct {
+	_ struct{} `locationName:"UpdateFunctionRequest" type:"structure" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+
+	// The function code. For more information about writing a CloudFront function,
+	// see Writing function code for CloudFront Functions (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/writing-function-code.html)
+	// in the Amazon CloudFront Developer Guide.
+	//
+	// FunctionCode is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by UpdateFunctionInput's
+	// String and GoString methods.
+	//
+	// FunctionCode is automatically base64 encoded/decoded by the SDK.
+	//
+	// FunctionCode is a required field
+	FunctionCode []byte `min:"1" type:"blob" required:"true" sensitive:"true"`
+
+	// Configuration information about the function.
+	//
+	// FunctionConfig is a required field
+	FunctionConfig *FunctionConfig `type:"structure" required:"true"`
+
+	// The current version (ETag value) of the function that you are updating, which
+	// you can get using DescribeFunction.
+	//
+	// IfMatch is a required field
+	IfMatch *string `location:"header" locationName:"If-Match" type:"string" required:"true"`
+
+	// The name of the function that you are updating.
+	//
+	// Name is a required field
+	Name *string `location:"uri" locationName:"Name" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFunctionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFunctionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateFunctionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateFunctionInput"}
+	if s.FunctionCode == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionCode"))
+	}
+	if s.FunctionCode != nil && len(s.FunctionCode) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FunctionCode", 1))
+	}
+	if s.FunctionConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("FunctionConfig"))
+	}
+	if s.IfMatch == nil {
+		invalidParams.Add(request.NewErrParamRequired("IfMatch"))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.FunctionConfig != nil {
+		if err := s.FunctionConfig.Validate(); err != nil {
+			invalidParams.AddNested("FunctionConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFunctionCode sets the FunctionCode field's value.
+func (s *UpdateFunctionInput) SetFunctionCode(v []byte) *UpdateFunctionInput {
+	s.FunctionCode = v
+	return s
+}
+
+// SetFunctionConfig sets the FunctionConfig field's value.
+func (s *UpdateFunctionInput) SetFunctionConfig(v *FunctionConfig) *UpdateFunctionInput {
+	s.FunctionConfig = v
+	return s
+}
+
+// SetIfMatch sets the IfMatch field's value.
+func (s *UpdateFunctionInput) SetIfMatch(v string) *UpdateFunctionInput {
+	s.IfMatch = &v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *UpdateFunctionInput) SetName(v string) *UpdateFunctionInput {
+	s.Name = &v
+	return s
+}
+
+type UpdateFunctionOutput struct {
+	_ struct{} `type:"structure" payload:"FunctionSummary"`
+
+	// The version identifier for the current version of the CloudFront function.
+	ETag *string `location:"header" locationName:"ETtag" type:"string"`
+
+	// Contains configuration information and metadata about a CloudFront function.
+	FunctionSummary *FunctionSummary `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFunctionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFunctionOutput) GoString() string {
+	return s.String()
+}
+
+// SetETag sets the ETag field's value.
+func (s *UpdateFunctionOutput) SetETag(v string) *UpdateFunctionOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetFunctionSummary sets the FunctionSummary field's value.
+func (s *UpdateFunctionOutput) SetFunctionSummary(v *FunctionSummary) *UpdateFunctionOutput {
+	s.FunctionSummary = v
+	return s
+}
+
+type UpdateKeyGroupInput struct {
+	_ struct{} `locationName:"UpdateKeyGroupRequest" type:"structure" payload:"KeyGroupConfig"`
+
+	// The identifier of the key group that you are updating.
+	//
+	// Id is a required field
+	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
+
+	// The version of the key group that you are updating. The version is the key
+	// group’s ETag value.
+	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
+
+	// The key group configuration.
+	//
+	// KeyGroupConfig is a required field
+	KeyGroupConfig *KeyGroupConfig `locationName:"KeyGroupConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateKeyGroupInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateKeyGroupInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateKeyGroupInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateKeyGroupInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+	if s.KeyGroupConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("KeyGroupConfig"))
+	}
+	if s.KeyGroupConfig != nil {
+		if err := s.KeyGroupConfig.Validate(); err != nil {
+			invalidParams.AddNested("KeyGroupConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetId sets the Id field's value.
+func (s *UpdateKeyGroupInput) SetId(v string) *UpdateKeyGroupInput {
+	s.Id = &v
+	return s
+}
+
+// SetIfMatch sets the IfMatch field's value.
+func (s *UpdateKeyGroupInput) SetIfMatch(v string) *UpdateKeyGroupInput {
+	s.IfMatch = &v
+	return s
+}
+
+// SetKeyGroupConfig sets the KeyGroupConfig field's value.
+func (s *UpdateKeyGroupInput) SetKeyGroupConfig(v *KeyGroupConfig) *UpdateKeyGroupInput {
+	s.KeyGroupConfig = v
+	return s
+}
+
+type UpdateKeyGroupOutput struct {
+	_ struct{} `type:"structure" payload:"KeyGroup"`
+
+	// The identifier for this version of the key group.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// The key group that was just updated.
+	KeyGroup *KeyGroup `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateKeyGroupOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateKeyGroupOutput) GoString() string {
+	return s.String()
+}
+
+// SetETag sets the ETag field's value.
+func (s *UpdateKeyGroupOutput) SetETag(v string) *UpdateKeyGroupOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetKeyGroup sets the KeyGroup field's value.
+func (s *UpdateKeyGroupOutput) SetKeyGroup(v *KeyGroup) *UpdateKeyGroupOutput {
+	s.KeyGroup = v
 	return s
 }
 
@@ -18915,12 +30040,20 @@ type UpdateOriginRequestPolicyInput struct {
 	OriginRequestPolicyConfig *OriginRequestPolicyConfig `locationName:"OriginRequestPolicyConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateOriginRequestPolicyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateOriginRequestPolicyInput) GoString() string {
 	return s.String()
 }
@@ -18977,12 +30110,20 @@ type UpdateOriginRequestPolicyOutput struct {
 	OriginRequestPolicy *OriginRequestPolicy `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateOriginRequestPolicyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateOriginRequestPolicyOutput) GoString() string {
 	return s.String()
 }
@@ -19002,7 +30143,7 @@ func (s *UpdateOriginRequestPolicyOutput) SetOriginRequestPolicy(v *OriginReques
 type UpdatePublicKeyInput struct {
 	_ struct{} `locationName:"UpdatePublicKeyRequest" type:"structure" payload:"PublicKeyConfig"`
 
-	// ID of the public key to be updated.
+	// The identifier of the public key that you are updating.
 	//
 	// Id is a required field
 	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
@@ -19011,18 +30152,26 @@ type UpdatePublicKeyInput struct {
 	// key to update. For example: E2QWRUHAPOMQZL.
 	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
 
-	// Request to update public key information.
+	// A public key configuration.
 	//
 	// PublicKeyConfig is a required field
 	PublicKeyConfig *PublicKeyConfig `locationName:"PublicKeyConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdatePublicKeyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdatePublicKeyInput) GoString() string {
 	return s.String()
 }
@@ -19072,19 +30221,27 @@ func (s *UpdatePublicKeyInput) SetPublicKeyConfig(v *PublicKeyConfig) *UpdatePub
 type UpdatePublicKeyOutput struct {
 	_ struct{} `type:"structure" payload:"PublicKey"`
 
-	// The current version of the update public key result. For example: E2QWRUHAPOMQZL.
+	// The identifier of the current version of the public key.
 	ETag *string `location:"header" locationName:"ETag" type:"string"`
 
-	// Return the results of updating the public key.
+	// The public key.
 	PublicKey *PublicKey `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdatePublicKeyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdatePublicKeyOutput) GoString() string {
 	return s.String()
 }
@@ -19098,6 +30255,251 @@ func (s *UpdatePublicKeyOutput) SetETag(v string) *UpdatePublicKeyOutput {
 // SetPublicKey sets the PublicKey field's value.
 func (s *UpdatePublicKeyOutput) SetPublicKey(v *PublicKey) *UpdatePublicKeyOutput {
 	s.PublicKey = v
+	return s
+}
+
+type UpdateRealtimeLogConfigInput struct {
+	_ struct{} `locationName:"UpdateRealtimeLogConfigRequest" type:"structure" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+
+	// The Amazon Resource Name (ARN) for this real-time log configuration.
+	ARN *string `type:"string"`
+
+	// Contains information about the Amazon Kinesis data stream where you are sending
+	// real-time log data.
+	EndPoints []*EndPoint `type:"list"`
+
+	// A list of fields to include in each real-time log record.
+	//
+	// For more information about fields, see Real-time log configuration fields
+	// (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/real-time-logs.html#understand-real-time-log-config-fields)
+	// in the Amazon CloudFront Developer Guide.
+	Fields []*string `locationNameList:"Field" type:"list"`
+
+	// The name for this real-time log configuration.
+	Name *string `type:"string"`
+
+	// The sampling rate for this real-time log configuration. The sampling rate
+	// determines the percentage of viewer requests that are represented in the
+	// real-time log data. You must provide an integer between 1 and 100, inclusive.
+	SamplingRate *int64 `type:"long"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateRealtimeLogConfigInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateRealtimeLogConfigInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateRealtimeLogConfigInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateRealtimeLogConfigInput"}
+	if s.EndPoints != nil {
+		for i, v := range s.EndPoints {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "EndPoints", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetARN sets the ARN field's value.
+func (s *UpdateRealtimeLogConfigInput) SetARN(v string) *UpdateRealtimeLogConfigInput {
+	s.ARN = &v
+	return s
+}
+
+// SetEndPoints sets the EndPoints field's value.
+func (s *UpdateRealtimeLogConfigInput) SetEndPoints(v []*EndPoint) *UpdateRealtimeLogConfigInput {
+	s.EndPoints = v
+	return s
+}
+
+// SetFields sets the Fields field's value.
+func (s *UpdateRealtimeLogConfigInput) SetFields(v []*string) *UpdateRealtimeLogConfigInput {
+	s.Fields = v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *UpdateRealtimeLogConfigInput) SetName(v string) *UpdateRealtimeLogConfigInput {
+	s.Name = &v
+	return s
+}
+
+// SetSamplingRate sets the SamplingRate field's value.
+func (s *UpdateRealtimeLogConfigInput) SetSamplingRate(v int64) *UpdateRealtimeLogConfigInput {
+	s.SamplingRate = &v
+	return s
+}
+
+type UpdateRealtimeLogConfigOutput struct {
+	_ struct{} `type:"structure"`
+
+	// A real-time log configuration.
+	RealtimeLogConfig *RealtimeLogConfig `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateRealtimeLogConfigOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateRealtimeLogConfigOutput) GoString() string {
+	return s.String()
+}
+
+// SetRealtimeLogConfig sets the RealtimeLogConfig field's value.
+func (s *UpdateRealtimeLogConfigOutput) SetRealtimeLogConfig(v *RealtimeLogConfig) *UpdateRealtimeLogConfigOutput {
+	s.RealtimeLogConfig = v
+	return s
+}
+
+type UpdateResponseHeadersPolicyInput struct {
+	_ struct{} `locationName:"UpdateResponseHeadersPolicyRequest" type:"structure" payload:"ResponseHeadersPolicyConfig"`
+
+	// The identifier for the response headers policy that you are updating.
+	//
+	// Id is a required field
+	Id *string `location:"uri" locationName:"Id" type:"string" required:"true"`
+
+	// The version of the response headers policy that you are updating.
+	//
+	// The version is returned in the cache policy’s ETag field in the response
+	// to GetResponseHeadersPolicyConfig.
+	IfMatch *string `location:"header" locationName:"If-Match" type:"string"`
+
+	// A response headers policy configuration.
+	//
+	// ResponseHeadersPolicyConfig is a required field
+	ResponseHeadersPolicyConfig *ResponseHeadersPolicyConfig `locationName:"ResponseHeadersPolicyConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateResponseHeadersPolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateResponseHeadersPolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateResponseHeadersPolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateResponseHeadersPolicyInput"}
+	if s.Id == nil {
+		invalidParams.Add(request.NewErrParamRequired("Id"))
+	}
+	if s.Id != nil && len(*s.Id) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Id", 1))
+	}
+	if s.ResponseHeadersPolicyConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResponseHeadersPolicyConfig"))
+	}
+	if s.ResponseHeadersPolicyConfig != nil {
+		if err := s.ResponseHeadersPolicyConfig.Validate(); err != nil {
+			invalidParams.AddNested("ResponseHeadersPolicyConfig", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetId sets the Id field's value.
+func (s *UpdateResponseHeadersPolicyInput) SetId(v string) *UpdateResponseHeadersPolicyInput {
+	s.Id = &v
+	return s
+}
+
+// SetIfMatch sets the IfMatch field's value.
+func (s *UpdateResponseHeadersPolicyInput) SetIfMatch(v string) *UpdateResponseHeadersPolicyInput {
+	s.IfMatch = &v
+	return s
+}
+
+// SetResponseHeadersPolicyConfig sets the ResponseHeadersPolicyConfig field's value.
+func (s *UpdateResponseHeadersPolicyInput) SetResponseHeadersPolicyConfig(v *ResponseHeadersPolicyConfig) *UpdateResponseHeadersPolicyInput {
+	s.ResponseHeadersPolicyConfig = v
+	return s
+}
+
+type UpdateResponseHeadersPolicyOutput struct {
+	_ struct{} `type:"structure" payload:"ResponseHeadersPolicy"`
+
+	// The current version of the response headers policy.
+	ETag *string `location:"header" locationName:"ETag" type:"string"`
+
+	// A response headers policy.
+	ResponseHeadersPolicy *ResponseHeadersPolicy `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateResponseHeadersPolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateResponseHeadersPolicyOutput) GoString() string {
+	return s.String()
+}
+
+// SetETag sets the ETag field's value.
+func (s *UpdateResponseHeadersPolicyOutput) SetETag(v string) *UpdateResponseHeadersPolicyOutput {
+	s.ETag = &v
+	return s
+}
+
+// SetResponseHeadersPolicy sets the ResponseHeadersPolicy field's value.
+func (s *UpdateResponseHeadersPolicyOutput) SetResponseHeadersPolicy(v *ResponseHeadersPolicy) *UpdateResponseHeadersPolicyOutput {
+	s.ResponseHeadersPolicy = v
 	return s
 }
 
@@ -19120,12 +30522,20 @@ type UpdateStreamingDistributionInput struct {
 	StreamingDistributionConfig *StreamingDistributionConfig `locationName:"StreamingDistributionConfig" type:"structure" required:"true" xmlURI:"http://cloudfront.amazonaws.com/doc/2020-05-31/"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateStreamingDistributionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateStreamingDistributionInput) GoString() string {
 	return s.String()
 }
@@ -19183,12 +30593,20 @@ type UpdateStreamingDistributionOutput struct {
 	StreamingDistribution *StreamingDistribution `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateStreamingDistributionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateStreamingDistributionOutput) GoString() string {
 	return s.String()
 }
@@ -19231,9 +30649,8 @@ func (s *UpdateStreamingDistributionOutput) SetStreamingDistribution(v *Streamin
 //    (https://docs.aws.amazon.com/AmazonCloudFront/latest/DeveloperGuide/distribution-web-values-specify.html#DownloadDistValues-security-policy)
 //    in the Amazon CloudFront Developer Guide.
 //
-//    * The location of the SSL/TLS certificate, AWS Certificate Manager (ACM)
-//    (https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html) (recommended)
-//    or AWS Identity and Access Management (AWS IAM) (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_server-certs.html).
+//    * The location of the SSL/TLS certificate, Certificate Manager (ACM) (https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html)
+//    (recommended) or Identity and Access Management (IAM) (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_server-certs.html).
 //    You specify the location by setting a value in one of the following fields
 //    (not both): ACMCertificateArn IAMCertificateId
 //
@@ -19249,11 +30666,11 @@ type ViewerCertificate struct {
 	_ struct{} `type:"structure"`
 
 	// If the distribution uses Aliases (alternate domain names or CNAMEs) and the
-	// SSL/TLS certificate is stored in AWS Certificate Manager (ACM) (https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html),
+	// SSL/TLS certificate is stored in Certificate Manager (ACM) (https://docs.aws.amazon.com/acm/latest/userguide/acm-overview.html),
 	// provide the Amazon Resource Name (ARN) of the ACM certificate. CloudFront
 	// only supports ACM certificates in the US East (N. Virginia) Region (us-east-1).
 	//
-	// If you specify an ACM certificate ARN, you must also specify values for MinimumProtocolVerison
+	// If you specify an ACM certificate ARN, you must also specify values for MinimumProtocolVersion
 	// and SSLSupportMethod.
 	ACMCertificateArn *string `type:"string"`
 
@@ -19294,11 +30711,10 @@ type ViewerCertificate struct {
 	CloudFrontDefaultCertificate *bool `type:"boolean"`
 
 	// If the distribution uses Aliases (alternate domain names or CNAMEs) and the
-	// SSL/TLS certificate is stored in AWS Identity and Access Management (AWS
-	// IAM) (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_server-certs.html),
+	// SSL/TLS certificate is stored in Identity and Access Management (IAM) (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_server-certs.html),
 	// provide the ID of the IAM certificate.
 	//
-	// If you specify an IAM certificate ID, you must also specify values for MinimumProtocolVerison
+	// If you specify an IAM certificate ID, you must also specify values for MinimumProtocolVersion
 	// and SSLSupportMethod.
 	IAMCertificateId *string `type:"string"`
 
@@ -19337,17 +30753,30 @@ type ViewerCertificate struct {
 	//    including those that don’t support SNI. This is not recommended, and
 	//    results in additional monthly charges from CloudFront.
 	//
+	//    * static-ip - Do not specify this value unless your distribution has been
+	//    enabled for this feature by the CloudFront team. If you have a use case
+	//    that requires static IP addresses for a distribution, contact CloudFront
+	//    through the Amazon Web Services Support Center (https://console.aws.amazon.com/support/home).
+	//
 	// If the distribution uses the CloudFront domain name such as d111111abcdef8.cloudfront.net,
 	// don’t set a value for this field.
 	SSLSupportMethod *string `type:"string" enum:"SSLSupportMethod"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ViewerCertificate) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ViewerCertificate) GoString() string {
 	return s.String()
 }
@@ -19531,6 +30960,50 @@ func Format_Values() []string {
 }
 
 const (
+	// FrameOptionsListDeny is a FrameOptionsList enum value
+	FrameOptionsListDeny = "DENY"
+
+	// FrameOptionsListSameorigin is a FrameOptionsList enum value
+	FrameOptionsListSameorigin = "SAMEORIGIN"
+)
+
+// FrameOptionsList_Values returns all elements of the FrameOptionsList enum
+func FrameOptionsList_Values() []string {
+	return []string{
+		FrameOptionsListDeny,
+		FrameOptionsListSameorigin,
+	}
+}
+
+const (
+	// FunctionRuntimeCloudfrontJs10 is a FunctionRuntime enum value
+	FunctionRuntimeCloudfrontJs10 = "cloudfront-js-1.0"
+)
+
+// FunctionRuntime_Values returns all elements of the FunctionRuntime enum
+func FunctionRuntime_Values() []string {
+	return []string{
+		FunctionRuntimeCloudfrontJs10,
+	}
+}
+
+const (
+	// FunctionStageDevelopment is a FunctionStage enum value
+	FunctionStageDevelopment = "DEVELOPMENT"
+
+	// FunctionStageLive is a FunctionStage enum value
+	FunctionStageLive = "LIVE"
+)
+
+// FunctionStage_Values returns all elements of the FunctionStage enum
+func FunctionStage_Values() []string {
+	return []string{
+		FunctionStageDevelopment,
+		FunctionStageLive,
+	}
+}
+
+const (
 	// GeoRestrictionTypeBlacklist is a GeoRestrictionType enum value
 	GeoRestrictionTypeBlacklist = "blacklist"
 
@@ -19660,6 +31133,9 @@ const (
 
 	// MinimumProtocolVersionTlsv122019 is a MinimumProtocolVersion enum value
 	MinimumProtocolVersionTlsv122019 = "TLSv1.2_2019"
+
+	// MinimumProtocolVersionTlsv122021 is a MinimumProtocolVersion enum value
+	MinimumProtocolVersionTlsv122021 = "TLSv1.2_2021"
 )
 
 // MinimumProtocolVersion_Values returns all elements of the MinimumProtocolVersion enum
@@ -19671,6 +31147,7 @@ func MinimumProtocolVersion_Values() []string {
 		MinimumProtocolVersionTlsv112016,
 		MinimumProtocolVersionTlsv122018,
 		MinimumProtocolVersionTlsv122019,
+		MinimumProtocolVersionTlsv122021,
 	}
 }
 
@@ -19795,11 +31272,126 @@ func PriceClass_Values() []string {
 }
 
 const (
+	// RealtimeMetricsSubscriptionStatusEnabled is a RealtimeMetricsSubscriptionStatus enum value
+	RealtimeMetricsSubscriptionStatusEnabled = "Enabled"
+
+	// RealtimeMetricsSubscriptionStatusDisabled is a RealtimeMetricsSubscriptionStatus enum value
+	RealtimeMetricsSubscriptionStatusDisabled = "Disabled"
+)
+
+// RealtimeMetricsSubscriptionStatus_Values returns all elements of the RealtimeMetricsSubscriptionStatus enum
+func RealtimeMetricsSubscriptionStatus_Values() []string {
+	return []string{
+		RealtimeMetricsSubscriptionStatusEnabled,
+		RealtimeMetricsSubscriptionStatusDisabled,
+	}
+}
+
+const (
+	// ReferrerPolicyListNoReferrer is a ReferrerPolicyList enum value
+	ReferrerPolicyListNoReferrer = "no-referrer"
+
+	// ReferrerPolicyListNoReferrerWhenDowngrade is a ReferrerPolicyList enum value
+	ReferrerPolicyListNoReferrerWhenDowngrade = "no-referrer-when-downgrade"
+
+	// ReferrerPolicyListOrigin is a ReferrerPolicyList enum value
+	ReferrerPolicyListOrigin = "origin"
+
+	// ReferrerPolicyListOriginWhenCrossOrigin is a ReferrerPolicyList enum value
+	ReferrerPolicyListOriginWhenCrossOrigin = "origin-when-cross-origin"
+
+	// ReferrerPolicyListSameOrigin is a ReferrerPolicyList enum value
+	ReferrerPolicyListSameOrigin = "same-origin"
+
+	// ReferrerPolicyListStrictOrigin is a ReferrerPolicyList enum value
+	ReferrerPolicyListStrictOrigin = "strict-origin"
+
+	// ReferrerPolicyListStrictOriginWhenCrossOrigin is a ReferrerPolicyList enum value
+	ReferrerPolicyListStrictOriginWhenCrossOrigin = "strict-origin-when-cross-origin"
+
+	// ReferrerPolicyListUnsafeUrl is a ReferrerPolicyList enum value
+	ReferrerPolicyListUnsafeUrl = "unsafe-url"
+)
+
+// ReferrerPolicyList_Values returns all elements of the ReferrerPolicyList enum
+func ReferrerPolicyList_Values() []string {
+	return []string{
+		ReferrerPolicyListNoReferrer,
+		ReferrerPolicyListNoReferrerWhenDowngrade,
+		ReferrerPolicyListOrigin,
+		ReferrerPolicyListOriginWhenCrossOrigin,
+		ReferrerPolicyListSameOrigin,
+		ReferrerPolicyListStrictOrigin,
+		ReferrerPolicyListStrictOriginWhenCrossOrigin,
+		ReferrerPolicyListUnsafeUrl,
+	}
+}
+
+const (
+	// ResponseHeadersPolicyAccessControlAllowMethodsValuesGet is a ResponseHeadersPolicyAccessControlAllowMethodsValues enum value
+	ResponseHeadersPolicyAccessControlAllowMethodsValuesGet = "GET"
+
+	// ResponseHeadersPolicyAccessControlAllowMethodsValuesPost is a ResponseHeadersPolicyAccessControlAllowMethodsValues enum value
+	ResponseHeadersPolicyAccessControlAllowMethodsValuesPost = "POST"
+
+	// ResponseHeadersPolicyAccessControlAllowMethodsValuesOptions is a ResponseHeadersPolicyAccessControlAllowMethodsValues enum value
+	ResponseHeadersPolicyAccessControlAllowMethodsValuesOptions = "OPTIONS"
+
+	// ResponseHeadersPolicyAccessControlAllowMethodsValuesPut is a ResponseHeadersPolicyAccessControlAllowMethodsValues enum value
+	ResponseHeadersPolicyAccessControlAllowMethodsValuesPut = "PUT"
+
+	// ResponseHeadersPolicyAccessControlAllowMethodsValuesDelete is a ResponseHeadersPolicyAccessControlAllowMethodsValues enum value
+	ResponseHeadersPolicyAccessControlAllowMethodsValuesDelete = "DELETE"
+
+	// ResponseHeadersPolicyAccessControlAllowMethodsValuesPatch is a ResponseHeadersPolicyAccessControlAllowMethodsValues enum value
+	ResponseHeadersPolicyAccessControlAllowMethodsValuesPatch = "PATCH"
+
+	// ResponseHeadersPolicyAccessControlAllowMethodsValuesHead is a ResponseHeadersPolicyAccessControlAllowMethodsValues enum value
+	ResponseHeadersPolicyAccessControlAllowMethodsValuesHead = "HEAD"
+
+	// ResponseHeadersPolicyAccessControlAllowMethodsValuesAll is a ResponseHeadersPolicyAccessControlAllowMethodsValues enum value
+	ResponseHeadersPolicyAccessControlAllowMethodsValuesAll = "ALL"
+)
+
+// ResponseHeadersPolicyAccessControlAllowMethodsValues_Values returns all elements of the ResponseHeadersPolicyAccessControlAllowMethodsValues enum
+func ResponseHeadersPolicyAccessControlAllowMethodsValues_Values() []string {
+	return []string{
+		ResponseHeadersPolicyAccessControlAllowMethodsValuesGet,
+		ResponseHeadersPolicyAccessControlAllowMethodsValuesPost,
+		ResponseHeadersPolicyAccessControlAllowMethodsValuesOptions,
+		ResponseHeadersPolicyAccessControlAllowMethodsValuesPut,
+		ResponseHeadersPolicyAccessControlAllowMethodsValuesDelete,
+		ResponseHeadersPolicyAccessControlAllowMethodsValuesPatch,
+		ResponseHeadersPolicyAccessControlAllowMethodsValuesHead,
+		ResponseHeadersPolicyAccessControlAllowMethodsValuesAll,
+	}
+}
+
+const (
+	// ResponseHeadersPolicyTypeManaged is a ResponseHeadersPolicyType enum value
+	ResponseHeadersPolicyTypeManaged = "managed"
+
+	// ResponseHeadersPolicyTypeCustom is a ResponseHeadersPolicyType enum value
+	ResponseHeadersPolicyTypeCustom = "custom"
+)
+
+// ResponseHeadersPolicyType_Values returns all elements of the ResponseHeadersPolicyType enum
+func ResponseHeadersPolicyType_Values() []string {
+	return []string{
+		ResponseHeadersPolicyTypeManaged,
+		ResponseHeadersPolicyTypeCustom,
+	}
+}
+
+const (
 	// SSLSupportMethodSniOnly is a SSLSupportMethod enum value
 	SSLSupportMethodSniOnly = "sni-only"
 
 	// SSLSupportMethodVip is a SSLSupportMethod enum value
 	SSLSupportMethodVip = "vip"
+
+	// SSLSupportMethodStaticIp is a SSLSupportMethod enum value
+	SSLSupportMethodStaticIp = "static-ip"
 )
 
 // SSLSupportMethod_Values returns all elements of the SSLSupportMethod enum
@@ -19807,6 +31399,7 @@ func SSLSupportMethod_Values() []string {
 	return []string{
 		SSLSupportMethodSniOnly,
 		SSLSupportMethodVip,
+		SSLSupportMethodStaticIp,
 	}
 }
 

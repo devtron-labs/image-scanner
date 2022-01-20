@@ -58,15 +58,25 @@ func (c *ACMPCA) CreateCertificateAuthorityRequest(input *CreateCertificateAutho
 // CreateCertificateAuthority API operation for AWS Certificate Manager Private Certificate Authority.
 //
 // Creates a root or subordinate private certificate authority (CA). You must
-// specify the CA configuration, the certificate revocation list (CRL) configuration,
-// the CA type, and an optional idempotency token to avoid accidental creation
-// of multiple CAs. The CA configuration specifies the name of the algorithm
-// and key size to be used to create the CA private key, the type of signing
-// algorithm that the CA uses, and X.500 subject information. The CRL configuration
-// specifies the CRL expiration period in days (the validity period of the CRL),
-// the Amazon S3 bucket that will contain the CRL, and a CNAME alias for the
-// S3 bucket that is included in certificates issued by the CA. If successful,
-// this action returns the Amazon Resource Name (ARN) of the CA.
+// specify the CA configuration, an optional configuration for Online Certificate
+// Status Protocol (OCSP) and/or a certificate revocation list (CRL), the CA
+// type, and an optional idempotency token to avoid accidental creation of multiple
+// CAs. The CA configuration specifies the name of the algorithm and key size
+// to be used to create the CA private key, the type of signing algorithm that
+// the CA uses, and X.500 subject information. The OCSP configuration can optionally
+// specify a custom URL for the OCSP responder. The CRL configuration specifies
+// the CRL expiration period in days (the validity period of the CRL), the Amazon
+// S3 bucket that will contain the CRL, and a CNAME alias for the S3 bucket
+// that is included in certificates issued by the CA. If successful, this action
+// returns the Amazon Resource Name (ARN) of the CA.
+//
+// ACM Private CA assets that are stored in Amazon S3 can be protected with
+// encryption. For more information, see Encrypting Your CRLs (https://docs.aws.amazon.com/acm-pca/latest/userguide/PcaCreateCa.html#crl-encryption).
+//
+// Both PCA and the IAM principal must have permission to write to the S3 bucket
+// that you specify. If the IAM principal making the call does not have permission
+// to write to the bucket, then an exception is thrown. For more information,
+// see Configure Access to ACM Private CA (https://docs.aws.amazon.com/acm-pca/latest/userguide/PcaAuthAccess.html).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -80,16 +90,17 @@ func (c *ACMPCA) CreateCertificateAuthorityRequest(input *CreateCertificateAutho
 //   One or more of the specified arguments was not valid.
 //
 //   * InvalidPolicyException
-//   The S3 bucket policy is not valid. The policy must give ACM Private CA rights
-//   to read from and write to the bucket and find the bucket location.
+//   The resource policy is invalid or is missing a required statement. For general
+//   information about IAM policy and statement structure, see Overview of JSON
+//   Policies (https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#access_policies-json).
 //
 //   * InvalidTagException
 //   The tag associated with the CA is not valid. The invalid argument is contained
 //   in the message field.
 //
 //   * LimitExceededException
-//   An ACM Private CA limit has been exceeded. See the exception message returned
-//   to determine the limit that was exceeded.
+//   An ACM Private CA quota has been exceeded. See the exception message returned
+//   to determine the quota that was exceeded.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/CreateCertificateAuthority
 func (c *ACMPCA) CreateCertificateAuthority(input *CreateCertificateAuthorityInput) (*CreateCertificateAuthorityOutput, error) {
@@ -159,7 +170,17 @@ func (c *ACMPCA) CreateCertificateAuthorityAuditReportRequest(input *CreateCerti
 //
 // Creates an audit report that lists every time that your CA private key is
 // used. The report is saved in the Amazon S3 bucket that you specify on input.
-// The IssueCertificate and RevokeCertificate actions use the private key.
+// The IssueCertificate (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_IssueCertificate.html)
+// and RevokeCertificate (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_RevokeCertificate.html)
+// actions use the private key.
+//
+// Both PCA and the IAM principal must have permission to write to the S3 bucket
+// that you specify. If the IAM principal making the call does not have permission
+// to write to the bucket, then an exception is thrown. For more information,
+// see Configure Access to ACM Private CA (https://docs.aws.amazon.com/acm-pca/latest/userguide/PcaAuthAccess.html).
+//
+// ACM Private CA assets that are stored in Amazon S3 can be protected with
+// encryption. For more information, see Encrypting Your Audit Reports (https://docs.aws.amazon.com/acm-pca/latest/userguide/PcaAuditReport.html#audit-report-encryption).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -176,8 +197,8 @@ func (c *ACMPCA) CreateCertificateAuthorityAuditReportRequest(input *CreateCerti
 //   The request has failed for an unspecified reason.
 //
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
@@ -186,8 +207,7 @@ func (c *ACMPCA) CreateCertificateAuthorityAuditReportRequest(input *CreateCerti
 //   One or more of the specified arguments was not valid.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/CreateCertificateAuthorityAuditReport
 func (c *ACMPCA) CreateCertificateAuthorityAuditReport(input *CreateCertificateAuthorityAuditReportInput) (*CreateCertificateAuthorityAuditReportOutput, error) {
@@ -256,16 +276,29 @@ func (c *ACMPCA) CreatePermissionRequest(input *CreatePermissionInput) (req *req
 
 // CreatePermission API operation for AWS Certificate Manager Private Certificate Authority.
 //
-// Assigns permissions from a private CA to a designated AWS service. Services
-// are specified by their service principals and can be given permission to
-// create and retrieve certificates on a private CA. Services can also be given
-// permission to list the active permissions that the private CA has granted.
-// For ACM to automatically renew your private CA's certificates, you must assign
-// all possible permissions from the CA to the ACM service principal.
+// Grants one or more permissions on a private CA to the AWS Certificate Manager
+// (ACM) service principal (acm.amazonaws.com). These permissions allow ACM
+// to issue and renew ACM certificates that reside in the same AWS account as
+// the CA.
 //
-// At this time, you can only assign permissions to ACM (acm.amazonaws.com).
-// Permissions can be revoked with the DeletePermission action and listed with
-// the ListPermissions action.
+// You can list current permissions with the ListPermissions (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListPermissions.html)
+// action and revoke them with the DeletePermission (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_DeletePermission.html)
+// action.
+//
+// About Permissions
+//
+//    * If the private CA and the certificates it issues reside in the same
+//    account, you can use CreatePermission to grant permissions for ACM to
+//    carry out automatic certificate renewals.
+//
+//    * For automatic certificate renewal to succeed, the ACM service principal
+//    needs permissions to create, retrieve, and list certificates.
+//
+//    * If the private CA and the ACM certificates reside in different accounts,
+//    then permissions cannot be used to enable automatic renewals. Instead,
+//    the ACM certificate owner must set up a resource-based policy to enable
+//    cross-account issuance and renewals. For more information, see Using a
+//    Resource Based Policy with ACM Private CA (https://docs.aws.amazon.com/acm-pca/latest/userguide/pca-rbp.html).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -276,8 +309,8 @@ func (c *ACMPCA) CreatePermissionRequest(input *CreatePermissionInput) (req *req
 //
 // Returned Error Types:
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
@@ -286,12 +319,11 @@ func (c *ACMPCA) CreatePermissionRequest(input *CreatePermissionInput) (req *req
 //   The designated permission has already been given to the user.
 //
 //   * LimitExceededException
-//   An ACM Private CA limit has been exceeded. See the exception message returned
-//   to determine the limit that was exceeded.
+//   An ACM Private CA quota has been exceeded. See the exception message returned
+//   to determine the quota that was exceeded.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 //   * RequestFailedException
 //   The request has failed for an unspecified reason.
@@ -365,27 +397,31 @@ func (c *ACMPCA) DeleteCertificateAuthorityRequest(input *DeleteCertificateAutho
 //
 // Deletes a private certificate authority (CA). You must provide the Amazon
 // Resource Name (ARN) of the private CA that you want to delete. You can find
-// the ARN by calling the ListCertificateAuthorities action.
+// the ARN by calling the ListCertificateAuthorities (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListCertificateAuthorities.html)
+// action.
 //
 // Deleting a CA will invalidate other CAs and certificates below it in your
 // CA hierarchy.
 //
 // Before you can delete a CA that you have created and activated, you must
-// disable it. To do this, call the UpdateCertificateAuthority action and set
-// the CertificateAuthorityStatus parameter to DISABLED.
+// disable it. To do this, call the UpdateCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_UpdateCertificateAuthority.html)
+// action and set the CertificateAuthorityStatus parameter to DISABLED.
 //
 // Additionally, you can delete a CA if you are waiting for it to be created
 // (that is, the status of the CA is CREATING). You can also delete it if the
 // CA has been created but you haven't yet imported the signed certificate into
 // ACM Private CA (that is, the status of the CA is PENDING_CERTIFICATE).
 //
-// When you successfully call DeleteCertificateAuthority, the CA's status changes
-// to DELETED. However, the CA won't be permanently deleted until the restoration
-// period has passed. By default, if you do not set the PermanentDeletionTimeInDays
-// parameter, the CA remains restorable for 30 days. You can set the parameter
-// from 7 to 30 days. The DescribeCertificateAuthority action returns the time
-// remaining in the restoration window of a private CA in the DELETED state.
-// To restore an eligible CA, call the RestoreCertificateAuthority action.
+// When you successfully call DeleteCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_DeleteCertificateAuthority.html),
+// the CA's status changes to DELETED. However, the CA won't be permanently
+// deleted until the restoration period has passed. By default, if you do not
+// set the PermanentDeletionTimeInDays parameter, the CA remains restorable
+// for 30 days. You can set the parameter from 7 to 30 days. The DescribeCertificateAuthority
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_DescribeCertificateAuthority.html)
+// action returns the time remaining in the restoration window of a private
+// CA in the DELETED state. To restore an eligible CA, call the RestoreCertificateAuthority
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_RestoreCertificateAuthority.html)
+// action.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -399,15 +435,14 @@ func (c *ACMPCA) DeleteCertificateAuthorityRequest(input *DeleteCertificateAutho
 //   A previous update to your private CA is still ongoing.
 //
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/DeleteCertificateAuthority
 func (c *ACMPCA) DeleteCertificateAuthority(input *DeleteCertificateAuthorityInput) (*DeleteCertificateAuthorityOutput, error) {
@@ -476,9 +511,31 @@ func (c *ACMPCA) DeletePermissionRequest(input *DeletePermissionInput) (req *req
 
 // DeletePermission API operation for AWS Certificate Manager Private Certificate Authority.
 //
-// Revokes permissions that a private CA assigned to a designated AWS service.
-// Permissions can be created with the CreatePermission action and listed with
-// the ListPermissions action.
+// Revokes permissions on a private CA granted to the AWS Certificate Manager
+// (ACM) service principal (acm.amazonaws.com).
+//
+// These permissions allow ACM to issue and renew ACM certificates that reside
+// in the same AWS account as the CA. If you revoke these permissions, ACM will
+// no longer renew the affected certificates automatically.
+//
+// Permissions can be granted with the CreatePermission (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreatePermission.html)
+// action and listed with the ListPermissions (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListPermissions.html)
+// action.
+//
+// About Permissions
+//
+//    * If the private CA and the certificates it issues reside in the same
+//    account, you can use CreatePermission to grant permissions for ACM to
+//    carry out automatic certificate renewals.
+//
+//    * For automatic certificate renewal to succeed, the ACM service principal
+//    needs permissions to create, retrieve, and list certificates.
+//
+//    * If the private CA and the ACM certificates reside in different accounts,
+//    then permissions cannot be used to enable automatic renewals. Instead,
+//    the ACM certificate owner must set up a resource-based policy to enable
+//    cross-account issuance and renewals. For more information, see Using a
+//    Resource Based Policy with ACM Private CA (https://docs.aws.amazon.com/acm-pca/latest/userguide/pca-rbp.html).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -489,15 +546,14 @@ func (c *ACMPCA) DeletePermissionRequest(input *DeletePermissionInput) (req *req
 //
 // Returned Error Types:
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 //   * RequestFailedException
 //   The request has failed for an unspecified reason.
@@ -519,6 +575,134 @@ func (c *ACMPCA) DeletePermission(input *DeletePermissionInput) (*DeletePermissi
 // for more information on using Contexts.
 func (c *ACMPCA) DeletePermissionWithContext(ctx aws.Context, input *DeletePermissionInput, opts ...request.Option) (*DeletePermissionOutput, error) {
 	req, out := c.DeletePermissionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeletePolicy = "DeletePolicy"
+
+// DeletePolicyRequest generates a "aws/request.Request" representing the
+// client's request for the DeletePolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeletePolicy for more information on using the DeletePolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeletePolicyRequest method.
+//    req, resp := client.DeletePolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/DeletePolicy
+func (c *ACMPCA) DeletePolicyRequest(input *DeletePolicyInput) (req *request.Request, output *DeletePolicyOutput) {
+	op := &request.Operation{
+		Name:       opDeletePolicy,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DeletePolicyInput{}
+	}
+
+	output = &DeletePolicyOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(jsonrpc.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// DeletePolicy API operation for AWS Certificate Manager Private Certificate Authority.
+//
+// Deletes the resource-based policy attached to a private CA. Deletion will
+// remove any access that the policy has granted. If there is no policy attached
+// to the private CA, this action will return successful.
+//
+// If you delete a policy that was applied through AWS Resource Access Manager
+// (RAM), the CA will be removed from all shares in which it was included.
+//
+// The AWS Certificate Manager Service Linked Role that the policy supports
+// is not affected when you delete the policy.
+//
+// The current policy can be shown with GetPolicy (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_GetPolicy.html)
+// and updated with PutPolicy (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_PutPolicy.html).
+//
+// About Policies
+//
+//    * A policy grants access on a private CA to an AWS customer account, to
+//    AWS Organizations, or to an AWS Organizations unit. Policies are under
+//    the control of a CA administrator. For more information, see Using a Resource
+//    Based Policy with ACM Private CA (https://docs.aws.amazon.com/acm-pca/latest/userguide/pca-rbp.html).
+//
+//    * A policy permits a user of AWS Certificate Manager (ACM) to issue ACM
+//    certificates signed by a CA in another account.
+//
+//    * For ACM to manage automatic renewal of these certificates, the ACM user
+//    must configure a Service Linked Role (SLR). The SLR allows the ACM service
+//    to assume the identity of the user, subject to confirmation against the
+//    ACM Private CA policy. For more information, see Using a Service Linked
+//    Role with ACM (https://docs.aws.amazon.com/acm/latest/userguide/acm-slr.html).
+//
+//    * Updates made in AWS Resource Manager (RAM) are reflected in policies.
+//    For more information, see Attach a Policy for Cross-Account Access (https://docs.aws.amazon.com/acm-pca/latest/userguide/pca-ram.html).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Certificate Manager Private Certificate Authority's
+// API operation DeletePolicy for usage and error information.
+//
+// Returned Error Types:
+//   * ConcurrentModificationException
+//   A previous update to your private CA is still ongoing.
+//
+//   * InvalidArnException
+//   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
+//
+//   * InvalidStateException
+//   The state of the private CA does not allow this action to occur.
+//
+//   * LockoutPreventedException
+//   The current action was prevented because it would lock the caller out from
+//   performing subsequent actions. Verify that the specified parameters would
+//   not result in the caller being denied access to the resource.
+//
+//   * RequestFailedException
+//   The request has failed for an unspecified reason.
+//
+//   * ResourceNotFoundException
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/DeletePolicy
+func (c *ACMPCA) DeletePolicy(input *DeletePolicyInput) (*DeletePolicyOutput, error) {
+	req, out := c.DeletePolicyRequest(input)
+	return out, req.Send()
+}
+
+// DeletePolicyWithContext is the same as DeletePolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeletePolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ACMPCA) DeletePolicyWithContext(ctx aws.Context, input *DeletePolicyInput, opts ...request.Option) (*DeletePolicyOutput, error) {
+	req, out := c.DeletePolicyRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -568,9 +752,10 @@ func (c *ACMPCA) DescribeCertificateAuthorityRequest(input *DescribeCertificateA
 
 // DescribeCertificateAuthority API operation for AWS Certificate Manager Private Certificate Authority.
 //
-// Lists information about your private certificate authority (CA). You specify
-// the private CA on input by its ARN (Amazon Resource Name). The output contains
-// the status of your CA. This can be any of the following:
+// Lists information about your private certificate authority (CA) or one that
+// has been shared with you. You specify the private CA on input by its ARN
+// (Amazon Resource Name). The output contains the status of your CA. This can
+// be any of the following:
 //
 //    * CREATING - ACM Private CA is creating your private certificate authority.
 //
@@ -585,7 +770,7 @@ func (c *ACMPCA) DescribeCertificateAuthorityRequest(input *DescribeCertificateA
 //    * EXPIRED - Your private CA certificate has expired.
 //
 //    * FAILED - Your private CA has failed. Your CA can fail because of problems
-//    such a network outage or backend AWS failure or other errors. A failed
+//    such a network outage or back-end AWS failure or other errors. A failed
 //    CA can never return to the pending state. You must create a new CA.
 //
 //    * DELETED - Your private CA is within the restoration period, after which
@@ -601,8 +786,8 @@ func (c *ACMPCA) DescribeCertificateAuthorityRequest(input *DescribeCertificateA
 //
 // Returned Error Types:
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
@@ -674,9 +859,12 @@ func (c *ACMPCA) DescribeCertificateAuthorityAuditReportRequest(input *DescribeC
 // DescribeCertificateAuthorityAuditReport API operation for AWS Certificate Manager Private Certificate Authority.
 //
 // Lists information about a specific audit report created by calling the CreateCertificateAuthorityAuditReport
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthorityAuditReport.html)
 // action. Audit information is created every time the certificate authority
 // (CA) private key is used. The private key is used when you call the IssueCertificate
-// action or the RevokeCertificate action.
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_IssueCertificate.html)
+// action or the RevokeCertificate (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_RevokeCertificate.html)
+// action.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -687,8 +875,8 @@ func (c *ACMPCA) DescribeCertificateAuthorityAuditReportRequest(input *DescribeC
 //
 // Returned Error Types:
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
@@ -762,12 +950,14 @@ func (c *ACMPCA) GetCertificateRequest(input *GetCertificateInput) (req *request
 
 // GetCertificate API operation for AWS Certificate Manager Private Certificate Authority.
 //
-// Retrieves a certificate from your private CA. The ARN of the certificate
-// is returned when you call the IssueCertificate action. You must specify both
-// the ARN of your private CA and the ARN of the issued certificate when calling
-// the GetCertificate action. You can retrieve the certificate if it is in the
-// ISSUED state. You can call the CreateCertificateAuthorityAuditReport action
-// to create a report that contains information about all of the certificates
+// Retrieves a certificate from your private CA or one that has been shared
+// with you. The ARN of the certificate is returned when you call the IssueCertificate
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_IssueCertificate.html)
+// action. You must specify both the ARN of your private CA and the ARN of the
+// issued certificate when calling the GetCertificate action. You can retrieve
+// the certificate if it is in the ISSUED state. You can call the CreateCertificateAuthorityAuditReport
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthorityAuditReport.html)
+// action to create a report that contains information about all of the certificates
 // issued and revoked by your private CA.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -785,15 +975,14 @@ func (c *ACMPCA) GetCertificateRequest(input *GetCertificateInput) (req *request
 //   The request has failed for an unspecified reason.
 //
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/GetCertificate
 func (c *ACMPCA) GetCertificate(input *GetCertificateInput) (*GetCertificateOutput, error) {
@@ -862,9 +1051,9 @@ func (c *ACMPCA) GetCertificateAuthorityCertificateRequest(input *GetCertificate
 // GetCertificateAuthorityCertificate API operation for AWS Certificate Manager Private Certificate Authority.
 //
 // Retrieves the certificate and certificate chain for your private certificate
-// authority (CA). Both the certificate and the chain are base64 PEM-encoded.
-// The chain does not include the CA certificate. Each certificate in the chain
-// signs the one before it.
+// authority (CA) or one that has been shared with you. Both the certificate
+// and the chain are base64 PEM-encoded. The chain does not include the CA certificate.
+// Each certificate in the chain signs the one before it.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -875,12 +1064,11 @@ func (c *ACMPCA) GetCertificateAuthorityCertificateRequest(input *GetCertificate
 //
 // Returned Error Types:
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
@@ -953,10 +1141,11 @@ func (c *ACMPCA) GetCertificateAuthorityCsrRequest(input *GetCertificateAuthorit
 //
 // Retrieves the certificate signing request (CSR) for your private certificate
 // authority (CA). The CSR is created when you call the CreateCertificateAuthority
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html)
 // action. Sign the CSR with your ACM Private CA-hosted or on-premises root
 // or subordinate CA. Then import the signed certificate back into ACM Private
-// CA by calling the ImportCertificateAuthorityCertificate action. The CSR is
-// returned as a base64 PEM-encoded string.
+// CA by calling the ImportCertificateAuthorityCertificate (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ImportCertificateAuthorityCertificate.html)
+// action. The CSR is returned as a base64 PEM-encoded string.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -973,15 +1162,14 @@ func (c *ACMPCA) GetCertificateAuthorityCsrRequest(input *GetCertificateAuthorit
 //   The request has failed for an unspecified reason.
 //
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/GetCertificateAuthorityCsr
 func (c *ACMPCA) GetCertificateAuthorityCsr(input *GetCertificateAuthorityCsrInput) (*GetCertificateAuthorityCsrOutput, error) {
@@ -1000,6 +1188,119 @@ func (c *ACMPCA) GetCertificateAuthorityCsr(input *GetCertificateAuthorityCsrInp
 // for more information on using Contexts.
 func (c *ACMPCA) GetCertificateAuthorityCsrWithContext(ctx aws.Context, input *GetCertificateAuthorityCsrInput, opts ...request.Option) (*GetCertificateAuthorityCsrOutput, error) {
 	req, out := c.GetCertificateAuthorityCsrRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetPolicy = "GetPolicy"
+
+// GetPolicyRequest generates a "aws/request.Request" representing the
+// client's request for the GetPolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetPolicy for more information on using the GetPolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetPolicyRequest method.
+//    req, resp := client.GetPolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/GetPolicy
+func (c *ACMPCA) GetPolicyRequest(input *GetPolicyInput) (req *request.Request, output *GetPolicyOutput) {
+	op := &request.Operation{
+		Name:       opGetPolicy,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &GetPolicyInput{}
+	}
+
+	output = &GetPolicyOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetPolicy API operation for AWS Certificate Manager Private Certificate Authority.
+//
+// Retrieves the resource-based policy attached to a private CA. If either the
+// private CA resource or the policy cannot be found, this action returns a
+// ResourceNotFoundException.
+//
+// The policy can be attached or updated with PutPolicy (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_PutPolicy.html)
+// and removed with DeletePolicy (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_DeletePolicy.html).
+//
+// About Policies
+//
+//    * A policy grants access on a private CA to an AWS customer account, to
+//    AWS Organizations, or to an AWS Organizations unit. Policies are under
+//    the control of a CA administrator. For more information, see Using a Resource
+//    Based Policy with ACM Private CA (https://docs.aws.amazon.com/acm-pca/latest/userguide/pca-rbp.html).
+//
+//    * A policy permits a user of AWS Certificate Manager (ACM) to issue ACM
+//    certificates signed by a CA in another account.
+//
+//    * For ACM to manage automatic renewal of these certificates, the ACM user
+//    must configure a Service Linked Role (SLR). The SLR allows the ACM service
+//    to assume the identity of the user, subject to confirmation against the
+//    ACM Private CA policy. For more information, see Using a Service Linked
+//    Role with ACM (https://docs.aws.amazon.com/acm/latest/userguide/acm-slr.html).
+//
+//    * Updates made in AWS Resource Manager (RAM) are reflected in policies.
+//    For more information, see Attach a Policy for Cross-Account Access (https://docs.aws.amazon.com/acm-pca/latest/userguide/pca-ram.html).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Certificate Manager Private Certificate Authority's
+// API operation GetPolicy for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidArnException
+//   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
+//
+//   * InvalidStateException
+//   The state of the private CA does not allow this action to occur.
+//
+//   * RequestFailedException
+//   The request has failed for an unspecified reason.
+//
+//   * ResourceNotFoundException
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/GetPolicy
+func (c *ACMPCA) GetPolicy(input *GetPolicyInput) (*GetPolicyOutput, error) {
+	req, out := c.GetPolicyRequest(input)
+	return out, req.Send()
+}
+
+// GetPolicyWithContext is the same as GetPolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetPolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ACMPCA) GetPolicyWithContext(ctx aws.Context, input *GetPolicyInput, opts ...request.Option) (*GetPolicyOutput, error) {
+	req, out := c.GetPolicyRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -1055,35 +1356,91 @@ func (c *ACMPCA) ImportCertificateAuthorityCertificateRequest(input *ImportCerti
 // ACM Private CA. Before you can call this action, the following preparations
 // must in place:
 //
-// In ACM Private CA, call the CreateCertificateAuthority action to create the
-// private CA that that you plan to back with the imported certificate.
+// In ACM Private CA, call the CreateCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html)
+// action to create the private CA that you plan to back with the imported certificate.
 //
-// Call the GetCertificateAuthorityCsr action to generate a certificate signing
-// request (CSR).
+// Call the GetCertificateAuthorityCsr (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_GetCertificateAuthorityCsr.html)
+// action to generate a certificate signing request (CSR).
 //
-// Sign the CSR using a root or intermediate CA hosted either by an on-premises
-// PKI hierarchy or a commercial CA..
+// Sign the CSR using a root or intermediate CA hosted by either an on-premises
+// PKI hierarchy or by a commercial CA.
 //
 // Create a certificate chain and copy the signed certificate and the certificate
 // chain to your working directory.
 //
-// The following requirements apply when you import a CA certificate.
+// ACM Private CA supports three scenarios for installing a CA certificate:
 //
-//    * You cannot import a non-self-signed certificate for use as a root CA.
+//    * Installing a certificate for a root CA hosted by ACM Private CA.
 //
-//    * You cannot import a self-signed certificate for use as a subordinate
-//    CA.
+//    * Installing a subordinate CA certificate whose parent authority is hosted
+//    by ACM Private CA.
+//
+//    * Installing a subordinate CA certificate whose parent authority is externally
+//    hosted.
+//
+// The following additional requirements apply when you import a CA certificate.
+//
+//    * Only a self-signed certificate can be imported as a root CA.
+//
+//    * A self-signed certificate cannot be imported as a subordinate CA.
 //
 //    * Your certificate chain must not include the private CA certificate that
 //    you are importing.
 //
-//    * Your ACM Private CA-hosted or on-premises CA certificate must be the
-//    last certificate in your chain. The subordinate certificate, if any, that
-//    your root CA signed must be next to last. The subordinate certificate
-//    signed by the preceding subordinate CA must come next, and so on until
-//    your chain is built.
+//    * Your root CA must be the last certificate in your chain. The subordinate
+//    certificate, if any, that your root CA signed must be next to last. The
+//    subordinate certificate signed by the preceding subordinate CA must come
+//    next, and so on until your chain is built.
 //
 //    * The chain must be PEM-encoded.
+//
+//    * The maximum allowed size of a certificate is 32 KB.
+//
+//    * The maximum allowed size of a certificate chain is 2 MB.
+//
+// Enforcement of Critical Constraints
+//
+// ACM Private CA allows the following extensions to be marked critical in the
+// imported CA certificate or chain.
+//
+//    * Basic constraints (must be marked critical)
+//
+//    * Subject alternative names
+//
+//    * Key usage
+//
+//    * Extended key usage
+//
+//    * Authority key identifier
+//
+//    * Subject key identifier
+//
+//    * Issuer alternative name
+//
+//    * Subject directory attributes
+//
+//    * Subject information access
+//
+//    * Certificate policies
+//
+//    * Policy mappings
+//
+//    * Inhibit anyPolicy
+//
+// ACM Private CA rejects the following extensions when they are marked critical
+// in an imported CA certificate or chain.
+//
+//    * Name constraints
+//
+//    * Policy constraints
+//
+//    * CRL distribution points
+//
+//    * Authority information access
+//
+//    * Freshest CRL
+//
+//    * Any other extension
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1103,8 +1460,8 @@ func (c *ACMPCA) ImportCertificateAuthorityCertificateRequest(input *ImportCerti
 //   The request has failed for an unspecified reason.
 //
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
@@ -1113,8 +1470,7 @@ func (c *ACMPCA) ImportCertificateAuthorityCertificateRequest(input *ImportCerti
 //   The request action cannot be performed or is prohibited.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 //   * MalformedCertificateException
 //   One or more fields in the certificate are invalid.
@@ -1189,10 +1545,11 @@ func (c *ACMPCA) IssueCertificateRequest(input *IssueCertificateInput) (req *req
 
 // IssueCertificate API operation for AWS Certificate Manager Private Certificate Authority.
 //
-// Uses your private certificate authority (CA) to issue a client certificate.
-// This action returns the Amazon Resource Name (ARN) of the certificate. You
-// can retrieve the certificate by calling the GetCertificate action and specifying
-// the ARN.
+// Uses your private certificate authority (CA), or one that has been shared
+// with you, to issue a client certificate. This action returns the Amazon Resource
+// Name (ARN) of the certificate. You can retrieve the certificate by calling
+// the GetCertificate (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_GetCertificate.html)
+// action and specifying the ARN.
 //
 // You cannot use the ACM ListCertificateAuthorities action to retrieve the
 // ARNs of the certificates that you issue by using ACM Private CA.
@@ -1206,16 +1563,15 @@ func (c *ACMPCA) IssueCertificateRequest(input *IssueCertificateInput) (req *req
 //
 // Returned Error Types:
 //   * LimitExceededException
-//   An ACM Private CA limit has been exceeded. See the exception message returned
-//   to determine the limit that was exceeded.
+//   An ACM Private CA quota has been exceeded. See the exception message returned
+//   to determine the quota that was exceeded.
 //
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
@@ -1299,6 +1655,7 @@ func (c *ACMPCA) ListCertificateAuthoritiesRequest(input *ListCertificateAuthori
 // ListCertificateAuthorities API operation for AWS Certificate Manager Private Certificate Authority.
 //
 // Lists the private certificate authorities that you created by using the CreateCertificateAuthority
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html)
 // action.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -1311,7 +1668,7 @@ func (c *ACMPCA) ListCertificateAuthoritiesRequest(input *ListCertificateAuthori
 // Returned Error Types:
 //   * InvalidNextTokenException
 //   The token specified in the NextToken argument is not valid. Use the token
-//   returned from your previous call to ListCertificateAuthorities.
+//   returned from your previous call to ListCertificateAuthorities (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListCertificateAuthorities.html).
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/ListCertificateAuthorities
 func (c *ACMPCA) ListCertificateAuthorities(input *ListCertificateAuthoritiesInput) (*ListCertificateAuthoritiesOutput, error) {
@@ -1437,9 +1794,30 @@ func (c *ACMPCA) ListPermissionsRequest(input *ListPermissionsInput) (req *reque
 
 // ListPermissions API operation for AWS Certificate Manager Private Certificate Authority.
 //
-// Lists all the permissions, if any, that have been assigned by a private CA.
-// Permissions can be granted with the CreatePermission action and revoked with
-// the DeletePermission action.
+// List all permissions on a private CA, if any, granted to the AWS Certificate
+// Manager (ACM) service principal (acm.amazonaws.com).
+//
+// These permissions allow ACM to issue and renew ACM certificates that reside
+// in the same AWS account as the CA.
+//
+// Permissions can be granted with the CreatePermission (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreatePermission.html)
+// action and revoked with the DeletePermission (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_DeletePermission.html)
+// action.
+//
+// About Permissions
+//
+//    * If the private CA and the certificates it issues reside in the same
+//    account, you can use CreatePermission to grant permissions for ACM to
+//    carry out automatic certificate renewals.
+//
+//    * For automatic certificate renewal to succeed, the ACM service principal
+//    needs permissions to create, retrieve, and list certificates.
+//
+//    * If the private CA and the ACM certificates reside in different accounts,
+//    then permissions cannot be used to enable automatic renewals. Instead,
+//    the ACM certificate owner must set up a resource-based policy to enable
+//    cross-account issuance and renewals. For more information, see Using a
+//    Resource Based Policy with ACM Private CA (https://docs.aws.amazon.com/acm-pca/latest/userguide/pca-rbp.html).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1450,19 +1828,18 @@ func (c *ACMPCA) ListPermissionsRequest(input *ListPermissionsInput) (req *reque
 //
 // Returned Error Types:
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
 //
 //   * InvalidNextTokenException
 //   The token specified in the NextToken argument is not valid. Use the token
-//   returned from your previous call to ListCertificateAuthorities.
+//   returned from your previous call to ListCertificateAuthorities (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListCertificateAuthorities.html).
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 //   * RequestFailedException
 //   The request has failed for an unspecified reason.
@@ -1591,11 +1968,13 @@ func (c *ACMPCA) ListTagsRequest(input *ListTagsInput) (req *request.Request, ou
 
 // ListTags API operation for AWS Certificate Manager Private Certificate Authority.
 //
-// Lists the tags, if any, that are associated with your private CA. Tags are
-// labels that you can use to identify and organize your CAs. Each tag consists
-// of a key and an optional value. Call the TagCertificateAuthority action to
-// add one or more tags to your CA. Call the UntagCertificateAuthority action
-// to remove tags.
+// Lists the tags, if any, that are associated with your private CA or one that
+// has been shared with you. Tags are labels that you can use to identify and
+// organize your CAs. Each tag consists of a key and an optional value. Call
+// the TagCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_TagCertificateAuthority.html)
+// action to add one or more tags to your CA. Call the UntagCertificateAuthority
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_UntagCertificateAuthority.html)
+// action to remove tags.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1606,15 +1985,14 @@ func (c *ACMPCA) ListTagsRequest(input *ListTagsInput) (req *request.Request, ou
 //
 // Returned Error Types:
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/ListTags
 func (c *ACMPCA) ListTags(input *ListTagsInput) (*ListTagsOutput, error) {
@@ -1690,6 +2068,135 @@ func (c *ACMPCA) ListTagsPagesWithContext(ctx aws.Context, input *ListTagsInput,
 	return p.Err()
 }
 
+const opPutPolicy = "PutPolicy"
+
+// PutPolicyRequest generates a "aws/request.Request" representing the
+// client's request for the PutPolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See PutPolicy for more information on using the PutPolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the PutPolicyRequest method.
+//    req, resp := client.PutPolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/PutPolicy
+func (c *ACMPCA) PutPolicyRequest(input *PutPolicyInput) (req *request.Request, output *PutPolicyOutput) {
+	op := &request.Operation{
+		Name:       opPutPolicy,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &PutPolicyInput{}
+	}
+
+	output = &PutPolicyOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(jsonrpc.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// PutPolicy API operation for AWS Certificate Manager Private Certificate Authority.
+//
+// Attaches a resource-based policy to a private CA.
+//
+// A policy can also be applied by sharing a private CA through AWS Resource
+// Access Manager (RAM). For more information, see Attach a Policy for Cross-Account
+// Access (https://docs.aws.amazon.com/acm-pca/latest/userguide/pca-ram.html).
+//
+// The policy can be displayed with GetPolicy (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_GetPolicy.html)
+// and removed with DeletePolicy (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_DeletePolicy.html).
+//
+// About Policies
+//
+//    * A policy grants access on a private CA to an AWS customer account, to
+//    AWS Organizations, or to an AWS Organizations unit. Policies are under
+//    the control of a CA administrator. For more information, see Using a Resource
+//    Based Policy with ACM Private CA (https://docs.aws.amazon.com/acm-pca/latest/userguide/pca-rbp.html).
+//
+//    * A policy permits a user of AWS Certificate Manager (ACM) to issue ACM
+//    certificates signed by a CA in another account.
+//
+//    * For ACM to manage automatic renewal of these certificates, the ACM user
+//    must configure a Service Linked Role (SLR). The SLR allows the ACM service
+//    to assume the identity of the user, subject to confirmation against the
+//    ACM Private CA policy. For more information, see Using a Service Linked
+//    Role with ACM (https://docs.aws.amazon.com/acm/latest/userguide/acm-slr.html).
+//
+//    * Updates made in AWS Resource Manager (RAM) are reflected in policies.
+//    For more information, see Attach a Policy for Cross-Account Access (https://docs.aws.amazon.com/acm-pca/latest/userguide/pca-ram.html).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Certificate Manager Private Certificate Authority's
+// API operation PutPolicy for usage and error information.
+//
+// Returned Error Types:
+//   * ConcurrentModificationException
+//   A previous update to your private CA is still ongoing.
+//
+//   * InvalidArnException
+//   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
+//
+//   * InvalidStateException
+//   The state of the private CA does not allow this action to occur.
+//
+//   * InvalidPolicyException
+//   The resource policy is invalid or is missing a required statement. For general
+//   information about IAM policy and statement structure, see Overview of JSON
+//   Policies (https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#access_policies-json).
+//
+//   * LockoutPreventedException
+//   The current action was prevented because it would lock the caller out from
+//   performing subsequent actions. Verify that the specified parameters would
+//   not result in the caller being denied access to the resource.
+//
+//   * RequestFailedException
+//   The request has failed for an unspecified reason.
+//
+//   * ResourceNotFoundException
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/PutPolicy
+func (c *ACMPCA) PutPolicy(input *PutPolicyInput) (*PutPolicyOutput, error) {
+	req, out := c.PutPolicyRequest(input)
+	return out, req.Send()
+}
+
+// PutPolicyWithContext is the same as PutPolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See PutPolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ACMPCA) PutPolicyWithContext(ctx aws.Context, input *PutPolicyInput, opts ...request.Option) (*PutPolicyOutput, error) {
+	req, out := c.PutPolicyRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opRestoreCertificateAuthority = "RestoreCertificateAuthority"
 
 // RestoreCertificateAuthorityRequest generates a "aws/request.Request" representing the
@@ -1737,15 +2244,18 @@ func (c *ACMPCA) RestoreCertificateAuthorityRequest(input *RestoreCertificateAut
 //
 // Restores a certificate authority (CA) that is in the DELETED state. You can
 // restore a CA during the period that you defined in the PermanentDeletionTimeInDays
-// parameter of the DeleteCertificateAuthority action. Currently, you can specify
-// 7 to 30 days. If you did not specify a PermanentDeletionTimeInDays value,
-// by default you can restore the CA at any time in a 30 day period. You can
-// check the time remaining in the restoration period of a private CA in the
-// DELETED state by calling the DescribeCertificateAuthority or ListCertificateAuthorities
+// parameter of the DeleteCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_DeleteCertificateAuthority.html)
+// action. Currently, you can specify 7 to 30 days. If you did not specify a
+// PermanentDeletionTimeInDays value, by default you can restore the CA at any
+// time in a 30 day period. You can check the time remaining in the restoration
+// period of a private CA in the DELETED state by calling the DescribeCertificateAuthority
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_DescribeCertificateAuthority.html)
+// or ListCertificateAuthorities (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListCertificateAuthorities.html)
 // actions. The status of a restored CA is set to its pre-deletion status when
 // the RestoreCertificateAuthority action returns. To change its status to ACTIVE,
-// call the UpdateCertificateAuthority action. If the private CA was in the
-// PENDING_CERTIFICATE state at deletion, you must use the ImportCertificateAuthorityCertificate
+// call the UpdateCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_UpdateCertificateAuthority.html)
+// action. If the private CA was in the PENDING_CERTIFICATE state at deletion,
+// you must use the ImportCertificateAuthorityCertificate (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ImportCertificateAuthorityCertificate.html)
 // action to import a certificate authority into the private CA before it can
 // be activated. You cannot restore a CA after the restoration period has ended.
 //
@@ -1758,12 +2268,11 @@ func (c *ACMPCA) RestoreCertificateAuthorityRequest(input *RestoreCertificateAut
 //
 // Returned Error Types:
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
@@ -1838,10 +2347,20 @@ func (c *ACMPCA) RevokeCertificateRequest(input *RevokeCertificateInput) (req *r
 // Revokes a certificate that was issued inside ACM Private CA. If you enable
 // a certificate revocation list (CRL) when you create or update your private
 // CA, information about the revoked certificates will be included in the CRL.
-// ACM Private CA writes the CRL to an S3 bucket that you specify. For more
-// information about revocation, see the CrlConfiguration structure. ACM Private
-// CA also writes revocation information to the audit report. For more information,
-// see CreateCertificateAuthorityAuditReport.
+// ACM Private CA writes the CRL to an S3 bucket that you specify. A CRL is
+// typically updated approximately 30 minutes after a certificate is revoked.
+// If for any reason the CRL update fails, ACM Private CA attempts makes further
+// attempts every 15 minutes. With Amazon CloudWatch, you can create alarms
+// for the metrics CRLGenerated and MisconfiguredCRLBucket. For more information,
+// see Supported CloudWatch Metrics (https://docs.aws.amazon.com/acm-pca/latest/userguide/PcaCloudWatch.html).
+//
+// Both PCA and the IAM principal must have permission to write to the S3 bucket
+// that you specify. If the IAM principal making the call does not have permission
+// to write to the bucket, then an exception is thrown. For more information,
+// see Configure Access to ACM Private CA (https://docs.aws.amazon.com/acm-pca/latest/userguide/PcaAuthAccess.html).
+//
+// ACM Private CA also writes revocation information to the audit report. For
+// more information, see CreateCertificateAuthorityAuditReport (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthorityAuditReport.html).
 //
 // You cannot revoke a root CA self-signed certificate.
 //
@@ -1863,16 +2382,15 @@ func (c *ACMPCA) RevokeCertificateRequest(input *RevokeCertificateInput) (req *r
 //   The request action cannot be performed or is prohibited.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 //   * LimitExceededException
-//   An ACM Private CA limit has been exceeded. See the exception message returned
-//   to determine the limit that was exceeded.
+//   An ACM Private CA quota has been exceeded. See the exception message returned
+//   to determine the quota that was exceeded.
 //
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * RequestAlreadyProcessedException
 //   Your request has already been completed.
@@ -1957,8 +2475,9 @@ func (c *ACMPCA) TagCertificateAuthorityRequest(input *TagCertificateAuthorityIn
 // a tag to just one private CA if you want to identify a specific characteristic
 // of that CA, or you can apply the same tag to multiple private CAs if you
 // want to filter for a common relationship among those CAs. To remove one or
-// more tags, use the UntagCertificateAuthority action. Call the ListTags action
-// to see what tags are associated with your CA.
+// more tags, use the UntagCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_UntagCertificateAuthority.html)
+// action. Call the ListTags (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListTags.html)
+// action to see what tags are associated with your CA.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1969,15 +2488,14 @@ func (c *ACMPCA) TagCertificateAuthorityRequest(input *TagCertificateAuthorityIn
 //
 // Returned Error Types:
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 //   * InvalidTagException
 //   The tag associated with the CA is not valid. The invalid argument is contained
@@ -2058,7 +2576,8 @@ func (c *ACMPCA) UntagCertificateAuthorityRequest(input *UntagCertificateAuthori
 // pair. If you do not specify the value portion of the tag when calling this
 // action, the tag will be removed regardless of value. If you specify a value,
 // the tag is removed only if it is associated with the specified value. To
-// add tags to a private CA, use the TagCertificateAuthority. Call the ListTags
+// add tags to a private CA, use the TagCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_TagCertificateAuthority.html).
+// Call the ListTags (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListTags.html)
 // action to see what tags are associated with your CA.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -2070,15 +2589,14 @@ func (c *ACMPCA) UntagCertificateAuthorityRequest(input *UntagCertificateAuthori
 //
 // Returned Error Types:
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArnException
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 //   * InvalidTagException
 //   The tag associated with the CA is not valid. The invalid argument is contained
@@ -2156,6 +2674,11 @@ func (c *ACMPCA) UpdateCertificateAuthorityRequest(input *UpdateCertificateAutho
 // it. You can disable a private CA that is in the ACTIVE state or make a CA
 // that is in the DISABLED state active again.
 //
+// Both PCA and the IAM principal must have permission to write to the S3 bucket
+// that you specify. If the IAM principal making the call does not have permission
+// to write to the bucket, then an exception is thrown. For more information,
+// see Configure Access to ACM Private CA (https://docs.aws.amazon.com/acm-pca/latest/userguide/PcaAuthAccess.html).
+//
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
 // the error.
@@ -2168,8 +2691,8 @@ func (c *ACMPCA) UpdateCertificateAuthorityRequest(input *UpdateCertificateAutho
 //   A previous update to your private CA is still ongoing.
 //
 //   * ResourceNotFoundException
-//   A resource such as a private CA, S3 bucket, certificate, or audit report
-//   cannot be found.
+//   A resource such as a private CA, S3 bucket, certificate, audit report, or
+//   policy cannot be found.
 //
 //   * InvalidArgsException
 //   One or more of the specified arguments was not valid.
@@ -2178,12 +2701,12 @@ func (c *ACMPCA) UpdateCertificateAuthorityRequest(input *UpdateCertificateAutho
 //   The requested Amazon Resource Name (ARN) does not refer to an existing resource.
 //
 //   * InvalidStateException
-//   The private CA is in a state during which a report or certificate cannot
-//   be generated.
+//   The state of the private CA does not allow this action to occur.
 //
 //   * InvalidPolicyException
-//   The S3 bucket policy is not valid. The policy must give ACM Private CA rights
-//   to read from and write to the bucket and find the bucket location.
+//   The resource policy is invalid or is missing a required statement. For general
+//   information about IAM policy and statement structure, see Overview of JSON
+//   Policies (https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#access_policies-json).
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/acm-pca-2017-08-22/UpdateCertificateAuthority
 func (c *ACMPCA) UpdateCertificateAuthority(input *UpdateCertificateAuthorityInput) (*UpdateCertificateAuthorityOutput, error) {
@@ -2207,24 +2730,25 @@ func (c *ACMPCA) UpdateCertificateAuthorityWithContext(ctx aws.Context, input *U
 	return out, req.Send()
 }
 
-// Contains information about the certificate subject. The certificate can be
-// one issued by your private certificate authority (CA) or it can be your private
-// CA certificate. The Subject field in the certificate identifies the entity
-// that owns or controls the public key in the certificate. The entity can be
-// a user, computer, device, or service. The Subject must contain an X.500 distinguished
-// name (DN). A DN is a sequence of relative distinguished names (RDNs). The
-// RDNs are separated by commas in the certificate. The DN must be unique for
-// each entity, but your private CA can issue more than one certificate with
-// the same DN to the same entity.
+// Contains information about the certificate subject. The Subject field in
+// the certificate identifies the entity that owns or controls the public key
+// in the certificate. The entity can be a user, computer, device, or service.
+// The Subject must contain an X.500 distinguished name (DN). A DN is a sequence
+// of relative distinguished names (RDNs). The RDNs are separated by commas
+// in the certificate.
 type ASN1Subject struct {
 	_ struct{} `type:"structure"`
 
-	// Fully qualified domain name (FQDN) associated with the certificate subject.
+	// For CA and end-entity certificates in a private PKI, the common name (CN)
+	// can be any string within the length limit.
+	//
+	// Note: In publicly trusted certificates, the common name must be a fully qualified
+	// domain name (FQDN) associated with the certificate subject.
 	CommonName *string `type:"string"`
 
 	// Two-digit code that specifies the country in which the certificate subject
 	// located.
-	Country *string `type:"string"`
+	Country *string `min:"2" type:"string"`
 
 	// Disambiguating information for the certificate subject.
 	DistinguishedNameQualifier *string `type:"string"`
@@ -2238,7 +2762,7 @@ type ASN1Subject struct {
 
 	// Concatenation that typically contains the first letter of the GivenName,
 	// the first letter of the middle name if one exists, and the first letter of
-	// the SurName.
+	// the Surname.
 	Initials *string `type:"string"`
 
 	// The locality (such as a city or town) in which the certificate subject is
@@ -2272,14 +2796,35 @@ type ASN1Subject struct {
 	Title *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ASN1Subject) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ASN1Subject) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ASN1Subject) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ASN1Subject"}
+	if s.Country != nil && len(*s.Country) < 2 {
+		invalidParams.Add(request.NewErrParamMinLen("Country", 2))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // SetCommonName sets the CommonName field's value.
@@ -2366,15 +2911,200 @@ func (s *ASN1Subject) SetTitle(v string) *ASN1Subject {
 	return s
 }
 
+// Provides access information used by the authorityInfoAccess and subjectInfoAccess
+// extensions described in RFC 5280 (https://tools.ietf.org/html/rfc5280).
+type AccessDescription struct {
+	_ struct{} `type:"structure"`
+
+	// The location of AccessDescription information.
+	//
+	// AccessLocation is a required field
+	AccessLocation *GeneralName `type:"structure" required:"true"`
+
+	// The type and format of AccessDescription information.
+	//
+	// AccessMethod is a required field
+	AccessMethod *AccessMethod `type:"structure" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AccessDescription) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AccessDescription) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AccessDescription) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AccessDescription"}
+	if s.AccessLocation == nil {
+		invalidParams.Add(request.NewErrParamRequired("AccessLocation"))
+	}
+	if s.AccessMethod == nil {
+		invalidParams.Add(request.NewErrParamRequired("AccessMethod"))
+	}
+	if s.AccessLocation != nil {
+		if err := s.AccessLocation.Validate(); err != nil {
+			invalidParams.AddNested("AccessLocation", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAccessLocation sets the AccessLocation field's value.
+func (s *AccessDescription) SetAccessLocation(v *GeneralName) *AccessDescription {
+	s.AccessLocation = v
+	return s
+}
+
+// SetAccessMethod sets the AccessMethod field's value.
+func (s *AccessDescription) SetAccessMethod(v *AccessMethod) *AccessDescription {
+	s.AccessMethod = v
+	return s
+}
+
+// Describes the type and format of extension access. Only one of CustomObjectIdentifier
+// or AccessMethodType may be provided. Providing both results in InvalidArgsException.
+type AccessMethod struct {
+	_ struct{} `type:"structure"`
+
+	// Specifies the AccessMethod.
+	AccessMethodType *string `type:"string" enum:"AccessMethodType"`
+
+	// An object identifier (OID) specifying the AccessMethod. The OID must satisfy
+	// the regular expression shown below. For more information, see NIST's definition
+	// of Object Identifier (OID) (https://csrc.nist.gov/glossary/term/Object_Identifier).
+	CustomObjectIdentifier *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AccessMethod) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AccessMethod) GoString() string {
+	return s.String()
+}
+
+// SetAccessMethodType sets the AccessMethodType field's value.
+func (s *AccessMethod) SetAccessMethodType(v string) *AccessMethod {
+	s.AccessMethodType = &v
+	return s
+}
+
+// SetCustomObjectIdentifier sets the CustomObjectIdentifier field's value.
+func (s *AccessMethod) SetCustomObjectIdentifier(v string) *AccessMethod {
+	s.CustomObjectIdentifier = &v
+	return s
+}
+
+// Contains X.509 certificate information to be placed in an issued certificate.
+// An APIPassthrough or APICSRPassthrough template variant must be selected,
+// or else this parameter is ignored.
+//
+// If conflicting or duplicate certificate information is supplied from other
+// sources, ACM Private CA applies order of operation rules (https://docs.aws.amazon.com/acm-pca/latest/userguide/UsingTemplates.html#template-order-of-operations)
+// to determine what information is used.
+type ApiPassthrough struct {
+	_ struct{} `type:"structure"`
+
+	// Specifies X.509 extension information for a certificate.
+	Extensions *Extensions `type:"structure"`
+
+	// Contains information about the certificate subject. The Subject field in
+	// the certificate identifies the entity that owns or controls the public key
+	// in the certificate. The entity can be a user, computer, device, or service.
+	// The Subject must contain an X.500 distinguished name (DN). A DN is a sequence
+	// of relative distinguished names (RDNs). The RDNs are separated by commas
+	// in the certificate.
+	Subject *ASN1Subject `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ApiPassthrough) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ApiPassthrough) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ApiPassthrough) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ApiPassthrough"}
+	if s.Extensions != nil {
+		if err := s.Extensions.Validate(); err != nil {
+			invalidParams.AddNested("Extensions", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Subject != nil {
+		if err := s.Subject.Validate(); err != nil {
+			invalidParams.AddNested("Subject", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetExtensions sets the Extensions field's value.
+func (s *ApiPassthrough) SetExtensions(v *Extensions) *ApiPassthrough {
+	s.Extensions = v
+	return s
+}
+
+// SetSubject sets the Subject field's value.
+func (s *ApiPassthrough) SetSubject(v *ASN1Subject) *ApiPassthrough {
+	s.Subject = v
+	return s
+}
+
 // Contains information about your private certificate authority (CA). Your
 // private CA can issue and revoke X.509 digital certificates. Digital certificates
 // verify that the entity named in the certificate Subject field owns or controls
 // the public key contained in the Subject Public Key Info field. Call the CreateCertificateAuthority
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html)
 // action to create your private CA. You must then call the GetCertificateAuthorityCertificate
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_GetCertificateAuthorityCertificate.html)
 // action to retrieve a private CA certificate signing request (CSR). Sign the
 // CSR with your ACM Private CA-hosted or on-premises root or subordinate CA
-// certificate. Call the ImportCertificateAuthorityCertificate action to import
-// the signed certificate into AWS Certificate Manager (ACM).
+// certificate. Call the ImportCertificateAuthorityCertificate (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ImportCertificateAuthorityCertificate.html)
+// action to import the signed certificate into AWS Certificate Manager (ACM).
 type CertificateAuthority struct {
 	_ struct{} `type:"structure"`
 
@@ -2391,6 +3121,18 @@ type CertificateAuthority struct {
 	// Reason the request to create your private CA failed.
 	FailureReason *string `type:"string" enum:"FailureReason"`
 
+	// Defines a cryptographic key management compliance standard used for handling
+	// CA keys.
+	//
+	// Default: FIPS_140_2_LEVEL_3_OR_HIGHER
+	//
+	// Note: AWS Region ap-northeast-3 supports only FIPS_140_2_LEVEL_2_OR_HIGHER.
+	// You must explicitly specify this parameter and value when creating a CA in
+	// that Region. Specifying a different value (or no value) results in an InvalidArgsException
+	// with the message "A certificate authority cannot be created in this region
+	// with the specified security standard."
+	KeyStorageSecurityStandard *string `type:"string" enum:"KeyStorageSecurityStandard"`
+
 	// Date and time at which your private CA was last updated.
 	LastStateChangeAt *time.Time `type:"timestamp"`
 
@@ -2400,13 +3142,18 @@ type CertificateAuthority struct {
 	// Date and time before which your private CA certificate is not valid.
 	NotBefore *time.Time `type:"timestamp"`
 
+	// The AWS account ID that owns the certificate authority.
+	OwnerAccount *string `min:"12" type:"string"`
+
 	// The period during which a deleted CA can be restored. For more information,
 	// see the PermanentDeletionTimeInDays parameter of the DeleteCertificateAuthorityRequest
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_DeleteCertificateAuthorityRequest.html)
 	// action.
 	RestorableUntil *time.Time `type:"timestamp"`
 
-	// Information about the certificate revocation list (CRL) created and maintained
-	// by your private CA.
+	// Information about the Online Certificate Status Protocol (OCSP) configuration
+	// or certificate revocation list (CRL) created and maintained by your private
+	// CA.
 	RevocationConfiguration *RevocationConfiguration `type:"structure"`
 
 	// Serial number of your private CA.
@@ -2419,12 +3166,20 @@ type CertificateAuthority struct {
 	Type *string `type:"string" enum:"CertificateAuthorityType"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CertificateAuthority) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CertificateAuthority) GoString() string {
 	return s.String()
 }
@@ -2453,6 +3208,12 @@ func (s *CertificateAuthority) SetFailureReason(v string) *CertificateAuthority 
 	return s
 }
 
+// SetKeyStorageSecurityStandard sets the KeyStorageSecurityStandard field's value.
+func (s *CertificateAuthority) SetKeyStorageSecurityStandard(v string) *CertificateAuthority {
+	s.KeyStorageSecurityStandard = &v
+	return s
+}
+
 // SetLastStateChangeAt sets the LastStateChangeAt field's value.
 func (s *CertificateAuthority) SetLastStateChangeAt(v time.Time) *CertificateAuthority {
 	s.LastStateChangeAt = &v
@@ -2468,6 +3229,12 @@ func (s *CertificateAuthority) SetNotAfter(v time.Time) *CertificateAuthority {
 // SetNotBefore sets the NotBefore field's value.
 func (s *CertificateAuthority) SetNotBefore(v time.Time) *CertificateAuthority {
 	s.NotBefore = &v
+	return s
+}
+
+// SetOwnerAccount sets the OwnerAccount field's value.
+func (s *CertificateAuthority) SetOwnerAccount(v string) *CertificateAuthority {
+	s.OwnerAccount = &v
 	return s
 }
 
@@ -2506,9 +3273,14 @@ func (s *CertificateAuthority) SetType(v string) *CertificateAuthority {
 // the key pair that your private CA creates when it issues a certificate. It
 // also includes the signature algorithm that it uses when issuing certificates,
 // and its X.500 distinguished name. You must specify this information when
-// you call the CreateCertificateAuthority action.
+// you call the CreateCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html)
+// action.
 type CertificateAuthorityConfiguration struct {
 	_ struct{} `type:"structure"`
+
+	// Specifies information to be added to the extension section of the certificate
+	// signing request (CSR).
+	CsrExtensions *CsrExtensions `type:"structure"`
 
 	// Type of the public key algorithm and size, in bits, of the key pair that
 	// your CA creates when it issues a certificate. When you create a subordinate
@@ -2518,6 +3290,9 @@ type CertificateAuthorityConfiguration struct {
 	KeyAlgorithm *string `type:"string" required:"true" enum:"KeyAlgorithm"`
 
 	// Name of the algorithm your private CA uses to sign certificate requests.
+	//
+	// This parameter should not be confused with the SigningAlgorithm parameter
+	// used to sign certificates when they are issued.
 	//
 	// SigningAlgorithm is a required field
 	SigningAlgorithm *string `type:"string" required:"true" enum:"SigningAlgorithm"`
@@ -2529,12 +3304,20 @@ type CertificateAuthorityConfiguration struct {
 	Subject *ASN1Subject `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CertificateAuthorityConfiguration) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CertificateAuthorityConfiguration) GoString() string {
 	return s.String()
 }
@@ -2551,11 +3334,27 @@ func (s *CertificateAuthorityConfiguration) Validate() error {
 	if s.Subject == nil {
 		invalidParams.Add(request.NewErrParamRequired("Subject"))
 	}
+	if s.CsrExtensions != nil {
+		if err := s.CsrExtensions.Validate(); err != nil {
+			invalidParams.AddNested("CsrExtensions", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Subject != nil {
+		if err := s.Subject.Validate(); err != nil {
+			invalidParams.AddNested("Subject", err.(request.ErrInvalidParams))
+		}
+	}
 
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetCsrExtensions sets the CsrExtensions field's value.
+func (s *CertificateAuthorityConfiguration) SetCsrExtensions(v *CsrExtensions) *CertificateAuthorityConfiguration {
+	s.CsrExtensions = v
+	return s
 }
 
 // SetKeyAlgorithm sets the KeyAlgorithm field's value.
@@ -2585,12 +3384,20 @@ type CertificateMismatchException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CertificateMismatchException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CertificateMismatchException) GoString() string {
 	return s.String()
 }
@@ -2641,12 +3448,20 @@ type ConcurrentModificationException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ConcurrentModificationException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ConcurrentModificationException) GoString() string {
 	return s.String()
 }
@@ -2707,15 +3522,23 @@ type CreateCertificateAuthorityAuditReportInput struct {
 	// The name of the S3 bucket that will contain the audit report.
 	//
 	// S3BucketName is a required field
-	S3BucketName *string `type:"string" required:"true"`
+	S3BucketName *string `min:"3" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCertificateAuthorityAuditReportInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCertificateAuthorityAuditReportInput) GoString() string {
 	return s.String()
 }
@@ -2734,6 +3557,9 @@ func (s *CreateCertificateAuthorityAuditReportInput) Validate() error {
 	}
 	if s.S3BucketName == nil {
 		invalidParams.Add(request.NewErrParamRequired("S3BucketName"))
+	}
+	if s.S3BucketName != nil && len(*s.S3BucketName) < 3 {
+		invalidParams.Add(request.NewErrParamMinLen("S3BucketName", 3))
 	}
 
 	if invalidParams.Len() > 0 {
@@ -2770,12 +3596,20 @@ type CreateCertificateAuthorityAuditReportOutput struct {
 	S3Key *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCertificateAuthorityAuditReportOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCertificateAuthorityAuditReportOutput) GoString() string {
 	return s.String()
 }
@@ -2806,35 +3640,55 @@ type CreateCertificateAuthorityInput struct {
 	// CertificateAuthorityType is a required field
 	CertificateAuthorityType *string `type:"string" required:"true" enum:"CertificateAuthorityType"`
 
-	// Alphanumeric string that can be used to distinguish between calls to CreateCertificateAuthority.
-	// Idempotency tokens time out after five minutes. Therefore, if you call CreateCertificateAuthority
-	// multiple times with the same idempotency token within a five minute period,
-	// ACM Private CA recognizes that you are requesting only one certificate. As
-	// a result, ACM Private CA issues only one. If you change the idempotency token
-	// for each call, however, ACM Private CA recognizes that you are requesting
-	// multiple certificates.
+	// Custom string that can be used to distinguish between calls to the CreateCertificateAuthority
+	// action. Idempotency tokens for CreateCertificateAuthority time out after
+	// five minutes. Therefore, if you call CreateCertificateAuthority multiple
+	// times with the same idempotency token within five minutes, ACM Private CA
+	// recognizes that you are requesting only certificate authority and will issue
+	// only one. If you change the idempotency token for each call, PCA recognizes
+	// that you are requesting multiple certificate authorities.
 	IdempotencyToken *string `min:"1" type:"string"`
 
-	// Contains a Boolean value that you can use to enable a certification revocation
-	// list (CRL) for the CA, the name of the S3 bucket to which ACM Private CA
-	// will write the CRL, and an optional CNAME alias that you can use to hide
-	// the name of your bucket in the CRL Distribution Points extension of your
-	// CA certificate. For more information, see the CrlConfiguration structure.
+	// Specifies a cryptographic key management compliance standard used for handling
+	// CA keys.
+	//
+	// Default: FIPS_140_2_LEVEL_3_OR_HIGHER
+	//
+	// Note: FIPS_140_2_LEVEL_3_OR_HIGHER is not supported in Region ap-northeast-3.
+	// When creating a CA in the ap-northeast-3, you must provide FIPS_140_2_LEVEL_2_OR_HIGHER
+	// as the argument for KeyStorageSecurityStandard. Failure to do this results
+	// in an InvalidArgsException with the message, "A certificate authority cannot
+	// be created in this region with the specified security standard."
+	KeyStorageSecurityStandard *string `type:"string" enum:"KeyStorageSecurityStandard"`
+
+	// Contains information to enable Online Certificate Status Protocol (OCSP)
+	// support, to enable a certificate revocation list (CRL), to enable both, or
+	// to enable neither. The default is for both certificate validation mechanisms
+	// to be disabled. For more information, see the OcspConfiguration (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_OcspConfiguration.html)
+	// and CrlConfiguration (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CrlConfiguration.html)
+	// types.
 	RevocationConfiguration *RevocationConfiguration `type:"structure"`
 
 	// Key-value pairs that will be attached to the new private CA. You can associate
-	// up to 50 tags with a private CA. For information using tags with
-	//
-	// IAM to manage permissions, see Controlling Access Using IAM Tags (https://docs.aws.amazon.com/IAM/latest/UserGuide/access_iam-tags.html).
+	// up to 50 tags with a private CA. For information using tags with IAM to manage
+	// permissions, see Controlling Access Using IAM Tags (https://docs.aws.amazon.com/IAM/latest/UserGuide/access_iam-tags.html).
 	Tags []*Tag `min:"1" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCertificateAuthorityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCertificateAuthorityInput) GoString() string {
 	return s.String()
 }
@@ -2899,6 +3753,12 @@ func (s *CreateCertificateAuthorityInput) SetIdempotencyToken(v string) *CreateC
 	return s
 }
 
+// SetKeyStorageSecurityStandard sets the KeyStorageSecurityStandard field's value.
+func (s *CreateCertificateAuthorityInput) SetKeyStorageSecurityStandard(v string) *CreateCertificateAuthorityInput {
+	s.KeyStorageSecurityStandard = &v
+	return s
+}
+
 // SetRevocationConfiguration sets the RevocationConfiguration field's value.
 func (s *CreateCertificateAuthorityInput) SetRevocationConfiguration(v *RevocationConfiguration) *CreateCertificateAuthorityInput {
 	s.RevocationConfiguration = v
@@ -2921,12 +3781,20 @@ type CreateCertificateAuthorityOutput struct {
 	CertificateAuthorityArn *string `min:"5" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCertificateAuthorityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCertificateAuthorityOutput) GoString() string {
 	return s.String()
 }
@@ -2947,8 +3815,8 @@ type CreatePermissionInput struct {
 	Actions []*string `min:"1" type:"list" required:"true"`
 
 	// The Amazon Resource Name (ARN) of the CA that grants the permissions. You
-	// can find the ARN by calling the ListCertificateAuthorities action. This must
-	// have the following form:
+	// can find the ARN by calling the ListCertificateAuthorities (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListCertificateAuthorities.html)
+	// action. This must have the following form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012 .
 	//
@@ -2965,12 +3833,20 @@ type CreatePermissionInput struct {
 	SourceAccount *string `min:"12" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePermissionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePermissionInput) GoString() string {
 	return s.String()
 }
@@ -3031,12 +3907,20 @@ type CreatePermissionOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePermissionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePermissionOutput) GoString() string {
 	return s.String()
 }
@@ -3051,12 +3935,19 @@ func (s CreatePermissionOutput) GoString() string {
 // Points extension of each certificate it issues. Your S3 bucket policy must
 // give write permission to ACM Private CA.
 //
+// ACM Private CA assets that are stored in Amazon S3 can be protected with
+// encryption. For more information, see Encrypting Your CRLs (https://docs.aws.amazon.com/acm-pca/latest/userguide/PcaCreateCa.html#crl-encryption).
+//
 // Your private CA uses the value in the ExpirationInDays parameter to calculate
 // the nextUpdate field in the CRL. The CRL is refreshed at 1/2 the age of next
 // update or when a certificate is revoked. When a certificate is revoked, it
 // is recorded in the next CRL that is generated and in the next audit report.
 // Only time valid certificates are listed in the CRL. Expired certificates
 // are not included.
+//
+// A CRL is typically updated approximately 30 minutes after a certificate is
+// revoked. If for any reason a CRL update fails, ACM Private CA makes further
+// attempts every 15 minutes.
 //
 // CRLs contain the following fields:
 //
@@ -3091,6 +3982,9 @@ func (s CreatePermissionOutput) GoString() string {
 // can use the following OpenSSL command to list a CRL.
 //
 // openssl crl -inform DER -text -in crl_path -noout
+//
+// For more information, see Planning a certificate revocation list (CRL) (https://docs.aws.amazon.com/acm-pca/latest/userguide/crl-planning.html)
+// in the AWS Certificate Manager Private Certificate Authority (PCA) User Guide
 type CrlConfiguration struct {
 	_ struct{} `type:"structure"`
 
@@ -3101,30 +3995,57 @@ type CrlConfiguration struct {
 
 	// Boolean value that specifies whether certificate revocation lists (CRLs)
 	// are enabled. You can use this value to enable certificate revocation for
-	// a new CA when you call the CreateCertificateAuthority action or for an existing
-	// CA when you call the UpdateCertificateAuthority action.
+	// a new CA when you call the CreateCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html)
+	// action or for an existing CA when you call the UpdateCertificateAuthority
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_UpdateCertificateAuthority.html)
+	// action.
 	//
 	// Enabled is a required field
 	Enabled *bool `type:"boolean" required:"true"`
 
-	// Number of days until a certificate expires.
+	// Validity period of the CRL in days.
 	ExpirationInDays *int64 `min:"1" type:"integer"`
 
 	// Name of the S3 bucket that contains the CRL. If you do not provide a value
 	// for the CustomCname argument, the name of your S3 bucket is placed into the
 	// CRL Distribution Points extension of the issued certificate. You can change
-	// the name of your bucket by calling the UpdateCertificateAuthority action.
-	// You must specify a bucket policy that allows ACM Private CA to write the
-	// CRL to your bucket.
+	// the name of your bucket by calling the UpdateCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_UpdateCertificateAuthority.html)
+	// operation. You must specify a bucket policy (https://docs.aws.amazon.com/acm-pca/latest/userguide/PcaCreateCa.html#s3-policies)
+	// that allows ACM Private CA to write the CRL to your bucket.
 	S3BucketName *string `min:"3" type:"string"`
+
+	// Determines whether the CRL will be publicly readable or privately held in
+	// the CRL Amazon S3 bucket. If you choose PUBLIC_READ, the CRL will be accessible
+	// over the public internet. If you choose BUCKET_OWNER_FULL_CONTROL, only the
+	// owner of the CRL S3 bucket can access the CRL, and your PKI clients may need
+	// an alternative method of access.
+	//
+	// If no value is specified, the default is PUBLIC_READ.
+	//
+	// Note: This default can cause CA creation to fail in some circumstances. If
+	// you have have enabled the Block Public Access (BPA) feature in your S3 account,
+	// then you must specify the value of this parameter as BUCKET_OWNER_FULL_CONTROL,
+	// and not doing so results in an error. If you have disabled BPA in S3, then
+	// you can specify either BUCKET_OWNER_FULL_CONTROL or PUBLIC_READ as the value.
+	//
+	// For more information, see Blocking public access to the S3 bucket (https://docs.aws.amazon.com/acm-pca/latest/userguide/PcaCreateCa.html#s3-bpa).
+	S3ObjectAcl *string `type:"string" enum:"S3ObjectAcl"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CrlConfiguration) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CrlConfiguration) GoString() string {
 	return s.String()
 }
@@ -3172,10 +4093,83 @@ func (s *CrlConfiguration) SetS3BucketName(v string) *CrlConfiguration {
 	return s
 }
 
+// SetS3ObjectAcl sets the S3ObjectAcl field's value.
+func (s *CrlConfiguration) SetS3ObjectAcl(v string) *CrlConfiguration {
+	s.S3ObjectAcl = &v
+	return s
+}
+
+// Describes the certificate extensions to be added to the certificate signing
+// request (CSR).
+type CsrExtensions struct {
+	_ struct{} `type:"structure"`
+
+	// Indicates the purpose of the certificate and of the key contained in the
+	// certificate.
+	KeyUsage *KeyUsage `type:"structure"`
+
+	// For CA certificates, provides a path to additional information pertaining
+	// to the CA, such as revocation and policy. For more information, see Subject
+	// Information Access (https://tools.ietf.org/html/rfc5280#section-4.2.2.2)
+	// in RFC 5280.
+	SubjectInformationAccess []*AccessDescription `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CsrExtensions) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CsrExtensions) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CsrExtensions) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CsrExtensions"}
+	if s.SubjectInformationAccess != nil {
+		for i, v := range s.SubjectInformationAccess {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "SubjectInformationAccess", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetKeyUsage sets the KeyUsage field's value.
+func (s *CsrExtensions) SetKeyUsage(v *KeyUsage) *CsrExtensions {
+	s.KeyUsage = v
+	return s
+}
+
+// SetSubjectInformationAccess sets the SubjectInformationAccess field's value.
+func (s *CsrExtensions) SetSubjectInformationAccess(v []*AccessDescription) *CsrExtensions {
+	s.SubjectInformationAccess = v
+	return s
+}
+
 type DeleteCertificateAuthorityInput struct {
 	_ struct{} `type:"structure"`
 
-	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority.
+	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html).
 	// This must have the following form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012 .
@@ -3188,12 +4182,20 @@ type DeleteCertificateAuthorityInput struct {
 	PermanentDeletionTimeInDays *int64 `min:"7" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCertificateAuthorityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCertificateAuthorityInput) GoString() string {
 	return s.String()
 }
@@ -3233,12 +4235,20 @@ type DeleteCertificateAuthorityOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCertificateAuthorityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCertificateAuthorityOutput) GoString() string {
 	return s.String()
 }
@@ -3247,8 +4257,8 @@ type DeletePermissionInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Number (ARN) of the private CA that issued the permissions.
-	// You can find the CA's ARN by calling the ListCertificateAuthorities action.
-	// This must have the following form:
+	// You can find the CA's ARN by calling the ListCertificateAuthorities (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListCertificateAuthorities.html)
+	// action. This must have the following form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012 .
 	//
@@ -3265,12 +4275,20 @@ type DeletePermissionInput struct {
 	SourceAccount *string `min:"12" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePermissionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePermissionInput) GoString() string {
 	return s.String()
 }
@@ -3319,13 +4337,95 @@ type DeletePermissionOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePermissionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePermissionOutput) GoString() string {
+	return s.String()
+}
+
+type DeletePolicyInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Number (ARN) of the private CA that will have its policy
+	// deleted. You can find the CA's ARN by calling the ListCertificateAuthorities
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListCertificateAuthorities.html)
+	// action. The ARN value must have the form arn:aws:acm-pca:region:account:certificate-authority/01234567-89ab-cdef-0123-0123456789ab.
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `min:"5" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeletePolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeletePolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeletePolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeletePolicyInput"}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+	if s.ResourceArn != nil && len(*s.ResourceArn) < 5 {
+		invalidParams.Add(request.NewErrParamMinLen("ResourceArn", 5))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *DeletePolicyInput) SetResourceArn(v string) *DeletePolicyInput {
+	s.ResourceArn = &v
+	return s
+}
+
+type DeletePolicyOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeletePolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeletePolicyOutput) GoString() string {
 	return s.String()
 }
 
@@ -3333,6 +4433,7 @@ type DescribeCertificateAuthorityAuditReportInput struct {
 	_ struct{} `type:"structure"`
 
 	// The report ID returned by calling the CreateCertificateAuthorityAuditReport
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthorityAuditReport.html)
 	// action.
 	//
 	// AuditReportId is a required field
@@ -3346,12 +4447,20 @@ type DescribeCertificateAuthorityAuditReportInput struct {
 	CertificateAuthorityArn *string `min:"5" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCertificateAuthorityAuditReportInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCertificateAuthorityAuditReportInput) GoString() string {
 	return s.String()
 }
@@ -3400,18 +4509,26 @@ type DescribeCertificateAuthorityAuditReportOutput struct {
 	CreatedAt *time.Time `type:"timestamp"`
 
 	// Name of the S3 bucket that contains the report.
-	S3BucketName *string `type:"string"`
+	S3BucketName *string `min:"3" type:"string"`
 
 	// S3 key that uniquely identifies the report file in your S3 bucket.
 	S3Key *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCertificateAuthorityAuditReportOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCertificateAuthorityAuditReportOutput) GoString() string {
 	return s.String()
 }
@@ -3443,7 +4560,8 @@ func (s *DescribeCertificateAuthorityAuditReportOutput) SetS3Key(v string) *Desc
 type DescribeCertificateAuthorityInput struct {
 	_ struct{} `type:"structure"`
 
-	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority.
+	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html).
 	// This must be of the form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012 .
@@ -3452,12 +4570,20 @@ type DescribeCertificateAuthorityInput struct {
 	CertificateAuthorityArn *string `min:"5" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCertificateAuthorityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCertificateAuthorityInput) GoString() string {
 	return s.String()
 }
@@ -3487,17 +4613,25 @@ func (s *DescribeCertificateAuthorityInput) SetCertificateAuthorityArn(v string)
 type DescribeCertificateAuthorityOutput struct {
 	_ struct{} `type:"structure"`
 
-	// A CertificateAuthority structure that contains information about your private
-	// CA.
+	// A CertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CertificateAuthority.html)
+	// structure that contains information about your private CA.
 	CertificateAuthority *CertificateAuthority `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCertificateAuthorityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCertificateAuthorityOutput) GoString() string {
 	return s.String()
 }
@@ -3505,6 +4639,343 @@ func (s DescribeCertificateAuthorityOutput) GoString() string {
 // SetCertificateAuthority sets the CertificateAuthority field's value.
 func (s *DescribeCertificateAuthorityOutput) SetCertificateAuthority(v *CertificateAuthority) *DescribeCertificateAuthorityOutput {
 	s.CertificateAuthority = v
+	return s
+}
+
+// Describes an Electronic Data Interchange (EDI) entity as described in as
+// defined in Subject Alternative Name (https://tools.ietf.org/html/rfc5280)
+// in RFC 5280.
+type EdiPartyName struct {
+	_ struct{} `type:"structure"`
+
+	// Specifies the name assigner.
+	NameAssigner *string `type:"string"`
+
+	// Specifies the party name.
+	//
+	// PartyName is a required field
+	PartyName *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EdiPartyName) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EdiPartyName) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *EdiPartyName) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "EdiPartyName"}
+	if s.PartyName == nil {
+		invalidParams.Add(request.NewErrParamRequired("PartyName"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetNameAssigner sets the NameAssigner field's value.
+func (s *EdiPartyName) SetNameAssigner(v string) *EdiPartyName {
+	s.NameAssigner = &v
+	return s
+}
+
+// SetPartyName sets the PartyName field's value.
+func (s *EdiPartyName) SetPartyName(v string) *EdiPartyName {
+	s.PartyName = &v
+	return s
+}
+
+// Specifies additional purposes for which the certified public key may be used
+// other than basic purposes indicated in the KeyUsage extension.
+type ExtendedKeyUsage struct {
+	_ struct{} `type:"structure"`
+
+	// Specifies a custom ExtendedKeyUsage with an object identifier (OID).
+	ExtendedKeyUsageObjectIdentifier *string `type:"string"`
+
+	// Specifies a standard ExtendedKeyUsage as defined as in RFC 5280 (https://tools.ietf.org/html/rfc5280#section-4.2.1.12).
+	ExtendedKeyUsageType *string `type:"string" enum:"ExtendedKeyUsageType"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExtendedKeyUsage) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExtendedKeyUsage) GoString() string {
+	return s.String()
+}
+
+// SetExtendedKeyUsageObjectIdentifier sets the ExtendedKeyUsageObjectIdentifier field's value.
+func (s *ExtendedKeyUsage) SetExtendedKeyUsageObjectIdentifier(v string) *ExtendedKeyUsage {
+	s.ExtendedKeyUsageObjectIdentifier = &v
+	return s
+}
+
+// SetExtendedKeyUsageType sets the ExtendedKeyUsageType field's value.
+func (s *ExtendedKeyUsage) SetExtendedKeyUsageType(v string) *ExtendedKeyUsage {
+	s.ExtendedKeyUsageType = &v
+	return s
+}
+
+// Contains X.509 extension information for a certificate.
+type Extensions struct {
+	_ struct{} `type:"structure"`
+
+	// Contains a sequence of one or more policy information terms, each of which
+	// consists of an object identifier (OID) and optional qualifiers. For more
+	// information, see NIST's definition of Object Identifier (OID) (https://csrc.nist.gov/glossary/term/Object_Identifier).
+	//
+	// In an end-entity certificate, these terms indicate the policy under which
+	// the certificate was issued and the purposes for which it may be used. In
+	// a CA certificate, these terms limit the set of policies for certification
+	// paths that include this certificate.
+	CertificatePolicies []*PolicyInformation `min:"1" type:"list"`
+
+	// Specifies additional purposes for which the certified public key may be used
+	// other than basic purposes indicated in the KeyUsage extension.
+	ExtendedKeyUsage []*ExtendedKeyUsage `min:"1" type:"list"`
+
+	// Defines one or more purposes for which the key contained in the certificate
+	// can be used. Default value for each option is false.
+	KeyUsage *KeyUsage `type:"structure"`
+
+	// The subject alternative name extension allows identities to be bound to the
+	// subject of the certificate. These identities may be included in addition
+	// to or in place of the identity in the subject field of the certificate.
+	SubjectAlternativeNames []*GeneralName `min:"1" type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Extensions) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Extensions) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Extensions) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Extensions"}
+	if s.CertificatePolicies != nil && len(s.CertificatePolicies) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CertificatePolicies", 1))
+	}
+	if s.ExtendedKeyUsage != nil && len(s.ExtendedKeyUsage) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ExtendedKeyUsage", 1))
+	}
+	if s.SubjectAlternativeNames != nil && len(s.SubjectAlternativeNames) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("SubjectAlternativeNames", 1))
+	}
+	if s.CertificatePolicies != nil {
+		for i, v := range s.CertificatePolicies {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "CertificatePolicies", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+	if s.SubjectAlternativeNames != nil {
+		for i, v := range s.SubjectAlternativeNames {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "SubjectAlternativeNames", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCertificatePolicies sets the CertificatePolicies field's value.
+func (s *Extensions) SetCertificatePolicies(v []*PolicyInformation) *Extensions {
+	s.CertificatePolicies = v
+	return s
+}
+
+// SetExtendedKeyUsage sets the ExtendedKeyUsage field's value.
+func (s *Extensions) SetExtendedKeyUsage(v []*ExtendedKeyUsage) *Extensions {
+	s.ExtendedKeyUsage = v
+	return s
+}
+
+// SetKeyUsage sets the KeyUsage field's value.
+func (s *Extensions) SetKeyUsage(v *KeyUsage) *Extensions {
+	s.KeyUsage = v
+	return s
+}
+
+// SetSubjectAlternativeNames sets the SubjectAlternativeNames field's value.
+func (s *Extensions) SetSubjectAlternativeNames(v []*GeneralName) *Extensions {
+	s.SubjectAlternativeNames = v
+	return s
+}
+
+// Describes an ASN.1 X.400 GeneralName as defined in RFC 5280 (https://tools.ietf.org/html/rfc5280).
+// Only one of the following naming options should be provided. Providing more
+// than one option results in an InvalidArgsException error.
+type GeneralName struct {
+	_ struct{} `type:"structure"`
+
+	// Contains information about the certificate subject. The Subject field in
+	// the certificate identifies the entity that owns or controls the public key
+	// in the certificate. The entity can be a user, computer, device, or service.
+	// The Subject must contain an X.500 distinguished name (DN). A DN is a sequence
+	// of relative distinguished names (RDNs). The RDNs are separated by commas
+	// in the certificate.
+	DirectoryName *ASN1Subject `type:"structure"`
+
+	// Represents GeneralName as a DNS name.
+	DnsName *string `type:"string"`
+
+	// Represents GeneralName as an EdiPartyName object.
+	EdiPartyName *EdiPartyName `type:"structure"`
+
+	// Represents GeneralName as an IPv4 or IPv6 address.
+	IpAddress *string `type:"string"`
+
+	// Represents GeneralName using an OtherName object.
+	OtherName *OtherName `type:"structure"`
+
+	// Represents GeneralName as an object identifier (OID).
+	RegisteredId *string `type:"string"`
+
+	// Represents GeneralName as an RFC 822 (https://tools.ietf.org/html/rfc822)
+	// email address.
+	Rfc822Name *string `type:"string"`
+
+	// Represents GeneralName as a URI.
+	UniformResourceIdentifier *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GeneralName) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GeneralName) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GeneralName) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GeneralName"}
+	if s.DirectoryName != nil {
+		if err := s.DirectoryName.Validate(); err != nil {
+			invalidParams.AddNested("DirectoryName", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.EdiPartyName != nil {
+		if err := s.EdiPartyName.Validate(); err != nil {
+			invalidParams.AddNested("EdiPartyName", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.OtherName != nil {
+		if err := s.OtherName.Validate(); err != nil {
+			invalidParams.AddNested("OtherName", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDirectoryName sets the DirectoryName field's value.
+func (s *GeneralName) SetDirectoryName(v *ASN1Subject) *GeneralName {
+	s.DirectoryName = v
+	return s
+}
+
+// SetDnsName sets the DnsName field's value.
+func (s *GeneralName) SetDnsName(v string) *GeneralName {
+	s.DnsName = &v
+	return s
+}
+
+// SetEdiPartyName sets the EdiPartyName field's value.
+func (s *GeneralName) SetEdiPartyName(v *EdiPartyName) *GeneralName {
+	s.EdiPartyName = v
+	return s
+}
+
+// SetIpAddress sets the IpAddress field's value.
+func (s *GeneralName) SetIpAddress(v string) *GeneralName {
+	s.IpAddress = &v
+	return s
+}
+
+// SetOtherName sets the OtherName field's value.
+func (s *GeneralName) SetOtherName(v *OtherName) *GeneralName {
+	s.OtherName = v
+	return s
+}
+
+// SetRegisteredId sets the RegisteredId field's value.
+func (s *GeneralName) SetRegisteredId(v string) *GeneralName {
+	s.RegisteredId = &v
+	return s
+}
+
+// SetRfc822Name sets the Rfc822Name field's value.
+func (s *GeneralName) SetRfc822Name(v string) *GeneralName {
+	s.Rfc822Name = &v
+	return s
+}
+
+// SetUniformResourceIdentifier sets the UniformResourceIdentifier field's value.
+func (s *GeneralName) SetUniformResourceIdentifier(v string) *GeneralName {
+	s.UniformResourceIdentifier = &v
 	return s
 }
 
@@ -3519,12 +4990,20 @@ type GetCertificateAuthorityCertificateInput struct {
 	CertificateAuthorityArn *string `min:"5" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateAuthorityCertificateInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateAuthorityCertificateInput) GoString() string {
 	return s.String()
 }
@@ -3558,18 +5037,26 @@ type GetCertificateAuthorityCertificateOutput struct {
 	Certificate *string `type:"string"`
 
 	// Base64-encoded certificate chain that includes any intermediate certificates
-	// and chains up to root on-premises certificate that you used to sign your
-	// private CA certificate. The chain does not include your private CA certificate.
-	// If this is a root CA, the value will be null.
+	// and chains up to root certificate that you used to sign your private CA certificate.
+	// The chain does not include your private CA certificate. If this is a root
+	// CA, the value will be null.
 	CertificateChain *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateAuthorityCertificateOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateAuthorityCertificateOutput) GoString() string {
 	return s.String()
 }
@@ -3590,6 +5077,7 @@ type GetCertificateAuthorityCsrInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) that was returned when you called the CreateCertificateAuthority
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html)
 	// action. This must be of the form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012
@@ -3598,12 +5086,20 @@ type GetCertificateAuthorityCsrInput struct {
 	CertificateAuthorityArn *string `min:"5" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateAuthorityCsrInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateAuthorityCsrInput) GoString() string {
 	return s.String()
 }
@@ -3638,12 +5134,20 @@ type GetCertificateAuthorityCsrOutput struct {
 	Csr *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateAuthorityCsrOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateAuthorityCsrOutput) GoString() string {
 	return s.String()
 }
@@ -3665,7 +5169,8 @@ type GetCertificateInput struct {
 	// CertificateArn is a required field
 	CertificateArn *string `min:"5" type:"string" required:"true"`
 
-	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority.
+	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html).
 	// This must be of the form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012 .
@@ -3674,12 +5179,20 @@ type GetCertificateInput struct {
 	CertificateAuthorityArn *string `min:"5" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateInput) GoString() string {
 	return s.String()
 }
@@ -3724,17 +5237,25 @@ type GetCertificateOutput struct {
 	// The base64 PEM-encoded certificate specified by the CertificateArn parameter.
 	Certificate *string `type:"string"`
 
-	// The base64 PEM-encoded certificate chain that chains up to the on-premises
-	// root CA certificate that you used to sign your private CA certificate.
+	// The base64 PEM-encoded certificate chain that chains up to the root CA certificate
+	// that you used to sign your private CA certificate.
 	CertificateChain *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCertificateOutput) GoString() string {
 	return s.String()
 }
@@ -3751,18 +5272,100 @@ func (s *GetCertificateOutput) SetCertificateChain(v string) *GetCertificateOutp
 	return s
 }
 
+type GetPolicyInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Number (ARN) of the private CA that will have its policy
+	// retrieved. You can find the CA's ARN by calling the ListCertificateAuthorities
+	// action.
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `min:"5" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetPolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetPolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetPolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetPolicyInput"}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+	if s.ResourceArn != nil && len(*s.ResourceArn) < 5 {
+		invalidParams.Add(request.NewErrParamMinLen("ResourceArn", 5))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *GetPolicyInput) SetResourceArn(v string) *GetPolicyInput {
+	s.ResourceArn = &v
+	return s
+}
+
+type GetPolicyOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The policy attached to the private CA as a JSON document.
+	Policy *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetPolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetPolicyOutput) GoString() string {
+	return s.String()
+}
+
+// SetPolicy sets the Policy field's value.
+func (s *GetPolicyOutput) SetPolicy(v string) *GetPolicyOutput {
+	s.Policy = &v
+	return s
+}
+
 type ImportCertificateAuthorityCertificateInput struct {
 	_ struct{} `type:"structure"`
 
 	// The PEM-encoded certificate for a private CA. This may be a self-signed certificate
 	// in the case of a root CA, or it may be signed by another CA that you control.
-	//
 	// Certificate is automatically base64 encoded/decoded by the SDK.
 	//
 	// Certificate is a required field
 	Certificate []byte `min:"1" type:"blob" required:"true"`
 
-	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority.
+	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html).
 	// This must be of the form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012
@@ -3777,17 +5380,24 @@ type ImportCertificateAuthorityCertificateInput struct {
 	//
 	// This parameter must be supplied when you import a subordinate CA. When you
 	// import a root CA, there is no chain.
-	//
 	// CertificateChain is automatically base64 encoded/decoded by the SDK.
 	CertificateChain []byte `type:"blob"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ImportCertificateAuthorityCertificateInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ImportCertificateAuthorityCertificateInput) GoString() string {
 	return s.String()
 }
@@ -3836,12 +5446,20 @@ type ImportCertificateAuthorityCertificateOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ImportCertificateAuthorityCertificateOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ImportCertificateAuthorityCertificateOutput) GoString() string {
 	return s.String()
 }
@@ -3854,12 +5472,20 @@ type InvalidArgsException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidArgsException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidArgsException) GoString() string {
 	return s.String()
 }
@@ -3910,12 +5536,20 @@ type InvalidArnException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidArnException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidArnException) GoString() string {
 	return s.String()
 }
@@ -3959,7 +5593,7 @@ func (s *InvalidArnException) RequestID() string {
 }
 
 // The token specified in the NextToken argument is not valid. Use the token
-// returned from your previous call to ListCertificateAuthorities.
+// returned from your previous call to ListCertificateAuthorities (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListCertificateAuthorities.html).
 type InvalidNextTokenException struct {
 	_            struct{}                  `type:"structure"`
 	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
@@ -3967,12 +5601,20 @@ type InvalidNextTokenException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidNextTokenException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidNextTokenException) GoString() string {
 	return s.String()
 }
@@ -4015,8 +5657,9 @@ func (s *InvalidNextTokenException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
-// The S3 bucket policy is not valid. The policy must give ACM Private CA rights
-// to read from and write to the bucket and find the bucket location.
+// The resource policy is invalid or is missing a required statement. For general
+// information about IAM policy and statement structure, see Overview of JSON
+// Policies (https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#access_policies-json).
 type InvalidPolicyException struct {
 	_            struct{}                  `type:"structure"`
 	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
@@ -4024,12 +5667,20 @@ type InvalidPolicyException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidPolicyException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidPolicyException) GoString() string {
 	return s.String()
 }
@@ -4080,12 +5731,20 @@ type InvalidRequestException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidRequestException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidRequestException) GoString() string {
 	return s.String()
 }
@@ -4128,8 +5787,7 @@ func (s *InvalidRequestException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
-// The private CA is in a state during which a report or certificate cannot
-// be generated.
+// The state of the private CA does not allow this action to occur.
 type InvalidStateException struct {
 	_            struct{}                  `type:"structure"`
 	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
@@ -4137,12 +5795,20 @@ type InvalidStateException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidStateException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidStateException) GoString() string {
 	return s.String()
 }
@@ -4194,12 +5860,20 @@ type InvalidTagException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidTagException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidTagException) GoString() string {
 	return s.String()
 }
@@ -4245,7 +5919,18 @@ func (s *InvalidTagException) RequestID() string {
 type IssueCertificateInput struct {
 	_ struct{} `type:"structure"`
 
-	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority.
+	// Specifies X.509 certificate information to be included in the issued certificate.
+	// An APIPassthrough or APICSRPassthrough template variant must be selected,
+	// or else this parameter is ignored. For more information about using these
+	// templates, see Understanding Certificate Templates (https://docs.aws.amazon.com/acm-pca/latest/userguide/UsingTemplates.html).
+	//
+	// If conflicting or duplicate certificate information is supplied during certificate
+	// issuance, ACM Private CA applies order of operation rules (https://docs.aws.amazon.com/acm-pca/latest/userguide/UsingTemplates.html#template-order-of-operations)
+	// to determine what information is used.
+	ApiPassthrough *ApiPassthrough `type:"structure"`
+
+	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html).
 	// This must be of the form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012
@@ -4254,72 +5939,107 @@ type IssueCertificateInput struct {
 	CertificateAuthorityArn *string `min:"5" type:"string" required:"true"`
 
 	// The certificate signing request (CSR) for the certificate you want to issue.
-	// You can use the following OpenSSL command to create the CSR and a 2048 bit
-	// RSA private key.
+	// As an example, you can use the following OpenSSL command to create the CSR
+	// and a 2048 bit RSA private key.
 	//
 	// openssl req -new -newkey rsa:2048 -days 365 -keyout private/test_cert_priv_key.pem
 	// -out csr/test_cert_.csr
 	//
-	// If you have a configuration file, you can use the following OpenSSL command.
-	// The usr_cert block in the configuration file contains your X509 version 3
-	// extensions.
+	// If you have a configuration file, you can then use the following OpenSSL
+	// command. The usr_cert block in the configuration file contains your X509
+	// version 3 extensions.
 	//
 	// openssl req -new -config openssl_rsa.cnf -extensions usr_cert -newkey rsa:2048
 	// -days -365 -keyout private/test_cert_priv_key.pem -out csr/test_cert_.csr
 	//
+	// Note: A CSR must provide either a subject name or a subject alternative name
+	// or the request will be rejected.
 	// Csr is automatically base64 encoded/decoded by the SDK.
 	//
 	// Csr is a required field
 	Csr []byte `min:"1" type:"blob" required:"true"`
 
-	// Custom string that can be used to distinguish between calls to the IssueCertificate
-	// action. Idempotency tokens time out after one hour. Therefore, if you call
-	// IssueCertificate multiple times with the same idempotency token within 5
-	// minutes, ACM Private CA recognizes that you are requesting only one certificate
-	// and will issue only one. If you change the idempotency token for each call,
-	// PCA recognizes that you are requesting multiple certificates.
+	// Alphanumeric string that can be used to distinguish between calls to the
+	// IssueCertificate action. Idempotency tokens for IssueCertificate time out
+	// after one minute. Therefore, if you call IssueCertificate multiple times
+	// with the same idempotency token within one minute, ACM Private CA recognizes
+	// that you are requesting only one certificate and will issue only one. If
+	// you change the idempotency token for each call, PCA recognizes that you are
+	// requesting multiple certificates.
 	IdempotencyToken *string `min:"1" type:"string"`
 
 	// The name of the algorithm that will be used to sign the certificate to be
 	// issued.
+	//
+	// This parameter should not be confused with the SigningAlgorithm parameter
+	// used to sign a CSR in the CreateCertificateAuthority action.
 	//
 	// SigningAlgorithm is a required field
 	SigningAlgorithm *string `type:"string" required:"true" enum:"SigningAlgorithm"`
 
 	// Specifies a custom configuration template to use when issuing a certificate.
 	// If this parameter is not provided, ACM Private CA defaults to the EndEntityCertificate/V1
-	// template.
+	// template. For CA certificates, you should choose the shortest path length
+	// that meets your needs. The path length is indicated by the PathLenN portion
+	// of the ARN, where N is the CA depth (https://docs.aws.amazon.com/acm-pca/latest/userguide/PcaTerms.html#terms-cadepth).
 	//
-	// The following service-owned TemplateArn values are supported by ACM Private
-	// CA:
+	// Note: The CA depth configured on a subordinate CA certificate must not exceed
+	// the limit set by its parents in the CA hierarchy.
 	//
-	//    * arn:aws:acm-pca:::template/EndEntityCertificate/V1
-	//
-	//    * arn:aws:acm-pca:::template/SubordinateCACertificate_PathLen0/V1
-	//
-	//    * arn:aws:acm-pca:::template/SubordinateCACertificate_PathLen1/V1
-	//
-	//    * arn:aws:acm-pca:::template/SubordinateCACertificate_PathLen2/V1
-	//
-	//    * arn:aws:acm-pca:::template/SubordinateCACertificate_PathLen3/V1
-	//
-	//    * arn:aws:acm-pca:::template/RootCACertificate/V1
-	//
-	// For more information, see Using Templates (https://docs.aws.amazon.com/acm-pca/latest/userguide/UsingTemplates.html).
+	// For a list of TemplateArn values supported by ACM Private CA, see Understanding
+	// Certificate Templates (https://docs.aws.amazon.com/acm-pca/latest/userguide/UsingTemplates.html).
 	TemplateArn *string `min:"5" type:"string"`
 
-	// The type of the validity period.
+	// Information describing the end of the validity period of the certificate.
+	// This parameter sets the “Not After” date for the certificate.
+	//
+	// Certificate validity is the period of time during which a certificate is
+	// valid. Validity can be expressed as an explicit date and time when the certificate
+	// expires, or as a span of time after issuance, stated in days, months, or
+	// years. For more information, see Validity (https://tools.ietf.org/html/rfc5280#section-4.1.2.5)
+	// in RFC 5280.
+	//
+	// This value is unaffected when ValidityNotBefore is also specified. For example,
+	// if Validity is set to 20 days in the future, the certificate will expire
+	// 20 days from issuance time regardless of the ValidityNotBefore value.
+	//
+	// The end of the validity period configured on a certificate must not exceed
+	// the limit set on its parents in the CA hierarchy.
 	//
 	// Validity is a required field
 	Validity *Validity `type:"structure" required:"true"`
+
+	// Information describing the start of the validity period of the certificate.
+	// This parameter sets the “Not Before" date for the certificate.
+	//
+	// By default, when issuing a certificate, ACM Private CA sets the "Not Before"
+	// date to the issuance time minus 60 minutes. This compensates for clock inconsistencies
+	// across computer systems. The ValidityNotBefore parameter can be used to customize
+	// the “Not Before” value.
+	//
+	// Unlike the Validity parameter, the ValidityNotBefore parameter is optional.
+	//
+	// The ValidityNotBefore value is expressed as an explicit date and time, using
+	// the Validity type value ABSOLUTE. For more information, see Validity (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_Validity.html)
+	// in this API reference and Validity (https://tools.ietf.org/html/rfc5280#section-4.1.2.5)
+	// in RFC 5280.
+	ValidityNotBefore *Validity `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s IssueCertificateInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s IssueCertificateInput) GoString() string {
 	return s.String()
 }
@@ -4351,9 +6071,19 @@ func (s *IssueCertificateInput) Validate() error {
 	if s.Validity == nil {
 		invalidParams.Add(request.NewErrParamRequired("Validity"))
 	}
+	if s.ApiPassthrough != nil {
+		if err := s.ApiPassthrough.Validate(); err != nil {
+			invalidParams.AddNested("ApiPassthrough", err.(request.ErrInvalidParams))
+		}
+	}
 	if s.Validity != nil {
 		if err := s.Validity.Validate(); err != nil {
 			invalidParams.AddNested("Validity", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ValidityNotBefore != nil {
+		if err := s.ValidityNotBefore.Validate(); err != nil {
+			invalidParams.AddNested("ValidityNotBefore", err.(request.ErrInvalidParams))
 		}
 	}
 
@@ -4361,6 +6091,12 @@ func (s *IssueCertificateInput) Validate() error {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetApiPassthrough sets the ApiPassthrough field's value.
+func (s *IssueCertificateInput) SetApiPassthrough(v *ApiPassthrough) *IssueCertificateInput {
+	s.ApiPassthrough = v
+	return s
 }
 
 // SetCertificateAuthorityArn sets the CertificateAuthorityArn field's value.
@@ -4399,6 +6135,12 @@ func (s *IssueCertificateInput) SetValidity(v *Validity) *IssueCertificateInput 
 	return s
 }
 
+// SetValidityNotBefore sets the ValidityNotBefore field's value.
+func (s *IssueCertificateInput) SetValidityNotBefore(v *Validity) *IssueCertificateInput {
+	s.ValidityNotBefore = v
+	return s
+}
+
 type IssueCertificateOutput struct {
 	_ struct{} `type:"structure"`
 
@@ -4409,12 +6151,20 @@ type IssueCertificateOutput struct {
 	CertificateArn *string `min:"5" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s IssueCertificateOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s IssueCertificateOutput) GoString() string {
 	return s.String()
 }
@@ -4425,8 +6175,113 @@ func (s *IssueCertificateOutput) SetCertificateArn(v string) *IssueCertificateOu
 	return s
 }
 
-// An ACM Private CA limit has been exceeded. See the exception message returned
-// to determine the limit that was exceeded.
+// Defines one or more purposes for which the key contained in the certificate
+// can be used. Default value for each option is false.
+type KeyUsage struct {
+	_ struct{} `type:"structure"`
+
+	// Key can be used to sign CRLs.
+	CRLSign *bool `type:"boolean"`
+
+	// Key can be used to decipher data.
+	DataEncipherment *bool `type:"boolean"`
+
+	// Key can be used only to decipher data.
+	DecipherOnly *bool `type:"boolean"`
+
+	// Key can be used for digital signing.
+	DigitalSignature *bool `type:"boolean"`
+
+	// Key can be used only to encipher data.
+	EncipherOnly *bool `type:"boolean"`
+
+	// Key can be used in a key-agreement protocol.
+	KeyAgreement *bool `type:"boolean"`
+
+	// Key can be used to sign certificates.
+	KeyCertSign *bool `type:"boolean"`
+
+	// Key can be used to encipher data.
+	KeyEncipherment *bool `type:"boolean"`
+
+	// Key can be used for non-repudiation.
+	NonRepudiation *bool `type:"boolean"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KeyUsage) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KeyUsage) GoString() string {
+	return s.String()
+}
+
+// SetCRLSign sets the CRLSign field's value.
+func (s *KeyUsage) SetCRLSign(v bool) *KeyUsage {
+	s.CRLSign = &v
+	return s
+}
+
+// SetDataEncipherment sets the DataEncipherment field's value.
+func (s *KeyUsage) SetDataEncipherment(v bool) *KeyUsage {
+	s.DataEncipherment = &v
+	return s
+}
+
+// SetDecipherOnly sets the DecipherOnly field's value.
+func (s *KeyUsage) SetDecipherOnly(v bool) *KeyUsage {
+	s.DecipherOnly = &v
+	return s
+}
+
+// SetDigitalSignature sets the DigitalSignature field's value.
+func (s *KeyUsage) SetDigitalSignature(v bool) *KeyUsage {
+	s.DigitalSignature = &v
+	return s
+}
+
+// SetEncipherOnly sets the EncipherOnly field's value.
+func (s *KeyUsage) SetEncipherOnly(v bool) *KeyUsage {
+	s.EncipherOnly = &v
+	return s
+}
+
+// SetKeyAgreement sets the KeyAgreement field's value.
+func (s *KeyUsage) SetKeyAgreement(v bool) *KeyUsage {
+	s.KeyAgreement = &v
+	return s
+}
+
+// SetKeyCertSign sets the KeyCertSign field's value.
+func (s *KeyUsage) SetKeyCertSign(v bool) *KeyUsage {
+	s.KeyCertSign = &v
+	return s
+}
+
+// SetKeyEncipherment sets the KeyEncipherment field's value.
+func (s *KeyUsage) SetKeyEncipherment(v bool) *KeyUsage {
+	s.KeyEncipherment = &v
+	return s
+}
+
+// SetNonRepudiation sets the NonRepudiation field's value.
+func (s *KeyUsage) SetNonRepudiation(v bool) *KeyUsage {
+	s.NonRepudiation = &v
+	return s
+}
+
+// An ACM Private CA quota has been exceeded. See the exception message returned
+// to determine the quota that was exceeded.
 type LimitExceededException struct {
 	_            struct{}                  `type:"structure"`
 	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
@@ -4434,12 +6289,20 @@ type LimitExceededException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LimitExceededException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LimitExceededException) GoString() string {
 	return s.String()
 }
@@ -4495,14 +6358,26 @@ type ListCertificateAuthoritiesInput struct {
 	// you receive a response with truncated results. Set it to the value of the
 	// NextToken parameter from the response you just received.
 	NextToken *string `min:"1" type:"string"`
+
+	// Use this parameter to filter the returned set of certificate authorities
+	// based on their owner. The default is SELF.
+	ResourceOwner *string `type:"string" enum:"ResourceOwner"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCertificateAuthoritiesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCertificateAuthoritiesInput) GoString() string {
 	return s.String()
 }
@@ -4535,6 +6410,12 @@ func (s *ListCertificateAuthoritiesInput) SetNextToken(v string) *ListCertificat
 	return s
 }
 
+// SetResourceOwner sets the ResourceOwner field's value.
+func (s *ListCertificateAuthoritiesInput) SetResourceOwner(v string) *ListCertificateAuthoritiesInput {
+	s.ResourceOwner = &v
+	return s
+}
+
 type ListCertificateAuthoritiesOutput struct {
 	_ struct{} `type:"structure"`
 
@@ -4546,12 +6427,20 @@ type ListCertificateAuthoritiesOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCertificateAuthoritiesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCertificateAuthoritiesOutput) GoString() string {
 	return s.String()
 }
@@ -4572,9 +6461,10 @@ type ListPermissionsInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Number (ARN) of the private CA to inspect. You can find
-	// the ARN by calling the ListCertificateAuthorities action. This must be of
-	// the form: arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012
+	// the ARN by calling the ListCertificateAuthorities (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListCertificateAuthorities.html)
+	// action. This must be of the form: arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012
 	// You can get a private CA's ARN by running the ListCertificateAuthorities
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListCertificateAuthorities.html)
 	// action.
 	//
 	// CertificateAuthorityArn is a required field
@@ -4592,12 +6482,20 @@ type ListPermissionsInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPermissionsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPermissionsInput) GoString() string {
 	return s.String()
 }
@@ -4654,12 +6552,20 @@ type ListPermissionsOutput struct {
 	Permissions []*Permission `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPermissionsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPermissionsOutput) GoString() string {
 	return s.String()
 }
@@ -4680,6 +6586,7 @@ type ListTagsInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) that was returned when you called the CreateCertificateAuthority
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html)
 	// action. This must be of the form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012
@@ -4699,12 +6606,20 @@ type ListTagsInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsInput) GoString() string {
 	return s.String()
 }
@@ -4760,12 +6675,20 @@ type ListTagsOutput struct {
 	Tags []*Tag `min:"1" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsOutput) GoString() string {
 	return s.String()
 }
@@ -4782,6 +6705,72 @@ func (s *ListTagsOutput) SetTags(v []*Tag) *ListTagsOutput {
 	return s
 }
 
+// The current action was prevented because it would lock the caller out from
+// performing subsequent actions. Verify that the specified parameters would
+// not result in the caller being denied access to the resource.
+type LockoutPreventedException struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	Message_ *string `locationName:"message" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s LockoutPreventedException) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s LockoutPreventedException) GoString() string {
+	return s.String()
+}
+
+func newErrorLockoutPreventedException(v protocol.ResponseMetadata) error {
+	return &LockoutPreventedException{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *LockoutPreventedException) Code() string {
+	return "LockoutPreventedException"
+}
+
+// Message returns the exception's message.
+func (s *LockoutPreventedException) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *LockoutPreventedException) OrigErr() error {
+	return nil
+}
+
+func (s *LockoutPreventedException) Error() string {
+	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *LockoutPreventedException) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *LockoutPreventedException) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
 // The certificate signing request is invalid.
 type MalformedCSRException struct {
 	_            struct{}                  `type:"structure"`
@@ -4790,12 +6779,20 @@ type MalformedCSRException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s MalformedCSRException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s MalformedCSRException) GoString() string {
 	return s.String()
 }
@@ -4846,12 +6843,20 @@ type MalformedCertificateException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s MalformedCertificateException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s MalformedCertificateException) GoString() string {
 	return s.String()
 }
@@ -4894,12 +6899,148 @@ func (s *MalformedCertificateException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
+// Contains information to enable and configure Online Certificate Status Protocol
+// (OCSP) for validating certificate revocation status.
+//
+// When you revoke a certificate, OCSP responses may take up to 60 minutes to
+// reflect the new status.
+type OcspConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// Flag enabling use of the Online Certificate Status Protocol (OCSP) for validating
+	// certificate revocation status.
+	//
+	// Enabled is a required field
+	Enabled *bool `type:"boolean" required:"true"`
+
+	// By default, ACM Private CA injects an AWS domain into certificates being
+	// validated by the Online Certificate Status Protocol (OCSP). A customer can
+	// alternatively use this object to define a CNAME specifying a customized OCSP
+	// domain.
+	//
+	// Note: The value of the CNAME must not include a protocol prefix such as "http://"
+	// or "https://".
+	//
+	// For more information, see Customizing Online Certificate Status Protocol
+	// (OCSP) (https://docs.aws.amazon.com/acm-pca/latest/userguide/ocsp-customize.html)
+	// in the AWS Certificate Manager Private Certificate Authority (PCA) User Guide.
+	OcspCustomCname *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s OcspConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s OcspConfiguration) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *OcspConfiguration) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "OcspConfiguration"}
+	if s.Enabled == nil {
+		invalidParams.Add(request.NewErrParamRequired("Enabled"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetEnabled sets the Enabled field's value.
+func (s *OcspConfiguration) SetEnabled(v bool) *OcspConfiguration {
+	s.Enabled = &v
+	return s
+}
+
+// SetOcspCustomCname sets the OcspCustomCname field's value.
+func (s *OcspConfiguration) SetOcspCustomCname(v string) *OcspConfiguration {
+	s.OcspCustomCname = &v
+	return s
+}
+
+// Defines a custom ASN.1 X.400 GeneralName using an object identifier (OID)
+// and value. The OID must satisfy the regular expression shown below. For more
+// information, see NIST's definition of Object Identifier (OID) (https://csrc.nist.gov/glossary/term/Object_Identifier).
+type OtherName struct {
+	_ struct{} `type:"structure"`
+
+	// Specifies an OID.
+	//
+	// TypeId is a required field
+	TypeId *string `type:"string" required:"true"`
+
+	// Specifies an OID value.
+	//
+	// Value is a required field
+	Value *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s OtherName) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s OtherName) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *OtherName) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "OtherName"}
+	if s.TypeId == nil {
+		invalidParams.Add(request.NewErrParamRequired("TypeId"))
+	}
+	if s.Value == nil {
+		invalidParams.Add(request.NewErrParamRequired("Value"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetTypeId sets the TypeId field's value.
+func (s *OtherName) SetTypeId(v string) *OtherName {
+	s.TypeId = &v
+	return s
+}
+
+// SetValue sets the Value field's value.
+func (s *OtherName) SetValue(v string) *OtherName {
+	s.Value = &v
+	return s
+}
+
 // Permissions designate which private CA actions can be performed by an AWS
 // service or entity. In order for ACM to automatically renew private certificates,
 // you must give the ACM service principal all available permissions (IssueCertificate,
 // GetCertificate, and ListPermissions). Permissions can be assigned with the
-// CreatePermission action, removed with the DeletePermission action, and listed
-// with the ListPermissions action.
+// CreatePermission (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreatePermission.html)
+// action, removed with the DeletePermission (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_DeletePermission.html)
+// action, and listed with the ListPermissions (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListPermissions.html)
+// action.
 type Permission struct {
 	_ struct{} `type:"structure"`
 
@@ -4914,22 +7055,30 @@ type Permission struct {
 	CreatedAt *time.Time `type:"timestamp"`
 
 	// The name of the policy that is associated with the permission.
-	Policy *string `type:"string"`
+	Policy *string `min:"1" type:"string"`
 
 	// The AWS service or entity that holds the permission. At this time, the only
 	// valid principal is acm.amazonaws.com.
 	Principal *string `type:"string"`
 
 	// The ID of the account that assigned the permission.
-	SourceAccount *string `type:"string"`
+	SourceAccount *string `min:"12" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Permission) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Permission) GoString() string {
 	return s.String()
 }
@@ -4978,12 +7127,20 @@ type PermissionAlreadyExistsException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PermissionAlreadyExistsException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PermissionAlreadyExistsException) GoString() string {
 	return s.String()
 }
@@ -5026,6 +7183,291 @@ func (s *PermissionAlreadyExistsException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
+// Defines the X.509 CertificatePolicies extension.
+type PolicyInformation struct {
+	_ struct{} `type:"structure"`
+
+	// Specifies the object identifier (OID) of the certificate policy under which
+	// the certificate was issued. For more information, see NIST's definition of
+	// Object Identifier (OID) (https://csrc.nist.gov/glossary/term/Object_Identifier).
+	//
+	// CertPolicyId is a required field
+	CertPolicyId *string `type:"string" required:"true"`
+
+	// Modifies the given CertPolicyId with a qualifier. ACM Private CA supports
+	// the certification practice statement (CPS) qualifier.
+	PolicyQualifiers []*PolicyQualifierInfo `min:"1" type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PolicyInformation) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PolicyInformation) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PolicyInformation) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PolicyInformation"}
+	if s.CertPolicyId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CertPolicyId"))
+	}
+	if s.PolicyQualifiers != nil && len(s.PolicyQualifiers) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PolicyQualifiers", 1))
+	}
+	if s.PolicyQualifiers != nil {
+		for i, v := range s.PolicyQualifiers {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "PolicyQualifiers", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCertPolicyId sets the CertPolicyId field's value.
+func (s *PolicyInformation) SetCertPolicyId(v string) *PolicyInformation {
+	s.CertPolicyId = &v
+	return s
+}
+
+// SetPolicyQualifiers sets the PolicyQualifiers field's value.
+func (s *PolicyInformation) SetPolicyQualifiers(v []*PolicyQualifierInfo) *PolicyInformation {
+	s.PolicyQualifiers = v
+	return s
+}
+
+// Modifies the CertPolicyId of a PolicyInformation object with a qualifier.
+// ACM Private CA supports the certification practice statement (CPS) qualifier.
+type PolicyQualifierInfo struct {
+	_ struct{} `type:"structure"`
+
+	// Identifies the qualifier modifying a CertPolicyId.
+	//
+	// PolicyQualifierId is a required field
+	PolicyQualifierId *string `type:"string" required:"true" enum:"PolicyQualifierId"`
+
+	// Defines the qualifier type. ACM Private CA supports the use of a URI for
+	// a CPS qualifier in this field.
+	//
+	// Qualifier is a required field
+	Qualifier *Qualifier `type:"structure" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PolicyQualifierInfo) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PolicyQualifierInfo) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PolicyQualifierInfo) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PolicyQualifierInfo"}
+	if s.PolicyQualifierId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PolicyQualifierId"))
+	}
+	if s.Qualifier == nil {
+		invalidParams.Add(request.NewErrParamRequired("Qualifier"))
+	}
+	if s.Qualifier != nil {
+		if err := s.Qualifier.Validate(); err != nil {
+			invalidParams.AddNested("Qualifier", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetPolicyQualifierId sets the PolicyQualifierId field's value.
+func (s *PolicyQualifierInfo) SetPolicyQualifierId(v string) *PolicyQualifierInfo {
+	s.PolicyQualifierId = &v
+	return s
+}
+
+// SetQualifier sets the Qualifier field's value.
+func (s *PolicyQualifierInfo) SetQualifier(v *Qualifier) *PolicyQualifierInfo {
+	s.Qualifier = v
+	return s
+}
+
+type PutPolicyInput struct {
+	_ struct{} `type:"structure"`
+
+	// The path and file name of a JSON-formatted IAM policy to attach to the specified
+	// private CA resource. If this policy does not contain all required statements
+	// or if it includes any statement that is not allowed, the PutPolicy action
+	// returns an InvalidPolicyException. For information about IAM policy and statement
+	// structure, see Overview of JSON Policies (https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies.html#access_policies-json).
+	//
+	// Policy is a required field
+	Policy *string `min:"1" type:"string" required:"true"`
+
+	// The Amazon Resource Number (ARN) of the private CA to associate with the
+	// policy. The ARN of the CA can be found by calling the ListCertificateAuthorities
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_ListCertificateAuthorities.html)
+	// action.
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `min:"5" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutPolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutPolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutPolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutPolicyInput"}
+	if s.Policy == nil {
+		invalidParams.Add(request.NewErrParamRequired("Policy"))
+	}
+	if s.Policy != nil && len(*s.Policy) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Policy", 1))
+	}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+	if s.ResourceArn != nil && len(*s.ResourceArn) < 5 {
+		invalidParams.Add(request.NewErrParamMinLen("ResourceArn", 5))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetPolicy sets the Policy field's value.
+func (s *PutPolicyInput) SetPolicy(v string) *PutPolicyInput {
+	s.Policy = &v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *PutPolicyInput) SetResourceArn(v string) *PutPolicyInput {
+	s.ResourceArn = &v
+	return s
+}
+
+type PutPolicyOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutPolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutPolicyOutput) GoString() string {
+	return s.String()
+}
+
+// Defines a PolicyInformation qualifier. ACM Private CA supports the certification
+// practice statement (CPS) qualifier (https://tools.ietf.org/html/rfc5280#section-4.2.1.4)
+// defined in RFC 5280.
+type Qualifier struct {
+	_ struct{} `type:"structure"`
+
+	// Contains a pointer to a certification practice statement (CPS) published
+	// by the CA.
+	//
+	// CpsUri is a required field
+	CpsUri *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Qualifier) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Qualifier) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *Qualifier) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "Qualifier"}
+	if s.CpsUri == nil {
+		invalidParams.Add(request.NewErrParamRequired("CpsUri"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCpsUri sets the CpsUri field's value.
+func (s *Qualifier) SetCpsUri(v string) *Qualifier {
+	s.CpsUri = &v
+	return s
+}
+
 // Your request has already been completed.
 type RequestAlreadyProcessedException struct {
 	_            struct{}                  `type:"structure"`
@@ -5034,12 +7476,20 @@ type RequestAlreadyProcessedException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RequestAlreadyProcessedException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RequestAlreadyProcessedException) GoString() string {
 	return s.String()
 }
@@ -5090,12 +7540,20 @@ type RequestFailedException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RequestFailedException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RequestFailedException) GoString() string {
 	return s.String()
 }
@@ -5146,12 +7604,20 @@ type RequestInProgressException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RequestInProgressException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RequestInProgressException) GoString() string {
 	return s.String()
 }
@@ -5194,8 +7660,8 @@ func (s *RequestInProgressException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
-// A resource such as a private CA, S3 bucket, certificate, or audit report
-// cannot be found.
+// A resource such as a private CA, S3 bucket, certificate, audit report, or
+// policy cannot be found.
 type ResourceNotFoundException struct {
 	_            struct{}                  `type:"structure"`
 	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
@@ -5203,12 +7669,20 @@ type ResourceNotFoundException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) GoString() string {
 	return s.String()
 }
@@ -5255,6 +7729,7 @@ type RestoreCertificateAuthorityInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) that was returned when you called the CreateCertificateAuthority
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html)
 	// action. This must be of the form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012
@@ -5263,12 +7738,20 @@ type RestoreCertificateAuthorityInput struct {
 	CertificateAuthorityArn *string `min:"5" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RestoreCertificateAuthorityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RestoreCertificateAuthorityInput) GoString() string {
 	return s.String()
 }
@@ -5299,35 +7782,63 @@ type RestoreCertificateAuthorityOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RestoreCertificateAuthorityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RestoreCertificateAuthorityOutput) GoString() string {
 	return s.String()
 }
 
 // Certificate revocation information used by the CreateCertificateAuthority
-// and UpdateCertificateAuthority actions. Your private certificate authority
-// (CA) can create and maintain a certificate revocation list (CRL). A CRL contains
-// information about certificates revoked by your CA. For more information,
-// see RevokeCertificate.
+// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html)
+// and UpdateCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_UpdateCertificateAuthority.html)
+// actions. Your private certificate authority (CA) can configure Online Certificate
+// Status Protocol (OCSP) support and/or maintain a certificate revocation list
+// (CRL). OCSP returns validation information about certificates as requested
+// by clients, and a CRL contains an updated list of certificates revoked by
+// your CA. For more information, see RevokeCertificate (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_RevokeCertificate.html)
+// and Setting up a certificate revocation method (https://docs.aws.amazon.com/acm-pca/latest/userguide/revocation-setup.html)
+// in the AWS Certificate Manager Private Certificate Authority (PCA) User Guide.
 type RevocationConfiguration struct {
 	_ struct{} `type:"structure"`
 
 	// Configuration of the certificate revocation list (CRL), if any, maintained
-	// by your private CA.
+	// by your private CA. A CRL is typically updated approximately 30 minutes after
+	// a certificate is revoked. If for any reason a CRL update fails, ACM Private
+	// CA makes further attempts every 15 minutes.
 	CrlConfiguration *CrlConfiguration `type:"structure"`
+
+	// Configuration of Online Certificate Status Protocol (OCSP) support, if any,
+	// maintained by your private CA. When you revoke a certificate, OCSP responses
+	// may take up to 60 minutes to reflect the new status.
+	OcspConfiguration *OcspConfiguration `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RevocationConfiguration) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RevocationConfiguration) GoString() string {
 	return s.String()
 }
@@ -5338,6 +7849,11 @@ func (s *RevocationConfiguration) Validate() error {
 	if s.CrlConfiguration != nil {
 		if err := s.CrlConfiguration.Validate(); err != nil {
 			invalidParams.AddNested("CrlConfiguration", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.OcspConfiguration != nil {
+		if err := s.OcspConfiguration.Validate(); err != nil {
+			invalidParams.AddNested("OcspConfiguration", err.(request.ErrInvalidParams))
 		}
 	}
 
@@ -5353,6 +7869,12 @@ func (s *RevocationConfiguration) SetCrlConfiguration(v *CrlConfiguration) *Revo
 	return s
 }
 
+// SetOcspConfiguration sets the OcspConfiguration field's value.
+func (s *RevocationConfiguration) SetOcspConfiguration(v *OcspConfiguration) *RevocationConfiguration {
+	s.OcspConfiguration = v
+	return s
+}
+
 type RevokeCertificateInput struct {
 	_ struct{} `type:"structure"`
 
@@ -5365,10 +7887,10 @@ type RevokeCertificateInput struct {
 	CertificateAuthorityArn *string `min:"5" type:"string" required:"true"`
 
 	// Serial number of the certificate to be revoked. This must be in hexadecimal
-	// format. You can retrieve the serial number by calling GetCertificate with
-	// the Amazon Resource Name (ARN) of the certificate you want and the ARN of
-	// your private CA. The GetCertificate action retrieves the certificate in the
-	// PEM format. You can use the following OpenSSL command to list the certificate
+	// format. You can retrieve the serial number by calling GetCertificate (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_GetCertificate.html)
+	// with the Amazon Resource Name (ARN) of the certificate you want and the ARN
+	// of your private CA. The GetCertificate action retrieves the certificate in
+	// the PEM format. You can use the following OpenSSL command to list the certificate
 	// in text format and copy the hexadecimal serial number.
 	//
 	// openssl x509 -in file_path -text -noout
@@ -5386,12 +7908,20 @@ type RevokeCertificateInput struct {
 	RevocationReason *string `type:"string" required:"true" enum:"RevocationReason"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RevokeCertificateInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RevokeCertificateInput) GoString() string {
 	return s.String()
 }
@@ -5440,12 +7970,20 @@ type RevokeCertificateOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RevokeCertificateOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RevokeCertificateOutput) GoString() string {
 	return s.String()
 }
@@ -5453,7 +7991,8 @@ func (s RevokeCertificateOutput) GoString() string {
 // Tags are labels that you can use to identify and organize your private CAs.
 // Each tag consists of a key and an optional value. You can associate up to
 // 50 tags with a private CA. To add one or more tags to a private CA, call
-// the TagCertificateAuthority action. To remove a tag, call the UntagCertificateAuthority
+// the TagCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_TagCertificateAuthority.html)
+// action. To remove a tag, call the UntagCertificateAuthority (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_UntagCertificateAuthority.html)
 // action.
 type Tag struct {
 	_ struct{} `type:"structure"`
@@ -5467,12 +8006,20 @@ type Tag struct {
 	Value *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) GoString() string {
 	return s.String()
 }
@@ -5508,7 +8055,8 @@ func (s *Tag) SetValue(v string) *Tag {
 type TagCertificateAuthorityInput struct {
 	_ struct{} `type:"structure"`
 
-	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority.
+	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html).
 	// This must be of the form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012
@@ -5522,12 +8070,20 @@ type TagCertificateAuthorityInput struct {
 	Tags []*Tag `min:"1" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagCertificateAuthorityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagCertificateAuthorityInput) GoString() string {
 	return s.String()
 }
@@ -5580,12 +8136,20 @@ type TagCertificateAuthorityOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagCertificateAuthorityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagCertificateAuthorityOutput) GoString() string {
 	return s.String()
 }
@@ -5599,12 +8163,20 @@ type TooManyTagsException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TooManyTagsException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TooManyTagsException) GoString() string {
 	return s.String()
 }
@@ -5650,7 +8222,8 @@ func (s *TooManyTagsException) RequestID() string {
 type UntagCertificateAuthorityInput struct {
 	_ struct{} `type:"structure"`
 
-	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority.
+	// The Amazon Resource Name (ARN) that was returned when you called CreateCertificateAuthority
+	// (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CreateCertificateAuthority.html).
 	// This must be of the form:
 	//
 	// arn:aws:acm-pca:region:account:certificate-authority/12345678-1234-1234-1234-123456789012
@@ -5664,12 +8237,20 @@ type UntagCertificateAuthorityInput struct {
 	Tags []*Tag `min:"1" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagCertificateAuthorityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagCertificateAuthorityInput) GoString() string {
 	return s.String()
 }
@@ -5722,12 +8303,20 @@ type UntagCertificateAuthorityOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagCertificateAuthorityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagCertificateAuthorityOutput) GoString() string {
 	return s.String()
 }
@@ -5743,19 +8332,32 @@ type UpdateCertificateAuthorityInput struct {
 	// CertificateAuthorityArn is a required field
 	CertificateAuthorityArn *string `min:"5" type:"string" required:"true"`
 
-	// Revocation information for your private CA.
+	// Contains information to enable Online Certificate Status Protocol (OCSP)
+	// support, to enable a certificate revocation list (CRL), to enable both, or
+	// to enable neither. If this parameter is not supplied, existing capibilites
+	// remain unchanged. For more information, see the OcspConfiguration (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_OcspConfiguration.html)
+	// and CrlConfiguration (https://docs.aws.amazon.com/acm-pca/latest/APIReference/API_CrlConfiguration.html)
+	// types.
 	RevocationConfiguration *RevocationConfiguration `type:"structure"`
 
 	// Status of your private CA.
 	Status *string `type:"string" enum:"CertificateAuthorityStatus"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCertificateAuthorityInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCertificateAuthorityInput) GoString() string {
 	return s.String()
 }
@@ -5803,39 +8405,95 @@ type UpdateCertificateAuthorityOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCertificateAuthorityOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCertificateAuthorityOutput) GoString() string {
 	return s.String()
 }
 
-// Length of time for which the certificate issued by your private certificate
-// authority (CA), or by the private CA itself, is valid in days, months, or
-// years. You can issue a certificate by calling the IssueCertificate action.
+// Validity specifies the period of time during which a certificate is valid.
+// Validity can be expressed as an explicit date and time when the validity
+// of a certificate starts or expires, or as a span of time after issuance,
+// stated in days, months, or years. For more information, see Validity (https://tools.ietf.org/html/rfc5280#section-4.1.2.5)
+// in RFC 5280.
+//
+// ACM Private CA API consumes the Validity data type differently in two distinct
+// parameters of the IssueCertificate action. The required parameter IssueCertificate:Validity
+// specifies the end of a certificate's validity period. The optional parameter
+// IssueCertificate:ValidityNotBefore specifies a customized starting time for
+// the validity period.
 type Validity struct {
 	_ struct{} `type:"structure"`
 
-	// Specifies whether the Value parameter represents days, months, or years.
+	// Determines how ACM Private CA interprets the Value parameter, an integer.
+	// Supported validity types include those listed below. Type definitions with
+	// values include a sample input value and the resulting output.
+	//
+	// END_DATE: The specific date and time when the certificate will expire, expressed
+	// using UTCTime (YYMMDDHHMMSS) or GeneralizedTime (YYYYMMDDHHMMSS) format.
+	// When UTCTime is used, if the year field (YY) is greater than or equal to
+	// 50, the year is interpreted as 19YY. If the year field is less than 50, the
+	// year is interpreted as 20YY.
+	//
+	//    * Sample input value: 491231235959 (UTCTime format)
+	//
+	//    * Output expiration date/time: 12/31/2049 23:59:59
+	//
+	// ABSOLUTE: The specific date and time when the validity of a certificate will
+	// start or expire, expressed in seconds since the Unix Epoch.
+	//
+	//    * Sample input value: 2524608000
+	//
+	//    * Output expiration date/time: 01/01/2050 00:00:00
+	//
+	// DAYS, MONTHS, YEARS: The relative time from the moment of issuance until
+	// the certificate will expire, expressed in days, months, or years.
+	//
+	// Example if DAYS, issued on 10/12/2020 at 12:34:54 UTC:
+	//
+	//    * Sample input value: 90
+	//
+	//    * Output expiration date: 01/10/2020 12:34:54 UTC
+	//
+	// The minimum validity duration for a certificate using relative time (DAYS)
+	// is one day. The minimum validity for a certificate using absolute time (ABSOLUTE
+	// or END_DATE) is one second.
 	//
 	// Type is a required field
 	Type *string `type:"string" required:"true" enum:"ValidityPeriodType"`
 
-	// Time period.
+	// A long integer interpreted according to the value of Type, below.
 	//
 	// Value is a required field
 	Value *int64 `min:"1" type:"long" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Validity) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Validity) GoString() string {
 	return s.String()
 }
@@ -5869,6 +8527,26 @@ func (s *Validity) SetType(v string) *Validity {
 func (s *Validity) SetValue(v int64) *Validity {
 	s.Value = &v
 	return s
+}
+
+const (
+	// AccessMethodTypeCaRepository is a AccessMethodType enum value
+	AccessMethodTypeCaRepository = "CA_REPOSITORY"
+
+	// AccessMethodTypeResourcePkiManifest is a AccessMethodType enum value
+	AccessMethodTypeResourcePkiManifest = "RESOURCE_PKI_MANIFEST"
+
+	// AccessMethodTypeResourcePkiNotify is a AccessMethodType enum value
+	AccessMethodTypeResourcePkiNotify = "RESOURCE_PKI_NOTIFY"
+)
+
+// AccessMethodType_Values returns all elements of the AccessMethodType enum
+func AccessMethodType_Values() []string {
+	return []string{
+		AccessMethodTypeCaRepository,
+		AccessMethodTypeResourcePkiManifest,
+		AccessMethodTypeResourcePkiNotify,
+	}
 }
 
 const (
@@ -5980,6 +8658,50 @@ func CertificateAuthorityType_Values() []string {
 }
 
 const (
+	// ExtendedKeyUsageTypeServerAuth is a ExtendedKeyUsageType enum value
+	ExtendedKeyUsageTypeServerAuth = "SERVER_AUTH"
+
+	// ExtendedKeyUsageTypeClientAuth is a ExtendedKeyUsageType enum value
+	ExtendedKeyUsageTypeClientAuth = "CLIENT_AUTH"
+
+	// ExtendedKeyUsageTypeCodeSigning is a ExtendedKeyUsageType enum value
+	ExtendedKeyUsageTypeCodeSigning = "CODE_SIGNING"
+
+	// ExtendedKeyUsageTypeEmailProtection is a ExtendedKeyUsageType enum value
+	ExtendedKeyUsageTypeEmailProtection = "EMAIL_PROTECTION"
+
+	// ExtendedKeyUsageTypeTimeStamping is a ExtendedKeyUsageType enum value
+	ExtendedKeyUsageTypeTimeStamping = "TIME_STAMPING"
+
+	// ExtendedKeyUsageTypeOcspSigning is a ExtendedKeyUsageType enum value
+	ExtendedKeyUsageTypeOcspSigning = "OCSP_SIGNING"
+
+	// ExtendedKeyUsageTypeSmartCardLogin is a ExtendedKeyUsageType enum value
+	ExtendedKeyUsageTypeSmartCardLogin = "SMART_CARD_LOGIN"
+
+	// ExtendedKeyUsageTypeDocumentSigning is a ExtendedKeyUsageType enum value
+	ExtendedKeyUsageTypeDocumentSigning = "DOCUMENT_SIGNING"
+
+	// ExtendedKeyUsageTypeCertificateTransparency is a ExtendedKeyUsageType enum value
+	ExtendedKeyUsageTypeCertificateTransparency = "CERTIFICATE_TRANSPARENCY"
+)
+
+// ExtendedKeyUsageType_Values returns all elements of the ExtendedKeyUsageType enum
+func ExtendedKeyUsageType_Values() []string {
+	return []string{
+		ExtendedKeyUsageTypeServerAuth,
+		ExtendedKeyUsageTypeClientAuth,
+		ExtendedKeyUsageTypeCodeSigning,
+		ExtendedKeyUsageTypeEmailProtection,
+		ExtendedKeyUsageTypeTimeStamping,
+		ExtendedKeyUsageTypeOcspSigning,
+		ExtendedKeyUsageTypeSmartCardLogin,
+		ExtendedKeyUsageTypeDocumentSigning,
+		ExtendedKeyUsageTypeCertificateTransparency,
+	}
+}
+
+const (
 	// FailureReasonRequestTimedOut is a FailureReason enum value
 	FailureReasonRequestTimedOut = "REQUEST_TIMED_OUT"
 
@@ -6024,6 +8746,50 @@ func KeyAlgorithm_Values() []string {
 }
 
 const (
+	// KeyStorageSecurityStandardFips1402Level2OrHigher is a KeyStorageSecurityStandard enum value
+	KeyStorageSecurityStandardFips1402Level2OrHigher = "FIPS_140_2_LEVEL_2_OR_HIGHER"
+
+	// KeyStorageSecurityStandardFips1402Level3OrHigher is a KeyStorageSecurityStandard enum value
+	KeyStorageSecurityStandardFips1402Level3OrHigher = "FIPS_140_2_LEVEL_3_OR_HIGHER"
+)
+
+// KeyStorageSecurityStandard_Values returns all elements of the KeyStorageSecurityStandard enum
+func KeyStorageSecurityStandard_Values() []string {
+	return []string{
+		KeyStorageSecurityStandardFips1402Level2OrHigher,
+		KeyStorageSecurityStandardFips1402Level3OrHigher,
+	}
+}
+
+const (
+	// PolicyQualifierIdCps is a PolicyQualifierId enum value
+	PolicyQualifierIdCps = "CPS"
+)
+
+// PolicyQualifierId_Values returns all elements of the PolicyQualifierId enum
+func PolicyQualifierId_Values() []string {
+	return []string{
+		PolicyQualifierIdCps,
+	}
+}
+
+const (
+	// ResourceOwnerSelf is a ResourceOwner enum value
+	ResourceOwnerSelf = "SELF"
+
+	// ResourceOwnerOtherAccounts is a ResourceOwner enum value
+	ResourceOwnerOtherAccounts = "OTHER_ACCOUNTS"
+)
+
+// ResourceOwner_Values returns all elements of the ResourceOwner enum
+func ResourceOwner_Values() []string {
+	return []string{
+		ResourceOwnerSelf,
+		ResourceOwnerOtherAccounts,
+	}
+}
+
+const (
 	// RevocationReasonUnspecified is a RevocationReason enum value
 	RevocationReasonUnspecified = "UNSPECIFIED"
 
@@ -6060,6 +8826,22 @@ func RevocationReason_Values() []string {
 		RevocationReasonCessationOfOperation,
 		RevocationReasonPrivilegeWithdrawn,
 		RevocationReasonAACompromise,
+	}
+}
+
+const (
+	// S3ObjectAclPublicRead is a S3ObjectAcl enum value
+	S3ObjectAclPublicRead = "PUBLIC_READ"
+
+	// S3ObjectAclBucketOwnerFullControl is a S3ObjectAcl enum value
+	S3ObjectAclBucketOwnerFullControl = "BUCKET_OWNER_FULL_CONTROL"
+)
+
+// S3ObjectAcl_Values returns all elements of the S3ObjectAcl enum
+func S3ObjectAcl_Values() []string {
+	return []string{
+		S3ObjectAclPublicRead,
+		S3ObjectAclBucketOwnerFullControl,
 	}
 }
 

@@ -198,12 +198,20 @@ type Exception struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Exception) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Exception) GoString() string {
 	return s.String()
 }
@@ -336,6 +344,18 @@ type GenerateDataSetInput struct {
 	//    * us_sales_and_use_tax_records From 2017-09-15 to present: Available monthly
 	//    on the 15th day of the month by 24:00 UTC.
 	//
+	//    * disbursed_amount_by_product_with_uncollected_funds This data set is
+	//    deprecated. Download related reports from AMMP instead!
+	//
+	//    * customer_profile_by_industry This data set is deprecated. Download related
+	//    reports from AMMP instead!
+	//
+	//    * customer_profile_by_revenue This data set is deprecated. Download related
+	//    reports from AMMP instead!
+	//
+	//    * customer_profile_by_geography This data set is deprecated. Download
+	//    related reports from AMMP instead!
+	//
 	// DataSetType is a required field
 	DataSetType *string `locationName:"dataSetType" min:"1" type:"string" required:"true" enum:"DataSetType"`
 
@@ -365,12 +385,20 @@ type GenerateDataSetInput struct {
 	SnsTopicArn *string `locationName:"snsTopicArn" min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GenerateDataSetInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GenerateDataSetInput) GoString() string {
 	return s.String()
 }
@@ -467,12 +495,20 @@ type GenerateDataSetOutput struct {
 	DataSetRequestId *string `locationName:"dataSetRequestId" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GenerateDataSetOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GenerateDataSetOutput) GoString() string {
 	return s.String()
 }
@@ -540,12 +576,20 @@ type StartSupportDataExportInput struct {
 	SnsTopicArn *string `locationName:"snsTopicArn" min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartSupportDataExportInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartSupportDataExportInput) GoString() string {
 	return s.String()
 }
@@ -642,12 +686,20 @@ type StartSupportDataExportOutput struct {
 	DataSetRequestId *string `locationName:"dataSetRequestId" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartSupportDataExportOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartSupportDataExportOutput) GoString() string {
 	return s.String()
 }

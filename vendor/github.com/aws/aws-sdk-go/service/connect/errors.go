@@ -8,6 +8,18 @@ import (
 
 const (
 
+	// ErrCodeAccessDeniedException for service response error code
+	// "AccessDeniedException".
+	//
+	// You do not have sufficient permissions to perform this action.
+	ErrCodeAccessDeniedException = "AccessDeniedException"
+
+	// ErrCodeContactFlowNotPublishedException for service response error code
+	// "ContactFlowNotPublishedException".
+	//
+	// The contact flow has not been published.
+	ErrCodeContactFlowNotPublishedException = "ContactFlowNotPublishedException"
+
 	// ErrCodeContactNotFoundException for service response error code
 	// "ContactNotFoundException".
 	//
@@ -26,11 +38,29 @@ const (
 	// A resource with the specified name already exists.
 	ErrCodeDuplicateResourceException = "DuplicateResourceException"
 
+	// ErrCodeIdempotencyException for service response error code
+	// "IdempotencyException".
+	//
+	// An entity with the same name already exists.
+	ErrCodeIdempotencyException = "IdempotencyException"
+
 	// ErrCodeInternalServiceException for service response error code
 	// "InternalServiceException".
 	//
-	// Request processing failed due to an error or failure with the service.
+	// Request processing failed because of an error or failure with the service.
 	ErrCodeInternalServiceException = "InternalServiceException"
+
+	// ErrCodeInvalidContactFlowException for service response error code
+	// "InvalidContactFlowException".
+	//
+	// The contact flow is not valid.
+	ErrCodeInvalidContactFlowException = "InvalidContactFlowException"
+
+	// ErrCodeInvalidContactFlowModuleException for service response error code
+	// "InvalidContactFlowModuleException".
+	//
+	// The problems with the module. Please fix before trying again.
+	ErrCodeInvalidContactFlowModuleException = "InvalidContactFlowModuleException"
 
 	// ErrCodeInvalidParameterException for service response error code
 	// "InvalidParameterException".
@@ -56,11 +86,29 @@ const (
 	// The contact is not permitted.
 	ErrCodeOutboundContactNotPermittedException = "OutboundContactNotPermittedException"
 
+	// ErrCodeResourceConflictException for service response error code
+	// "ResourceConflictException".
+	//
+	// A resource already has that name.
+	ErrCodeResourceConflictException = "ResourceConflictException"
+
+	// ErrCodeResourceInUseException for service response error code
+	// "ResourceInUseException".
+	//
+	// That resource is already in use. Please try another.
+	ErrCodeResourceInUseException = "ResourceInUseException"
+
 	// ErrCodeResourceNotFoundException for service response error code
 	// "ResourceNotFoundException".
 	//
 	// The specified resource was not found.
 	ErrCodeResourceNotFoundException = "ResourceNotFoundException"
+
+	// ErrCodeServiceQuotaExceededException for service response error code
+	// "ServiceQuotaExceededException".
+	//
+	// The service quota has been exceeded.
+	ErrCodeServiceQuotaExceededException = "ServiceQuotaExceededException"
 
 	// ErrCodeThrottlingException for service response error code
 	// "ThrottlingException".
@@ -76,15 +124,23 @@ const (
 )
 
 var exceptionFromCode = map[string]func(protocol.ResponseMetadata) error{
+	"AccessDeniedException":                newErrorAccessDeniedException,
+	"ContactFlowNotPublishedException":     newErrorContactFlowNotPublishedException,
 	"ContactNotFoundException":             newErrorContactNotFoundException,
 	"DestinationNotAllowedException":       newErrorDestinationNotAllowedException,
 	"DuplicateResourceException":           newErrorDuplicateResourceException,
+	"IdempotencyException":                 newErrorIdempotencyException,
 	"InternalServiceException":             newErrorInternalServiceException,
+	"InvalidContactFlowException":          newErrorInvalidContactFlowException,
+	"InvalidContactFlowModuleException":    newErrorInvalidContactFlowModuleException,
 	"InvalidParameterException":            newErrorInvalidParameterException,
 	"InvalidRequestException":              newErrorInvalidRequestException,
 	"LimitExceededException":               newErrorLimitExceededException,
 	"OutboundContactNotPermittedException": newErrorOutboundContactNotPermittedException,
+	"ResourceConflictException":            newErrorResourceConflictException,
+	"ResourceInUseException":               newErrorResourceInUseException,
 	"ResourceNotFoundException":            newErrorResourceNotFoundException,
+	"ServiceQuotaExceededException":        newErrorServiceQuotaExceededException,
 	"ThrottlingException":                  newErrorThrottlingException,
 	"UserNotFoundException":                newErrorUserNotFoundException,
 }

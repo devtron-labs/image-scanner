@@ -64,6 +64,10 @@ type CodeGuruReviewerAPI interface {
 	AssociateRepositoryWithContext(aws.Context, *codegurureviewer.AssociateRepositoryInput, ...request.Option) (*codegurureviewer.AssociateRepositoryOutput, error)
 	AssociateRepositoryRequest(*codegurureviewer.AssociateRepositoryInput) (*request.Request, *codegurureviewer.AssociateRepositoryOutput)
 
+	CreateCodeReview(*codegurureviewer.CreateCodeReviewInput) (*codegurureviewer.CreateCodeReviewOutput, error)
+	CreateCodeReviewWithContext(aws.Context, *codegurureviewer.CreateCodeReviewInput, ...request.Option) (*codegurureviewer.CreateCodeReviewOutput, error)
+	CreateCodeReviewRequest(*codegurureviewer.CreateCodeReviewInput) (*request.Request, *codegurureviewer.CreateCodeReviewOutput)
+
 	DescribeCodeReview(*codegurureviewer.DescribeCodeReviewInput) (*codegurureviewer.DescribeCodeReviewOutput, error)
 	DescribeCodeReviewWithContext(aws.Context, *codegurureviewer.DescribeCodeReviewInput, ...request.Option) (*codegurureviewer.DescribeCodeReviewOutput, error)
 	DescribeCodeReviewRequest(*codegurureviewer.DescribeCodeReviewInput) (*request.Request, *codegurureviewer.DescribeCodeReviewOutput)
@@ -108,9 +112,27 @@ type CodeGuruReviewerAPI interface {
 	ListRepositoryAssociationsPages(*codegurureviewer.ListRepositoryAssociationsInput, func(*codegurureviewer.ListRepositoryAssociationsOutput, bool) bool) error
 	ListRepositoryAssociationsPagesWithContext(aws.Context, *codegurureviewer.ListRepositoryAssociationsInput, func(*codegurureviewer.ListRepositoryAssociationsOutput, bool) bool, ...request.Option) error
 
+	ListTagsForResource(*codegurureviewer.ListTagsForResourceInput) (*codegurureviewer.ListTagsForResourceOutput, error)
+	ListTagsForResourceWithContext(aws.Context, *codegurureviewer.ListTagsForResourceInput, ...request.Option) (*codegurureviewer.ListTagsForResourceOutput, error)
+	ListTagsForResourceRequest(*codegurureviewer.ListTagsForResourceInput) (*request.Request, *codegurureviewer.ListTagsForResourceOutput)
+
 	PutRecommendationFeedback(*codegurureviewer.PutRecommendationFeedbackInput) (*codegurureviewer.PutRecommendationFeedbackOutput, error)
 	PutRecommendationFeedbackWithContext(aws.Context, *codegurureviewer.PutRecommendationFeedbackInput, ...request.Option) (*codegurureviewer.PutRecommendationFeedbackOutput, error)
 	PutRecommendationFeedbackRequest(*codegurureviewer.PutRecommendationFeedbackInput) (*request.Request, *codegurureviewer.PutRecommendationFeedbackOutput)
+
+	TagResource(*codegurureviewer.TagResourceInput) (*codegurureviewer.TagResourceOutput, error)
+	TagResourceWithContext(aws.Context, *codegurureviewer.TagResourceInput, ...request.Option) (*codegurureviewer.TagResourceOutput, error)
+	TagResourceRequest(*codegurureviewer.TagResourceInput) (*request.Request, *codegurureviewer.TagResourceOutput)
+
+	UntagResource(*codegurureviewer.UntagResourceInput) (*codegurureviewer.UntagResourceOutput, error)
+	UntagResourceWithContext(aws.Context, *codegurureviewer.UntagResourceInput, ...request.Option) (*codegurureviewer.UntagResourceOutput, error)
+	UntagResourceRequest(*codegurureviewer.UntagResourceInput) (*request.Request, *codegurureviewer.UntagResourceOutput)
+
+	WaitUntilCodeReviewCompleted(*codegurureviewer.DescribeCodeReviewInput) error
+	WaitUntilCodeReviewCompletedWithContext(aws.Context, *codegurureviewer.DescribeCodeReviewInput, ...request.WaiterOption) error
+
+	WaitUntilRepositoryAssociationSucceeded(*codegurureviewer.DescribeRepositoryAssociationInput) error
+	WaitUntilRepositoryAssociationSucceededWithContext(aws.Context, *codegurureviewer.DescribeRepositoryAssociationInput, ...request.WaiterOption) error
 }
 
 var _ CodeGuruReviewerAPI = (*codegurureviewer.CodeGuruReviewer)(nil)

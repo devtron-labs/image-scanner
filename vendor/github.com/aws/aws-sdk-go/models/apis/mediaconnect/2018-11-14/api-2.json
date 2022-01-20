@@ -11,6 +11,40 @@
     "signatureVersion": "v4"
   },
   "operations": {
+    "AddFlowMediaStreams": {
+      "name": "AddFlowMediaStreams",
+      "http": {
+        "method": "POST",
+        "requestUri": "/v1/flows/{flowArn}/mediaStreams",
+        "responseCode": 201
+      },
+      "input": {
+        "shape": "AddFlowMediaStreamsRequest"
+      },
+      "output": {
+        "shape": "AddFlowMediaStreamsResponse"
+      },
+      "errors": [
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "ForbiddenException"
+        },
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "TooManyRequestsException"
+        }
+      ]
+    },
     "AddFlowOutputs": {
       "name": "AddFlowOutputs",
       "http": {
@@ -218,6 +252,68 @@
         }
       ]
     },
+    "DescribeOffering": {
+      "name": "DescribeOffering",
+      "http": {
+        "method": "GET",
+        "requestUri": "/v1/offerings/{offeringArn}",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "DescribeOfferingRequest"
+      },
+      "output": {
+        "shape": "DescribeOfferingResponse"
+      },
+      "errors": [
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "TooManyRequestsException"
+        },
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        }
+      ]
+    },
+    "DescribeReservation": {
+      "name": "DescribeReservation",
+      "http": {
+        "method": "GET",
+        "requestUri": "/v1/reservations/{reservationArn}",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "DescribeReservationRequest"
+      },
+      "output": {
+        "shape": "DescribeReservationResponse"
+      },
+      "errors": [
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "TooManyRequestsException"
+        },
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        }
+      ]
+    },
     "GrantFlowEntitlements": {
       "name": "GrantFlowEntitlements",
       "http": {
@@ -311,6 +407,62 @@
         }
       ]
     },
+    "ListOfferings": {
+      "name": "ListOfferings",
+      "http": {
+        "method": "GET",
+        "requestUri": "/v1/offerings",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "ListOfferingsRequest"
+      },
+      "output": {
+        "shape": "ListOfferingsResponse"
+      },
+      "errors": [
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "TooManyRequestsException"
+        },
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        }
+      ]
+    },
+    "ListReservations": {
+      "name": "ListReservations",
+      "http": {
+        "method": "GET",
+        "requestUri": "/v1/reservations",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "ListReservationsRequest"
+      },
+      "output": {
+        "shape": "ListReservationsResponse"
+      },
+      "errors": [
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "TooManyRequestsException"
+        },
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        }
+      ]
+    },
     "ListTagsForResource": {
       "name": "ListTagsForResource",
       "http": {
@@ -333,6 +485,74 @@
         },
         {
           "shape": "InternalServerErrorException"
+        }
+      ]
+    },
+    "PurchaseOffering": {
+      "name": "PurchaseOffering",
+      "http": {
+        "method": "POST",
+        "requestUri": "/v1/offerings/{offeringArn}",
+        "responseCode": 201
+      },
+      "input": {
+        "shape": "PurchaseOfferingRequest"
+      },
+      "output": {
+        "shape": "PurchaseOfferingResponse"
+      },
+      "errors": [
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "ForbiddenException"
+        },
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "TooManyRequestsException"
+        }
+      ]
+    },
+    "RemoveFlowMediaStream": {
+      "name": "RemoveFlowMediaStream",
+      "http": {
+        "method": "DELETE",
+        "requestUri": "/v1/flows/{flowArn}/mediaStreams/{mediaStreamName}",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "RemoveFlowMediaStreamRequest"
+      },
+      "output": {
+        "shape": "RemoveFlowMediaStreamResponse"
+      },
+      "errors": [
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "ForbiddenException"
+        },
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "TooManyRequestsException"
         }
       ]
     },
@@ -652,6 +872,40 @@
         }
       ]
     },
+    "UpdateFlowMediaStream": {
+      "name": "UpdateFlowMediaStream",
+      "http": {
+        "method": "PUT",
+        "requestUri": "/v1/flows/{flowArn}/mediaStreams/{mediaStreamName}",
+        "responseCode": 202
+      },
+      "input": {
+        "shape": "UpdateFlowMediaStreamRequest"
+      },
+      "output": {
+        "shape": "UpdateFlowMediaStreamResponse"
+      },
+      "errors": [
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "ForbiddenException"
+        },
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "TooManyRequestsException"
+        }
+      ]
+    },
     "UpdateFlowOutput": {
       "name": "UpdateFlowOutput",
       "http": {
@@ -722,6 +976,38 @@
     }
   },
   "shapes": {
+    "AddFlowMediaStreamsRequest": {
+      "type": "structure",
+      "members": {
+        "FlowArn": {
+          "shape": "__string",
+          "pattern": "^arn:.+:mediaconnect.+:flow:.+$",
+          "location": "uri",
+          "locationName": "flowArn"
+        },
+        "MediaStreams": {
+          "shape": "__listOfAddMediaStreamRequest",
+          "locationName": "mediaStreams"
+        }
+      },
+      "required": [
+        "FlowArn",
+        "MediaStreams"
+      ]
+    },
+    "AddFlowMediaStreamsResponse": {
+      "type": "structure",
+      "members": {
+        "FlowArn": {
+          "shape": "__string",
+          "locationName": "flowArn"
+        },
+        "MediaStreams": {
+          "shape": "__listOfMediaStream",
+          "locationName": "mediaStreams"
+        }
+      }
+    },
     "AddFlowOutputs420Exception": {
       "type": "structure",
       "members": {
@@ -831,6 +1117,44 @@
         }
       }
     },
+    "AddMediaStreamRequest": {
+      "type": "structure",
+      "members": {
+        "Attributes": {
+          "shape": "MediaStreamAttributesRequest",
+          "locationName": "attributes"
+        },
+        "ClockRate": {
+          "shape": "__integer",
+          "locationName": "clockRate"
+        },
+        "Description": {
+          "shape": "__string",
+          "locationName": "description"
+        },
+        "MediaStreamId": {
+          "shape": "__integer",
+          "locationName": "mediaStreamId"
+        },
+        "MediaStreamName": {
+          "shape": "__string",
+          "locationName": "mediaStreamName"
+        },
+        "MediaStreamType": {
+          "shape": "MediaStreamType",
+          "locationName": "mediaStreamType"
+        },
+        "VideoFormat": {
+          "shape": "__string",
+          "locationName": "videoFormat"
+        }
+      },
+      "required": [
+        "MediaStreamType",
+        "MediaStreamId",
+        "MediaStreamName"
+      ]
+    },
     "AddOutputRequest": {
       "type": "structure",
       "members": {
@@ -854,6 +1178,14 @@
           "shape": "__integer",
           "locationName": "maxLatency"
         },
+        "MediaStreamOutputConfigurations": {
+          "shape": "__listOfMediaStreamOutputConfigurationRequest",
+          "locationName": "mediaStreamOutputConfigurations"
+        },
+        "MinLatency": {
+          "shape": "__integer",
+          "locationName": "minLatency"
+        },
         "Name": {
           "shape": "__string",
           "locationName": "name"
@@ -869,6 +1201,10 @@
         "RemoteId": {
           "shape": "__string",
           "locationName": "remoteId"
+        },
+        "SenderControlPort": {
+          "shape": "__integer",
+          "locationName": "senderControlPort"
         },
         "SmoothingLatency": {
           "shape": "__integer",
@@ -911,6 +1247,18 @@
         "httpStatusCode": 400
       }
     },
+    "Colorimetry": {
+      "type": "string",
+      "enum": [
+        "BT601",
+        "BT709",
+        "BT2020",
+        "BT2100",
+        "ST2065-1",
+        "ST2065-3",
+        "XYZ"
+      ]
+    },
     "CreateFlow420Exception": {
       "type": "structure",
       "members": {
@@ -937,6 +1285,10 @@
         "Entitlements": {
           "shape": "__listOfGrantEntitlementRequest",
           "locationName": "entitlements"
+        },
+        "MediaStreams": {
+          "shape": "__listOfAddMediaStreamRequest",
+          "locationName": "mediaStreams"
         },
         "Name": {
           "shape": "__string",
@@ -1028,6 +1380,155 @@
         }
       }
     },
+    "DescribeOfferingRequest": {
+      "type": "structure",
+      "members": {
+        "OfferingArn": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "offeringArn"
+        }
+      },
+      "required": [
+        "OfferingArn"
+      ]
+    },
+    "DescribeOfferingResponse": {
+      "type": "structure",
+      "members": {
+        "Offering": {
+          "shape": "Offering",
+          "locationName": "offering"
+        }
+      }
+    },
+    "DescribeReservationRequest": {
+      "type": "structure",
+      "members": {
+        "ReservationArn": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "reservationArn"
+        }
+      },
+      "required": [
+        "ReservationArn"
+      ]
+    },
+    "DescribeReservationResponse": {
+      "type": "structure",
+      "members": {
+        "Reservation": {
+          "shape": "Reservation",
+          "locationName": "reservation"
+        }
+      }
+    },
+    "DestinationConfiguration": {
+      "type": "structure",
+      "members": {
+        "DestinationIp": {
+          "shape": "__string",
+          "locationName": "destinationIp"
+        },
+        "DestinationPort": {
+          "shape": "__integer",
+          "locationName": "destinationPort"
+        },
+        "Interface": {
+          "shape": "Interface",
+          "locationName": "interface"
+        },
+        "OutboundIp": {
+          "shape": "__string",
+          "locationName": "outboundIp"
+        }
+      },
+      "required": [
+        "DestinationIp",
+        "DestinationPort",
+        "Interface",
+        "OutboundIp"
+      ]
+    },
+    "DestinationConfigurationRequest": {
+      "type": "structure",
+      "members": {
+        "DestinationIp": {
+          "shape": "__string",
+          "locationName": "destinationIp"
+        },
+        "DestinationPort": {
+          "shape": "__integer",
+          "locationName": "destinationPort"
+        },
+        "Interface": {
+          "shape": "InterfaceRequest",
+          "locationName": "interface"
+        }
+      },
+      "required": [
+        "DestinationIp",
+        "DestinationPort",
+        "Interface"
+      ]
+    },
+    "DurationUnits": {
+      "type": "string",
+      "enum": [
+        "MONTHS"
+      ]
+    },
+    "EncoderProfile": {
+      "type": "string",
+      "enum": [
+        "main",
+        "high"
+      ]
+    },
+    "EncodingName": {
+      "type": "string",
+      "enum": [
+        "jxsv",
+        "raw",
+        "smpte291",
+        "pcm"
+      ]
+    },
+    "EncodingParameters": {
+      "type": "structure",
+      "members": {
+        "CompressionFactor": {
+          "shape": "__double",
+          "locationName": "compressionFactor"
+        },
+        "EncoderProfile": {
+          "shape": "EncoderProfile",
+          "locationName": "encoderProfile"
+        }
+      },
+      "required": [
+        "EncoderProfile",
+        "CompressionFactor"
+      ]
+    },
+    "EncodingParametersRequest": {
+      "type": "structure",
+      "members": {
+        "CompressionFactor": {
+          "shape": "__double",
+          "locationName": "compressionFactor"
+        },
+        "EncoderProfile": {
+          "shape": "EncoderProfile",
+          "locationName": "encoderProfile"
+        }
+      },
+      "required": [
+        "EncoderProfile",
+        "CompressionFactor"
+      ]
+    },
     "Encryption": {
       "type": "structure",
       "members": {
@@ -1069,7 +1570,6 @@
         }
       },
       "required": [
-        "Algorithm",
         "RoleArn"
       ]
     },
@@ -1121,15 +1621,30 @@
     "FailoverConfig": {
       "type": "structure",
       "members": {
+        "FailoverMode": {
+          "shape": "FailoverMode",
+          "locationName": "failoverMode"
+        },
         "RecoveryWindow": {
           "shape": "__integer",
           "locationName": "recoveryWindow"
+        },
+        "SourcePriority": {
+          "shape": "SourcePriority",
+          "locationName": "sourcePriority"
         },
         "State": {
           "shape": "State",
           "locationName": "state"
         }
       }
+    },
+    "FailoverMode": {
+      "type": "string",
+      "enum": [
+        "MERGE",
+        "FAILOVER"
+      ]
     },
     "Flow": {
       "type": "structure",
@@ -1153,6 +1668,10 @@
         "FlowArn": {
           "shape": "__string",
           "locationName": "flowArn"
+        },
+        "MediaStreams": {
+          "shape": "__listOfMediaStream",
+          "locationName": "mediaStreams"
         },
         "Name": {
           "shape": "__string",
@@ -1192,6 +1711,72 @@
         "Source",
         "Name"
       ]
+    },
+    "Fmtp": {
+      "type": "structure",
+      "members": {
+        "ChannelOrder": {
+          "shape": "__string",
+          "locationName": "channelOrder"
+        },
+        "Colorimetry": {
+          "shape": "Colorimetry",
+          "locationName": "colorimetry"
+        },
+        "ExactFramerate": {
+          "shape": "__string",
+          "locationName": "exactFramerate"
+        },
+        "Par": {
+          "shape": "__string",
+          "locationName": "par"
+        },
+        "Range": {
+          "shape": "Range",
+          "locationName": "range"
+        },
+        "ScanMode": {
+          "shape": "ScanMode",
+          "locationName": "scanMode"
+        },
+        "Tcs": {
+          "shape": "Tcs",
+          "locationName": "tcs"
+        }
+      }
+    },
+    "FmtpRequest": {
+      "type": "structure",
+      "members": {
+        "ChannelOrder": {
+          "shape": "__string",
+          "locationName": "channelOrder"
+        },
+        "Colorimetry": {
+          "shape": "Colorimetry",
+          "locationName": "colorimetry"
+        },
+        "ExactFramerate": {
+          "shape": "__string",
+          "locationName": "exactFramerate"
+        },
+        "Par": {
+          "shape": "__string",
+          "locationName": "par"
+        },
+        "Range": {
+          "shape": "Range",
+          "locationName": "range"
+        },
+        "ScanMode": {
+          "shape": "ScanMode",
+          "locationName": "scanMode"
+        },
+        "Tcs": {
+          "shape": "Tcs",
+          "locationName": "tcs"
+        }
+      }
     },
     "ForbiddenException": {
       "type": "structure",
@@ -1288,6 +1873,69 @@
         }
       }
     },
+    "InputConfiguration": {
+      "type": "structure",
+      "members": {
+        "InputIp": {
+          "shape": "__string",
+          "locationName": "inputIp"
+        },
+        "InputPort": {
+          "shape": "__integer",
+          "locationName": "inputPort"
+        },
+        "Interface": {
+          "shape": "Interface",
+          "locationName": "interface"
+        }
+      },
+      "required": [
+        "InputPort",
+        "InputIp",
+        "Interface"
+      ]
+    },
+    "InputConfigurationRequest": {
+      "type": "structure",
+      "members": {
+        "InputPort": {
+          "shape": "__integer",
+          "locationName": "inputPort"
+        },
+        "Interface": {
+          "shape": "InterfaceRequest",
+          "locationName": "interface"
+        }
+      },
+      "required": [
+        "InputPort",
+        "Interface"
+      ]
+    },
+    "Interface": {
+      "type": "structure",
+      "members": {
+        "Name": {
+          "shape": "__string",
+          "locationName": "name"
+        }
+      },
+      "required": [
+        "Name"
+      ]
+    },
+    "InterfaceRequest": {
+      "type": "structure",
+      "members": {
+        "Name": {
+          "shape": "__string",
+          "locationName": "name"
+        }
+      },
+      "required": [
+        "Name"
+      ]
+    },
     "InternalServerErrorException": {
       "type": "structure",
       "members": {
@@ -1308,7 +1956,8 @@
       "type": "string",
       "enum": [
         "speke",
-        "static-key"
+        "static-key",
+        "srt-password"
       ]
     },
     "ListEntitlementsRequest": {
@@ -1364,6 +2013,62 @@
         "NextToken": {
           "shape": "__string",
           "locationName": "nextToken"
+        }
+      }
+    },
+    "ListOfferingsRequest": {
+      "type": "structure",
+      "members": {
+        "MaxResults": {
+          "shape": "MaxResults",
+          "location": "querystring",
+          "locationName": "maxResults"
+        },
+        "NextToken": {
+          "shape": "__string",
+          "location": "querystring",
+          "locationName": "nextToken"
+        }
+      }
+    },
+    "ListOfferingsResponse": {
+      "type": "structure",
+      "members": {
+        "NextToken": {
+          "shape": "__string",
+          "locationName": "nextToken"
+        },
+        "Offerings": {
+          "shape": "__listOfOffering",
+          "locationName": "offerings"
+        }
+      }
+    },
+    "ListReservationsRequest": {
+      "type": "structure",
+      "members": {
+        "MaxResults": {
+          "shape": "MaxResults",
+          "location": "querystring",
+          "locationName": "maxResults"
+        },
+        "NextToken": {
+          "shape": "__string",
+          "location": "querystring",
+          "locationName": "nextToken"
+        }
+      }
+    },
+    "ListReservationsResponse": {
+      "type": "structure",
+      "members": {
+        "NextToken": {
+          "shape": "__string",
+          "locationName": "nextToken"
+        },
+        "Reservations": {
+          "shape": "__listOfReservation",
+          "locationName": "reservations"
         }
       }
     },
@@ -1452,6 +2157,178 @@
       "min": 1,
       "max": 1000
     },
+    "MediaStream": {
+      "type": "structure",
+      "members": {
+        "Attributes": {
+          "shape": "MediaStreamAttributes",
+          "locationName": "attributes"
+        },
+        "ClockRate": {
+          "shape": "__integer",
+          "locationName": "clockRate"
+        },
+        "Description": {
+          "shape": "__string",
+          "locationName": "description"
+        },
+        "Fmt": {
+          "shape": "__integer",
+          "locationName": "fmt"
+        },
+        "MediaStreamId": {
+          "shape": "__integer",
+          "locationName": "mediaStreamId"
+        },
+        "MediaStreamName": {
+          "shape": "__string",
+          "locationName": "mediaStreamName"
+        },
+        "MediaStreamType": {
+          "shape": "MediaStreamType",
+          "locationName": "mediaStreamType"
+        },
+        "VideoFormat": {
+          "shape": "__string",
+          "locationName": "videoFormat"
+        }
+      },
+      "required": [
+        "MediaStreamType",
+        "MediaStreamId",
+        "MediaStreamName",
+        "Fmt"
+      ]
+    },
+    "MediaStreamAttributes": {
+      "type": "structure",
+      "members": {
+        "Fmtp": {
+          "shape": "Fmtp",
+          "locationName": "fmtp"
+        },
+        "Lang": {
+          "shape": "__string",
+          "locationName": "lang"
+        }
+      },
+      "required": [
+        "Fmtp"
+      ]
+    },
+    "MediaStreamAttributesRequest": {
+      "type": "structure",
+      "members": {
+        "Fmtp": {
+          "shape": "FmtpRequest",
+          "locationName": "fmtp"
+        },
+        "Lang": {
+          "shape": "__string",
+          "locationName": "lang"
+        }
+      }
+    },
+    "MediaStreamOutputConfiguration": {
+      "type": "structure",
+      "members": {
+        "DestinationConfigurations": {
+          "shape": "__listOfDestinationConfiguration",
+          "locationName": "destinationConfigurations"
+        },
+        "EncodingName": {
+          "shape": "EncodingName",
+          "locationName": "encodingName"
+        },
+        "EncodingParameters": {
+          "shape": "EncodingParameters",
+          "locationName": "encodingParameters"
+        },
+        "MediaStreamName": {
+          "shape": "__string",
+          "locationName": "mediaStreamName"
+        }
+      },
+      "required": [
+        "MediaStreamName",
+        "EncodingName"
+      ]
+    },
+    "MediaStreamOutputConfigurationRequest": {
+      "type": "structure",
+      "members": {
+        "DestinationConfigurations": {
+          "shape": "__listOfDestinationConfigurationRequest",
+          "locationName": "destinationConfigurations"
+        },
+        "EncodingName": {
+          "shape": "EncodingName",
+          "locationName": "encodingName"
+        },
+        "EncodingParameters": {
+          "shape": "EncodingParametersRequest",
+          "locationName": "encodingParameters"
+        },
+        "MediaStreamName": {
+          "shape": "__string",
+          "locationName": "mediaStreamName"
+        }
+      },
+      "required": [
+        "MediaStreamName",
+        "EncodingName"
+      ]
+    },
+    "MediaStreamSourceConfiguration": {
+      "type": "structure",
+      "members": {
+        "EncodingName": {
+          "shape": "EncodingName",
+          "locationName": "encodingName"
+        },
+        "InputConfigurations": {
+          "shape": "__listOfInputConfiguration",
+          "locationName": "inputConfigurations"
+        },
+        "MediaStreamName": {
+          "shape": "__string",
+          "locationName": "mediaStreamName"
+        }
+      },
+      "required": [
+        "MediaStreamName",
+        "EncodingName"
+      ]
+    },
+    "MediaStreamSourceConfigurationRequest": {
+      "type": "structure",
+      "members": {
+        "EncodingName": {
+          "shape": "EncodingName",
+          "locationName": "encodingName"
+        },
+        "InputConfigurations": {
+          "shape": "__listOfInputConfigurationRequest",
+          "locationName": "inputConfigurations"
+        },
+        "MediaStreamName": {
+          "shape": "__string",
+          "locationName": "mediaStreamName"
+        }
+      },
+      "required": [
+        "MediaStreamName",
+        "EncodingName"
+      ]
+    },
+    "MediaStreamType": {
+      "type": "string",
+      "enum": [
+        "video",
+        "audio",
+        "ancillary-data"
+      ]
+    },
     "Messages": {
       "type": "structure",
       "members": {
@@ -1462,6 +2339,13 @@
       },
       "required": [
         "Errors"
+      ]
+    },
+    "NetworkInterfaceType": {
+      "type": "string",
+      "enum": [
+        "ena",
+        "efa"
       ]
     },
     "NotFoundException": {
@@ -1479,6 +2363,53 @@
       "error": {
         "httpStatusCode": 404
       }
+    },
+    "Offering": {
+      "type": "structure",
+      "members": {
+        "CurrencyCode": {
+          "shape": "__string",
+          "locationName": "currencyCode"
+        },
+        "Duration": {
+          "shape": "__integer",
+          "locationName": "duration"
+        },
+        "DurationUnits": {
+          "shape": "DurationUnits",
+          "locationName": "durationUnits"
+        },
+        "OfferingArn": {
+          "shape": "__string",
+          "locationName": "offeringArn"
+        },
+        "OfferingDescription": {
+          "shape": "__string",
+          "locationName": "offeringDescription"
+        },
+        "PricePerUnit": {
+          "shape": "__string",
+          "locationName": "pricePerUnit"
+        },
+        "PriceUnits": {
+          "shape": "PriceUnits",
+          "locationName": "priceUnits"
+        },
+        "ResourceSpecification": {
+          "shape": "ResourceSpecification",
+          "locationName": "resourceSpecification"
+        }
+      },
+      "required": [
+        "CurrencyCode",
+        "OfferingArn",
+        "OfferingDescription",
+        "DurationUnits",
+        "Duration",
+        "PricePerUnit",
+        "ResourceSpecification",
+        "PriceUnits"
+      ]
     },
     "Output": {
       "type": "structure",
@@ -1503,9 +2434,17 @@
           "shape": "__string",
           "locationName": "entitlementArn"
         },
+        "ListenerAddress": {
+          "shape": "__string",
+          "locationName": "listenerAddress"
+        },
         "MediaLiveInputArn": {
           "shape": "__string",
           "locationName": "mediaLiveInputArn"
+        },
+        "MediaStreamOutputConfigurations": {
+          "shape": "__listOfMediaStreamOutputConfiguration",
+          "locationName": "mediaStreamOutputConfigurations"
         },
         "Name": {
           "shape": "__string",
@@ -1533,6 +2472,12 @@
         "Name"
       ]
     },
+    "PriceUnits": {
+      "type": "string",
+      "enum": [
+        "HOURLY"
+      ]
+    },
     "Protocol": {
       "type": "string",
       "enum": [
@@ -1540,8 +2485,85 @@
         "rtp-fec",
         "rtp",
         "zixi-pull",
-        "rist"
+        "rist",
+        "st2110-jpegxs",
+        "cdi",
+        "srt-listener",
+        "fujitsu-qos"
       ]
+    },
+    "PurchaseOfferingRequest": {
+      "type": "structure",
+      "members": {
+        "OfferingArn": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "offeringArn"
+        },
+        "ReservationName": {
+          "shape": "__string",
+          "locationName": "reservationName"
+        },
+        "Start": {
+          "shape": "__string",
+          "locationName": "start"
+        }
+      },
+      "required": [
+        "OfferingArn",
+        "Start",
+        "ReservationName"
+      ]
+    },
+    "PurchaseOfferingResponse": {
+      "type": "structure",
+      "members": {
+        "Reservation": {
+          "shape": "Reservation",
+          "locationName": "reservation"
+        }
+      }
+    },
+    "Range": {
+      "type": "string",
+      "enum": [
+        "NARROW",
+        "FULL",
+        "FULLPROTECT"
+      ]
+    },
+    "RemoveFlowMediaStreamRequest": {
+      "type": "structure",
+      "members": {
+        "FlowArn": {
+          "shape": "__string",
+          "pattern": "^arn:.+:mediaconnect.+:flow:.+$",
+          "location": "uri",
+          "locationName": "flowArn"
+        },
+        "MediaStreamName": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "mediaStreamName"
+        }
+      },
+      "required": [
+        "FlowArn",
+        "MediaStreamName"
+      ]
+    },
+    "RemoveFlowMediaStreamResponse": {
+      "type": "structure",
+      "members": {
+        "FlowArn": {
+          "shape": "__string",
+          "locationName": "flowArn"
+        },
+        "MediaStreamName": {
+          "shape": "__string",
+          "locationName": "mediaStreamName"
+        }
+      }
     },
     "RemoveFlowOutputRequest": {
       "type": "structure",
@@ -1643,6 +2665,109 @@
         }
       }
     },
+    "Reservation": {
+      "type": "structure",
+      "members": {
+        "CurrencyCode": {
+          "shape": "__string",
+          "locationName": "currencyCode"
+        },
+        "Duration": {
+          "shape": "__integer",
+          "locationName": "duration"
+        },
+        "DurationUnits": {
+          "shape": "DurationUnits",
+          "locationName": "durationUnits"
+        },
+        "End": {
+          "shape": "__string",
+          "locationName": "end"
+        },
+        "OfferingArn": {
+          "shape": "__string",
+          "locationName": "offeringArn"
+        },
+        "OfferingDescription": {
+          "shape": "__string",
+          "locationName": "offeringDescription"
+        },
+        "PricePerUnit": {
+          "shape": "__string",
+          "locationName": "pricePerUnit"
+        },
+        "PriceUnits": {
+          "shape": "PriceUnits",
+          "locationName": "priceUnits"
+        },
+        "ReservationArn": {
+          "shape": "__string",
+          "locationName": "reservationArn"
+        },
+        "ReservationName": {
+          "shape": "__string",
+          "locationName": "reservationName"
+        },
+        "ReservationState": {
+          "shape": "ReservationState",
+          "locationName": "reservationState"
+        },
+        "ResourceSpecification": {
+          "shape": "ResourceSpecification",
+          "locationName": "resourceSpecification"
+        },
+        "Start": {
+          "shape": "__string",
+          "locationName": "start"
+        }
+      },
+      "required": [
+        "CurrencyCode",
+        "ReservationState",
+        "OfferingArn",
+        "ReservationArn",
+        "Start",
+        "OfferingDescription",
+        "ReservationName",
+        "End",
+        "Duration",
+        "DurationUnits",
+        "PricePerUnit",
+        "ResourceSpecification",
+        "PriceUnits"
+      ]
+    },
+    "ReservationState": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "EXPIRED",
+        "PROCESSING",
+        "CANCELED"
+      ]
+    },
+    "ResourceSpecification": {
+      "type": "structure",
+      "members": {
+        "ReservedBitrate": {
+          "shape": "__integer",
+          "locationName": "reservedBitrate"
+        },
+        "ResourceType": {
+          "shape": "ResourceType",
+          "locationName": "resourceType"
+        }
+      },
+      "required": [
+        "ResourceType"
+      ]
+    },
+    "ResourceType": {
+      "type": "string",
+      "enum": [
+        "Mbps_Outbound_Bandwidth"
+      ]
+    },
     "ResponseError": {
       "type": "structure",
       "members": {
@@ -1687,6 +2812,14 @@
         }
       }
     },
+    "ScanMode": {
+      "type": "string",
+      "enum": [
+        "progressive",
+        "interlace",
+        "progressive-segmented-frame"
+      ]
+    },
     "ServiceUnavailableException": {
       "type": "structure",
       "members": {
@@ -1730,6 +2863,18 @@
           "shape": "__integer",
           "locationName": "maxLatency"
         },
+        "MaxSyncBuffer": {
+          "shape": "__integer",
+          "locationName": "maxSyncBuffer"
+        },
+        "MediaStreamSourceConfigurations": {
+          "shape": "__listOfMediaStreamSourceConfigurationRequest",
+          "locationName": "mediaStreamSourceConfigurations"
+        },
+        "MinLatency": {
+          "shape": "__integer",
+          "locationName": "minLatency"
+        },
         "Name": {
           "shape": "__string",
           "locationName": "name"
@@ -1737,6 +2882,14 @@
         "Protocol": {
           "shape": "Protocol",
           "locationName": "protocol"
+        },
+        "SenderControlPort": {
+          "shape": "__integer",
+          "locationName": "senderControlPort"
+        },
+        "SenderIpAddress": {
+          "shape": "__string",
+          "locationName": "senderIpAddress"
         },
         "StreamId": {
           "shape": "__string",
@@ -1779,9 +2932,21 @@
           "shape": "__integer",
           "locationName": "ingestPort"
         },
+        "MediaStreamSourceConfigurations": {
+          "shape": "__listOfMediaStreamSourceConfiguration",
+          "locationName": "mediaStreamSourceConfigurations"
+        },
         "Name": {
           "shape": "__string",
           "locationName": "name"
+        },
+        "SenderControlPort": {
+          "shape": "__integer",
+          "locationName": "senderControlPort"
+        },
+        "SenderIpAddress": {
+          "shape": "__string",
+          "locationName": "senderIpAddress"
         },
         "SourceArn": {
           "shape": "__string",
@@ -1804,6 +2969,15 @@
         "SourceArn",
         "Name"
       ]
+    },
+    "SourcePriority": {
+      "type": "structure",
+      "members": {
+        "PrimarySource": {
+          "shape": "__string",
+          "locationName": "primarySource"
+        }
+      }
     },
     "SourceType": {
       "type": "string",
@@ -1901,6 +3075,20 @@
         "Tags"
       ]
     },
+    "Tcs": {
+      "type": "string",
+      "enum": [
+        "SDR",
+        "PQ",
+        "HLG",
+        "LINEAR",
+        "BT2100LINPQ",
+        "BT2100LINHLG",
+        "ST2065-1",
+        "ST428-1",
+        "DENSITY"
+      ]
+    },
     "TooManyRequestsException": {
       "type": "structure",
       "members": {
@@ -1932,6 +3120,14 @@
           "shape": "__integer",
           "locationName": "maxLatency"
         },
+        "MaxSyncBuffer": {
+          "shape": "__integer",
+          "locationName": "maxSyncBuffer"
+        },
+        "MinLatency": {
+          "shape": "__integer",
+          "locationName": "minLatency"
+        },
         "Protocol": {
           "shape": "Protocol",
           "locationName": "protocol"
@@ -1939,6 +3135,14 @@
         "RemoteId": {
           "shape": "__string",
           "locationName": "remoteId"
+        },
+        "SenderControlPort": {
+          "shape": "__integer",
+          "locationName": "senderControlPort"
+        },
+        "SenderIpAddress": {
+          "shape": "__string",
+          "locationName": "senderIpAddress"
         },
         "SmoothingLatency": {
           "shape": "__integer",
@@ -2016,9 +3220,17 @@
     "UpdateFailoverConfig": {
       "type": "structure",
       "members": {
+        "FailoverMode": {
+          "shape": "FailoverMode",
+          "locationName": "failoverMode"
+        },
         "RecoveryWindow": {
           "shape": "__integer",
           "locationName": "recoveryWindow"
+        },
+        "SourcePriority": {
+          "shape": "SourcePriority",
+          "locationName": "sourcePriority"
         },
         "State": {
           "shape": "State",
@@ -2074,6 +3286,59 @@
         }
       }
     },
+    "UpdateFlowMediaStreamRequest": {
+      "type": "structure",
+      "members": {
+        "Attributes": {
+          "shape": "MediaStreamAttributesRequest",
+          "locationName": "attributes"
+        },
+        "ClockRate": {
+          "shape": "__integer",
+          "locationName": "clockRate"
+        },
+        "Description": {
+          "shape": "__string",
+          "locationName": "description"
+        },
+        "FlowArn": {
+          "shape": "__string",
+          "pattern": "^arn:.+:mediaconnect.+:flow:.+$",
+          "location": "uri",
+          "locationName": "flowArn"
+        },
+        "MediaStreamName": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "mediaStreamName"
+        },
+        "MediaStreamType": {
+          "shape": "MediaStreamType",
+          "locationName": "mediaStreamType"
+        },
+        "VideoFormat": {
+          "shape": "__string",
+          "locationName": "videoFormat"
+        }
+      },
+      "required": [
+        "FlowArn",
+        "MediaStreamName"
+      ]
+    },
+    "UpdateFlowMediaStreamResponse": {
+      "type": "structure",
+      "members": {
+        "FlowArn": {
+          "shape": "__string",
+          "locationName": "flowArn"
+        },
+        "MediaStream": {
+          "shape": "MediaStream",
+          "locationName": "mediaStream"
+        }
+      }
+    },
     "UpdateFlowOutputRequest": {
       "type": "structure",
       "members": {
@@ -2102,6 +3367,14 @@
           "shape": "__integer",
           "locationName": "maxLatency"
         },
+        "MediaStreamOutputConfigurations": {
+          "shape": "__listOfMediaStreamOutputConfigurationRequest",
+          "locationName": "mediaStreamOutputConfigurations"
+        },
+        "MinLatency": {
+          "shape": "__integer",
+          "locationName": "minLatency"
+        },
         "OutputArn": {
           "shape": "__string",
           "location": "uri",
@@ -2118,6 +3391,14 @@
         "RemoteId": {
           "shape": "__string",
           "locationName": "remoteId"
+        },
+        "SenderControlPort": {
+          "shape": "__integer",
+          "locationName": "senderControlPort"
+        },
+        "SenderIpAddress": {
+          "shape": "__string",
+          "locationName": "senderIpAddress"
         },
         "SmoothingLatency": {
           "shape": "__integer",
@@ -2208,9 +3489,29 @@
           "shape": "__integer",
           "locationName": "maxLatency"
         },
+        "MaxSyncBuffer": {
+          "shape": "__integer",
+          "locationName": "maxSyncBuffer"
+        },
+        "MediaStreamSourceConfigurations": {
+          "shape": "__listOfMediaStreamSourceConfigurationRequest",
+          "locationName": "mediaStreamSourceConfigurations"
+        },
+        "MinLatency": {
+          "shape": "__integer",
+          "locationName": "minLatency"
+        },
         "Protocol": {
           "shape": "Protocol",
           "locationName": "protocol"
+        },
+        "SenderControlPort": {
+          "shape": "__integer",
+          "locationName": "senderControlPort"
+        },
+        "SenderIpAddress": {
+          "shape": "__string",
+          "locationName": "senderIpAddress"
         },
         "SourceArn": {
           "shape": "__string",
@@ -2259,6 +3560,10 @@
           "shape": "__listOf__string",
           "locationName": "networkInterfaceIds"
         },
+        "NetworkInterfaceType": {
+          "shape": "NetworkInterfaceType",
+          "locationName": "networkInterfaceType"
+        },
         "RoleArn": {
           "shape": "__string",
           "locationName": "roleArn"
@@ -2273,6 +3578,7 @@
         }
       },
       "required": [
+        "NetworkInterfaceType",
         "NetworkInterfaceIds",
         "SubnetId",
         "SecurityGroupIds",
@@ -2295,6 +3601,10 @@
         "Name": {
           "shape": "__string",
           "locationName": "name"
+        },
+        "NetworkInterfaceType": {
+          "shape": "NetworkInterfaceType",
+          "locationName": "networkInterfaceType"
         },
         "RoleArn": {
           "shape": "__string",
@@ -2325,10 +3635,28 @@
     "__integer": {
       "type": "integer"
     },
+    "__listOfAddMediaStreamRequest": {
+      "type": "list",
+      "member": {
+        "shape": "AddMediaStreamRequest"
+      }
+    },
     "__listOfAddOutputRequest": {
       "type": "list",
       "member": {
         "shape": "AddOutputRequest"
+      }
+    },
+    "__listOfDestinationConfiguration": {
+      "type": "list",
+      "member": {
+        "shape": "DestinationConfiguration"
+      }
+    },
+    "__listOfDestinationConfigurationRequest": {
+      "type": "list",
+      "member": {
+        "shape": "DestinationConfigurationRequest"
       }
     },
     "__listOfEntitlement": {
@@ -2343,6 +3671,18 @@
         "shape": "GrantEntitlementRequest"
       }
     },
+    "__listOfInputConfiguration": {
+      "type": "list",
+      "member": {
+        "shape": "InputConfiguration"
+      }
+    },
+    "__listOfInputConfigurationRequest": {
+      "type": "list",
+      "member": {
+        "shape": "InputConfigurationRequest"
+      }
+    },
     "__listOfListedEntitlement": {
       "type": "list",
       "member": {
@@ -2355,10 +3695,52 @@
         "shape": "ListedFlow"
       }
     },
+    "__listOfMediaStream": {
+      "type": "list",
+      "member": {
+        "shape": "MediaStream"
+      }
+    },
+    "__listOfMediaStreamOutputConfiguration": {
+      "type": "list",
+      "member": {
+        "shape": "MediaStreamOutputConfiguration"
+      }
+    },
+    "__listOfMediaStreamOutputConfigurationRequest": {
+      "type": "list",
+      "member": {
+        "shape": "MediaStreamOutputConfigurationRequest"
+      }
+    },
+    "__listOfMediaStreamSourceConfiguration": {
+      "type": "list",
+      "member": {
+        "shape": "MediaStreamSourceConfiguration"
+      }
+    },
+    "__listOfMediaStreamSourceConfigurationRequest": {
+      "type": "list",
+      "member": {
+        "shape": "MediaStreamSourceConfigurationRequest"
+      }
+    },
+    "__listOfOffering": {
+      "type": "list",
+      "member": {
+        "shape": "Offering"
+      }
+    },
     "__listOfOutput": {
       "type": "list",
       "member": {
         "shape": "Output"
+      }
+    },
+    "__listOfReservation": {
+      "type": "list",
+      "member": {
+        "shape": "Reservation"
       }
     },
     "__listOfSetSourceRequest": {

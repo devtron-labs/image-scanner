@@ -72,6 +72,10 @@ type IVSAPI interface {
 	CreateChannelWithContext(aws.Context, *ivs.CreateChannelInput, ...request.Option) (*ivs.CreateChannelOutput, error)
 	CreateChannelRequest(*ivs.CreateChannelInput) (*request.Request, *ivs.CreateChannelOutput)
 
+	CreateRecordingConfiguration(*ivs.CreateRecordingConfigurationInput) (*ivs.CreateRecordingConfigurationOutput, error)
+	CreateRecordingConfigurationWithContext(aws.Context, *ivs.CreateRecordingConfigurationInput, ...request.Option) (*ivs.CreateRecordingConfigurationOutput, error)
+	CreateRecordingConfigurationRequest(*ivs.CreateRecordingConfigurationInput) (*request.Request, *ivs.CreateRecordingConfigurationOutput)
+
 	CreateStreamKey(*ivs.CreateStreamKeyInput) (*ivs.CreateStreamKeyOutput, error)
 	CreateStreamKeyWithContext(aws.Context, *ivs.CreateStreamKeyInput, ...request.Option) (*ivs.CreateStreamKeyOutput, error)
 	CreateStreamKeyRequest(*ivs.CreateStreamKeyInput) (*request.Request, *ivs.CreateStreamKeyOutput)
@@ -79,6 +83,14 @@ type IVSAPI interface {
 	DeleteChannel(*ivs.DeleteChannelInput) (*ivs.DeleteChannelOutput, error)
 	DeleteChannelWithContext(aws.Context, *ivs.DeleteChannelInput, ...request.Option) (*ivs.DeleteChannelOutput, error)
 	DeleteChannelRequest(*ivs.DeleteChannelInput) (*request.Request, *ivs.DeleteChannelOutput)
+
+	DeletePlaybackKeyPair(*ivs.DeletePlaybackKeyPairInput) (*ivs.DeletePlaybackKeyPairOutput, error)
+	DeletePlaybackKeyPairWithContext(aws.Context, *ivs.DeletePlaybackKeyPairInput, ...request.Option) (*ivs.DeletePlaybackKeyPairOutput, error)
+	DeletePlaybackKeyPairRequest(*ivs.DeletePlaybackKeyPairInput) (*request.Request, *ivs.DeletePlaybackKeyPairOutput)
+
+	DeleteRecordingConfiguration(*ivs.DeleteRecordingConfigurationInput) (*ivs.DeleteRecordingConfigurationOutput, error)
+	DeleteRecordingConfigurationWithContext(aws.Context, *ivs.DeleteRecordingConfigurationInput, ...request.Option) (*ivs.DeleteRecordingConfigurationOutput, error)
+	DeleteRecordingConfigurationRequest(*ivs.DeleteRecordingConfigurationInput) (*request.Request, *ivs.DeleteRecordingConfigurationOutput)
 
 	DeleteStreamKey(*ivs.DeleteStreamKeyInput) (*ivs.DeleteStreamKeyOutput, error)
 	DeleteStreamKeyWithContext(aws.Context, *ivs.DeleteStreamKeyInput, ...request.Option) (*ivs.DeleteStreamKeyOutput, error)
@@ -88,6 +100,14 @@ type IVSAPI interface {
 	GetChannelWithContext(aws.Context, *ivs.GetChannelInput, ...request.Option) (*ivs.GetChannelOutput, error)
 	GetChannelRequest(*ivs.GetChannelInput) (*request.Request, *ivs.GetChannelOutput)
 
+	GetPlaybackKeyPair(*ivs.GetPlaybackKeyPairInput) (*ivs.GetPlaybackKeyPairOutput, error)
+	GetPlaybackKeyPairWithContext(aws.Context, *ivs.GetPlaybackKeyPairInput, ...request.Option) (*ivs.GetPlaybackKeyPairOutput, error)
+	GetPlaybackKeyPairRequest(*ivs.GetPlaybackKeyPairInput) (*request.Request, *ivs.GetPlaybackKeyPairOutput)
+
+	GetRecordingConfiguration(*ivs.GetRecordingConfigurationInput) (*ivs.GetRecordingConfigurationOutput, error)
+	GetRecordingConfigurationWithContext(aws.Context, *ivs.GetRecordingConfigurationInput, ...request.Option) (*ivs.GetRecordingConfigurationOutput, error)
+	GetRecordingConfigurationRequest(*ivs.GetRecordingConfigurationInput) (*request.Request, *ivs.GetRecordingConfigurationOutput)
+
 	GetStream(*ivs.GetStreamInput) (*ivs.GetStreamOutput, error)
 	GetStreamWithContext(aws.Context, *ivs.GetStreamInput, ...request.Option) (*ivs.GetStreamOutput, error)
 	GetStreamRequest(*ivs.GetStreamInput) (*request.Request, *ivs.GetStreamOutput)
@@ -96,6 +116,14 @@ type IVSAPI interface {
 	GetStreamKeyWithContext(aws.Context, *ivs.GetStreamKeyInput, ...request.Option) (*ivs.GetStreamKeyOutput, error)
 	GetStreamKeyRequest(*ivs.GetStreamKeyInput) (*request.Request, *ivs.GetStreamKeyOutput)
 
+	GetStreamSession(*ivs.GetStreamSessionInput) (*ivs.GetStreamSessionOutput, error)
+	GetStreamSessionWithContext(aws.Context, *ivs.GetStreamSessionInput, ...request.Option) (*ivs.GetStreamSessionOutput, error)
+	GetStreamSessionRequest(*ivs.GetStreamSessionInput) (*request.Request, *ivs.GetStreamSessionOutput)
+
+	ImportPlaybackKeyPair(*ivs.ImportPlaybackKeyPairInput) (*ivs.ImportPlaybackKeyPairOutput, error)
+	ImportPlaybackKeyPairWithContext(aws.Context, *ivs.ImportPlaybackKeyPairInput, ...request.Option) (*ivs.ImportPlaybackKeyPairOutput, error)
+	ImportPlaybackKeyPairRequest(*ivs.ImportPlaybackKeyPairInput) (*request.Request, *ivs.ImportPlaybackKeyPairOutput)
+
 	ListChannels(*ivs.ListChannelsInput) (*ivs.ListChannelsOutput, error)
 	ListChannelsWithContext(aws.Context, *ivs.ListChannelsInput, ...request.Option) (*ivs.ListChannelsOutput, error)
 	ListChannelsRequest(*ivs.ListChannelsInput) (*request.Request, *ivs.ListChannelsOutput)
@@ -103,12 +131,33 @@ type IVSAPI interface {
 	ListChannelsPages(*ivs.ListChannelsInput, func(*ivs.ListChannelsOutput, bool) bool) error
 	ListChannelsPagesWithContext(aws.Context, *ivs.ListChannelsInput, func(*ivs.ListChannelsOutput, bool) bool, ...request.Option) error
 
+	ListPlaybackKeyPairs(*ivs.ListPlaybackKeyPairsInput) (*ivs.ListPlaybackKeyPairsOutput, error)
+	ListPlaybackKeyPairsWithContext(aws.Context, *ivs.ListPlaybackKeyPairsInput, ...request.Option) (*ivs.ListPlaybackKeyPairsOutput, error)
+	ListPlaybackKeyPairsRequest(*ivs.ListPlaybackKeyPairsInput) (*request.Request, *ivs.ListPlaybackKeyPairsOutput)
+
+	ListPlaybackKeyPairsPages(*ivs.ListPlaybackKeyPairsInput, func(*ivs.ListPlaybackKeyPairsOutput, bool) bool) error
+	ListPlaybackKeyPairsPagesWithContext(aws.Context, *ivs.ListPlaybackKeyPairsInput, func(*ivs.ListPlaybackKeyPairsOutput, bool) bool, ...request.Option) error
+
+	ListRecordingConfigurations(*ivs.ListRecordingConfigurationsInput) (*ivs.ListRecordingConfigurationsOutput, error)
+	ListRecordingConfigurationsWithContext(aws.Context, *ivs.ListRecordingConfigurationsInput, ...request.Option) (*ivs.ListRecordingConfigurationsOutput, error)
+	ListRecordingConfigurationsRequest(*ivs.ListRecordingConfigurationsInput) (*request.Request, *ivs.ListRecordingConfigurationsOutput)
+
+	ListRecordingConfigurationsPages(*ivs.ListRecordingConfigurationsInput, func(*ivs.ListRecordingConfigurationsOutput, bool) bool) error
+	ListRecordingConfigurationsPagesWithContext(aws.Context, *ivs.ListRecordingConfigurationsInput, func(*ivs.ListRecordingConfigurationsOutput, bool) bool, ...request.Option) error
+
 	ListStreamKeys(*ivs.ListStreamKeysInput) (*ivs.ListStreamKeysOutput, error)
 	ListStreamKeysWithContext(aws.Context, *ivs.ListStreamKeysInput, ...request.Option) (*ivs.ListStreamKeysOutput, error)
 	ListStreamKeysRequest(*ivs.ListStreamKeysInput) (*request.Request, *ivs.ListStreamKeysOutput)
 
 	ListStreamKeysPages(*ivs.ListStreamKeysInput, func(*ivs.ListStreamKeysOutput, bool) bool) error
 	ListStreamKeysPagesWithContext(aws.Context, *ivs.ListStreamKeysInput, func(*ivs.ListStreamKeysOutput, bool) bool, ...request.Option) error
+
+	ListStreamSessions(*ivs.ListStreamSessionsInput) (*ivs.ListStreamSessionsOutput, error)
+	ListStreamSessionsWithContext(aws.Context, *ivs.ListStreamSessionsInput, ...request.Option) (*ivs.ListStreamSessionsOutput, error)
+	ListStreamSessionsRequest(*ivs.ListStreamSessionsInput) (*request.Request, *ivs.ListStreamSessionsOutput)
+
+	ListStreamSessionsPages(*ivs.ListStreamSessionsInput, func(*ivs.ListStreamSessionsOutput, bool) bool) error
+	ListStreamSessionsPagesWithContext(aws.Context, *ivs.ListStreamSessionsInput, func(*ivs.ListStreamSessionsOutput, bool) bool, ...request.Option) error
 
 	ListStreams(*ivs.ListStreamsInput) (*ivs.ListStreamsOutput, error)
 	ListStreamsWithContext(aws.Context, *ivs.ListStreamsInput, ...request.Option) (*ivs.ListStreamsOutput, error)
@@ -120,9 +169,6 @@ type IVSAPI interface {
 	ListTagsForResource(*ivs.ListTagsForResourceInput) (*ivs.ListTagsForResourceOutput, error)
 	ListTagsForResourceWithContext(aws.Context, *ivs.ListTagsForResourceInput, ...request.Option) (*ivs.ListTagsForResourceOutput, error)
 	ListTagsForResourceRequest(*ivs.ListTagsForResourceInput) (*request.Request, *ivs.ListTagsForResourceOutput)
-
-	ListTagsForResourcePages(*ivs.ListTagsForResourceInput, func(*ivs.ListTagsForResourceOutput, bool) bool) error
-	ListTagsForResourcePagesWithContext(aws.Context, *ivs.ListTagsForResourceInput, func(*ivs.ListTagsForResourceOutput, bool) bool, ...request.Option) error
 
 	PutMetadata(*ivs.PutMetadataInput) (*ivs.PutMetadataOutput, error)
 	PutMetadataWithContext(aws.Context, *ivs.PutMetadataInput, ...request.Option) (*ivs.PutMetadataOutput, error)

@@ -12,6 +12,35 @@
     "signatureVersion": "v4"
   },
   "operations": {
+    "BatchAssociateScramSecret" : {
+      "name" : "BatchAssociateScramSecret",
+      "http" : {
+        "method" : "POST",
+        "requestUri" : "/v1/clusters/{clusterArn}/scram-secrets",
+        "responseCode" : 200
+      },
+      "input" : {
+        "shape" : "BatchAssociateScramSecretRequest"
+      },
+      "output" : {
+        "shape" : "BatchAssociateScramSecretResponse"
+      },
+      "errors" : [ {
+        "shape" : "BadRequestException"
+      }, {
+        "shape" : "UnauthorizedException"
+      }, {
+        "shape" : "InternalServerErrorException"
+      }, {
+        "shape" : "ForbiddenException"
+      }, {
+        "shape" : "NotFoundException"
+      }, {
+        "shape" : "ServiceUnavailableException"
+      }, {
+        "shape" : "TooManyRequestsException"
+      } ]
+    },
     "CreateCluster": {
       "name": "CreateCluster",
       "http": {
@@ -24,6 +53,43 @@
       },
       "output": {
         "shape": "CreateClusterResponse"
+      },
+      "errors": [
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "UnauthorizedException"
+        },
+        {
+          "shape": "ForbiddenException"
+        },
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "TooManyRequestsException"
+        },
+        {
+          "shape": "ConflictException"
+        }
+      ]
+    },
+    "CreateClusterV2": {
+      "name": "CreateClusterV2",
+      "http": {
+        "method": "POST",
+        "requestUri": "/api/v2/clusters",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "CreateClusterV2Request"
+      },
+      "output": {
+        "shape": "CreateClusterV2Response"
       },
       "errors": [
         {
@@ -114,6 +180,34 @@
         }
       ]
     },
+    "DeleteConfiguration": {
+      "name": "DeleteConfiguration",
+      "http": {
+        "method": "DELETE",
+        "requestUri": "/v1/configurations/{arn}",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "DeleteConfigurationRequest"
+      },
+      "output": {
+        "shape": "DeleteConfigurationResponse"
+      },
+      "errors": [
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "ForbiddenException"
+        }
+      ]
+    },
     "DescribeCluster": {
       "name": "DescribeCluster",
       "http": {
@@ -126,6 +220,37 @@
       },
       "output": {
         "shape": "DescribeClusterResponse"
+      },
+      "errors": [
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "UnauthorizedException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "ForbiddenException"
+        }
+      ]
+    },
+    "DescribeClusterV2": {
+      "name": "DescribeClusterV2",
+      "http": {
+        "method": "GET",
+        "requestUri": "/api/v2/clusters/{clusterArn}",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "DescribeClusterV2Request"
+      },
+      "output": {
+        "shape": "DescribeClusterV2Response"
       },
       "errors": [
         {
@@ -244,6 +369,35 @@
         }
       ]
     },
+    "BatchDisassociateScramSecret" : {
+      "name" : "BatchDisassociateScramSecret",
+      "http" : {
+        "method" : "PATCH",
+        "requestUri" : "/v1/clusters/{clusterArn}/scram-secrets",
+        "responseCode" : 200
+      },
+      "input" : {
+        "shape" : "BatchDisassociateScramSecretRequest"
+      },
+      "output" : {
+        "shape" : "BatchDisassociateScramSecretResponse"
+      },
+      "errors" : [ {
+        "shape" : "BadRequestException"
+      }, {
+        "shape" : "UnauthorizedException"
+      }, {
+        "shape" : "InternalServerErrorException"
+      }, {
+        "shape" : "ForbiddenException"
+      }, {
+        "shape" : "NotFoundException"
+      }, {
+        "shape" : "ServiceUnavailableException"
+      }, {
+        "shape" : "TooManyRequestsException"
+      } ]
+    },
     "GetBootstrapBrokers": {
       "name": "GetBootstrapBrokers",
       "http": {
@@ -352,6 +506,34 @@
       },
       "output": {
         "shape": "ListClustersResponse"
+      },
+      "errors": [
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "UnauthorizedException"
+        },
+        {
+          "shape": "ForbiddenException"
+        }
+      ]
+    },
+    "ListClustersV2": {
+      "name": "ListClustersV2",
+      "http": {
+        "method": "GET",
+        "requestUri": "/api/v2/clusters",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "ListClustersV2Request"
+      },
+      "output": {
+        "shape": "ListClustersV2Response"
       },
       "errors": [
         {
@@ -488,6 +670,35 @@
           "shape": "ForbiddenException"
         }
       ]
+    },
+    "ListScramSecrets" : {
+      "name" : "ListScramSecrets",
+      "http" : {
+        "method" : "GET",
+        "requestUri" : "/v1/clusters/{clusterArn}/scram-secrets",
+        "responseCode" : 200
+      },
+      "input" : {
+        "shape" : "ListScramSecretsRequest"
+      },
+      "output" : {
+        "shape" : "ListScramSecretsResponse"
+      },
+      "errors" : [ {
+        "shape" : "BadRequestException"
+      }, {
+        "shape" : "UnauthorizedException"
+      }, {
+        "shape" : "InternalServerErrorException"
+      }, {
+        "shape" : "ForbiddenException"
+      }, {
+        "shape" : "NotFoundException"
+      }, {
+        "shape" : "ServiceUnavailableException"
+      }, {
+        "shape" : "TooManyRequestsException"
+      } ]
     },
     "ListTagsForResource": {
       "name": "ListTagsForResource",
@@ -626,6 +837,43 @@
         }
       ]
     },
+    "UpdateBrokerType": {
+      "name": "UpdateBrokerType",
+      "http": {
+        "method": "PUT",
+        "requestUri": "/v1/clusters/{clusterArn}/nodes/type",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "UpdateBrokerTypeRequest"
+      },
+      "output": {
+        "shape": "UpdateBrokerTypeResponse"
+      },
+      "errors": [
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "ForbiddenException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "UnauthorizedException"
+        },
+        {
+          "shape": "TooManyRequestsException"
+        }
+      ]
+    },
     "UpdateBrokerStorage": {
       "name": "UpdateBrokerStorage",
       "http": {
@@ -638,6 +886,37 @@
       },
       "output": {
         "shape": "UpdateBrokerStorageResponse"
+      },
+      "errors": [
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "UnauthorizedException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "ForbiddenException"
+        }
+      ]
+    },
+    "UpdateConfiguration": {
+      "name": "UpdateConfiguration",
+      "http": {
+        "method": "PUT",
+        "requestUri": "/v1/configurations/{arn}",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "UpdateConfigurationRequest"
+      },
+      "output": {
+        "shape": "UpdateConfigurationResponse"
       },
       "errors": [
         {
@@ -728,6 +1007,43 @@
         } 
       ]
     },
+    "UpdateConnectivity":{
+      "name":"UpdateConnectivity",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/v1/clusters/{clusterArn}/connectivity",
+        "responseCode":200
+      },
+      "input":{
+        "shape":"UpdateConnectivityRequest"
+      },
+      "output":{
+        "shape":"UpdateConnectivityResponse"
+      },
+      "errors":[
+        {
+          "shape":"BadRequestException"
+        },
+        {
+          "shape":"UnauthorizedException"
+        },
+        {
+          "shape":"InternalServerErrorException"
+        },
+        {
+          "shape":"ForbiddenException"
+        },
+        {
+          "shape":"NotFoundException"
+        },
+        {
+          "shape":"ServiceUnavailableException"
+        },
+        {
+          "shape":"TooManyRequestsException"
+        }
+      ]
+    },
     "UpdateMonitoring" : {
       "name" : "UpdateMonitoring",
       "http" : {
@@ -752,9 +1068,66 @@
       }, {
         "shape" : "ForbiddenException"
       } ]
+    },
+    "UpdateSecurity" : {
+      "name" : "UpdateSecurity",
+      "http" : {
+        "method" : "PATCH",
+        "requestUri" : "/v1/clusters/{clusterArn}/security",
+        "responseCode" : 200
+      },
+      "input" : {
+        "shape" : "UpdateSecurityRequest"
+      },
+      "output" : {
+        "shape" : "UpdateSecurityResponse"
+      },
+      "errors" : [ {
+        "shape" : "BadRequestException"
+      }, {
+        "shape" : "UnauthorizedException"
+      }, {
+        "shape" : "InternalServerErrorException"
+      }, {
+        "shape" : "ForbiddenException"
+      }, {
+        "shape" : "NotFoundException"
+      }, {
+        "shape" : "ServiceUnavailableException"
+      }, {
+        "shape" : "TooManyRequestsException"
+      } ]
     }
   },
   "shapes": {
+    "BatchAssociateScramSecretRequest" : {
+      "type" : "structure",
+      "members" : {
+        "ClusterArn" : {
+          "shape" : "__string",
+          "location" : "uri",
+          "locationName" : "clusterArn"
+        },
+        "SecretArnList" : {
+          "shape" : "__listOf__string",
+          "locationName" : "secretArnList"
+        }
+      },
+      "required" : [ "ClusterArn", "SecretArnList" ]
+    },
+    "BatchAssociateScramSecretResponse" : {
+      "type" : "structure",
+      "members" : {
+        "ClusterArn" : {
+          "shape" : "__string",
+          "locationName" : "clusterArn"
+        },
+        "UnprocessedScramSecrets" : {
+          "shape" : "__listOfUnprocessedScramSecret",
+          "locationName" : "unprocessedScramSecrets"
+        }
+      }
+    },
     "BadRequestException": {
       "type": "structure",
       "members": {
@@ -834,6 +1207,10 @@
         "StorageInfo": {
           "shape": "StorageInfo",
           "locationName": "storageInfo"
+        },
+        "ConnectivityInfo":{
+          "shape":"ConnectivityInfo",
+          "locationName":"connectivityInfo"
         }
       },
       "required": [
@@ -887,12 +1264,20 @@
         }
       }
     },
-    "ClientAuthentication": {
-      "type": "structure",
-      "members": {
-        "Tls": {
-          "shape": "Tls",
-          "locationName": "tls"
+    "ClientAuthentication" : {
+      "type" : "structure",
+      "members" : {
+        "Sasl" : {
+          "shape" : "Sasl",
+          "locationName" : "sasl"
+        },
+        "Tls" : {
+          "shape" : "Tls",
+          "locationName" : "tls"
+        },
+        "Unauthenticated" : {
+          "shape" : "Unauthenticated",
+          "locationName" : "unauthenticated"
         }
       }
     },
@@ -977,6 +1362,10 @@
           "shape": "ClusterState",
           "locationName": "state"
         },
+        "StateInfo": {
+          "shape": "StateInfo",
+          "locationName": "stateInfo"
+        },
         "Tags": {
           "shape": "__mapOf__string",
           "locationName": "tags"
@@ -984,6 +1373,10 @@
         "ZookeeperConnectString": {
           "shape": "__string",
           "locationName": "zookeeperConnectString"
+        },
+        "ZookeeperConnectStringTls" : {
+          "shape" : "__string",
+          "locationName" : "zookeeperConnectStringTls"
         }
       }
     },
@@ -1063,9 +1456,12 @@
       "enum": [
         "ACTIVE",
         "CREATING",
-        "UPDATING",
         "DELETING",
-        "FAILED"
+        "FAILED",
+        "HEALING",
+        "MAINTENANCE",
+        "REBOOTING_BROKER",
+        "UPDATING"
       ]
     },
     "CompatibleKafkaVersion" : {
@@ -1107,6 +1503,10 @@
         "Name": {
           "shape": "__string",
           "locationName": "name"
+        },
+        "State": {
+          "shape": "ConfigurationState",
+          "locationName": "state"
         }
       },
       "required": [
@@ -1115,7 +1515,8 @@
         "CreationTime",
         "KafkaVersions",
         "Arn",
-        "Name"
+        "Name",
+        "State"
       ]
     },
     "ConfigurationInfo": {
@@ -1156,6 +1557,14 @@
         "CreationTime"
       ]
     },
+    "ConfigurationState": {
+      "type": "string",
+      "enum": [
+        "ACTIVE",
+        "DELETING",
+        "DELETE_FAILED"
+      ]
+    },
     "ConflictException": {
       "type": "structure",
       "members": {
@@ -1171,6 +1580,15 @@
       "exception": true,
       "error": {
         "httpStatusCode": 409
+      }
+    },
+    "ConnectivityInfo":{
+      "type":"structure",
+      "members":{
+        "PublicAccess":{
+          "shape":"PublicAccess",
+          "locationName":"publicAccess"
+        }
       }
     },
     "CreateClusterRequest": {
@@ -1288,6 +1706,10 @@
         "Name": {
           "shape": "__string",
           "locationName": "name"
+        },
+        "State": {
+          "shape": "ConfigurationState",
+          "locationName": "state"
         }
       }
     },
@@ -1318,6 +1740,32 @@
         },
         "State": {
           "shape": "ClusterState",
+          "locationName": "state"
+        }
+      }
+    },
+    "DeleteConfigurationRequest": {
+      "type": "structure",
+      "members": {
+        "Arn": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "arn"
+        }
+      },
+      "required": [
+        "Arn"
+      ]
+    },
+    "DeleteConfigurationResponse": {
+      "type": "structure",
+      "members": {
+        "Arn": {
+          "shape": "__string",
+          "locationName": "arn"
+        },
+        "State": {
+          "shape": "ConfigurationState",
           "locationName": "state"
         }
       }
@@ -1405,6 +1853,10 @@
         "Name": {
           "shape": "__string",
           "locationName": "name"
+        },
+        "State": {
+          "shape": "ConfigurationState",
+          "locationName": "state"
         }
       }
     },
@@ -1449,6 +1901,34 @@
         "ServerProperties": {
           "shape": "__blob",
           "locationName": "serverProperties"
+        }
+      }
+    },
+    "BatchDisassociateScramSecretRequest" : {
+      "type" : "structure",
+      "members" : {
+        "ClusterArn" : {
+          "shape" : "__string",
+          "location" : "uri",
+          "locationName" : "clusterArn"
+        },
+        "SecretArnList" : {
+          "shape" : "__listOf__string",
+          "locationName" : "secretArnList"
+        }
+      },
+      "required" : [ "ClusterArn", "SecretArnList" ]
+    },
+    "BatchDisassociateScramSecretResponse" : {
+      "type" : "structure",
+      "members" : {
+        "ClusterArn" : {
+          "shape" : "__string",
+          "locationName" : "clusterArn"
+        },
+        "UnprocessedScramSecrets" : {
+          "shape" : "__listOfUnprocessedScramSecret",
+          "locationName" : "unprocessedScramSecrets"
         }
       }
     },
@@ -1504,7 +1984,8 @@
       "enum": [
         "DEFAULT",
         "PER_BROKER",
-        "PER_TOPIC_PER_BROKER"
+        "PER_TOPIC_PER_BROKER",
+        "PER_TOPIC_PER_PARTITION"
       ]
     },
     "Error": {
@@ -1584,9 +2065,29 @@
           "shape": "__string",
           "locationName": "bootstrapBrokerString"
         },
+        "BootstrapBrokerStringPublicSaslIam" : {
+          "shape" : "__string",
+          "locationName" : "bootstrapBrokerStringPublicSaslIam"
+        },
+        "BootstrapBrokerStringPublicSaslScram" : {
+          "shape" : "__string",
+          "locationName" : "bootstrapBrokerStringPublicSaslScram"
+        },
+        "BootstrapBrokerStringPublicTls" : {
+          "shape" : "__string",
+          "locationName" : "bootstrapBrokerStringPublicTls"
+        },
         "BootstrapBrokerStringTls": {
           "shape": "__string",
           "locationName": "bootstrapBrokerStringTls"
+        },
+        "BootstrapBrokerStringSaslScram": {
+          "shape": "__string",
+          "locationName": "bootstrapBrokerStringSaslScram"
+        },
+        "BootstrapBrokerStringSaslIam": {
+          "shape": "__string",
+          "locationName": "bootstrapBrokerStringSaslIam"
         }
       }
     },
@@ -1681,6 +2182,391 @@
           "locationName": "nextToken"
         }
       }
+    },
+    "ListClustersV2Request": {
+      "type": "structure",
+      "members": {
+        "ClusterNameFilter": {
+          "shape": "__string",
+          "location": "querystring",
+          "locationName": "clusterNameFilter",
+          "documentation": "\n            <p>Specify a prefix of the names of the clusters that you want to list. The service lists all the clusters whose names start with this prefix.</p>\n         "
+        },
+        "ClusterTypeFilter": {
+          "shape": "__string",
+          "location": "querystring",
+          "locationName": "clusterTypeFilter",
+          "documentation": "\n            <p>Specify either PROVISIONED or SERVERLESS.</p>\n         "
+        },
+        "MaxResults": {
+          "shape": "MaxResults",
+          "location": "querystring",
+          "locationName": "maxResults",
+          "documentation": "\n            <p>The maximum number of results to return in the response. If there are more results, the response includes a NextToken parameter.</p>\n         "
+        },
+        "NextToken": {
+          "shape": "__string",
+          "location": "querystring",
+          "locationName": "nextToken",
+          "documentation": "\n            <p>The paginated results marker. When the result of the operation is truncated, the call returns NextToken in the response. \n            To get the next batch, provide this token in your next request.</p>\n         "
+        }
+      }
+    },
+    "ListClustersV2Response": {
+      "type": "structure",
+      "members": {
+        "ClusterInfoList": {
+          "shape": "__listOfCluster",
+          "locationName": "clusterInfoList",
+          "documentation": "\n            <p>Information on each of the MSK clusters in the response.</p>\n         "
+        },
+        "NextToken": {
+          "shape": "__string",
+          "locationName": "nextToken",
+          "documentation": "\n            <p>The paginated results marker. When the result of a ListClusters operation is truncated, the call returns NextToken in the response. \n               To get another batch of clusters, provide this token in your next request.</p>\n         "
+        }
+      }
+    },
+    "CreateClusterV2Request": {
+      "type": "structure",
+      "members": {
+        "ClusterName": {
+          "shape": "__stringMin1Max64",
+          "locationName": "clusterName",
+          "documentation": "\n            <p>The name of the cluster.</p>\n         "
+        },
+        "Tags": {
+          "shape": "__mapOf__string",
+          "locationName": "tags",
+          "documentation": "\n            <p>A map of tags that you want the cluster to have.</p>\n         "
+        },
+        "Provisioned": {
+          "shape": "ProvisionedRequest",
+          "locationName": "provisioned",
+          "documentation": "\n            <p>Information about the provisioned cluster.</p>\n         "
+        },
+        "Serverless": {
+          "shape": "ServerlessRequest",
+          "locationName": "serverless",
+          "documentation": "\n            <p>Information about the serverless cluster.</p>\n         "
+        }
+      },
+      "required": [
+        "ClusterName"
+      ]
+    },
+    "CreateClusterV2Response": {
+      "type": "structure",
+      "members": {
+        "ClusterArn": {
+          "shape": "__string",
+          "locationName": "clusterArn",
+          "documentation": "\n            <p>The Amazon Resource Name (ARN) of the cluster.</p>\n         "
+        },
+        "ClusterName": {
+          "shape": "__string",
+          "locationName": "clusterName",
+          "documentation": "\n            <p>The name of the MSK cluster.</p>\n         "
+        },
+        "State": {
+          "shape": "ClusterState",
+          "locationName": "state",
+          "documentation": "\n            <p>The state of the cluster. The possible states are ACTIVE, CREATING, DELETING, FAILED, HEALING, MAINTENANCE, REBOOTING_BROKER, and UPDATING.</p>\n         "
+        },
+        "ClusterType": {
+          "shape": "ClusterType",
+          "locationName": "clusterType",
+          "documentation": "\n            <p>The type of the cluster. The possible types are PROVISIONED or SERVERLESS.</p>\n         "
+        }
+      }
+    },
+    "DescribeClusterV2Request": {
+      "type": "structure",
+      "members": {
+        "ClusterArn": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "clusterArn",
+          "documentation": "\n            <p>The Amazon Resource Name (ARN) that uniquely identifies the cluster.</p>\n         "
+        }
+      },
+      "required": [
+        "ClusterArn"
+      ]
+    },
+    "DescribeClusterV2Response": {
+      "type": "structure",
+      "members": {
+        "ClusterInfo": {
+          "shape": "Cluster",
+          "locationName": "clusterInfo",
+          "documentation": "\n            <p>The cluster information.</p>\n         "
+        }
+      }
+    },
+    "Cluster": {
+      "type": "structure",
+      "members": {
+        "ActiveOperationArn": {
+          "shape": "__string",
+          "locationName": "activeOperationArn",
+          "documentation": "\n            <p>The Amazon Resource Name (ARN) that uniquely identifies a cluster operation.</p>\n         "
+        },
+        "ClusterType": {
+          "shape": "ClusterType",
+          "locationName": "clusterType",
+          "documentation": "\n            <p>Cluster Type.</p>\n         "
+        },
+        "ClusterArn": {
+          "shape": "__string",
+          "locationName": "clusterArn",
+          "documentation": "\n            <p>The Amazon Resource Name (ARN) that uniquely identifies the cluster.</p>\n         "
+        },
+        "ClusterName": {
+          "shape": "__string",
+          "locationName": "clusterName",
+          "documentation": "\n            <p>The name of the cluster.</p>\n         "
+        },
+        "CreationTime": {
+          "shape": "__timestampIso8601",
+          "locationName": "creationTime",
+          "documentation": "\n            <p>The time when the cluster was created.</p>\n         "
+        },
+        "CurrentVersion": {
+          "shape": "__string",
+          "locationName": "currentVersion",
+          "documentation": "\n            <p>The current version of the MSK cluster.</p>\n         "
+        },
+        "State": {
+          "shape": "ClusterState",
+          "locationName": "state",
+          "documentation": "\n            <p>The state of the cluster. The possible states are ACTIVE, CREATING, DELETING, FAILED, HEALING, MAINTENANCE, REBOOTING_BROKER, and UPDATING.</p>\n         "
+        },
+        "StateInfo" : {
+          "shape" : "StateInfo",
+          "locationName" : "stateInfo",
+          "documentation": "\n            <p>State Info for the Amazon MSK cluster.</p>\n         "
+        },
+        "Tags": {
+          "shape": "__mapOf__string",
+          "locationName": "tags",
+          "documentation": "\n            <p>Tags attached to the cluster.</p>\n         "
+        },
+        "Provisioned": {
+          "shape": "Provisioned",
+          "locationName": "provisioned",
+          "documentation": "\n            <p>Information about the provisioned cluster.</p>\n         "
+        },
+        "Serverless": {
+          "shape": "Serverless",
+          "locationName": "serverless",
+          "documentation": "\n            <p>Information about the serverless cluster.</p>\n         "
+        }
+      },
+      "documentation": "\n            <p>Returns information about a cluster.</p>\n         "
+    },
+    "ClusterType": {
+      "type": "string",
+      "documentation": "\n            <p>The type of cluster.</p>\n         ",
+      "enum": [
+        "PROVISIONED",
+        "SERVERLESS"
+      ]
+    },
+    "ProvisionedRequest": {
+      "type" : "structure",
+      "documentation": "\n            <p>Provisioned cluster request.</p>\n         ",
+      "members" : {
+        "BrokerNodeGroupInfo": {
+          "shape": "BrokerNodeGroupInfo",
+          "locationName": "brokerNodeGroupInfo",
+          "documentation": "\n            <p>Information about the brokers.</p>\n         "
+        },
+        "ClientAuthentication": {
+          "shape": "ClientAuthentication",
+          "locationName": "clientAuthentication",
+          "documentation": "\n            <p>Includes all client authentication information.</p>\n         "
+        },
+        "ConfigurationInfo": {
+          "shape": "ConfigurationInfo",
+          "locationName": "configurationInfo",
+          "documentation": "\n            <p>Represents the configuration that you want Amazon MSK to use for the brokers in a cluster.</p>\n         "
+        },
+        "EncryptionInfo": {
+          "shape": "EncryptionInfo",
+          "locationName": "encryptionInfo",
+          "documentation": "\n            <p>Includes all encryption-related information.</p>\n         "
+        },
+        "EnhancedMonitoring": {
+          "shape": "EnhancedMonitoring",
+          "locationName": "enhancedMonitoring",
+          "documentation": "\n            <p>Specifies the level of monitoring for the MSK cluster. The possible values are DEFAULT, PER_BROKER, PER_TOPIC_PER_BROKER, and PER_TOPIC_PER_PARTITION.</p>\n         "
+        },
+        "OpenMonitoring" : {
+          "shape" : "OpenMonitoringInfo",
+          "locationName" : "openMonitoring",
+          "documentation" : "\n            <p>The settings for open monitoring.</p>\n         "
+        },
+        "KafkaVersion": {
+          "shape": "__stringMin1Max128",
+          "locationName": "kafkaVersion",
+          "documentation": "\n            <p>The Apache Kafka version that you want for the cluster.</p>\n         "
+        },
+        "LoggingInfo": {
+          "shape": "LoggingInfo",
+          "locationName": "loggingInfo",
+          "documentation": "\n            <p>Log delivery information for the cluster.</p>\n         "
+        },
+        "NumberOfBrokerNodes": {
+          "shape": "__integerMin1Max15",
+          "locationName": "numberOfBrokerNodes",
+          "documentation": "\n            <p>The number of brokers in the cluster.</p>\n         "
+        }
+      },
+      "required": [
+        "BrokerNodeGroupInfo",
+        "KafkaVersion",
+        "NumberOfBrokerNodes"
+      ]
+    },
+    "Provisioned": {
+      "type" : "structure",
+      "documentation": "\n            <p>Provisioned cluster.</p>\n         ",
+      "members" : {
+        "BrokerNodeGroupInfo": {
+          "shape": "BrokerNodeGroupInfo",
+          "locationName": "brokerNodeGroupInfo",
+          "documentation": "\n            <p>Information about the brokers.</p>\n         "
+        },
+        "CurrentBrokerSoftwareInfo": {
+          "shape": "BrokerSoftwareInfo",
+          "locationName": "currentBrokerSoftwareInfo",
+          "documentation": "\n            <p>Information about the Apache Kafka version deployed on the brokers.</p>\n         "
+        },
+        "ClientAuthentication": {
+          "shape": "ClientAuthentication",
+          "locationName": "clientAuthentication",
+          "documentation": "\n            <p>Includes all client authentication information.</p>\n         "
+        },
+        "EncryptionInfo": {
+          "shape": "EncryptionInfo",
+          "locationName": "encryptionInfo",
+          "documentation": "\n            <p>Includes all encryption-related information.</p>\n         "
+        },
+        "EnhancedMonitoring": {
+          "shape": "EnhancedMonitoring",
+          "locationName": "enhancedMonitoring",
+          "documentation": "\n            <p>Specifies the level of monitoring for the MSK cluster. The possible values are DEFAULT, PER_BROKER, PER_TOPIC_PER_BROKER, and PER_TOPIC_PER_PARTITION.</p>\n         "
+        },
+        "OpenMonitoring" : {
+          "shape" : "OpenMonitoringInfo",
+          "locationName" : "openMonitoring",
+          "documentation" : "\n            <p>The settings for open monitoring.</p>\n         "
+        },
+        "LoggingInfo": {
+          "shape": "LoggingInfo",
+          "locationName": "loggingInfo",
+          "documentation": "\n            <p>Log delivery information for the cluster.</p>\n         "
+        },
+        "NumberOfBrokerNodes": {
+          "shape": "__integerMin1Max15",
+          "locationName": "numberOfBrokerNodes",
+          "documentation": "\n            <p>The number of brokers in the cluster.</p>\n         "
+        },
+        "ZookeeperConnectString": {
+          "shape": "__string",
+          "locationName": "zookeeperConnectString",
+          "documentation": "\n            <p>The connection string to use to connect to the Apache ZooKeeper cluster.</p>\n         "
+        },
+        "ZookeeperConnectStringTls" : {
+          "shape" : "__string",
+          "locationName" : "zookeeperConnectStringTls",
+          "documentation" : "\n            <p>The connection string to use to connect to the Apache ZooKeeper cluster on a TLS port.</p>\n         "
+        }
+      },
+      "required": [
+        "BrokerNodeGroupInfo",
+        "NumberOfBrokerNodes"
+      ]
+    },
+    "VpcConfig": {
+      "type" : "structure",
+      "documentation": "\n            <p>The configuration of the Amazon VPCs for the cluster.</p>\n         ",
+      "members": {
+        "SubnetIds": {
+          "shape": "__listOf__string",
+          "locationName": "subnetIds",
+          "documentation" : "\n            <p>The IDs of the subnets associated with the cluster.</p>\n         "
+        },
+        "SecurityGroupIds": {
+          "shape": "__listOf__string",
+          "locationName": "securityGroupIds",
+          "documentation" : "\n            <p>The IDs of the security groups associated with the cluster.</p>\n         "
+        }
+      },
+      "required": [
+        "SubnetIds"
+      ]
+    },
+    "ServerlessRequest": {
+      "type" : "structure",
+      "documentation": "\n            <p>Serverless cluster request.</p>\n         ",
+      "members" : {
+        "VpcConfigs": {
+          "shape": "__listOfVpcConfig",
+          "locationName": "vpcConfigs",
+          "documentation": "\n            <p>The configuration of the Amazon VPCs for the cluster.</p>\n         "
+        },
+        "ClientAuthentication": {
+          "shape": "ServerlessClientAuthentication",
+          "locationName": "clientAuthentication",
+          "documentation": "\n            <p>Includes all client authentication information.</p>\n         "
+        }
+      },
+      "required": [
+        "VpcConfigs"
+      ]
+    },
+    "ServerlessClientAuthentication" : {
+      "type" : "structure",
+      "members" : {
+        "Sasl" : {
+          "shape" : "ServerlessSasl",
+          "locationName" : "sasl",
+          "documentation" : "\n            <p>Details for client authentication using SASL.</p>\n         "
+        }
+      },
+      "documentation" : "\n            <p>Includes all client authentication information.</p>\n         "
+    },
+    "ServerlessSasl" : {
+      "type" : "structure",
+      "members" : {
+        "Iam" : {
+          "shape" : "Iam",
+          "locationName" : "iam",
+          "documentation" : "\n            <p>Indicates whether IAM access control is enabled.</p>\n         "
+        }
+      },
+      "documentation" : "\n            <p>Details for client authentication using SASL.</p>\n         "
+    },
+    "Serverless": {
+      "type" : "structure",
+      "documentation": "\n            <p>Serverless cluster.</p>\n         ",
+      "members" : {
+        "VpcConfigs": {
+          "shape": "__listOfVpcConfig",
+          "locationName": "vpcConfigs",
+          "documentation": "\n            <p>The configuration of the Amazon VPCs for the cluster.</p>\n         "
+        },
+        "ClientAuthentication": {
+          "shape": "ServerlessClientAuthentication",
+          "locationName": "clientAuthentication",
+          "documentation": "\n            <p>Includes all client authentication information.</p>\n         "
+        }
+      },
+      "required": [
+        "VpcConfigs"
+      ]
     },
     "ListClustersRequest": {
       "type": "structure",
@@ -1843,6 +2729,40 @@
         }
       }
     },
+    "ListScramSecretsRequest" : {
+      "type" : "structure",
+      "members" : {
+        "ClusterArn" : {
+          "shape" : "__string",
+          "location" : "uri",
+          "locationName" : "clusterArn"
+        },
+        "MaxResults" : {
+          "shape" : "MaxResults",
+          "location" : "querystring",
+          "locationName" : "maxResults"
+        },
+        "NextToken" : {
+          "shape" : "__string",
+          "location" : "querystring",
+          "locationName" : "nextToken"
+        }
+      },
+      "required" : [ "ClusterArn" ]
+    },
+    "ListScramSecretsResponse" : {
+      "type" : "structure",
+      "members" : {
+        "NextToken" : {
+          "shape" : "__string",
+          "locationName" : "nextToken"
+        },
+        "SecretArnList" : {
+          "shape" : "__listOf__string",
+          "locationName" : "secretArnList"
+        }
+      }
+    },
     "ListTagsForResourceRequest": {
       "type": "structure",
       "members": {
@@ -1880,20 +2800,20 @@
       },
      "required": [ "BrokerLogs" ]
     },
-    "MutableClusterInfo": {
-      "type": "structure",
-      "members": {
-        "BrokerEBSVolumeInfo": {
-          "shape": "__listOfBrokerEBSVolumeInfo",
-          "locationName": "brokerEBSVolumeInfo"
+    "MutableClusterInfo" : {
+      "type" : "structure",
+      "members" : {
+        "BrokerEBSVolumeInfo" : {
+          "shape" : "__listOfBrokerEBSVolumeInfo",
+          "locationName" : "brokerEBSVolumeInfo"
         },
-        "ConfigurationInfo": {
-          "shape": "ConfigurationInfo",
-          "locationName": "configurationInfo"
+        "ConfigurationInfo" : {
+          "shape" : "ConfigurationInfo",
+          "locationName" : "configurationInfo"
         },
-        "NumberOfBrokerNodes": {
-          "shape": "__integer",
-          "locationName": "numberOfBrokerNodes"
+        "NumberOfBrokerNodes" : {
+          "shape" : "__integer",
+          "locationName" : "numberOfBrokerNodes"
         },
         "OpenMonitoring" : {
           "shape" : "OpenMonitoring",
@@ -1907,9 +2827,25 @@
           "shape" : "__string",
           "locationName" : "kafkaVersion"
         },
-        "LoggingInfo": {
-          "shape": "LoggingInfo",
-          "locationName": "loggingInfo"
+        "LoggingInfo" : {
+          "shape" : "LoggingInfo",
+          "locationName" : "loggingInfo"
+        },
+        "InstanceType" : {
+          "shape" : "__string",
+          "locationName" : "instanceType"
+        },
+        "ClientAuthentication" : {
+          "shape" : "ClientAuthentication",
+          "locationName" : "clientAuthentication"
+        },
+        "EncryptionInfo" : {
+          "shape" : "EncryptionInfo",
+          "locationName" : "encryptionInfo"
+        },
+        "ConnectivityInfo":{
+          "shape":"ConnectivityInfo",
+          "locationName":"connectivityInfo"
         }
       }
     },
@@ -1963,6 +2899,37 @@
       "exception": true,
       "error": {
         "httpStatusCode": 404
+      }
+    },
+    "Sasl" : {
+      "type" : "structure",
+      "members" : {
+        "Scram" : {
+          "shape" : "Scram",
+          "locationName" : "scram"
+        },
+        "Iam" : {
+          "shape" : "Iam",
+          "locationName" : "iam"
+        }
+      }
+    },
+    "Scram" : {
+      "type" : "structure",
+      "members" : {
+        "Enabled" : {
+          "shape" : "__boolean",
+          "locationName" : "enabled"
+        }
+      }
+    },
+    "Iam" : {
+      "type" : "structure",
+      "members" : {
+        "Enabled" : {
+          "shape" : "__boolean",
+          "locationName" : "enabled"
+        }
       }
     },
     "ServiceUnavailableException": {
@@ -2022,12 +2989,16 @@
         "Tags"
       ]
     },
-    "Tls": {
-      "type": "structure",
-      "members": {
-        "CertificateAuthorityArnList": {
-          "shape": "__listOf__string",
-          "locationName": "certificateAuthorityArnList"
+    "Tls" : {
+      "type" : "structure",
+      "members" : {
+        "CertificateAuthorityArnList" : {
+          "shape" : "__listOf__string",
+          "locationName" : "certificateAuthorityArnList"
+        },
+        "Enabled" : {
+          "shape" : "__boolean",
+          "locationName" : "enabled"
         }
       }
     },
@@ -2048,6 +3019,15 @@
         "httpStatusCode": 429
       }
     },
+    "Unauthenticated" : {
+      "type" : "structure",
+      "members" : {
+        "Enabled" : {
+          "shape" : "__boolean",
+          "locationName" : "enabled"
+        }
+      }
+    },
     "UnauthorizedException": {
       "type": "structure",
       "members": {
@@ -2063,6 +3043,23 @@
       "exception": true,
       "error": {
         "httpStatusCode": 401
+      }
+    },
+    "UnprocessedScramSecret" : {
+      "type" : "structure",
+      "members" : {
+        "ErrorCode" : {
+          "shape" : "__string",
+          "locationName" : "errorCode"
+        },
+        "ErrorMessage" : {
+          "shape" : "__string",
+          "locationName" : "errorMessage"
+        },
+        "SecretArn" : {
+          "shape" : "__string",
+          "locationName" : "secretArn"
+        }
       }
     },
     "UntagResourceRequest": {
@@ -2083,6 +3080,42 @@
         "TagKeys",
         "ResourceArn"
       ]
+    },
+    "UpdateBrokerTypeRequest": {
+      "type": "structure",
+      "members": {
+        "ClusterArn": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "clusterArn"
+        },
+        "CurrentVersion": {
+          "shape": "__string",
+          "locationName": "currentVersion"
+        },
+        "TargetInstanceType": {
+          "shape": "__string",
+          "locationName": "targetInstanceType"
+        }
+      },
+      "required": [
+        "ClusterArn",
+        "CurrentVersion",
+        "TargetInstanceType"
+      ]
+    },
+    "UpdateBrokerTypeResponse": {
+      "type": "structure",
+      "members": {
+        "ClusterArn": {
+          "shape": "__string",
+          "locationName": "clusterArn"
+        },
+        "ClusterOperationArn": {
+          "shape": "__string",
+          "locationName": "clusterOperationArn"
+        }
+      }
     },
     "UpdateBrokerCountRequest": {
       "type": "structure",
@@ -2228,6 +3261,77 @@
         }
       }
     },
+    "UpdateConfigurationRequest" : {
+      "type": "structure",
+      "members": {
+        "Arn": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "arn"
+        },
+        "Description": {
+          "shape": "__string",
+          "locationName": "description"
+        },
+        "ServerProperties": {
+          "shape": "__blob",
+          "locationName": "serverProperties"
+        }
+      },
+      "required": [
+        "Arn",
+        "ServerProperties"
+      ]
+    },
+    "UpdateConfigurationResponse" : {
+      "type": "structure",
+      "members": {
+        "Arn": {
+          "shape": "__string",
+          "locationName": "arn"
+        },
+        "LatestRevision": {
+          "shape": "ConfigurationRevision",
+          "locationName": "latestRevision"
+        }
+      }
+    },
+    "UpdateConnectivityRequest":{
+      "type":"structure",
+      "members":{
+        "ClusterArn":{
+          "shape":"__string",
+          "location":"uri",
+          "locationName":"clusterArn"
+        },
+        "ConnectivityInfo":{
+          "shape":"ConnectivityInfo",
+          "locationName":"connectivityInfo"
+        },
+        "CurrentVersion":{
+          "shape":"__string",
+          "locationName":"currentVersion"
+        }
+      },
+      "required":[
+        "ClusterArn",
+        "ConnectivityInfo",
+        "CurrentVersion"
+      ]
+    },
+    "UpdateConnectivityResponse":{
+      "type":"structure",
+      "members":{
+        "ClusterArn":{
+          "shape":"__string",
+          "locationName":"clusterArn"
+        },
+        "ClusterOperationArn":{
+          "shape":"__string",
+          "locationName":"clusterOperationArn"
+        }
+      }
+    },
     "UpdateMonitoringRequest" : {
       "type" : "structure",
       "members" : {
@@ -2256,6 +3360,42 @@
       "required" : [ "ClusterArn", "CurrentVersion" ]
     },
     "UpdateMonitoringResponse" : {
+      "type" : "structure",
+      "members" : {
+        "ClusterArn" : {
+          "shape" : "__string",
+          "locationName" : "clusterArn"
+        },
+        "ClusterOperationArn" : {
+          "shape" : "__string",
+          "locationName" : "clusterOperationArn"
+        }
+      }
+    },
+    "UpdateSecurityRequest" : {
+      "type" : "structure",
+      "members" : {
+        "ClientAuthentication" : {
+          "shape" : "ClientAuthentication",
+          "locationName" : "clientAuthentication"
+        },
+        "ClusterArn" : {
+          "shape" : "__string",
+          "location" : "uri",
+          "locationName" : "clusterArn"
+        },
+        "CurrentVersion" : {
+          "shape" : "__string",
+          "locationName" : "currentVersion"
+        },
+        "EncryptionInfo" : {
+          "shape" : "EncryptionInfo",
+          "locationName" : "encryptionInfo"
+        }
+      },
+      "required" : [ "ClusterArn", "CurrentVersion" ]
+    },
+    "UpdateSecurityResponse" : {
       "type" : "structure",
       "members" : {
         "ClusterArn" : {
@@ -2336,6 +3476,15 @@
         "NodeExporter" : {
           "shape" : "NodeExporterInfo",
           "locationName" : "nodeExporter"
+        }
+      }
+    },
+    "PublicAccess":{
+      "type":"structure",
+      "members":{
+        "Type":{
+          "shape":"__string",
+          "locationName":"type"
         }
       }
     },
@@ -2477,6 +3626,18 @@
         "shape" : "CompatibleKafkaVersion"
       }
     },
+    "__listOfCluster": {
+      "type": "list",
+      "member": {
+        "shape": "Cluster"
+      }
+    },
+    "__listOfVpcConfig" : {
+      "type" : "list",
+      "member" : {
+        "shape" : "VpcConfig"
+      }
+    },
     "__listOfConfiguration": {
       "type": "list",
       "member": {
@@ -2499,6 +3660,12 @@
       "type": "list",
       "member": {
         "shape": "NodeInfo"
+      }
+    },
+    "__listOfUnprocessedScramSecret" : {
+      "type" : "list",
+      "member" : {
+        "shape" : "UnprocessedScramSecret"
       }
     },
     "__listOf__string": {

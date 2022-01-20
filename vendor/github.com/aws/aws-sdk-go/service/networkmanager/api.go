@@ -13,6 +13,207 @@ import (
 	"github.com/aws/aws-sdk-go/private/protocol/restjson"
 )
 
+const opAcceptAttachment = "AcceptAttachment"
+
+// AcceptAttachmentRequest generates a "aws/request.Request" representing the
+// client's request for the AcceptAttachment operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See AcceptAttachment for more information on using the AcceptAttachment
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the AcceptAttachmentRequest method.
+//    req, resp := client.AcceptAttachmentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/AcceptAttachment
+func (c *NetworkManager) AcceptAttachmentRequest(input *AcceptAttachmentInput) (req *request.Request, output *AcceptAttachmentOutput) {
+	op := &request.Operation{
+		Name:       opAcceptAttachment,
+		HTTPMethod: "POST",
+		HTTPPath:   "/attachments/{attachmentId}/accept",
+	}
+
+	if input == nil {
+		input = &AcceptAttachmentInput{}
+	}
+
+	output = &AcceptAttachmentOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// AcceptAttachment API operation for AWS Network Manager.
+//
+// Accepts a core network attachment request.
+//
+// Once the attachment request is accepted by a core network owner, the attachment
+// is created and connected to a core network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation AcceptAttachment for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/AcceptAttachment
+func (c *NetworkManager) AcceptAttachment(input *AcceptAttachmentInput) (*AcceptAttachmentOutput, error) {
+	req, out := c.AcceptAttachmentRequest(input)
+	return out, req.Send()
+}
+
+// AcceptAttachmentWithContext is the same as AcceptAttachment with the addition of
+// the ability to pass a context and additional request options.
+//
+// See AcceptAttachment for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) AcceptAttachmentWithContext(ctx aws.Context, input *AcceptAttachmentInput, opts ...request.Option) (*AcceptAttachmentOutput, error) {
+	req, out := c.AcceptAttachmentRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opAssociateConnectPeer = "AssociateConnectPeer"
+
+// AssociateConnectPeerRequest generates a "aws/request.Request" representing the
+// client's request for the AssociateConnectPeer operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See AssociateConnectPeer for more information on using the AssociateConnectPeer
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the AssociateConnectPeerRequest method.
+//    req, resp := client.AssociateConnectPeerRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/AssociateConnectPeer
+func (c *NetworkManager) AssociateConnectPeerRequest(input *AssociateConnectPeerInput) (req *request.Request, output *AssociateConnectPeerOutput) {
+	op := &request.Operation{
+		Name:       opAssociateConnectPeer,
+		HTTPMethod: "POST",
+		HTTPPath:   "/global-networks/{globalNetworkId}/connect-peer-associations",
+	}
+
+	if input == nil {
+		input = &AssociateConnectPeerInput{}
+	}
+
+	output = &AssociateConnectPeerOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// AssociateConnectPeer API operation for AWS Network Manager.
+//
+// Associates a core network Connect peer with a device and optionally, with
+// a link.
+//
+// If you specify a link, it must be associated with the specified device. You
+// can only associate core network Connect peers that have been created on a
+// core network Connect attachment on a core network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation AssociateConnectPeer for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * ServiceQuotaExceededException
+//   A service limit was exceeded.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/AssociateConnectPeer
+func (c *NetworkManager) AssociateConnectPeer(input *AssociateConnectPeerInput) (*AssociateConnectPeerOutput, error) {
+	req, out := c.AssociateConnectPeerRequest(input)
+	return out, req.Send()
+}
+
+// AssociateConnectPeerWithContext is the same as AssociateConnectPeer with the addition of
+// the ability to pass a context and additional request options.
+//
+// See AssociateConnectPeer for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) AssociateConnectPeerWithContext(ctx aws.Context, input *AssociateConnectPeerInput, opts ...request.Option) (*AssociateConnectPeerOutput, error) {
+	req, out := c.AssociateConnectPeerRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opAssociateCustomerGateway = "AssociateCustomerGateway"
 
 // AssociateCustomerGatewayRequest generates a "aws/request.Request" representing the
@@ -217,6 +418,506 @@ func (c *NetworkManager) AssociateLink(input *AssociateLinkInput) (*AssociateLin
 // for more information on using Contexts.
 func (c *NetworkManager) AssociateLinkWithContext(ctx aws.Context, input *AssociateLinkInput, opts ...request.Option) (*AssociateLinkOutput, error) {
 	req, out := c.AssociateLinkRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opAssociateTransitGatewayConnectPeer = "AssociateTransitGatewayConnectPeer"
+
+// AssociateTransitGatewayConnectPeerRequest generates a "aws/request.Request" representing the
+// client's request for the AssociateTransitGatewayConnectPeer operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See AssociateTransitGatewayConnectPeer for more information on using the AssociateTransitGatewayConnectPeer
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the AssociateTransitGatewayConnectPeerRequest method.
+//    req, resp := client.AssociateTransitGatewayConnectPeerRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/AssociateTransitGatewayConnectPeer
+func (c *NetworkManager) AssociateTransitGatewayConnectPeerRequest(input *AssociateTransitGatewayConnectPeerInput) (req *request.Request, output *AssociateTransitGatewayConnectPeerOutput) {
+	op := &request.Operation{
+		Name:       opAssociateTransitGatewayConnectPeer,
+		HTTPMethod: "POST",
+		HTTPPath:   "/global-networks/{globalNetworkId}/transit-gateway-connect-peer-associations",
+	}
+
+	if input == nil {
+		input = &AssociateTransitGatewayConnectPeerInput{}
+	}
+
+	output = &AssociateTransitGatewayConnectPeerOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// AssociateTransitGatewayConnectPeer API operation for AWS Network Manager.
+//
+// Associates a transit gateway Connect peer with a device, and optionally,
+// with a link. If you specify a link, it must be associated with the specified
+// device.
+//
+// You can only associate transit gateway Connect peers that have been created
+// on a transit gateway that's registered in your global network.
+//
+// You cannot associate a transit gateway Connect peer with more than one device
+// and link.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation AssociateTransitGatewayConnectPeer for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * ServiceQuotaExceededException
+//   A service limit was exceeded.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/AssociateTransitGatewayConnectPeer
+func (c *NetworkManager) AssociateTransitGatewayConnectPeer(input *AssociateTransitGatewayConnectPeerInput) (*AssociateTransitGatewayConnectPeerOutput, error) {
+	req, out := c.AssociateTransitGatewayConnectPeerRequest(input)
+	return out, req.Send()
+}
+
+// AssociateTransitGatewayConnectPeerWithContext is the same as AssociateTransitGatewayConnectPeer with the addition of
+// the ability to pass a context and additional request options.
+//
+// See AssociateTransitGatewayConnectPeer for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) AssociateTransitGatewayConnectPeerWithContext(ctx aws.Context, input *AssociateTransitGatewayConnectPeerInput, opts ...request.Option) (*AssociateTransitGatewayConnectPeerOutput, error) {
+	req, out := c.AssociateTransitGatewayConnectPeerRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateConnectAttachment = "CreateConnectAttachment"
+
+// CreateConnectAttachmentRequest generates a "aws/request.Request" representing the
+// client's request for the CreateConnectAttachment operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateConnectAttachment for more information on using the CreateConnectAttachment
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateConnectAttachmentRequest method.
+//    req, resp := client.CreateConnectAttachmentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateConnectAttachment
+func (c *NetworkManager) CreateConnectAttachmentRequest(input *CreateConnectAttachmentInput) (req *request.Request, output *CreateConnectAttachmentOutput) {
+	op := &request.Operation{
+		Name:       opCreateConnectAttachment,
+		HTTPMethod: "POST",
+		HTTPPath:   "/connect-attachments",
+	}
+
+	if input == nil {
+		input = &CreateConnectAttachmentInput{}
+	}
+
+	output = &CreateConnectAttachmentOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateConnectAttachment API operation for AWS Network Manager.
+//
+// Creates a core network Connect attachment from a specified core network attachment.
+//
+// A core network Connect attachment is a GRE-based tunnel attachment that you
+// can use to establish a connection between a core network and an appliance.
+// A core network Connect attachment uses an existing VPC attachment as the
+// underlying transport mechanism.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation CreateConnectAttachment for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateConnectAttachment
+func (c *NetworkManager) CreateConnectAttachment(input *CreateConnectAttachmentInput) (*CreateConnectAttachmentOutput, error) {
+	req, out := c.CreateConnectAttachmentRequest(input)
+	return out, req.Send()
+}
+
+// CreateConnectAttachmentWithContext is the same as CreateConnectAttachment with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateConnectAttachment for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) CreateConnectAttachmentWithContext(ctx aws.Context, input *CreateConnectAttachmentInput, opts ...request.Option) (*CreateConnectAttachmentOutput, error) {
+	req, out := c.CreateConnectAttachmentRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateConnectPeer = "CreateConnectPeer"
+
+// CreateConnectPeerRequest generates a "aws/request.Request" representing the
+// client's request for the CreateConnectPeer operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateConnectPeer for more information on using the CreateConnectPeer
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateConnectPeerRequest method.
+//    req, resp := client.CreateConnectPeerRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateConnectPeer
+func (c *NetworkManager) CreateConnectPeerRequest(input *CreateConnectPeerInput) (req *request.Request, output *CreateConnectPeerOutput) {
+	op := &request.Operation{
+		Name:       opCreateConnectPeer,
+		HTTPMethod: "POST",
+		HTTPPath:   "/connect-peers",
+	}
+
+	if input == nil {
+		input = &CreateConnectPeerInput{}
+	}
+
+	output = &CreateConnectPeerOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateConnectPeer API operation for AWS Network Manager.
+//
+// Creates a core network connect peer for a specified core network connect
+// attachment between a core network and an appliance. The peer address and
+// transit gateway address must be the same IP address family (IPv4 or IPv6).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation CreateConnectPeer for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateConnectPeer
+func (c *NetworkManager) CreateConnectPeer(input *CreateConnectPeerInput) (*CreateConnectPeerOutput, error) {
+	req, out := c.CreateConnectPeerRequest(input)
+	return out, req.Send()
+}
+
+// CreateConnectPeerWithContext is the same as CreateConnectPeer with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateConnectPeer for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) CreateConnectPeerWithContext(ctx aws.Context, input *CreateConnectPeerInput, opts ...request.Option) (*CreateConnectPeerOutput, error) {
+	req, out := c.CreateConnectPeerRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateConnection = "CreateConnection"
+
+// CreateConnectionRequest generates a "aws/request.Request" representing the
+// client's request for the CreateConnection operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateConnection for more information on using the CreateConnection
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateConnectionRequest method.
+//    req, resp := client.CreateConnectionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateConnection
+func (c *NetworkManager) CreateConnectionRequest(input *CreateConnectionInput) (req *request.Request, output *CreateConnectionOutput) {
+	op := &request.Operation{
+		Name:       opCreateConnection,
+		HTTPMethod: "POST",
+		HTTPPath:   "/global-networks/{globalNetworkId}/connections",
+	}
+
+	if input == nil {
+		input = &CreateConnectionInput{}
+	}
+
+	output = &CreateConnectionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateConnection API operation for AWS Network Manager.
+//
+// Creates a connection between two devices. The devices can be a physical or
+// virtual appliance that connects to a third-party appliance in a VPC, or a
+// physical appliance that connects to another physical appliance in an on-premises
+// network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation CreateConnection for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * ServiceQuotaExceededException
+//   A service limit was exceeded.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateConnection
+func (c *NetworkManager) CreateConnection(input *CreateConnectionInput) (*CreateConnectionOutput, error) {
+	req, out := c.CreateConnectionRequest(input)
+	return out, req.Send()
+}
+
+// CreateConnectionWithContext is the same as CreateConnection with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateConnection for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) CreateConnectionWithContext(ctx aws.Context, input *CreateConnectionInput, opts ...request.Option) (*CreateConnectionOutput, error) {
+	req, out := c.CreateConnectionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateCoreNetwork = "CreateCoreNetwork"
+
+// CreateCoreNetworkRequest generates a "aws/request.Request" representing the
+// client's request for the CreateCoreNetwork operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateCoreNetwork for more information on using the CreateCoreNetwork
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateCoreNetworkRequest method.
+//    req, resp := client.CreateCoreNetworkRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateCoreNetwork
+func (c *NetworkManager) CreateCoreNetworkRequest(input *CreateCoreNetworkInput) (req *request.Request, output *CreateCoreNetworkOutput) {
+	op := &request.Operation{
+		Name:       opCreateCoreNetwork,
+		HTTPMethod: "POST",
+		HTTPPath:   "/core-networks",
+	}
+
+	if input == nil {
+		input = &CreateCoreNetworkInput{}
+	}
+
+	output = &CreateCoreNetworkOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateCoreNetwork API operation for AWS Network Manager.
+//
+// Creates a core network as part of your global network, and optionally, with
+// a core network policy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation CreateCoreNetwork for usage and error information.
+//
+// Returned Error Types:
+//   * CoreNetworkPolicyException
+//   Describes a core network policy exception.
+//
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * ServiceQuotaExceededException
+//   A service limit was exceeded.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateCoreNetwork
+func (c *NetworkManager) CreateCoreNetwork(input *CreateCoreNetworkInput) (*CreateCoreNetworkOutput, error) {
+	req, out := c.CreateCoreNetworkRequest(input)
+	return out, req.Send()
+}
+
+// CreateCoreNetworkWithContext is the same as CreateCoreNetwork with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateCoreNetwork for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) CreateCoreNetworkWithContext(ctx aws.Context, input *CreateCoreNetworkInput, opts ...request.Option) (*CreateCoreNetworkOutput, error) {
+	req, out := c.CreateCoreNetworkRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -613,6 +1314,673 @@ func (c *NetworkManager) CreateSiteWithContext(ctx aws.Context, input *CreateSit
 	return out, req.Send()
 }
 
+const opCreateSiteToSiteVpnAttachment = "CreateSiteToSiteVpnAttachment"
+
+// CreateSiteToSiteVpnAttachmentRequest generates a "aws/request.Request" representing the
+// client's request for the CreateSiteToSiteVpnAttachment operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateSiteToSiteVpnAttachment for more information on using the CreateSiteToSiteVpnAttachment
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateSiteToSiteVpnAttachmentRequest method.
+//    req, resp := client.CreateSiteToSiteVpnAttachmentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateSiteToSiteVpnAttachment
+func (c *NetworkManager) CreateSiteToSiteVpnAttachmentRequest(input *CreateSiteToSiteVpnAttachmentInput) (req *request.Request, output *CreateSiteToSiteVpnAttachmentOutput) {
+	op := &request.Operation{
+		Name:       opCreateSiteToSiteVpnAttachment,
+		HTTPMethod: "POST",
+		HTTPPath:   "/site-to-site-vpn-attachments",
+	}
+
+	if input == nil {
+		input = &CreateSiteToSiteVpnAttachmentInput{}
+	}
+
+	output = &CreateSiteToSiteVpnAttachmentOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateSiteToSiteVpnAttachment API operation for AWS Network Manager.
+//
+// Creates a site-to-site VPN attachment on an edge location of a core network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation CreateSiteToSiteVpnAttachment for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateSiteToSiteVpnAttachment
+func (c *NetworkManager) CreateSiteToSiteVpnAttachment(input *CreateSiteToSiteVpnAttachmentInput) (*CreateSiteToSiteVpnAttachmentOutput, error) {
+	req, out := c.CreateSiteToSiteVpnAttachmentRequest(input)
+	return out, req.Send()
+}
+
+// CreateSiteToSiteVpnAttachmentWithContext is the same as CreateSiteToSiteVpnAttachment with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateSiteToSiteVpnAttachment for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) CreateSiteToSiteVpnAttachmentWithContext(ctx aws.Context, input *CreateSiteToSiteVpnAttachmentInput, opts ...request.Option) (*CreateSiteToSiteVpnAttachmentOutput, error) {
+	req, out := c.CreateSiteToSiteVpnAttachmentRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateVpcAttachment = "CreateVpcAttachment"
+
+// CreateVpcAttachmentRequest generates a "aws/request.Request" representing the
+// client's request for the CreateVpcAttachment operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateVpcAttachment for more information on using the CreateVpcAttachment
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateVpcAttachmentRequest method.
+//    req, resp := client.CreateVpcAttachmentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateVpcAttachment
+func (c *NetworkManager) CreateVpcAttachmentRequest(input *CreateVpcAttachmentInput) (req *request.Request, output *CreateVpcAttachmentOutput) {
+	op := &request.Operation{
+		Name:       opCreateVpcAttachment,
+		HTTPMethod: "POST",
+		HTTPPath:   "/vpc-attachments",
+	}
+
+	if input == nil {
+		input = &CreateVpcAttachmentInput{}
+	}
+
+	output = &CreateVpcAttachmentOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateVpcAttachment API operation for AWS Network Manager.
+//
+// Creates a VPC attachment on an edge location of a core network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation CreateVpcAttachment for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/CreateVpcAttachment
+func (c *NetworkManager) CreateVpcAttachment(input *CreateVpcAttachmentInput) (*CreateVpcAttachmentOutput, error) {
+	req, out := c.CreateVpcAttachmentRequest(input)
+	return out, req.Send()
+}
+
+// CreateVpcAttachmentWithContext is the same as CreateVpcAttachment with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateVpcAttachment for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) CreateVpcAttachmentWithContext(ctx aws.Context, input *CreateVpcAttachmentInput, opts ...request.Option) (*CreateVpcAttachmentOutput, error) {
+	req, out := c.CreateVpcAttachmentRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteAttachment = "DeleteAttachment"
+
+// DeleteAttachmentRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteAttachment operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteAttachment for more information on using the DeleteAttachment
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteAttachmentRequest method.
+//    req, resp := client.DeleteAttachmentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteAttachment
+func (c *NetworkManager) DeleteAttachmentRequest(input *DeleteAttachmentInput) (req *request.Request, output *DeleteAttachmentOutput) {
+	op := &request.Operation{
+		Name:       opDeleteAttachment,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/attachments/{attachmentId}",
+	}
+
+	if input == nil {
+		input = &DeleteAttachmentInput{}
+	}
+
+	output = &DeleteAttachmentOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DeleteAttachment API operation for AWS Network Manager.
+//
+// Deletes an attachment. Supports all attachment types.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation DeleteAttachment for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteAttachment
+func (c *NetworkManager) DeleteAttachment(input *DeleteAttachmentInput) (*DeleteAttachmentOutput, error) {
+	req, out := c.DeleteAttachmentRequest(input)
+	return out, req.Send()
+}
+
+// DeleteAttachmentWithContext is the same as DeleteAttachment with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteAttachment for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) DeleteAttachmentWithContext(ctx aws.Context, input *DeleteAttachmentInput, opts ...request.Option) (*DeleteAttachmentOutput, error) {
+	req, out := c.DeleteAttachmentRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteConnectPeer = "DeleteConnectPeer"
+
+// DeleteConnectPeerRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteConnectPeer operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteConnectPeer for more information on using the DeleteConnectPeer
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteConnectPeerRequest method.
+//    req, resp := client.DeleteConnectPeerRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteConnectPeer
+func (c *NetworkManager) DeleteConnectPeerRequest(input *DeleteConnectPeerInput) (req *request.Request, output *DeleteConnectPeerOutput) {
+	op := &request.Operation{
+		Name:       opDeleteConnectPeer,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/connect-peers/{connectPeerId}",
+	}
+
+	if input == nil {
+		input = &DeleteConnectPeerInput{}
+	}
+
+	output = &DeleteConnectPeerOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DeleteConnectPeer API operation for AWS Network Manager.
+//
+// Deletes a Connect peer.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation DeleteConnectPeer for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteConnectPeer
+func (c *NetworkManager) DeleteConnectPeer(input *DeleteConnectPeerInput) (*DeleteConnectPeerOutput, error) {
+	req, out := c.DeleteConnectPeerRequest(input)
+	return out, req.Send()
+}
+
+// DeleteConnectPeerWithContext is the same as DeleteConnectPeer with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteConnectPeer for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) DeleteConnectPeerWithContext(ctx aws.Context, input *DeleteConnectPeerInput, opts ...request.Option) (*DeleteConnectPeerOutput, error) {
+	req, out := c.DeleteConnectPeerRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteConnection = "DeleteConnection"
+
+// DeleteConnectionRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteConnection operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteConnection for more information on using the DeleteConnection
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteConnectionRequest method.
+//    req, resp := client.DeleteConnectionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteConnection
+func (c *NetworkManager) DeleteConnectionRequest(input *DeleteConnectionInput) (req *request.Request, output *DeleteConnectionOutput) {
+	op := &request.Operation{
+		Name:       opDeleteConnection,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/global-networks/{globalNetworkId}/connections/{connectionId}",
+	}
+
+	if input == nil {
+		input = &DeleteConnectionInput{}
+	}
+
+	output = &DeleteConnectionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DeleteConnection API operation for AWS Network Manager.
+//
+// Deletes the specified connection in your global network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation DeleteConnection for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteConnection
+func (c *NetworkManager) DeleteConnection(input *DeleteConnectionInput) (*DeleteConnectionOutput, error) {
+	req, out := c.DeleteConnectionRequest(input)
+	return out, req.Send()
+}
+
+// DeleteConnectionWithContext is the same as DeleteConnection with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteConnection for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) DeleteConnectionWithContext(ctx aws.Context, input *DeleteConnectionInput, opts ...request.Option) (*DeleteConnectionOutput, error) {
+	req, out := c.DeleteConnectionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteCoreNetwork = "DeleteCoreNetwork"
+
+// DeleteCoreNetworkRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteCoreNetwork operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteCoreNetwork for more information on using the DeleteCoreNetwork
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteCoreNetworkRequest method.
+//    req, resp := client.DeleteCoreNetworkRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteCoreNetwork
+func (c *NetworkManager) DeleteCoreNetworkRequest(input *DeleteCoreNetworkInput) (req *request.Request, output *DeleteCoreNetworkOutput) {
+	op := &request.Operation{
+		Name:       opDeleteCoreNetwork,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/core-networks/{coreNetworkId}",
+	}
+
+	if input == nil {
+		input = &DeleteCoreNetworkInput{}
+	}
+
+	output = &DeleteCoreNetworkOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DeleteCoreNetwork API operation for AWS Network Manager.
+//
+// Deletes a core network along with all core network policies. This can only
+// be done if there are no attachments on a core network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation DeleteCoreNetwork for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteCoreNetwork
+func (c *NetworkManager) DeleteCoreNetwork(input *DeleteCoreNetworkInput) (*DeleteCoreNetworkOutput, error) {
+	req, out := c.DeleteCoreNetworkRequest(input)
+	return out, req.Send()
+}
+
+// DeleteCoreNetworkWithContext is the same as DeleteCoreNetwork with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteCoreNetwork for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) DeleteCoreNetworkWithContext(ctx aws.Context, input *DeleteCoreNetworkInput, opts ...request.Option) (*DeleteCoreNetworkOutput, error) {
+	req, out := c.DeleteCoreNetworkRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteCoreNetworkPolicyVersion = "DeleteCoreNetworkPolicyVersion"
+
+// DeleteCoreNetworkPolicyVersionRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteCoreNetworkPolicyVersion operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteCoreNetworkPolicyVersion for more information on using the DeleteCoreNetworkPolicyVersion
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteCoreNetworkPolicyVersionRequest method.
+//    req, resp := client.DeleteCoreNetworkPolicyVersionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteCoreNetworkPolicyVersion
+func (c *NetworkManager) DeleteCoreNetworkPolicyVersionRequest(input *DeleteCoreNetworkPolicyVersionInput) (req *request.Request, output *DeleteCoreNetworkPolicyVersionOutput) {
+	op := &request.Operation{
+		Name:       opDeleteCoreNetworkPolicyVersion,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/core-networks/{coreNetworkId}/core-network-policy-versions/{policyVersionId}",
+	}
+
+	if input == nil {
+		input = &DeleteCoreNetworkPolicyVersionInput{}
+	}
+
+	output = &DeleteCoreNetworkPolicyVersionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DeleteCoreNetworkPolicyVersion API operation for AWS Network Manager.
+//
+// Deletes a policy version from a core network. You can't delete the current
+// LIVE policy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation DeleteCoreNetworkPolicyVersion for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteCoreNetworkPolicyVersion
+func (c *NetworkManager) DeleteCoreNetworkPolicyVersion(input *DeleteCoreNetworkPolicyVersionInput) (*DeleteCoreNetworkPolicyVersionOutput, error) {
+	req, out := c.DeleteCoreNetworkPolicyVersionRequest(input)
+	return out, req.Send()
+}
+
+// DeleteCoreNetworkPolicyVersionWithContext is the same as DeleteCoreNetworkPolicyVersion with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteCoreNetworkPolicyVersion for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) DeleteCoreNetworkPolicyVersionWithContext(ctx aws.Context, input *DeleteCoreNetworkPolicyVersionInput, opts ...request.Option) (*DeleteCoreNetworkPolicyVersionOutput, error) {
+	req, out := c.DeleteCoreNetworkPolicyVersionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opDeleteDevice = "DeleteDevice"
 
 // DeleteDeviceRequest generates a "aws/request.Request" representing the
@@ -896,6 +2264,100 @@ func (c *NetworkManager) DeleteLink(input *DeleteLinkInput) (*DeleteLinkOutput, 
 // for more information on using Contexts.
 func (c *NetworkManager) DeleteLinkWithContext(ctx aws.Context, input *DeleteLinkInput, opts ...request.Option) (*DeleteLinkOutput, error) {
 	req, out := c.DeleteLinkRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteResourcePolicy = "DeleteResourcePolicy"
+
+// DeleteResourcePolicyRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteResourcePolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteResourcePolicy for more information on using the DeleteResourcePolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteResourcePolicyRequest method.
+//    req, resp := client.DeleteResourcePolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteResourcePolicy
+func (c *NetworkManager) DeleteResourcePolicyRequest(input *DeleteResourcePolicyInput) (req *request.Request, output *DeleteResourcePolicyOutput) {
+	op := &request.Operation{
+		Name:       opDeleteResourcePolicy,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/resource-policy/{resourceArn}",
+	}
+
+	if input == nil {
+		input = &DeleteResourcePolicyInput{}
+	}
+
+	output = &DeleteResourcePolicyOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restjson.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// DeleteResourcePolicy API operation for AWS Network Manager.
+//
+// Deletes a resource policy for the specified resource. This revokes the access
+// of the principals specified in the resource policy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation DeleteResourcePolicy for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DeleteResourcePolicy
+func (c *NetworkManager) DeleteResourcePolicy(input *DeleteResourcePolicyInput) (*DeleteResourcePolicyOutput, error) {
+	req, out := c.DeleteResourcePolicyRequest(input)
+	return out, req.Send()
+}
+
+// DeleteResourcePolicyWithContext is the same as DeleteResourcePolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteResourcePolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) DeleteResourcePolicyWithContext(ctx aws.Context, input *DeleteResourcePolicyInput, opts ...request.Option) (*DeleteResourcePolicyOutput, error) {
+	req, out := c.DeleteResourcePolicyRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -1246,6 +2708,101 @@ func (c *NetworkManager) DescribeGlobalNetworksPagesWithContext(ctx aws.Context,
 	return p.Err()
 }
 
+const opDisassociateConnectPeer = "DisassociateConnectPeer"
+
+// DisassociateConnectPeerRequest generates a "aws/request.Request" representing the
+// client's request for the DisassociateConnectPeer operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DisassociateConnectPeer for more information on using the DisassociateConnectPeer
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DisassociateConnectPeerRequest method.
+//    req, resp := client.DisassociateConnectPeerRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DisassociateConnectPeer
+func (c *NetworkManager) DisassociateConnectPeerRequest(input *DisassociateConnectPeerInput) (req *request.Request, output *DisassociateConnectPeerOutput) {
+	op := &request.Operation{
+		Name:       opDisassociateConnectPeer,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/global-networks/{globalNetworkId}/connect-peer-associations/{connectPeerId}",
+	}
+
+	if input == nil {
+		input = &DisassociateConnectPeerInput{}
+	}
+
+	output = &DisassociateConnectPeerOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DisassociateConnectPeer API operation for AWS Network Manager.
+//
+// Disassociates a core network Connect peer from a device and a link.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation DisassociateConnectPeer for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DisassociateConnectPeer
+func (c *NetworkManager) DisassociateConnectPeer(input *DisassociateConnectPeerInput) (*DisassociateConnectPeerOutput, error) {
+	req, out := c.DisassociateConnectPeerRequest(input)
+	return out, req.Send()
+}
+
+// DisassociateConnectPeerWithContext is the same as DisassociateConnectPeer with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DisassociateConnectPeer for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) DisassociateConnectPeerWithContext(ctx aws.Context, input *DisassociateConnectPeerInput, opts ...request.Option) (*DisassociateConnectPeerOutput, error) {
+	req, out := c.DisassociateConnectPeerRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opDisassociateCustomerGateway = "DisassociateCustomerGateway"
 
 // DisassociateCustomerGatewayRequest generates a "aws/request.Request" representing the
@@ -1432,6 +2989,1016 @@ func (c *NetworkManager) DisassociateLink(input *DisassociateLinkInput) (*Disass
 // for more information on using Contexts.
 func (c *NetworkManager) DisassociateLinkWithContext(ctx aws.Context, input *DisassociateLinkInput, opts ...request.Option) (*DisassociateLinkOutput, error) {
 	req, out := c.DisassociateLinkRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDisassociateTransitGatewayConnectPeer = "DisassociateTransitGatewayConnectPeer"
+
+// DisassociateTransitGatewayConnectPeerRequest generates a "aws/request.Request" representing the
+// client's request for the DisassociateTransitGatewayConnectPeer operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DisassociateTransitGatewayConnectPeer for more information on using the DisassociateTransitGatewayConnectPeer
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DisassociateTransitGatewayConnectPeerRequest method.
+//    req, resp := client.DisassociateTransitGatewayConnectPeerRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DisassociateTransitGatewayConnectPeer
+func (c *NetworkManager) DisassociateTransitGatewayConnectPeerRequest(input *DisassociateTransitGatewayConnectPeerInput) (req *request.Request, output *DisassociateTransitGatewayConnectPeerOutput) {
+	op := &request.Operation{
+		Name:       opDisassociateTransitGatewayConnectPeer,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/global-networks/{globalNetworkId}/transit-gateway-connect-peer-associations/{transitGatewayConnectPeerArn}",
+	}
+
+	if input == nil {
+		input = &DisassociateTransitGatewayConnectPeerInput{}
+	}
+
+	output = &DisassociateTransitGatewayConnectPeerOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DisassociateTransitGatewayConnectPeer API operation for AWS Network Manager.
+//
+// Disassociates a transit gateway Connect peer from a device and link.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation DisassociateTransitGatewayConnectPeer for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/DisassociateTransitGatewayConnectPeer
+func (c *NetworkManager) DisassociateTransitGatewayConnectPeer(input *DisassociateTransitGatewayConnectPeerInput) (*DisassociateTransitGatewayConnectPeerOutput, error) {
+	req, out := c.DisassociateTransitGatewayConnectPeerRequest(input)
+	return out, req.Send()
+}
+
+// DisassociateTransitGatewayConnectPeerWithContext is the same as DisassociateTransitGatewayConnectPeer with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DisassociateTransitGatewayConnectPeer for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) DisassociateTransitGatewayConnectPeerWithContext(ctx aws.Context, input *DisassociateTransitGatewayConnectPeerInput, opts ...request.Option) (*DisassociateTransitGatewayConnectPeerOutput, error) {
+	req, out := c.DisassociateTransitGatewayConnectPeerRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opExecuteCoreNetworkChangeSet = "ExecuteCoreNetworkChangeSet"
+
+// ExecuteCoreNetworkChangeSetRequest generates a "aws/request.Request" representing the
+// client's request for the ExecuteCoreNetworkChangeSet operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ExecuteCoreNetworkChangeSet for more information on using the ExecuteCoreNetworkChangeSet
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ExecuteCoreNetworkChangeSetRequest method.
+//    req, resp := client.ExecuteCoreNetworkChangeSetRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/ExecuteCoreNetworkChangeSet
+func (c *NetworkManager) ExecuteCoreNetworkChangeSetRequest(input *ExecuteCoreNetworkChangeSetInput) (req *request.Request, output *ExecuteCoreNetworkChangeSetOutput) {
+	op := &request.Operation{
+		Name:       opExecuteCoreNetworkChangeSet,
+		HTTPMethod: "POST",
+		HTTPPath:   "/core-networks/{coreNetworkId}/core-network-change-sets/{policyVersionId}/execute",
+	}
+
+	if input == nil {
+		input = &ExecuteCoreNetworkChangeSetInput{}
+	}
+
+	output = &ExecuteCoreNetworkChangeSetOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restjson.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// ExecuteCoreNetworkChangeSet API operation for AWS Network Manager.
+//
+// Executes a change set on your core network. Deploys changes globally based
+// on the policy submitted..
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation ExecuteCoreNetworkChangeSet for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/ExecuteCoreNetworkChangeSet
+func (c *NetworkManager) ExecuteCoreNetworkChangeSet(input *ExecuteCoreNetworkChangeSetInput) (*ExecuteCoreNetworkChangeSetOutput, error) {
+	req, out := c.ExecuteCoreNetworkChangeSetRequest(input)
+	return out, req.Send()
+}
+
+// ExecuteCoreNetworkChangeSetWithContext is the same as ExecuteCoreNetworkChangeSet with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ExecuteCoreNetworkChangeSet for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) ExecuteCoreNetworkChangeSetWithContext(ctx aws.Context, input *ExecuteCoreNetworkChangeSetInput, opts ...request.Option) (*ExecuteCoreNetworkChangeSetOutput, error) {
+	req, out := c.ExecuteCoreNetworkChangeSetRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetConnectAttachment = "GetConnectAttachment"
+
+// GetConnectAttachmentRequest generates a "aws/request.Request" representing the
+// client's request for the GetConnectAttachment operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetConnectAttachment for more information on using the GetConnectAttachment
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetConnectAttachmentRequest method.
+//    req, resp := client.GetConnectAttachmentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetConnectAttachment
+func (c *NetworkManager) GetConnectAttachmentRequest(input *GetConnectAttachmentInput) (req *request.Request, output *GetConnectAttachmentOutput) {
+	op := &request.Operation{
+		Name:       opGetConnectAttachment,
+		HTTPMethod: "GET",
+		HTTPPath:   "/connect-attachments/{attachmentId}",
+	}
+
+	if input == nil {
+		input = &GetConnectAttachmentInput{}
+	}
+
+	output = &GetConnectAttachmentOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetConnectAttachment API operation for AWS Network Manager.
+//
+// Returns information about a core network Connect attachment.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetConnectAttachment for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetConnectAttachment
+func (c *NetworkManager) GetConnectAttachment(input *GetConnectAttachmentInput) (*GetConnectAttachmentOutput, error) {
+	req, out := c.GetConnectAttachmentRequest(input)
+	return out, req.Send()
+}
+
+// GetConnectAttachmentWithContext is the same as GetConnectAttachment with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetConnectAttachment for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetConnectAttachmentWithContext(ctx aws.Context, input *GetConnectAttachmentInput, opts ...request.Option) (*GetConnectAttachmentOutput, error) {
+	req, out := c.GetConnectAttachmentRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetConnectPeer = "GetConnectPeer"
+
+// GetConnectPeerRequest generates a "aws/request.Request" representing the
+// client's request for the GetConnectPeer operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetConnectPeer for more information on using the GetConnectPeer
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetConnectPeerRequest method.
+//    req, resp := client.GetConnectPeerRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetConnectPeer
+func (c *NetworkManager) GetConnectPeerRequest(input *GetConnectPeerInput) (req *request.Request, output *GetConnectPeerOutput) {
+	op := &request.Operation{
+		Name:       opGetConnectPeer,
+		HTTPMethod: "GET",
+		HTTPPath:   "/connect-peers/{connectPeerId}",
+	}
+
+	if input == nil {
+		input = &GetConnectPeerInput{}
+	}
+
+	output = &GetConnectPeerOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetConnectPeer API operation for AWS Network Manager.
+//
+// Returns information about a core network Connect peer.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetConnectPeer for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetConnectPeer
+func (c *NetworkManager) GetConnectPeer(input *GetConnectPeerInput) (*GetConnectPeerOutput, error) {
+	req, out := c.GetConnectPeerRequest(input)
+	return out, req.Send()
+}
+
+// GetConnectPeerWithContext is the same as GetConnectPeer with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetConnectPeer for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetConnectPeerWithContext(ctx aws.Context, input *GetConnectPeerInput, opts ...request.Option) (*GetConnectPeerOutput, error) {
+	req, out := c.GetConnectPeerRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetConnectPeerAssociations = "GetConnectPeerAssociations"
+
+// GetConnectPeerAssociationsRequest generates a "aws/request.Request" representing the
+// client's request for the GetConnectPeerAssociations operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetConnectPeerAssociations for more information on using the GetConnectPeerAssociations
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetConnectPeerAssociationsRequest method.
+//    req, resp := client.GetConnectPeerAssociationsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetConnectPeerAssociations
+func (c *NetworkManager) GetConnectPeerAssociationsRequest(input *GetConnectPeerAssociationsInput) (req *request.Request, output *GetConnectPeerAssociationsOutput) {
+	op := &request.Operation{
+		Name:       opGetConnectPeerAssociations,
+		HTTPMethod: "GET",
+		HTTPPath:   "/global-networks/{globalNetworkId}/connect-peer-associations",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &GetConnectPeerAssociationsInput{}
+	}
+
+	output = &GetConnectPeerAssociationsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetConnectPeerAssociations API operation for AWS Network Manager.
+//
+// Returns information about a core network Connect peer associations.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetConnectPeerAssociations for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetConnectPeerAssociations
+func (c *NetworkManager) GetConnectPeerAssociations(input *GetConnectPeerAssociationsInput) (*GetConnectPeerAssociationsOutput, error) {
+	req, out := c.GetConnectPeerAssociationsRequest(input)
+	return out, req.Send()
+}
+
+// GetConnectPeerAssociationsWithContext is the same as GetConnectPeerAssociations with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetConnectPeerAssociations for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetConnectPeerAssociationsWithContext(ctx aws.Context, input *GetConnectPeerAssociationsInput, opts ...request.Option) (*GetConnectPeerAssociationsOutput, error) {
+	req, out := c.GetConnectPeerAssociationsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// GetConnectPeerAssociationsPages iterates over the pages of a GetConnectPeerAssociations operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See GetConnectPeerAssociations method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a GetConnectPeerAssociations operation.
+//    pageNum := 0
+//    err := client.GetConnectPeerAssociationsPages(params,
+//        func(page *networkmanager.GetConnectPeerAssociationsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) GetConnectPeerAssociationsPages(input *GetConnectPeerAssociationsInput, fn func(*GetConnectPeerAssociationsOutput, bool) bool) error {
+	return c.GetConnectPeerAssociationsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// GetConnectPeerAssociationsPagesWithContext same as GetConnectPeerAssociationsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetConnectPeerAssociationsPagesWithContext(ctx aws.Context, input *GetConnectPeerAssociationsInput, fn func(*GetConnectPeerAssociationsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *GetConnectPeerAssociationsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.GetConnectPeerAssociationsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*GetConnectPeerAssociationsOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opGetConnections = "GetConnections"
+
+// GetConnectionsRequest generates a "aws/request.Request" representing the
+// client's request for the GetConnections operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetConnections for more information on using the GetConnections
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetConnectionsRequest method.
+//    req, resp := client.GetConnectionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetConnections
+func (c *NetworkManager) GetConnectionsRequest(input *GetConnectionsInput) (req *request.Request, output *GetConnectionsOutput) {
+	op := &request.Operation{
+		Name:       opGetConnections,
+		HTTPMethod: "GET",
+		HTTPPath:   "/global-networks/{globalNetworkId}/connections",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &GetConnectionsInput{}
+	}
+
+	output = &GetConnectionsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetConnections API operation for AWS Network Manager.
+//
+// Gets information about one or more of your connections in a global network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetConnections for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetConnections
+func (c *NetworkManager) GetConnections(input *GetConnectionsInput) (*GetConnectionsOutput, error) {
+	req, out := c.GetConnectionsRequest(input)
+	return out, req.Send()
+}
+
+// GetConnectionsWithContext is the same as GetConnections with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetConnections for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetConnectionsWithContext(ctx aws.Context, input *GetConnectionsInput, opts ...request.Option) (*GetConnectionsOutput, error) {
+	req, out := c.GetConnectionsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// GetConnectionsPages iterates over the pages of a GetConnections operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See GetConnections method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a GetConnections operation.
+//    pageNum := 0
+//    err := client.GetConnectionsPages(params,
+//        func(page *networkmanager.GetConnectionsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) GetConnectionsPages(input *GetConnectionsInput, fn func(*GetConnectionsOutput, bool) bool) error {
+	return c.GetConnectionsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// GetConnectionsPagesWithContext same as GetConnectionsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetConnectionsPagesWithContext(ctx aws.Context, input *GetConnectionsInput, fn func(*GetConnectionsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *GetConnectionsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.GetConnectionsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*GetConnectionsOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opGetCoreNetwork = "GetCoreNetwork"
+
+// GetCoreNetworkRequest generates a "aws/request.Request" representing the
+// client's request for the GetCoreNetwork operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetCoreNetwork for more information on using the GetCoreNetwork
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetCoreNetworkRequest method.
+//    req, resp := client.GetCoreNetworkRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetCoreNetwork
+func (c *NetworkManager) GetCoreNetworkRequest(input *GetCoreNetworkInput) (req *request.Request, output *GetCoreNetworkOutput) {
+	op := &request.Operation{
+		Name:       opGetCoreNetwork,
+		HTTPMethod: "GET",
+		HTTPPath:   "/core-networks/{coreNetworkId}",
+	}
+
+	if input == nil {
+		input = &GetCoreNetworkInput{}
+	}
+
+	output = &GetCoreNetworkOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetCoreNetwork API operation for AWS Network Manager.
+//
+// Returns information about a core network. By default it returns the LIVE
+// policy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetCoreNetwork for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetCoreNetwork
+func (c *NetworkManager) GetCoreNetwork(input *GetCoreNetworkInput) (*GetCoreNetworkOutput, error) {
+	req, out := c.GetCoreNetworkRequest(input)
+	return out, req.Send()
+}
+
+// GetCoreNetworkWithContext is the same as GetCoreNetwork with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetCoreNetwork for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetCoreNetworkWithContext(ctx aws.Context, input *GetCoreNetworkInput, opts ...request.Option) (*GetCoreNetworkOutput, error) {
+	req, out := c.GetCoreNetworkRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetCoreNetworkChangeSet = "GetCoreNetworkChangeSet"
+
+// GetCoreNetworkChangeSetRequest generates a "aws/request.Request" representing the
+// client's request for the GetCoreNetworkChangeSet operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetCoreNetworkChangeSet for more information on using the GetCoreNetworkChangeSet
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetCoreNetworkChangeSetRequest method.
+//    req, resp := client.GetCoreNetworkChangeSetRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetCoreNetworkChangeSet
+func (c *NetworkManager) GetCoreNetworkChangeSetRequest(input *GetCoreNetworkChangeSetInput) (req *request.Request, output *GetCoreNetworkChangeSetOutput) {
+	op := &request.Operation{
+		Name:       opGetCoreNetworkChangeSet,
+		HTTPMethod: "GET",
+		HTTPPath:   "/core-networks/{coreNetworkId}/core-network-change-sets/{policyVersionId}",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &GetCoreNetworkChangeSetInput{}
+	}
+
+	output = &GetCoreNetworkChangeSetOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetCoreNetworkChangeSet API operation for AWS Network Manager.
+//
+// Returns a change set between the LIVE core network policy and a submitted
+// policy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetCoreNetworkChangeSet for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetCoreNetworkChangeSet
+func (c *NetworkManager) GetCoreNetworkChangeSet(input *GetCoreNetworkChangeSetInput) (*GetCoreNetworkChangeSetOutput, error) {
+	req, out := c.GetCoreNetworkChangeSetRequest(input)
+	return out, req.Send()
+}
+
+// GetCoreNetworkChangeSetWithContext is the same as GetCoreNetworkChangeSet with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetCoreNetworkChangeSet for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetCoreNetworkChangeSetWithContext(ctx aws.Context, input *GetCoreNetworkChangeSetInput, opts ...request.Option) (*GetCoreNetworkChangeSetOutput, error) {
+	req, out := c.GetCoreNetworkChangeSetRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// GetCoreNetworkChangeSetPages iterates over the pages of a GetCoreNetworkChangeSet operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See GetCoreNetworkChangeSet method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a GetCoreNetworkChangeSet operation.
+//    pageNum := 0
+//    err := client.GetCoreNetworkChangeSetPages(params,
+//        func(page *networkmanager.GetCoreNetworkChangeSetOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) GetCoreNetworkChangeSetPages(input *GetCoreNetworkChangeSetInput, fn func(*GetCoreNetworkChangeSetOutput, bool) bool) error {
+	return c.GetCoreNetworkChangeSetPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// GetCoreNetworkChangeSetPagesWithContext same as GetCoreNetworkChangeSetPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetCoreNetworkChangeSetPagesWithContext(ctx aws.Context, input *GetCoreNetworkChangeSetInput, fn func(*GetCoreNetworkChangeSetOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *GetCoreNetworkChangeSetInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.GetCoreNetworkChangeSetRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*GetCoreNetworkChangeSetOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opGetCoreNetworkPolicy = "GetCoreNetworkPolicy"
+
+// GetCoreNetworkPolicyRequest generates a "aws/request.Request" representing the
+// client's request for the GetCoreNetworkPolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetCoreNetworkPolicy for more information on using the GetCoreNetworkPolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetCoreNetworkPolicyRequest method.
+//    req, resp := client.GetCoreNetworkPolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetCoreNetworkPolicy
+func (c *NetworkManager) GetCoreNetworkPolicyRequest(input *GetCoreNetworkPolicyInput) (req *request.Request, output *GetCoreNetworkPolicyOutput) {
+	op := &request.Operation{
+		Name:       opGetCoreNetworkPolicy,
+		HTTPMethod: "GET",
+		HTTPPath:   "/core-networks/{coreNetworkId}/core-network-policy",
+	}
+
+	if input == nil {
+		input = &GetCoreNetworkPolicyInput{}
+	}
+
+	output = &GetCoreNetworkPolicyOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetCoreNetworkPolicy API operation for AWS Network Manager.
+//
+// Gets details about a core network policy. You can get details about your
+// current live policy or any previous policy version.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetCoreNetworkPolicy for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetCoreNetworkPolicy
+func (c *NetworkManager) GetCoreNetworkPolicy(input *GetCoreNetworkPolicyInput) (*GetCoreNetworkPolicyOutput, error) {
+	req, out := c.GetCoreNetworkPolicyRequest(input)
+	return out, req.Send()
+}
+
+// GetCoreNetworkPolicyWithContext is the same as GetCoreNetworkPolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetCoreNetworkPolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetCoreNetworkPolicyWithContext(ctx aws.Context, input *GetCoreNetworkPolicyInput, opts ...request.Option) (*GetCoreNetworkPolicyOutput, error) {
+	req, out := c.GetCoreNetworkPolicyRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -2042,6 +4609,964 @@ func (c *NetworkManager) GetLinksPagesWithContext(ctx aws.Context, input *GetLin
 	return p.Err()
 }
 
+const opGetNetworkResourceCounts = "GetNetworkResourceCounts"
+
+// GetNetworkResourceCountsRequest generates a "aws/request.Request" representing the
+// client's request for the GetNetworkResourceCounts operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetNetworkResourceCounts for more information on using the GetNetworkResourceCounts
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetNetworkResourceCountsRequest method.
+//    req, resp := client.GetNetworkResourceCountsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetNetworkResourceCounts
+func (c *NetworkManager) GetNetworkResourceCountsRequest(input *GetNetworkResourceCountsInput) (req *request.Request, output *GetNetworkResourceCountsOutput) {
+	op := &request.Operation{
+		Name:       opGetNetworkResourceCounts,
+		HTTPMethod: "GET",
+		HTTPPath:   "/global-networks/{globalNetworkId}/network-resource-count",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &GetNetworkResourceCountsInput{}
+	}
+
+	output = &GetNetworkResourceCountsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetNetworkResourceCounts API operation for AWS Network Manager.
+//
+// Gets the count of network resources, by resource type, for the specified
+// global network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetNetworkResourceCounts for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetNetworkResourceCounts
+func (c *NetworkManager) GetNetworkResourceCounts(input *GetNetworkResourceCountsInput) (*GetNetworkResourceCountsOutput, error) {
+	req, out := c.GetNetworkResourceCountsRequest(input)
+	return out, req.Send()
+}
+
+// GetNetworkResourceCountsWithContext is the same as GetNetworkResourceCounts with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetNetworkResourceCounts for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetNetworkResourceCountsWithContext(ctx aws.Context, input *GetNetworkResourceCountsInput, opts ...request.Option) (*GetNetworkResourceCountsOutput, error) {
+	req, out := c.GetNetworkResourceCountsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// GetNetworkResourceCountsPages iterates over the pages of a GetNetworkResourceCounts operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See GetNetworkResourceCounts method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a GetNetworkResourceCounts operation.
+//    pageNum := 0
+//    err := client.GetNetworkResourceCountsPages(params,
+//        func(page *networkmanager.GetNetworkResourceCountsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) GetNetworkResourceCountsPages(input *GetNetworkResourceCountsInput, fn func(*GetNetworkResourceCountsOutput, bool) bool) error {
+	return c.GetNetworkResourceCountsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// GetNetworkResourceCountsPagesWithContext same as GetNetworkResourceCountsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetNetworkResourceCountsPagesWithContext(ctx aws.Context, input *GetNetworkResourceCountsInput, fn func(*GetNetworkResourceCountsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *GetNetworkResourceCountsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.GetNetworkResourceCountsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*GetNetworkResourceCountsOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opGetNetworkResourceRelationships = "GetNetworkResourceRelationships"
+
+// GetNetworkResourceRelationshipsRequest generates a "aws/request.Request" representing the
+// client's request for the GetNetworkResourceRelationships operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetNetworkResourceRelationships for more information on using the GetNetworkResourceRelationships
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetNetworkResourceRelationshipsRequest method.
+//    req, resp := client.GetNetworkResourceRelationshipsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetNetworkResourceRelationships
+func (c *NetworkManager) GetNetworkResourceRelationshipsRequest(input *GetNetworkResourceRelationshipsInput) (req *request.Request, output *GetNetworkResourceRelationshipsOutput) {
+	op := &request.Operation{
+		Name:       opGetNetworkResourceRelationships,
+		HTTPMethod: "GET",
+		HTTPPath:   "/global-networks/{globalNetworkId}/network-resource-relationships",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &GetNetworkResourceRelationshipsInput{}
+	}
+
+	output = &GetNetworkResourceRelationshipsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetNetworkResourceRelationships API operation for AWS Network Manager.
+//
+// Gets the network resource relationships for the specified global network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetNetworkResourceRelationships for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetNetworkResourceRelationships
+func (c *NetworkManager) GetNetworkResourceRelationships(input *GetNetworkResourceRelationshipsInput) (*GetNetworkResourceRelationshipsOutput, error) {
+	req, out := c.GetNetworkResourceRelationshipsRequest(input)
+	return out, req.Send()
+}
+
+// GetNetworkResourceRelationshipsWithContext is the same as GetNetworkResourceRelationships with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetNetworkResourceRelationships for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetNetworkResourceRelationshipsWithContext(ctx aws.Context, input *GetNetworkResourceRelationshipsInput, opts ...request.Option) (*GetNetworkResourceRelationshipsOutput, error) {
+	req, out := c.GetNetworkResourceRelationshipsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// GetNetworkResourceRelationshipsPages iterates over the pages of a GetNetworkResourceRelationships operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See GetNetworkResourceRelationships method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a GetNetworkResourceRelationships operation.
+//    pageNum := 0
+//    err := client.GetNetworkResourceRelationshipsPages(params,
+//        func(page *networkmanager.GetNetworkResourceRelationshipsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) GetNetworkResourceRelationshipsPages(input *GetNetworkResourceRelationshipsInput, fn func(*GetNetworkResourceRelationshipsOutput, bool) bool) error {
+	return c.GetNetworkResourceRelationshipsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// GetNetworkResourceRelationshipsPagesWithContext same as GetNetworkResourceRelationshipsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetNetworkResourceRelationshipsPagesWithContext(ctx aws.Context, input *GetNetworkResourceRelationshipsInput, fn func(*GetNetworkResourceRelationshipsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *GetNetworkResourceRelationshipsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.GetNetworkResourceRelationshipsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*GetNetworkResourceRelationshipsOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opGetNetworkResources = "GetNetworkResources"
+
+// GetNetworkResourcesRequest generates a "aws/request.Request" representing the
+// client's request for the GetNetworkResources operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetNetworkResources for more information on using the GetNetworkResources
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetNetworkResourcesRequest method.
+//    req, resp := client.GetNetworkResourcesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetNetworkResources
+func (c *NetworkManager) GetNetworkResourcesRequest(input *GetNetworkResourcesInput) (req *request.Request, output *GetNetworkResourcesOutput) {
+	op := &request.Operation{
+		Name:       opGetNetworkResources,
+		HTTPMethod: "GET",
+		HTTPPath:   "/global-networks/{globalNetworkId}/network-resources",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &GetNetworkResourcesInput{}
+	}
+
+	output = &GetNetworkResourcesOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetNetworkResources API operation for AWS Network Manager.
+//
+// Describes the network resources for the specified global network.
+//
+// The results include information from the corresponding Describe call for
+// the resource, minus any sensitive information such as pre-shared keys.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetNetworkResources for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetNetworkResources
+func (c *NetworkManager) GetNetworkResources(input *GetNetworkResourcesInput) (*GetNetworkResourcesOutput, error) {
+	req, out := c.GetNetworkResourcesRequest(input)
+	return out, req.Send()
+}
+
+// GetNetworkResourcesWithContext is the same as GetNetworkResources with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetNetworkResources for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetNetworkResourcesWithContext(ctx aws.Context, input *GetNetworkResourcesInput, opts ...request.Option) (*GetNetworkResourcesOutput, error) {
+	req, out := c.GetNetworkResourcesRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// GetNetworkResourcesPages iterates over the pages of a GetNetworkResources operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See GetNetworkResources method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a GetNetworkResources operation.
+//    pageNum := 0
+//    err := client.GetNetworkResourcesPages(params,
+//        func(page *networkmanager.GetNetworkResourcesOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) GetNetworkResourcesPages(input *GetNetworkResourcesInput, fn func(*GetNetworkResourcesOutput, bool) bool) error {
+	return c.GetNetworkResourcesPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// GetNetworkResourcesPagesWithContext same as GetNetworkResourcesPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetNetworkResourcesPagesWithContext(ctx aws.Context, input *GetNetworkResourcesInput, fn func(*GetNetworkResourcesOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *GetNetworkResourcesInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.GetNetworkResourcesRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*GetNetworkResourcesOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opGetNetworkRoutes = "GetNetworkRoutes"
+
+// GetNetworkRoutesRequest generates a "aws/request.Request" representing the
+// client's request for the GetNetworkRoutes operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetNetworkRoutes for more information on using the GetNetworkRoutes
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetNetworkRoutesRequest method.
+//    req, resp := client.GetNetworkRoutesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetNetworkRoutes
+func (c *NetworkManager) GetNetworkRoutesRequest(input *GetNetworkRoutesInput) (req *request.Request, output *GetNetworkRoutesOutput) {
+	op := &request.Operation{
+		Name:       opGetNetworkRoutes,
+		HTTPMethod: "POST",
+		HTTPPath:   "/global-networks/{globalNetworkId}/network-routes",
+	}
+
+	if input == nil {
+		input = &GetNetworkRoutesInput{}
+	}
+
+	output = &GetNetworkRoutesOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetNetworkRoutes API operation for AWS Network Manager.
+//
+// Gets the network routes of the specified global network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetNetworkRoutes for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetNetworkRoutes
+func (c *NetworkManager) GetNetworkRoutes(input *GetNetworkRoutesInput) (*GetNetworkRoutesOutput, error) {
+	req, out := c.GetNetworkRoutesRequest(input)
+	return out, req.Send()
+}
+
+// GetNetworkRoutesWithContext is the same as GetNetworkRoutes with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetNetworkRoutes for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetNetworkRoutesWithContext(ctx aws.Context, input *GetNetworkRoutesInput, opts ...request.Option) (*GetNetworkRoutesOutput, error) {
+	req, out := c.GetNetworkRoutesRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetNetworkTelemetry = "GetNetworkTelemetry"
+
+// GetNetworkTelemetryRequest generates a "aws/request.Request" representing the
+// client's request for the GetNetworkTelemetry operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetNetworkTelemetry for more information on using the GetNetworkTelemetry
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetNetworkTelemetryRequest method.
+//    req, resp := client.GetNetworkTelemetryRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetNetworkTelemetry
+func (c *NetworkManager) GetNetworkTelemetryRequest(input *GetNetworkTelemetryInput) (req *request.Request, output *GetNetworkTelemetryOutput) {
+	op := &request.Operation{
+		Name:       opGetNetworkTelemetry,
+		HTTPMethod: "GET",
+		HTTPPath:   "/global-networks/{globalNetworkId}/network-telemetry",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &GetNetworkTelemetryInput{}
+	}
+
+	output = &GetNetworkTelemetryOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetNetworkTelemetry API operation for AWS Network Manager.
+//
+// Gets the network telemetry of the specified global network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetNetworkTelemetry for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetNetworkTelemetry
+func (c *NetworkManager) GetNetworkTelemetry(input *GetNetworkTelemetryInput) (*GetNetworkTelemetryOutput, error) {
+	req, out := c.GetNetworkTelemetryRequest(input)
+	return out, req.Send()
+}
+
+// GetNetworkTelemetryWithContext is the same as GetNetworkTelemetry with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetNetworkTelemetry for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetNetworkTelemetryWithContext(ctx aws.Context, input *GetNetworkTelemetryInput, opts ...request.Option) (*GetNetworkTelemetryOutput, error) {
+	req, out := c.GetNetworkTelemetryRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// GetNetworkTelemetryPages iterates over the pages of a GetNetworkTelemetry operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See GetNetworkTelemetry method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a GetNetworkTelemetry operation.
+//    pageNum := 0
+//    err := client.GetNetworkTelemetryPages(params,
+//        func(page *networkmanager.GetNetworkTelemetryOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) GetNetworkTelemetryPages(input *GetNetworkTelemetryInput, fn func(*GetNetworkTelemetryOutput, bool) bool) error {
+	return c.GetNetworkTelemetryPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// GetNetworkTelemetryPagesWithContext same as GetNetworkTelemetryPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetNetworkTelemetryPagesWithContext(ctx aws.Context, input *GetNetworkTelemetryInput, fn func(*GetNetworkTelemetryOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *GetNetworkTelemetryInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.GetNetworkTelemetryRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*GetNetworkTelemetryOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opGetResourcePolicy = "GetResourcePolicy"
+
+// GetResourcePolicyRequest generates a "aws/request.Request" representing the
+// client's request for the GetResourcePolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetResourcePolicy for more information on using the GetResourcePolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetResourcePolicyRequest method.
+//    req, resp := client.GetResourcePolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetResourcePolicy
+func (c *NetworkManager) GetResourcePolicyRequest(input *GetResourcePolicyInput) (req *request.Request, output *GetResourcePolicyOutput) {
+	op := &request.Operation{
+		Name:       opGetResourcePolicy,
+		HTTPMethod: "GET",
+		HTTPPath:   "/resource-policy/{resourceArn}",
+	}
+
+	if input == nil {
+		input = &GetResourcePolicyInput{}
+	}
+
+	output = &GetResourcePolicyOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetResourcePolicy API operation for AWS Network Manager.
+//
+// Returns information about a resource policy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetResourcePolicy for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetResourcePolicy
+func (c *NetworkManager) GetResourcePolicy(input *GetResourcePolicyInput) (*GetResourcePolicyOutput, error) {
+	req, out := c.GetResourcePolicyRequest(input)
+	return out, req.Send()
+}
+
+// GetResourcePolicyWithContext is the same as GetResourcePolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetResourcePolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetResourcePolicyWithContext(ctx aws.Context, input *GetResourcePolicyInput, opts ...request.Option) (*GetResourcePolicyOutput, error) {
+	req, out := c.GetResourcePolicyRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetRouteAnalysis = "GetRouteAnalysis"
+
+// GetRouteAnalysisRequest generates a "aws/request.Request" representing the
+// client's request for the GetRouteAnalysis operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetRouteAnalysis for more information on using the GetRouteAnalysis
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetRouteAnalysisRequest method.
+//    req, resp := client.GetRouteAnalysisRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetRouteAnalysis
+func (c *NetworkManager) GetRouteAnalysisRequest(input *GetRouteAnalysisInput) (req *request.Request, output *GetRouteAnalysisOutput) {
+	op := &request.Operation{
+		Name:       opGetRouteAnalysis,
+		HTTPMethod: "GET",
+		HTTPPath:   "/global-networks/{globalNetworkId}/route-analyses/{routeAnalysisId}",
+	}
+
+	if input == nil {
+		input = &GetRouteAnalysisInput{}
+	}
+
+	output = &GetRouteAnalysisOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetRouteAnalysis API operation for AWS Network Manager.
+//
+// Gets information about the specified route analysis.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetRouteAnalysis for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetRouteAnalysis
+func (c *NetworkManager) GetRouteAnalysis(input *GetRouteAnalysisInput) (*GetRouteAnalysisOutput, error) {
+	req, out := c.GetRouteAnalysisRequest(input)
+	return out, req.Send()
+}
+
+// GetRouteAnalysisWithContext is the same as GetRouteAnalysis with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetRouteAnalysis for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetRouteAnalysisWithContext(ctx aws.Context, input *GetRouteAnalysisInput, opts ...request.Option) (*GetRouteAnalysisOutput, error) {
+	req, out := c.GetRouteAnalysisRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opGetSiteToSiteVpnAttachment = "GetSiteToSiteVpnAttachment"
+
+// GetSiteToSiteVpnAttachmentRequest generates a "aws/request.Request" representing the
+// client's request for the GetSiteToSiteVpnAttachment operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetSiteToSiteVpnAttachment for more information on using the GetSiteToSiteVpnAttachment
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetSiteToSiteVpnAttachmentRequest method.
+//    req, resp := client.GetSiteToSiteVpnAttachmentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetSiteToSiteVpnAttachment
+func (c *NetworkManager) GetSiteToSiteVpnAttachmentRequest(input *GetSiteToSiteVpnAttachmentInput) (req *request.Request, output *GetSiteToSiteVpnAttachmentOutput) {
+	op := &request.Operation{
+		Name:       opGetSiteToSiteVpnAttachment,
+		HTTPMethod: "GET",
+		HTTPPath:   "/site-to-site-vpn-attachments/{attachmentId}",
+	}
+
+	if input == nil {
+		input = &GetSiteToSiteVpnAttachmentInput{}
+	}
+
+	output = &GetSiteToSiteVpnAttachmentOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetSiteToSiteVpnAttachment API operation for AWS Network Manager.
+//
+// Returns information about a site-to-site VPN attachment.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetSiteToSiteVpnAttachment for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetSiteToSiteVpnAttachment
+func (c *NetworkManager) GetSiteToSiteVpnAttachment(input *GetSiteToSiteVpnAttachmentInput) (*GetSiteToSiteVpnAttachmentOutput, error) {
+	req, out := c.GetSiteToSiteVpnAttachmentRequest(input)
+	return out, req.Send()
+}
+
+// GetSiteToSiteVpnAttachmentWithContext is the same as GetSiteToSiteVpnAttachment with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetSiteToSiteVpnAttachment for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetSiteToSiteVpnAttachmentWithContext(ctx aws.Context, input *GetSiteToSiteVpnAttachmentInput, opts ...request.Option) (*GetSiteToSiteVpnAttachmentOutput, error) {
+	req, out := c.GetSiteToSiteVpnAttachmentRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opGetSites = "GetSites"
 
 // GetSitesRequest generates a "aws/request.Request" representing the
@@ -2184,6 +5709,160 @@ func (c *NetworkManager) GetSitesPagesWithContext(ctx aws.Context, input *GetSit
 
 	for p.Next() {
 		if !fn(p.Page().(*GetSitesOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opGetTransitGatewayConnectPeerAssociations = "GetTransitGatewayConnectPeerAssociations"
+
+// GetTransitGatewayConnectPeerAssociationsRequest generates a "aws/request.Request" representing the
+// client's request for the GetTransitGatewayConnectPeerAssociations operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetTransitGatewayConnectPeerAssociations for more information on using the GetTransitGatewayConnectPeerAssociations
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetTransitGatewayConnectPeerAssociationsRequest method.
+//    req, resp := client.GetTransitGatewayConnectPeerAssociationsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetTransitGatewayConnectPeerAssociations
+func (c *NetworkManager) GetTransitGatewayConnectPeerAssociationsRequest(input *GetTransitGatewayConnectPeerAssociationsInput) (req *request.Request, output *GetTransitGatewayConnectPeerAssociationsOutput) {
+	op := &request.Operation{
+		Name:       opGetTransitGatewayConnectPeerAssociations,
+		HTTPMethod: "GET",
+		HTTPPath:   "/global-networks/{globalNetworkId}/transit-gateway-connect-peer-associations",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &GetTransitGatewayConnectPeerAssociationsInput{}
+	}
+
+	output = &GetTransitGatewayConnectPeerAssociationsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetTransitGatewayConnectPeerAssociations API operation for AWS Network Manager.
+//
+// Gets information about one or more of your transit gateway Connect peer associations
+// in a global network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetTransitGatewayConnectPeerAssociations for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetTransitGatewayConnectPeerAssociations
+func (c *NetworkManager) GetTransitGatewayConnectPeerAssociations(input *GetTransitGatewayConnectPeerAssociationsInput) (*GetTransitGatewayConnectPeerAssociationsOutput, error) {
+	req, out := c.GetTransitGatewayConnectPeerAssociationsRequest(input)
+	return out, req.Send()
+}
+
+// GetTransitGatewayConnectPeerAssociationsWithContext is the same as GetTransitGatewayConnectPeerAssociations with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetTransitGatewayConnectPeerAssociations for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetTransitGatewayConnectPeerAssociationsWithContext(ctx aws.Context, input *GetTransitGatewayConnectPeerAssociationsInput, opts ...request.Option) (*GetTransitGatewayConnectPeerAssociationsOutput, error) {
+	req, out := c.GetTransitGatewayConnectPeerAssociationsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// GetTransitGatewayConnectPeerAssociationsPages iterates over the pages of a GetTransitGatewayConnectPeerAssociations operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See GetTransitGatewayConnectPeerAssociations method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a GetTransitGatewayConnectPeerAssociations operation.
+//    pageNum := 0
+//    err := client.GetTransitGatewayConnectPeerAssociationsPages(params,
+//        func(page *networkmanager.GetTransitGatewayConnectPeerAssociationsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) GetTransitGatewayConnectPeerAssociationsPages(input *GetTransitGatewayConnectPeerAssociationsInput, fn func(*GetTransitGatewayConnectPeerAssociationsOutput, bool) bool) error {
+	return c.GetTransitGatewayConnectPeerAssociationsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// GetTransitGatewayConnectPeerAssociationsPagesWithContext same as GetTransitGatewayConnectPeerAssociationsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetTransitGatewayConnectPeerAssociationsPagesWithContext(ctx aws.Context, input *GetTransitGatewayConnectPeerAssociationsInput, fn func(*GetTransitGatewayConnectPeerAssociationsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *GetTransitGatewayConnectPeerAssociationsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.GetTransitGatewayConnectPeerAssociationsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*GetTransitGatewayConnectPeerAssociationsOutput), !p.HasNextPage()) {
 			break
 		}
 	}
@@ -2341,6 +6020,684 @@ func (c *NetworkManager) GetTransitGatewayRegistrationsPagesWithContext(ctx aws.
 	return p.Err()
 }
 
+const opGetVpcAttachment = "GetVpcAttachment"
+
+// GetVpcAttachmentRequest generates a "aws/request.Request" representing the
+// client's request for the GetVpcAttachment operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See GetVpcAttachment for more information on using the GetVpcAttachment
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the GetVpcAttachmentRequest method.
+//    req, resp := client.GetVpcAttachmentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetVpcAttachment
+func (c *NetworkManager) GetVpcAttachmentRequest(input *GetVpcAttachmentInput) (req *request.Request, output *GetVpcAttachmentOutput) {
+	op := &request.Operation{
+		Name:       opGetVpcAttachment,
+		HTTPMethod: "GET",
+		HTTPPath:   "/vpc-attachments/{attachmentId}",
+	}
+
+	if input == nil {
+		input = &GetVpcAttachmentInput{}
+	}
+
+	output = &GetVpcAttachmentOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// GetVpcAttachment API operation for AWS Network Manager.
+//
+// Returns information about a VPC attachment.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation GetVpcAttachment for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/GetVpcAttachment
+func (c *NetworkManager) GetVpcAttachment(input *GetVpcAttachmentInput) (*GetVpcAttachmentOutput, error) {
+	req, out := c.GetVpcAttachmentRequest(input)
+	return out, req.Send()
+}
+
+// GetVpcAttachmentWithContext is the same as GetVpcAttachment with the addition of
+// the ability to pass a context and additional request options.
+//
+// See GetVpcAttachment for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) GetVpcAttachmentWithContext(ctx aws.Context, input *GetVpcAttachmentInput, opts ...request.Option) (*GetVpcAttachmentOutput, error) {
+	req, out := c.GetVpcAttachmentRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opListAttachments = "ListAttachments"
+
+// ListAttachmentsRequest generates a "aws/request.Request" representing the
+// client's request for the ListAttachments operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListAttachments for more information on using the ListAttachments
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListAttachmentsRequest method.
+//    req, resp := client.ListAttachmentsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/ListAttachments
+func (c *NetworkManager) ListAttachmentsRequest(input *ListAttachmentsInput) (req *request.Request, output *ListAttachmentsOutput) {
+	op := &request.Operation{
+		Name:       opListAttachments,
+		HTTPMethod: "GET",
+		HTTPPath:   "/attachments",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &ListAttachmentsInput{}
+	}
+
+	output = &ListAttachmentsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListAttachments API operation for AWS Network Manager.
+//
+// Returns a list of core network attachments.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation ListAttachments for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/ListAttachments
+func (c *NetworkManager) ListAttachments(input *ListAttachmentsInput) (*ListAttachmentsOutput, error) {
+	req, out := c.ListAttachmentsRequest(input)
+	return out, req.Send()
+}
+
+// ListAttachmentsWithContext is the same as ListAttachments with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListAttachments for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) ListAttachmentsWithContext(ctx aws.Context, input *ListAttachmentsInput, opts ...request.Option) (*ListAttachmentsOutput, error) {
+	req, out := c.ListAttachmentsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// ListAttachmentsPages iterates over the pages of a ListAttachments operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListAttachments method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListAttachments operation.
+//    pageNum := 0
+//    err := client.ListAttachmentsPages(params,
+//        func(page *networkmanager.ListAttachmentsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) ListAttachmentsPages(input *ListAttachmentsInput, fn func(*ListAttachmentsOutput, bool) bool) error {
+	return c.ListAttachmentsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// ListAttachmentsPagesWithContext same as ListAttachmentsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) ListAttachmentsPagesWithContext(ctx aws.Context, input *ListAttachmentsInput, fn func(*ListAttachmentsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *ListAttachmentsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.ListAttachmentsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*ListAttachmentsOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opListConnectPeers = "ListConnectPeers"
+
+// ListConnectPeersRequest generates a "aws/request.Request" representing the
+// client's request for the ListConnectPeers operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListConnectPeers for more information on using the ListConnectPeers
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListConnectPeersRequest method.
+//    req, resp := client.ListConnectPeersRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/ListConnectPeers
+func (c *NetworkManager) ListConnectPeersRequest(input *ListConnectPeersInput) (req *request.Request, output *ListConnectPeersOutput) {
+	op := &request.Operation{
+		Name:       opListConnectPeers,
+		HTTPMethod: "GET",
+		HTTPPath:   "/connect-peers",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &ListConnectPeersInput{}
+	}
+
+	output = &ListConnectPeersOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListConnectPeers API operation for AWS Network Manager.
+//
+// Returns a list of core network Connect peers.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation ListConnectPeers for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/ListConnectPeers
+func (c *NetworkManager) ListConnectPeers(input *ListConnectPeersInput) (*ListConnectPeersOutput, error) {
+	req, out := c.ListConnectPeersRequest(input)
+	return out, req.Send()
+}
+
+// ListConnectPeersWithContext is the same as ListConnectPeers with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListConnectPeers for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) ListConnectPeersWithContext(ctx aws.Context, input *ListConnectPeersInput, opts ...request.Option) (*ListConnectPeersOutput, error) {
+	req, out := c.ListConnectPeersRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// ListConnectPeersPages iterates over the pages of a ListConnectPeers operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListConnectPeers method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListConnectPeers operation.
+//    pageNum := 0
+//    err := client.ListConnectPeersPages(params,
+//        func(page *networkmanager.ListConnectPeersOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) ListConnectPeersPages(input *ListConnectPeersInput, fn func(*ListConnectPeersOutput, bool) bool) error {
+	return c.ListConnectPeersPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// ListConnectPeersPagesWithContext same as ListConnectPeersPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) ListConnectPeersPagesWithContext(ctx aws.Context, input *ListConnectPeersInput, fn func(*ListConnectPeersOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *ListConnectPeersInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.ListConnectPeersRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*ListConnectPeersOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opListCoreNetworkPolicyVersions = "ListCoreNetworkPolicyVersions"
+
+// ListCoreNetworkPolicyVersionsRequest generates a "aws/request.Request" representing the
+// client's request for the ListCoreNetworkPolicyVersions operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListCoreNetworkPolicyVersions for more information on using the ListCoreNetworkPolicyVersions
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListCoreNetworkPolicyVersionsRequest method.
+//    req, resp := client.ListCoreNetworkPolicyVersionsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/ListCoreNetworkPolicyVersions
+func (c *NetworkManager) ListCoreNetworkPolicyVersionsRequest(input *ListCoreNetworkPolicyVersionsInput) (req *request.Request, output *ListCoreNetworkPolicyVersionsOutput) {
+	op := &request.Operation{
+		Name:       opListCoreNetworkPolicyVersions,
+		HTTPMethod: "GET",
+		HTTPPath:   "/core-networks/{coreNetworkId}/core-network-policy-versions",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &ListCoreNetworkPolicyVersionsInput{}
+	}
+
+	output = &ListCoreNetworkPolicyVersionsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListCoreNetworkPolicyVersions API operation for AWS Network Manager.
+//
+// Returns a list of core network policy versions.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation ListCoreNetworkPolicyVersions for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/ListCoreNetworkPolicyVersions
+func (c *NetworkManager) ListCoreNetworkPolicyVersions(input *ListCoreNetworkPolicyVersionsInput) (*ListCoreNetworkPolicyVersionsOutput, error) {
+	req, out := c.ListCoreNetworkPolicyVersionsRequest(input)
+	return out, req.Send()
+}
+
+// ListCoreNetworkPolicyVersionsWithContext is the same as ListCoreNetworkPolicyVersions with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListCoreNetworkPolicyVersions for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) ListCoreNetworkPolicyVersionsWithContext(ctx aws.Context, input *ListCoreNetworkPolicyVersionsInput, opts ...request.Option) (*ListCoreNetworkPolicyVersionsOutput, error) {
+	req, out := c.ListCoreNetworkPolicyVersionsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// ListCoreNetworkPolicyVersionsPages iterates over the pages of a ListCoreNetworkPolicyVersions operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListCoreNetworkPolicyVersions method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListCoreNetworkPolicyVersions operation.
+//    pageNum := 0
+//    err := client.ListCoreNetworkPolicyVersionsPages(params,
+//        func(page *networkmanager.ListCoreNetworkPolicyVersionsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) ListCoreNetworkPolicyVersionsPages(input *ListCoreNetworkPolicyVersionsInput, fn func(*ListCoreNetworkPolicyVersionsOutput, bool) bool) error {
+	return c.ListCoreNetworkPolicyVersionsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// ListCoreNetworkPolicyVersionsPagesWithContext same as ListCoreNetworkPolicyVersionsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) ListCoreNetworkPolicyVersionsPagesWithContext(ctx aws.Context, input *ListCoreNetworkPolicyVersionsInput, fn func(*ListCoreNetworkPolicyVersionsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *ListCoreNetworkPolicyVersionsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.ListCoreNetworkPolicyVersionsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*ListCoreNetworkPolicyVersionsOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opListCoreNetworks = "ListCoreNetworks"
+
+// ListCoreNetworksRequest generates a "aws/request.Request" representing the
+// client's request for the ListCoreNetworks operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListCoreNetworks for more information on using the ListCoreNetworks
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListCoreNetworksRequest method.
+//    req, resp := client.ListCoreNetworksRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/ListCoreNetworks
+func (c *NetworkManager) ListCoreNetworksRequest(input *ListCoreNetworksInput) (req *request.Request, output *ListCoreNetworksOutput) {
+	op := &request.Operation{
+		Name:       opListCoreNetworks,
+		HTTPMethod: "GET",
+		HTTPPath:   "/core-networks",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &ListCoreNetworksInput{}
+	}
+
+	output = &ListCoreNetworksOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListCoreNetworks API operation for AWS Network Manager.
+//
+// Returns a list of owned and shared core networks.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation ListCoreNetworks for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/ListCoreNetworks
+func (c *NetworkManager) ListCoreNetworks(input *ListCoreNetworksInput) (*ListCoreNetworksOutput, error) {
+	req, out := c.ListCoreNetworksRequest(input)
+	return out, req.Send()
+}
+
+// ListCoreNetworksWithContext is the same as ListCoreNetworks with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListCoreNetworks for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) ListCoreNetworksWithContext(ctx aws.Context, input *ListCoreNetworksInput, opts ...request.Option) (*ListCoreNetworksOutput, error) {
+	req, out := c.ListCoreNetworksRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// ListCoreNetworksPages iterates over the pages of a ListCoreNetworks operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListCoreNetworks method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListCoreNetworks operation.
+//    pageNum := 0
+//    err := client.ListCoreNetworksPages(params,
+//        func(page *networkmanager.ListCoreNetworksOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *NetworkManager) ListCoreNetworksPages(input *ListCoreNetworksInput, fn func(*ListCoreNetworksOutput, bool) bool) error {
+	return c.ListCoreNetworksPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// ListCoreNetworksPagesWithContext same as ListCoreNetworksPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) ListCoreNetworksPagesWithContext(ctx aws.Context, input *ListCoreNetworksInput, fn func(*ListCoreNetworksOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *ListCoreNetworksInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.ListCoreNetworksRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*ListCoreNetworksOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
 const opListTagsForResource = "ListTagsForResource"
 
 // ListTagsForResourceRequest generates a "aws/request.Request" representing the
@@ -2432,6 +6789,202 @@ func (c *NetworkManager) ListTagsForResourceWithContext(ctx aws.Context, input *
 	return out, req.Send()
 }
 
+const opPutCoreNetworkPolicy = "PutCoreNetworkPolicy"
+
+// PutCoreNetworkPolicyRequest generates a "aws/request.Request" representing the
+// client's request for the PutCoreNetworkPolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See PutCoreNetworkPolicy for more information on using the PutCoreNetworkPolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the PutCoreNetworkPolicyRequest method.
+//    req, resp := client.PutCoreNetworkPolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/PutCoreNetworkPolicy
+func (c *NetworkManager) PutCoreNetworkPolicyRequest(input *PutCoreNetworkPolicyInput) (req *request.Request, output *PutCoreNetworkPolicyOutput) {
+	op := &request.Operation{
+		Name:       opPutCoreNetworkPolicy,
+		HTTPMethod: "POST",
+		HTTPPath:   "/core-networks/{coreNetworkId}/core-network-policy",
+	}
+
+	if input == nil {
+		input = &PutCoreNetworkPolicyInput{}
+	}
+
+	output = &PutCoreNetworkPolicyOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// PutCoreNetworkPolicy API operation for AWS Network Manager.
+//
+// Creates a new, immutable version of a core network policy. A subsequent change
+// set is created showing the differences between the LIVE policy and the submitted
+// policy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation PutCoreNetworkPolicy for usage and error information.
+//
+// Returned Error Types:
+//   * CoreNetworkPolicyException
+//   Describes a core network policy exception.
+//
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/PutCoreNetworkPolicy
+func (c *NetworkManager) PutCoreNetworkPolicy(input *PutCoreNetworkPolicyInput) (*PutCoreNetworkPolicyOutput, error) {
+	req, out := c.PutCoreNetworkPolicyRequest(input)
+	return out, req.Send()
+}
+
+// PutCoreNetworkPolicyWithContext is the same as PutCoreNetworkPolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See PutCoreNetworkPolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) PutCoreNetworkPolicyWithContext(ctx aws.Context, input *PutCoreNetworkPolicyInput, opts ...request.Option) (*PutCoreNetworkPolicyOutput, error) {
+	req, out := c.PutCoreNetworkPolicyRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opPutResourcePolicy = "PutResourcePolicy"
+
+// PutResourcePolicyRequest generates a "aws/request.Request" representing the
+// client's request for the PutResourcePolicy operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See PutResourcePolicy for more information on using the PutResourcePolicy
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the PutResourcePolicyRequest method.
+//    req, resp := client.PutResourcePolicyRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/PutResourcePolicy
+func (c *NetworkManager) PutResourcePolicyRequest(input *PutResourcePolicyInput) (req *request.Request, output *PutResourcePolicyOutput) {
+	op := &request.Operation{
+		Name:       opPutResourcePolicy,
+		HTTPMethod: "POST",
+		HTTPPath:   "/resource-policy/{resourceArn}",
+	}
+
+	if input == nil {
+		input = &PutResourcePolicyInput{}
+	}
+
+	output = &PutResourcePolicyOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restjson.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// PutResourcePolicy API operation for AWS Network Manager.
+//
+// Creates or updates a resource policy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation PutResourcePolicy for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * ServiceQuotaExceededException
+//   A service limit was exceeded.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/PutResourcePolicy
+func (c *NetworkManager) PutResourcePolicy(input *PutResourcePolicyInput) (*PutResourcePolicyOutput, error) {
+	req, out := c.PutResourcePolicyRequest(input)
+	return out, req.Send()
+}
+
+// PutResourcePolicyWithContext is the same as PutResourcePolicy with the addition of
+// the ability to pass a context and additional request options.
+//
+// See PutResourcePolicy for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) PutResourcePolicyWithContext(ctx aws.Context, input *PutResourcePolicyInput, opts ...request.Option) (*PutResourcePolicyOutput, error) {
+	req, out := c.PutResourcePolicyRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opRegisterTransitGateway = "RegisterTransitGateway"
 
 // RegisterTransitGatewayRequest generates a "aws/request.Request" representing the
@@ -2477,9 +7030,9 @@ func (c *NetworkManager) RegisterTransitGatewayRequest(input *RegisterTransitGat
 // RegisterTransitGateway API operation for AWS Network Manager.
 //
 // Registers a transit gateway in your global network. The transit gateway can
-// be in any AWS Region, but it must be owned by the same AWS account that owns
-// the global network. You cannot register a transit gateway in more than one
-// global network.
+// be in any Amazon Web Services Region, but it must be owned by the same Amazon
+// Web Services account that owns the global network. You cannot register a
+// transit gateway in more than one global network.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -2525,6 +7078,294 @@ func (c *NetworkManager) RegisterTransitGateway(input *RegisterTransitGatewayInp
 // for more information on using Contexts.
 func (c *NetworkManager) RegisterTransitGatewayWithContext(ctx aws.Context, input *RegisterTransitGatewayInput, opts ...request.Option) (*RegisterTransitGatewayOutput, error) {
 	req, out := c.RegisterTransitGatewayRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opRejectAttachment = "RejectAttachment"
+
+// RejectAttachmentRequest generates a "aws/request.Request" representing the
+// client's request for the RejectAttachment operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See RejectAttachment for more information on using the RejectAttachment
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the RejectAttachmentRequest method.
+//    req, resp := client.RejectAttachmentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/RejectAttachment
+func (c *NetworkManager) RejectAttachmentRequest(input *RejectAttachmentInput) (req *request.Request, output *RejectAttachmentOutput) {
+	op := &request.Operation{
+		Name:       opRejectAttachment,
+		HTTPMethod: "POST",
+		HTTPPath:   "/attachments/{attachmentId}/reject",
+	}
+
+	if input == nil {
+		input = &RejectAttachmentInput{}
+	}
+
+	output = &RejectAttachmentOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// RejectAttachment API operation for AWS Network Manager.
+//
+// Rejects a core network attachment request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation RejectAttachment for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/RejectAttachment
+func (c *NetworkManager) RejectAttachment(input *RejectAttachmentInput) (*RejectAttachmentOutput, error) {
+	req, out := c.RejectAttachmentRequest(input)
+	return out, req.Send()
+}
+
+// RejectAttachmentWithContext is the same as RejectAttachment with the addition of
+// the ability to pass a context and additional request options.
+//
+// See RejectAttachment for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) RejectAttachmentWithContext(ctx aws.Context, input *RejectAttachmentInput, opts ...request.Option) (*RejectAttachmentOutput, error) {
+	req, out := c.RejectAttachmentRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opRestoreCoreNetworkPolicyVersion = "RestoreCoreNetworkPolicyVersion"
+
+// RestoreCoreNetworkPolicyVersionRequest generates a "aws/request.Request" representing the
+// client's request for the RestoreCoreNetworkPolicyVersion operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See RestoreCoreNetworkPolicyVersion for more information on using the RestoreCoreNetworkPolicyVersion
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the RestoreCoreNetworkPolicyVersionRequest method.
+//    req, resp := client.RestoreCoreNetworkPolicyVersionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/RestoreCoreNetworkPolicyVersion
+func (c *NetworkManager) RestoreCoreNetworkPolicyVersionRequest(input *RestoreCoreNetworkPolicyVersionInput) (req *request.Request, output *RestoreCoreNetworkPolicyVersionOutput) {
+	op := &request.Operation{
+		Name:       opRestoreCoreNetworkPolicyVersion,
+		HTTPMethod: "POST",
+		HTTPPath:   "/core-networks/{coreNetworkId}/core-network-policy-versions/{policyVersionId}/restore",
+	}
+
+	if input == nil {
+		input = &RestoreCoreNetworkPolicyVersionInput{}
+	}
+
+	output = &RestoreCoreNetworkPolicyVersionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// RestoreCoreNetworkPolicyVersion API operation for AWS Network Manager.
+//
+// Restores a previous policy version as a new, immutable version of a core
+// network policy. A subsequent change set is created showing the differences
+// between the LIVE policy and restored policy.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation RestoreCoreNetworkPolicyVersion for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/RestoreCoreNetworkPolicyVersion
+func (c *NetworkManager) RestoreCoreNetworkPolicyVersion(input *RestoreCoreNetworkPolicyVersionInput) (*RestoreCoreNetworkPolicyVersionOutput, error) {
+	req, out := c.RestoreCoreNetworkPolicyVersionRequest(input)
+	return out, req.Send()
+}
+
+// RestoreCoreNetworkPolicyVersionWithContext is the same as RestoreCoreNetworkPolicyVersion with the addition of
+// the ability to pass a context and additional request options.
+//
+// See RestoreCoreNetworkPolicyVersion for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) RestoreCoreNetworkPolicyVersionWithContext(ctx aws.Context, input *RestoreCoreNetworkPolicyVersionInput, opts ...request.Option) (*RestoreCoreNetworkPolicyVersionOutput, error) {
+	req, out := c.RestoreCoreNetworkPolicyVersionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opStartRouteAnalysis = "StartRouteAnalysis"
+
+// StartRouteAnalysisRequest generates a "aws/request.Request" representing the
+// client's request for the StartRouteAnalysis operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See StartRouteAnalysis for more information on using the StartRouteAnalysis
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the StartRouteAnalysisRequest method.
+//    req, resp := client.StartRouteAnalysisRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/StartRouteAnalysis
+func (c *NetworkManager) StartRouteAnalysisRequest(input *StartRouteAnalysisInput) (req *request.Request, output *StartRouteAnalysisOutput) {
+	op := &request.Operation{
+		Name:       opStartRouteAnalysis,
+		HTTPMethod: "POST",
+		HTTPPath:   "/global-networks/{globalNetworkId}/route-analyses",
+	}
+
+	if input == nil {
+		input = &StartRouteAnalysisInput{}
+	}
+
+	output = &StartRouteAnalysisOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// StartRouteAnalysis API operation for AWS Network Manager.
+//
+// Starts analyzing the routing path between the specified source and destination.
+// For more information, see Route Analyzer (https://docs.aws.amazon.com/vpc/latest/tgw/route-analyzer.html).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation StartRouteAnalysis for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/StartRouteAnalysis
+func (c *NetworkManager) StartRouteAnalysis(input *StartRouteAnalysisInput) (*StartRouteAnalysisOutput, error) {
+	req, out := c.StartRouteAnalysisRequest(input)
+	return out, req.Send()
+}
+
+// StartRouteAnalysisWithContext is the same as StartRouteAnalysis with the addition of
+// the ability to pass a context and additional request options.
+//
+// See StartRouteAnalysis for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) StartRouteAnalysisWithContext(ctx aws.Context, input *StartRouteAnalysisInput, opts ...request.Option) (*StartRouteAnalysisOutput, error) {
+	req, out := c.StartRouteAnalysisRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -2720,6 +7561,197 @@ func (c *NetworkManager) UntagResource(input *UntagResourceInput) (*UntagResourc
 // for more information on using Contexts.
 func (c *NetworkManager) UntagResourceWithContext(ctx aws.Context, input *UntagResourceInput, opts ...request.Option) (*UntagResourceOutput, error) {
 	req, out := c.UntagResourceRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opUpdateConnection = "UpdateConnection"
+
+// UpdateConnectionRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateConnection operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateConnection for more information on using the UpdateConnection
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateConnectionRequest method.
+//    req, resp := client.UpdateConnectionRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/UpdateConnection
+func (c *NetworkManager) UpdateConnectionRequest(input *UpdateConnectionInput) (req *request.Request, output *UpdateConnectionOutput) {
+	op := &request.Operation{
+		Name:       opUpdateConnection,
+		HTTPMethod: "PATCH",
+		HTTPPath:   "/global-networks/{globalNetworkId}/connections/{connectionId}",
+	}
+
+	if input == nil {
+		input = &UpdateConnectionInput{}
+	}
+
+	output = &UpdateConnectionOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateConnection API operation for AWS Network Manager.
+//
+// Updates the information for an existing connection. To remove information
+// for any of the parameters, specify an empty string.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation UpdateConnection for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/UpdateConnection
+func (c *NetworkManager) UpdateConnection(input *UpdateConnectionInput) (*UpdateConnectionOutput, error) {
+	req, out := c.UpdateConnectionRequest(input)
+	return out, req.Send()
+}
+
+// UpdateConnectionWithContext is the same as UpdateConnection with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateConnection for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) UpdateConnectionWithContext(ctx aws.Context, input *UpdateConnectionInput, opts ...request.Option) (*UpdateConnectionOutput, error) {
+	req, out := c.UpdateConnectionRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opUpdateCoreNetwork = "UpdateCoreNetwork"
+
+// UpdateCoreNetworkRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateCoreNetwork operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateCoreNetwork for more information on using the UpdateCoreNetwork
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateCoreNetworkRequest method.
+//    req, resp := client.UpdateCoreNetworkRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/UpdateCoreNetwork
+func (c *NetworkManager) UpdateCoreNetworkRequest(input *UpdateCoreNetworkInput) (req *request.Request, output *UpdateCoreNetworkOutput) {
+	op := &request.Operation{
+		Name:       opUpdateCoreNetwork,
+		HTTPMethod: "PATCH",
+		HTTPPath:   "/core-networks/{coreNetworkId}",
+	}
+
+	if input == nil {
+		input = &UpdateCoreNetworkInput{}
+	}
+
+	output = &UpdateCoreNetworkOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateCoreNetwork API operation for AWS Network Manager.
+//
+// Updates the description of a core network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation UpdateCoreNetwork for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/UpdateCoreNetwork
+func (c *NetworkManager) UpdateCoreNetwork(input *UpdateCoreNetworkInput) (*UpdateCoreNetworkOutput, error) {
+	req, out := c.UpdateCoreNetworkRequest(input)
+	return out, req.Send()
+}
+
+// UpdateCoreNetworkWithContext is the same as UpdateCoreNetwork with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateCoreNetwork for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) UpdateCoreNetworkWithContext(ctx aws.Context, input *UpdateCoreNetworkInput, opts ...request.Option) (*UpdateCoreNetworkOutput, error) {
+	req, out := c.UpdateCoreNetworkRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -3016,6 +8048,101 @@ func (c *NetworkManager) UpdateLinkWithContext(ctx aws.Context, input *UpdateLin
 	return out, req.Send()
 }
 
+const opUpdateNetworkResourceMetadata = "UpdateNetworkResourceMetadata"
+
+// UpdateNetworkResourceMetadataRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateNetworkResourceMetadata operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateNetworkResourceMetadata for more information on using the UpdateNetworkResourceMetadata
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateNetworkResourceMetadataRequest method.
+//    req, resp := client.UpdateNetworkResourceMetadataRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/UpdateNetworkResourceMetadata
+func (c *NetworkManager) UpdateNetworkResourceMetadataRequest(input *UpdateNetworkResourceMetadataInput) (req *request.Request, output *UpdateNetworkResourceMetadataOutput) {
+	op := &request.Operation{
+		Name:       opUpdateNetworkResourceMetadata,
+		HTTPMethod: "PATCH",
+		HTTPPath:   "/global-networks/{globalNetworkId}/network-resources/{resourceArn}/metadata",
+	}
+
+	if input == nil {
+		input = &UpdateNetworkResourceMetadataInput{}
+	}
+
+	output = &UpdateNetworkResourceMetadataOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateNetworkResourceMetadata API operation for AWS Network Manager.
+//
+// Updates the resource metadata for the specified global network.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation UpdateNetworkResourceMetadata for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/UpdateNetworkResourceMetadata
+func (c *NetworkManager) UpdateNetworkResourceMetadata(input *UpdateNetworkResourceMetadataInput) (*UpdateNetworkResourceMetadataOutput, error) {
+	req, out := c.UpdateNetworkResourceMetadataRequest(input)
+	return out, req.Send()
+}
+
+// UpdateNetworkResourceMetadataWithContext is the same as UpdateNetworkResourceMetadata with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateNetworkResourceMetadata for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) UpdateNetworkResourceMetadataWithContext(ctx aws.Context, input *UpdateNetworkResourceMetadataInput, opts ...request.Option) (*UpdateNetworkResourceMetadataOutput, error) {
+	req, out := c.UpdateNetworkResourceMetadataRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opUpdateSite = "UpdateSite"
 
 // UpdateSiteRequest generates a "aws/request.Request" representing the
@@ -3112,6 +8239,223 @@ func (c *NetworkManager) UpdateSiteWithContext(ctx aws.Context, input *UpdateSit
 	return out, req.Send()
 }
 
+const opUpdateVpcAttachment = "UpdateVpcAttachment"
+
+// UpdateVpcAttachmentRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateVpcAttachment operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateVpcAttachment for more information on using the UpdateVpcAttachment
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateVpcAttachmentRequest method.
+//    req, resp := client.UpdateVpcAttachmentRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/UpdateVpcAttachment
+func (c *NetworkManager) UpdateVpcAttachmentRequest(input *UpdateVpcAttachmentInput) (req *request.Request, output *UpdateVpcAttachmentOutput) {
+	op := &request.Operation{
+		Name:       opUpdateVpcAttachment,
+		HTTPMethod: "PATCH",
+		HTTPPath:   "/vpc-attachments/{attachmentId}",
+	}
+
+	if input == nil {
+		input = &UpdateVpcAttachmentInput{}
+	}
+
+	output = &UpdateVpcAttachmentOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateVpcAttachment API operation for AWS Network Manager.
+//
+// Updates a VPC attachment.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Network Manager's
+// API operation UpdateVpcAttachment for usage and error information.
+//
+// Returned Error Types:
+//   * ValidationException
+//   The input fails to satisfy the constraints.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ResourceNotFoundException
+//   The specified resource could not be found.
+//
+//   * ConflictException
+//   There was a conflict processing the request. Updating or deleting the resource
+//   can cause an inconsistent state.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+//   * InternalServerException
+//   The request has failed due to an internal error.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/networkmanager-2019-07-05/UpdateVpcAttachment
+func (c *NetworkManager) UpdateVpcAttachment(input *UpdateVpcAttachmentInput) (*UpdateVpcAttachmentOutput, error) {
+	req, out := c.UpdateVpcAttachmentRequest(input)
+	return out, req.Send()
+}
+
+// UpdateVpcAttachmentWithContext is the same as UpdateVpcAttachment with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateVpcAttachment for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *NetworkManager) UpdateVpcAttachmentWithContext(ctx aws.Context, input *UpdateVpcAttachmentInput, opts ...request.Option) (*UpdateVpcAttachmentOutput, error) {
+	req, out := c.UpdateVpcAttachmentRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// Specifies a location in Amazon Web Services.
+type AWSLocation struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the subnet that the device is located in.
+	SubnetArn *string `type:"string"`
+
+	// The Zone that the device is located in. Specify the ID of an Availability
+	// Zone, Local Zone, Wavelength Zone, or an Outpost.
+	Zone *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AWSLocation) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AWSLocation) GoString() string {
+	return s.String()
+}
+
+// SetSubnetArn sets the SubnetArn field's value.
+func (s *AWSLocation) SetSubnetArn(v string) *AWSLocation {
+	s.SubnetArn = &v
+	return s
+}
+
+// SetZone sets the Zone field's value.
+func (s *AWSLocation) SetZone(v string) *AWSLocation {
+	s.Zone = &v
+	return s
+}
+
+type AcceptAttachmentInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the attachment.
+	//
+	// AttachmentId is a required field
+	AttachmentId *string `location:"uri" locationName:"attachmentId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AcceptAttachmentInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AcceptAttachmentInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AcceptAttachmentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AcceptAttachmentInput"}
+	if s.AttachmentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("AttachmentId"))
+	}
+	if s.AttachmentId != nil && len(*s.AttachmentId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AttachmentId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAttachmentId sets the AttachmentId field's value.
+func (s *AcceptAttachmentInput) SetAttachmentId(v string) *AcceptAttachmentInput {
+	s.AttachmentId = &v
+	return s
+}
+
+type AcceptAttachmentOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The response to the attachment request.
+	Attachment *Attachment `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AcceptAttachmentOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AcceptAttachmentOutput) GoString() string {
+	return s.String()
+}
+
+// SetAttachment sets the Attachment field's value.
+func (s *AcceptAttachmentOutput) SetAttachment(v *Attachment) *AcceptAttachmentOutput {
+	s.Attachment = v
+	return s
+}
+
 // You do not have sufficient access to perform this action.
 type AccessDeniedException struct {
 	_            struct{}                  `type:"structure"`
@@ -3120,12 +8464,20 @@ type AccessDeniedException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AccessDeniedException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AccessDeniedException) GoString() string {
 	return s.String()
 }
@@ -3168,11 +8520,127 @@ func (s *AccessDeniedException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
+type AssociateConnectPeerInput struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the Connect peer.
+	//
+	// ConnectPeerId is a required field
+	ConnectPeerId *string `type:"string" required:"true"`
+
+	// The ID of the device.
+	//
+	// DeviceId is a required field
+	DeviceId *string `type:"string" required:"true"`
+
+	// The ID of your global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The ID of the link.
+	LinkId *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateConnectPeerInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateConnectPeerInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AssociateConnectPeerInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AssociateConnectPeerInput"}
+	if s.ConnectPeerId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectPeerId"))
+	}
+	if s.DeviceId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeviceId"))
+	}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetConnectPeerId sets the ConnectPeerId field's value.
+func (s *AssociateConnectPeerInput) SetConnectPeerId(v string) *AssociateConnectPeerInput {
+	s.ConnectPeerId = &v
+	return s
+}
+
+// SetDeviceId sets the DeviceId field's value.
+func (s *AssociateConnectPeerInput) SetDeviceId(v string) *AssociateConnectPeerInput {
+	s.DeviceId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *AssociateConnectPeerInput) SetGlobalNetworkId(v string) *AssociateConnectPeerInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetLinkId sets the LinkId field's value.
+func (s *AssociateConnectPeerInput) SetLinkId(v string) *AssociateConnectPeerInput {
+	s.LinkId = &v
+	return s
+}
+
+type AssociateConnectPeerOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The response to the Connect peer request.
+	ConnectPeerAssociation *ConnectPeerAssociation `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateConnectPeerOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateConnectPeerOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnectPeerAssociation sets the ConnectPeerAssociation field's value.
+func (s *AssociateConnectPeerOutput) SetConnectPeerAssociation(v *ConnectPeerAssociation) *AssociateConnectPeerOutput {
+	s.ConnectPeerAssociation = v
+	return s
+}
+
 type AssociateCustomerGatewayInput struct {
 	_ struct{} `type:"structure"`
 
-	// The Amazon Resource Name (ARN) of the customer gateway. For more information,
-	// see Resources Defined by Amazon EC2 (https://docs.aws.amazon.com/IAM/latest/UserGuide/list_amazonec2.html#amazonec2-resources-for-iam-policies).
+	// The Amazon Resource Name (ARN) of the customer gateway.
 	//
 	// CustomerGatewayArn is a required field
 	CustomerGatewayArn *string `type:"string" required:"true"`
@@ -3191,12 +8659,20 @@ type AssociateCustomerGatewayInput struct {
 	LinkId *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateCustomerGatewayInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateCustomerGatewayInput) GoString() string {
 	return s.String()
 }
@@ -3254,12 +8730,20 @@ type AssociateCustomerGatewayOutput struct {
 	CustomerGatewayAssociation *CustomerGatewayAssociation `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateCustomerGatewayOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateCustomerGatewayOutput) GoString() string {
 	return s.String()
 }
@@ -3289,12 +8773,20 @@ type AssociateLinkInput struct {
 	LinkId *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateLinkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateLinkInput) GoString() string {
 	return s.String()
 }
@@ -3346,12 +8838,20 @@ type AssociateLinkOutput struct {
 	LinkAssociation *LinkAssociation `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateLinkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateLinkOutput) GoString() string {
 	return s.String()
 }
@@ -3359,6 +8859,272 @@ func (s AssociateLinkOutput) GoString() string {
 // SetLinkAssociation sets the LinkAssociation field's value.
 func (s *AssociateLinkOutput) SetLinkAssociation(v *LinkAssociation) *AssociateLinkOutput {
 	s.LinkAssociation = v
+	return s
+}
+
+type AssociateTransitGatewayConnectPeerInput struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the device.
+	//
+	// DeviceId is a required field
+	DeviceId *string `type:"string" required:"true"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The ID of the link.
+	LinkId *string `type:"string"`
+
+	// The Amazon Resource Name (ARN) of the Connect peer.
+	//
+	// TransitGatewayConnectPeerArn is a required field
+	TransitGatewayConnectPeerArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateTransitGatewayConnectPeerInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateTransitGatewayConnectPeerInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AssociateTransitGatewayConnectPeerInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AssociateTransitGatewayConnectPeerInput"}
+	if s.DeviceId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeviceId"))
+	}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.TransitGatewayConnectPeerArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("TransitGatewayConnectPeerArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDeviceId sets the DeviceId field's value.
+func (s *AssociateTransitGatewayConnectPeerInput) SetDeviceId(v string) *AssociateTransitGatewayConnectPeerInput {
+	s.DeviceId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *AssociateTransitGatewayConnectPeerInput) SetGlobalNetworkId(v string) *AssociateTransitGatewayConnectPeerInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetLinkId sets the LinkId field's value.
+func (s *AssociateTransitGatewayConnectPeerInput) SetLinkId(v string) *AssociateTransitGatewayConnectPeerInput {
+	s.LinkId = &v
+	return s
+}
+
+// SetTransitGatewayConnectPeerArn sets the TransitGatewayConnectPeerArn field's value.
+func (s *AssociateTransitGatewayConnectPeerInput) SetTransitGatewayConnectPeerArn(v string) *AssociateTransitGatewayConnectPeerInput {
+	s.TransitGatewayConnectPeerArn = &v
+	return s
+}
+
+type AssociateTransitGatewayConnectPeerOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The transit gateway Connect peer association.
+	TransitGatewayConnectPeerAssociation *TransitGatewayConnectPeerAssociation `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateTransitGatewayConnectPeerOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateTransitGatewayConnectPeerOutput) GoString() string {
+	return s.String()
+}
+
+// SetTransitGatewayConnectPeerAssociation sets the TransitGatewayConnectPeerAssociation field's value.
+func (s *AssociateTransitGatewayConnectPeerOutput) SetTransitGatewayConnectPeerAssociation(v *TransitGatewayConnectPeerAssociation) *AssociateTransitGatewayConnectPeerOutput {
+	s.TransitGatewayConnectPeerAssociation = v
+	return s
+}
+
+// Describes a core network attachment.
+type Attachment struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the attachment.
+	AttachmentId *string `type:"string"`
+
+	// The policy rule number associated with the attachment.
+	AttachmentPolicyRuleNumber *int64 `type:"integer"`
+
+	// The type of attachment.
+	AttachmentType *string `type:"string" enum:"AttachmentType"`
+
+	// The ARN of a core network.
+	CoreNetworkArn *string `type:"string"`
+
+	// A core network ID.
+	CoreNetworkId *string `type:"string"`
+
+	// The timestamp when the attachment was created.
+	CreatedAt *time.Time `type:"timestamp"`
+
+	// The Region where the edge is located.
+	EdgeLocation *string `min:"1" type:"string"`
+
+	// The ID of the attachment account owner.
+	OwnerAccountId *string `min:"12" type:"string"`
+
+	// The attachment to move from one segment to another.
+	ProposedSegmentChange *ProposedSegmentChange `type:"structure"`
+
+	// The attachment resource ARN.
+	ResourceArn *string `type:"string"`
+
+	// The name of the segment attachment.
+	SegmentName *string `type:"string"`
+
+	// The state of the attachment.
+	State *string `type:"string" enum:"AttachmentState"`
+
+	// The tags associated with the attachment.
+	Tags []*Tag `type:"list"`
+
+	// The timestamp when the attachment was last updated.
+	UpdatedAt *time.Time `type:"timestamp"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Attachment) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Attachment) GoString() string {
+	return s.String()
+}
+
+// SetAttachmentId sets the AttachmentId field's value.
+func (s *Attachment) SetAttachmentId(v string) *Attachment {
+	s.AttachmentId = &v
+	return s
+}
+
+// SetAttachmentPolicyRuleNumber sets the AttachmentPolicyRuleNumber field's value.
+func (s *Attachment) SetAttachmentPolicyRuleNumber(v int64) *Attachment {
+	s.AttachmentPolicyRuleNumber = &v
+	return s
+}
+
+// SetAttachmentType sets the AttachmentType field's value.
+func (s *Attachment) SetAttachmentType(v string) *Attachment {
+	s.AttachmentType = &v
+	return s
+}
+
+// SetCoreNetworkArn sets the CoreNetworkArn field's value.
+func (s *Attachment) SetCoreNetworkArn(v string) *Attachment {
+	s.CoreNetworkArn = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *Attachment) SetCoreNetworkId(v string) *Attachment {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetCreatedAt sets the CreatedAt field's value.
+func (s *Attachment) SetCreatedAt(v time.Time) *Attachment {
+	s.CreatedAt = &v
+	return s
+}
+
+// SetEdgeLocation sets the EdgeLocation field's value.
+func (s *Attachment) SetEdgeLocation(v string) *Attachment {
+	s.EdgeLocation = &v
+	return s
+}
+
+// SetOwnerAccountId sets the OwnerAccountId field's value.
+func (s *Attachment) SetOwnerAccountId(v string) *Attachment {
+	s.OwnerAccountId = &v
+	return s
+}
+
+// SetProposedSegmentChange sets the ProposedSegmentChange field's value.
+func (s *Attachment) SetProposedSegmentChange(v *ProposedSegmentChange) *Attachment {
+	s.ProposedSegmentChange = v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *Attachment) SetResourceArn(v string) *Attachment {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetSegmentName sets the SegmentName field's value.
+func (s *Attachment) SetSegmentName(v string) *Attachment {
+	s.SegmentName = &v
+	return s
+}
+
+// SetState sets the State field's value.
+func (s *Attachment) SetState(v string) *Attachment {
+	s.State = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *Attachment) SetTags(v []*Tag) *Attachment {
+	s.Tags = v
+	return s
+}
+
+// SetUpdatedAt sets the UpdatedAt field's value.
+func (s *Attachment) SetUpdatedAt(v time.Time) *Attachment {
+	s.UpdatedAt = &v
 	return s
 }
 
@@ -3373,12 +9139,20 @@ type Bandwidth struct {
 	UploadSpeed *int64 `type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Bandwidth) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Bandwidth) GoString() string {
 	return s.String()
 }
@@ -3392,6 +9166,38 @@ func (s *Bandwidth) SetDownloadSpeed(v int64) *Bandwidth {
 // SetUploadSpeed sets the UploadSpeed field's value.
 func (s *Bandwidth) SetUploadSpeed(v int64) *Bandwidth {
 	s.UploadSpeed = &v
+	return s
+}
+
+// Describes the BGP options.
+type BgpOptions struct {
+	_ struct{} `type:"structure"`
+
+	// The Peer ASN of the BGP.
+	PeerAsn *int64 `type:"long"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s BgpOptions) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s BgpOptions) GoString() string {
+	return s.String()
+}
+
+// SetPeerAsn sets the PeerAsn field's value.
+func (s *BgpOptions) SetPeerAsn(v int64) *BgpOptions {
+	s.PeerAsn = &v
 	return s
 }
 
@@ -3414,12 +9220,20 @@ type ConflictException struct {
 	ResourceType *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ConflictException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ConflictException) GoString() string {
 	return s.String()
 }
@@ -3462,12 +9276,1995 @@ func (s *ConflictException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
+// Describes a core network Connect attachment.
+type ConnectAttachment struct {
+	_ struct{} `type:"structure"`
+
+	// The attachment details.
+	Attachment *Attachment `type:"structure"`
+
+	// Options for connecting an attachment.
+	Options *ConnectAttachmentOptions `type:"structure"`
+
+	// The ID of the transport attachment.
+	TransportAttachmentId *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectAttachment) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectAttachment) GoString() string {
+	return s.String()
+}
+
+// SetAttachment sets the Attachment field's value.
+func (s *ConnectAttachment) SetAttachment(v *Attachment) *ConnectAttachment {
+	s.Attachment = v
+	return s
+}
+
+// SetOptions sets the Options field's value.
+func (s *ConnectAttachment) SetOptions(v *ConnectAttachmentOptions) *ConnectAttachment {
+	s.Options = v
+	return s
+}
+
+// SetTransportAttachmentId sets the TransportAttachmentId field's value.
+func (s *ConnectAttachment) SetTransportAttachmentId(v string) *ConnectAttachment {
+	s.TransportAttachmentId = &v
+	return s
+}
+
+// Describes a core network Connect attachment options.
+type ConnectAttachmentOptions struct {
+	_ struct{} `type:"structure"`
+
+	// The protocol used for the attachment connection.
+	Protocol *string `type:"string" enum:"TunnelProtocol"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectAttachmentOptions) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectAttachmentOptions) GoString() string {
+	return s.String()
+}
+
+// SetProtocol sets the Protocol field's value.
+func (s *ConnectAttachmentOptions) SetProtocol(v string) *ConnectAttachmentOptions {
+	s.Protocol = &v
+	return s
+}
+
+// Describes a core network Connect peer.
+type ConnectPeer struct {
+	_ struct{} `type:"structure"`
+
+	// The configuration of the Connect peer.
+	Configuration *ConnectPeerConfiguration `type:"structure"`
+
+	// The ID of the attachment to connect.
+	ConnectAttachmentId *string `type:"string"`
+
+	// The ID of the Connect peer.
+	ConnectPeerId *string `type:"string"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `type:"string"`
+
+	// The timestamp when the Connect peer was created.
+	CreatedAt *time.Time `type:"timestamp"`
+
+	// The Connect peer Regions where edges are located.
+	EdgeLocation *string `min:"1" type:"string"`
+
+	// The state of the Connect peer.
+	State *string `type:"string" enum:"ConnectPeerState"`
+
+	// The tags associated with the Connect peer.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectPeer) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectPeer) GoString() string {
+	return s.String()
+}
+
+// SetConfiguration sets the Configuration field's value.
+func (s *ConnectPeer) SetConfiguration(v *ConnectPeerConfiguration) *ConnectPeer {
+	s.Configuration = v
+	return s
+}
+
+// SetConnectAttachmentId sets the ConnectAttachmentId field's value.
+func (s *ConnectPeer) SetConnectAttachmentId(v string) *ConnectPeer {
+	s.ConnectAttachmentId = &v
+	return s
+}
+
+// SetConnectPeerId sets the ConnectPeerId field's value.
+func (s *ConnectPeer) SetConnectPeerId(v string) *ConnectPeer {
+	s.ConnectPeerId = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *ConnectPeer) SetCoreNetworkId(v string) *ConnectPeer {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetCreatedAt sets the CreatedAt field's value.
+func (s *ConnectPeer) SetCreatedAt(v time.Time) *ConnectPeer {
+	s.CreatedAt = &v
+	return s
+}
+
+// SetEdgeLocation sets the EdgeLocation field's value.
+func (s *ConnectPeer) SetEdgeLocation(v string) *ConnectPeer {
+	s.EdgeLocation = &v
+	return s
+}
+
+// SetState sets the State field's value.
+func (s *ConnectPeer) SetState(v string) *ConnectPeer {
+	s.State = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *ConnectPeer) SetTags(v []*Tag) *ConnectPeer {
+	s.Tags = v
+	return s
+}
+
+// Describes a core network Connect peer association.
+type ConnectPeerAssociation struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the Connect peer.
+	ConnectPeerId *string `type:"string"`
+
+	// The ID of the device to connect to.
+	DeviceId *string `type:"string"`
+
+	// The ID of the global network.
+	GlobalNetworkId *string `type:"string"`
+
+	// The ID of the link.
+	LinkId *string `type:"string"`
+
+	// The state of the Connect peer association.
+	State *string `type:"string" enum:"ConnectPeerAssociationState"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectPeerAssociation) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectPeerAssociation) GoString() string {
+	return s.String()
+}
+
+// SetConnectPeerId sets the ConnectPeerId field's value.
+func (s *ConnectPeerAssociation) SetConnectPeerId(v string) *ConnectPeerAssociation {
+	s.ConnectPeerId = &v
+	return s
+}
+
+// SetDeviceId sets the DeviceId field's value.
+func (s *ConnectPeerAssociation) SetDeviceId(v string) *ConnectPeerAssociation {
+	s.DeviceId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *ConnectPeerAssociation) SetGlobalNetworkId(v string) *ConnectPeerAssociation {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetLinkId sets the LinkId field's value.
+func (s *ConnectPeerAssociation) SetLinkId(v string) *ConnectPeerAssociation {
+	s.LinkId = &v
+	return s
+}
+
+// SetState sets the State field's value.
+func (s *ConnectPeerAssociation) SetState(v string) *ConnectPeerAssociation {
+	s.State = &v
+	return s
+}
+
+// Describes a core network BGP configuration.
+type ConnectPeerBgpConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// The address of a core network.
+	CoreNetworkAddress *string `min:"1" type:"string"`
+
+	// The ASN of the Coret Network.
+	CoreNetworkAsn *int64 `type:"long"`
+
+	// The address of a core network Connect peer.
+	PeerAddress *string `min:"1" type:"string"`
+
+	// The ASN of the Connect peer.
+	PeerAsn *int64 `type:"long"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectPeerBgpConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectPeerBgpConfiguration) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworkAddress sets the CoreNetworkAddress field's value.
+func (s *ConnectPeerBgpConfiguration) SetCoreNetworkAddress(v string) *ConnectPeerBgpConfiguration {
+	s.CoreNetworkAddress = &v
+	return s
+}
+
+// SetCoreNetworkAsn sets the CoreNetworkAsn field's value.
+func (s *ConnectPeerBgpConfiguration) SetCoreNetworkAsn(v int64) *ConnectPeerBgpConfiguration {
+	s.CoreNetworkAsn = &v
+	return s
+}
+
+// SetPeerAddress sets the PeerAddress field's value.
+func (s *ConnectPeerBgpConfiguration) SetPeerAddress(v string) *ConnectPeerBgpConfiguration {
+	s.PeerAddress = &v
+	return s
+}
+
+// SetPeerAsn sets the PeerAsn field's value.
+func (s *ConnectPeerBgpConfiguration) SetPeerAsn(v int64) *ConnectPeerBgpConfiguration {
+	s.PeerAsn = &v
+	return s
+}
+
+// Describes a core network Connect peer configuration.
+type ConnectPeerConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// The Connect peer BGP configurations.
+	BgpConfigurations []*ConnectPeerBgpConfiguration `type:"list"`
+
+	// The IP address of a core network.
+	CoreNetworkAddress *string `min:"1" type:"string"`
+
+	// The inside IP addresses used for a Connect peer configuration.
+	InsideCidrBlocks []*string `type:"list"`
+
+	// The IP address of the Connect peer.
+	PeerAddress *string `min:"1" type:"string"`
+
+	// The protocol used for a Connect peer configuration.
+	Protocol *string `type:"string" enum:"TunnelProtocol"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectPeerConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectPeerConfiguration) GoString() string {
+	return s.String()
+}
+
+// SetBgpConfigurations sets the BgpConfigurations field's value.
+func (s *ConnectPeerConfiguration) SetBgpConfigurations(v []*ConnectPeerBgpConfiguration) *ConnectPeerConfiguration {
+	s.BgpConfigurations = v
+	return s
+}
+
+// SetCoreNetworkAddress sets the CoreNetworkAddress field's value.
+func (s *ConnectPeerConfiguration) SetCoreNetworkAddress(v string) *ConnectPeerConfiguration {
+	s.CoreNetworkAddress = &v
+	return s
+}
+
+// SetInsideCidrBlocks sets the InsideCidrBlocks field's value.
+func (s *ConnectPeerConfiguration) SetInsideCidrBlocks(v []*string) *ConnectPeerConfiguration {
+	s.InsideCidrBlocks = v
+	return s
+}
+
+// SetPeerAddress sets the PeerAddress field's value.
+func (s *ConnectPeerConfiguration) SetPeerAddress(v string) *ConnectPeerConfiguration {
+	s.PeerAddress = &v
+	return s
+}
+
+// SetProtocol sets the Protocol field's value.
+func (s *ConnectPeerConfiguration) SetProtocol(v string) *ConnectPeerConfiguration {
+	s.Protocol = &v
+	return s
+}
+
+// Summary description of a Connect peer.
+type ConnectPeerSummary struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of a Connect peer attachment.
+	ConnectAttachmentId *string `type:"string"`
+
+	// The ID of a Connect peer.
+	ConnectPeerId *string `type:"string"`
+
+	// The state of a Connect peer.
+	ConnectPeerState *string `type:"string" enum:"ConnectPeerState"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `type:"string"`
+
+	// The timestamp when a Connect peer was created.
+	CreatedAt *time.Time `type:"timestamp"`
+
+	// The Region where the edge is located.
+	EdgeLocation *string `min:"1" type:"string"`
+
+	// The tags associated with a Connect peer summary.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectPeerSummary) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectPeerSummary) GoString() string {
+	return s.String()
+}
+
+// SetConnectAttachmentId sets the ConnectAttachmentId field's value.
+func (s *ConnectPeerSummary) SetConnectAttachmentId(v string) *ConnectPeerSummary {
+	s.ConnectAttachmentId = &v
+	return s
+}
+
+// SetConnectPeerId sets the ConnectPeerId field's value.
+func (s *ConnectPeerSummary) SetConnectPeerId(v string) *ConnectPeerSummary {
+	s.ConnectPeerId = &v
+	return s
+}
+
+// SetConnectPeerState sets the ConnectPeerState field's value.
+func (s *ConnectPeerSummary) SetConnectPeerState(v string) *ConnectPeerSummary {
+	s.ConnectPeerState = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *ConnectPeerSummary) SetCoreNetworkId(v string) *ConnectPeerSummary {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetCreatedAt sets the CreatedAt field's value.
+func (s *ConnectPeerSummary) SetCreatedAt(v time.Time) *ConnectPeerSummary {
+	s.CreatedAt = &v
+	return s
+}
+
+// SetEdgeLocation sets the EdgeLocation field's value.
+func (s *ConnectPeerSummary) SetEdgeLocation(v string) *ConnectPeerSummary {
+	s.EdgeLocation = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *ConnectPeerSummary) SetTags(v []*Tag) *ConnectPeerSummary {
+	s.Tags = v
+	return s
+}
+
+// Describes a connection.
+type Connection struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the second device in the connection.
+	ConnectedDeviceId *string `type:"string"`
+
+	// The ID of the link for the second device in the connection.
+	ConnectedLinkId *string `type:"string"`
+
+	// The Amazon Resource Name (ARN) of the connection.
+	ConnectionArn *string `type:"string"`
+
+	// The ID of the connection.
+	ConnectionId *string `type:"string"`
+
+	// The date and time that the connection was created.
+	CreatedAt *time.Time `type:"timestamp"`
+
+	// The description of the connection.
+	Description *string `type:"string"`
+
+	// The ID of the first device in the connection.
+	DeviceId *string `type:"string"`
+
+	// The ID of the global network.
+	GlobalNetworkId *string `type:"string"`
+
+	// The ID of the link for the first device in the connection.
+	LinkId *string `type:"string"`
+
+	// The state of the connection.
+	State *string `type:"string" enum:"ConnectionState"`
+
+	// The tags for the connection.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Connection) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Connection) GoString() string {
+	return s.String()
+}
+
+// SetConnectedDeviceId sets the ConnectedDeviceId field's value.
+func (s *Connection) SetConnectedDeviceId(v string) *Connection {
+	s.ConnectedDeviceId = &v
+	return s
+}
+
+// SetConnectedLinkId sets the ConnectedLinkId field's value.
+func (s *Connection) SetConnectedLinkId(v string) *Connection {
+	s.ConnectedLinkId = &v
+	return s
+}
+
+// SetConnectionArn sets the ConnectionArn field's value.
+func (s *Connection) SetConnectionArn(v string) *Connection {
+	s.ConnectionArn = &v
+	return s
+}
+
+// SetConnectionId sets the ConnectionId field's value.
+func (s *Connection) SetConnectionId(v string) *Connection {
+	s.ConnectionId = &v
+	return s
+}
+
+// SetCreatedAt sets the CreatedAt field's value.
+func (s *Connection) SetCreatedAt(v time.Time) *Connection {
+	s.CreatedAt = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *Connection) SetDescription(v string) *Connection {
+	s.Description = &v
+	return s
+}
+
+// SetDeviceId sets the DeviceId field's value.
+func (s *Connection) SetDeviceId(v string) *Connection {
+	s.DeviceId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *Connection) SetGlobalNetworkId(v string) *Connection {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetLinkId sets the LinkId field's value.
+func (s *Connection) SetLinkId(v string) *Connection {
+	s.LinkId = &v
+	return s
+}
+
+// SetState sets the State field's value.
+func (s *Connection) SetState(v string) *Connection {
+	s.State = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *Connection) SetTags(v []*Tag) *Connection {
+	s.Tags = v
+	return s
+}
+
+// Describes connection health.
+type ConnectionHealth struct {
+	_ struct{} `type:"structure"`
+
+	// The connection status.
+	Status *string `type:"string" enum:"ConnectionStatus"`
+
+	// The time the status was last updated.
+	Timestamp *time.Time `type:"timestamp"`
+
+	// The connection type.
+	Type *string `type:"string" enum:"ConnectionType"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectionHealth) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConnectionHealth) GoString() string {
+	return s.String()
+}
+
+// SetStatus sets the Status field's value.
+func (s *ConnectionHealth) SetStatus(v string) *ConnectionHealth {
+	s.Status = &v
+	return s
+}
+
+// SetTimestamp sets the Timestamp field's value.
+func (s *ConnectionHealth) SetTimestamp(v time.Time) *ConnectionHealth {
+	s.Timestamp = &v
+	return s
+}
+
+// SetType sets the Type field's value.
+func (s *ConnectionHealth) SetType(v string) *ConnectionHealth {
+	s.Type = &v
+	return s
+}
+
+// Describes a core network.
+type CoreNetwork struct {
+	_ struct{} `type:"structure"`
+
+	// The ARN of a core network.
+	CoreNetworkArn *string `type:"string"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `type:"string"`
+
+	// The timestamp when a core network was created.
+	CreatedAt *time.Time `type:"timestamp"`
+
+	// The description of a core network.
+	Description *string `type:"string"`
+
+	// The edges within a core network.
+	Edges []*CoreNetworkEdge `type:"list"`
+
+	// The ID of the global network that your core network is a part of.
+	GlobalNetworkId *string `type:"string"`
+
+	// The segments within a core network.
+	Segments []*CoreNetworkSegment `type:"list"`
+
+	// The current state of a core network.
+	State *string `type:"string" enum:"CoreNetworkState"`
+
+	// The tags associated with a core network.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetwork) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetwork) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworkArn sets the CoreNetworkArn field's value.
+func (s *CoreNetwork) SetCoreNetworkArn(v string) *CoreNetwork {
+	s.CoreNetworkArn = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *CoreNetwork) SetCoreNetworkId(v string) *CoreNetwork {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetCreatedAt sets the CreatedAt field's value.
+func (s *CoreNetwork) SetCreatedAt(v time.Time) *CoreNetwork {
+	s.CreatedAt = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *CoreNetwork) SetDescription(v string) *CoreNetwork {
+	s.Description = &v
+	return s
+}
+
+// SetEdges sets the Edges field's value.
+func (s *CoreNetwork) SetEdges(v []*CoreNetworkEdge) *CoreNetwork {
+	s.Edges = v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *CoreNetwork) SetGlobalNetworkId(v string) *CoreNetwork {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetSegments sets the Segments field's value.
+func (s *CoreNetwork) SetSegments(v []*CoreNetworkSegment) *CoreNetwork {
+	s.Segments = v
+	return s
+}
+
+// SetState sets the State field's value.
+func (s *CoreNetwork) SetState(v string) *CoreNetwork {
+	s.State = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CoreNetwork) SetTags(v []*Tag) *CoreNetwork {
+	s.Tags = v
+	return s
+}
+
+// Details describing a core network change.
+type CoreNetworkChange struct {
+	_ struct{} `type:"structure"`
+
+	// The action to take for a core network.
+	Action *string `type:"string" enum:"ChangeAction"`
+
+	// The resource identifier.
+	Identifier *string `type:"string"`
+
+	// The new value for a core network
+	NewValues *CoreNetworkChangeValues `type:"structure"`
+
+	// The previous values for a core network.
+	PreviousValues *CoreNetworkChangeValues `type:"structure"`
+
+	// The type of change.
+	Type *string `type:"string" enum:"ChangeType"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkChange) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkChange) GoString() string {
+	return s.String()
+}
+
+// SetAction sets the Action field's value.
+func (s *CoreNetworkChange) SetAction(v string) *CoreNetworkChange {
+	s.Action = &v
+	return s
+}
+
+// SetIdentifier sets the Identifier field's value.
+func (s *CoreNetworkChange) SetIdentifier(v string) *CoreNetworkChange {
+	s.Identifier = &v
+	return s
+}
+
+// SetNewValues sets the NewValues field's value.
+func (s *CoreNetworkChange) SetNewValues(v *CoreNetworkChangeValues) *CoreNetworkChange {
+	s.NewValues = v
+	return s
+}
+
+// SetPreviousValues sets the PreviousValues field's value.
+func (s *CoreNetworkChange) SetPreviousValues(v *CoreNetworkChangeValues) *CoreNetworkChange {
+	s.PreviousValues = v
+	return s
+}
+
+// SetType sets the Type field's value.
+func (s *CoreNetworkChange) SetType(v string) *CoreNetworkChange {
+	s.Type = &v
+	return s
+}
+
+// Describes a core network change.
+type CoreNetworkChangeValues struct {
+	_ struct{} `type:"structure"`
+
+	// The ASN of a core network.
+	Asn *int64 `type:"long"`
+
+	// The IP addresses used for a core network.
+	Cidr *string `type:"string"`
+
+	// The ID of the destination.
+	DestinationIdentifier *string `type:"string"`
+
+	// The Regions where edges are located in a core network.
+	EdgeLocations []*string `type:"list"`
+
+	// The inside IP addresses used for core network change values.
+	InsideCidrBlocks []*string `type:"list"`
+
+	// The names of the segments in a core network.
+	SegmentName *string `type:"string"`
+
+	// The shared segments for a core network change value.
+	SharedSegments []*string `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkChangeValues) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkChangeValues) GoString() string {
+	return s.String()
+}
+
+// SetAsn sets the Asn field's value.
+func (s *CoreNetworkChangeValues) SetAsn(v int64) *CoreNetworkChangeValues {
+	s.Asn = &v
+	return s
+}
+
+// SetCidr sets the Cidr field's value.
+func (s *CoreNetworkChangeValues) SetCidr(v string) *CoreNetworkChangeValues {
+	s.Cidr = &v
+	return s
+}
+
+// SetDestinationIdentifier sets the DestinationIdentifier field's value.
+func (s *CoreNetworkChangeValues) SetDestinationIdentifier(v string) *CoreNetworkChangeValues {
+	s.DestinationIdentifier = &v
+	return s
+}
+
+// SetEdgeLocations sets the EdgeLocations field's value.
+func (s *CoreNetworkChangeValues) SetEdgeLocations(v []*string) *CoreNetworkChangeValues {
+	s.EdgeLocations = v
+	return s
+}
+
+// SetInsideCidrBlocks sets the InsideCidrBlocks field's value.
+func (s *CoreNetworkChangeValues) SetInsideCidrBlocks(v []*string) *CoreNetworkChangeValues {
+	s.InsideCidrBlocks = v
+	return s
+}
+
+// SetSegmentName sets the SegmentName field's value.
+func (s *CoreNetworkChangeValues) SetSegmentName(v string) *CoreNetworkChangeValues {
+	s.SegmentName = &v
+	return s
+}
+
+// SetSharedSegments sets the SharedSegments field's value.
+func (s *CoreNetworkChangeValues) SetSharedSegments(v []*string) *CoreNetworkChangeValues {
+	s.SharedSegments = v
+	return s
+}
+
+// Describes a core network edge.
+type CoreNetworkEdge struct {
+	_ struct{} `type:"structure"`
+
+	// The ASN of a core network edge.
+	Asn *int64 `type:"long"`
+
+	// The Region where a core network edge is located.
+	EdgeLocation *string `min:"1" type:"string"`
+
+	// The inside IP addresses used for core network edges.
+	InsideCidrBlocks []*string `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkEdge) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkEdge) GoString() string {
+	return s.String()
+}
+
+// SetAsn sets the Asn field's value.
+func (s *CoreNetworkEdge) SetAsn(v int64) *CoreNetworkEdge {
+	s.Asn = &v
+	return s
+}
+
+// SetEdgeLocation sets the EdgeLocation field's value.
+func (s *CoreNetworkEdge) SetEdgeLocation(v string) *CoreNetworkEdge {
+	s.EdgeLocation = &v
+	return s
+}
+
+// SetInsideCidrBlocks sets the InsideCidrBlocks field's value.
+func (s *CoreNetworkEdge) SetInsideCidrBlocks(v []*string) *CoreNetworkEdge {
+	s.InsideCidrBlocks = v
+	return s
+}
+
+// Describes a core network policy. You can have only one LIVE Core Policy.
+type CoreNetworkPolicy struct {
+	_ struct{} `type:"structure"`
+
+	// Whether a core network policy is the current LIVE policy or the most recently
+	// submitted policy.
+	Alias *string `type:"string" enum:"CoreNetworkPolicyAlias"`
+
+	// The state of a core network policy.
+	ChangeSetState *string `type:"string" enum:"ChangeSetState"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `type:"string"`
+
+	// The timestamp when a core network policy was created.
+	CreatedAt *time.Time `type:"timestamp"`
+
+	// The description of a core network policy.
+	Description *string `type:"string"`
+
+	// Describes a core network policy.
+	PolicyDocument aws.JSONValue `type:"jsonvalue"`
+
+	// Describes any errors in a core network policy.
+	PolicyErrors []*CoreNetworkPolicyError `type:"list"`
+
+	// The ID of the policy version.
+	PolicyVersionId *int64 `type:"integer"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkPolicy) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkPolicy) GoString() string {
+	return s.String()
+}
+
+// SetAlias sets the Alias field's value.
+func (s *CoreNetworkPolicy) SetAlias(v string) *CoreNetworkPolicy {
+	s.Alias = &v
+	return s
+}
+
+// SetChangeSetState sets the ChangeSetState field's value.
+func (s *CoreNetworkPolicy) SetChangeSetState(v string) *CoreNetworkPolicy {
+	s.ChangeSetState = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *CoreNetworkPolicy) SetCoreNetworkId(v string) *CoreNetworkPolicy {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetCreatedAt sets the CreatedAt field's value.
+func (s *CoreNetworkPolicy) SetCreatedAt(v time.Time) *CoreNetworkPolicy {
+	s.CreatedAt = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *CoreNetworkPolicy) SetDescription(v string) *CoreNetworkPolicy {
+	s.Description = &v
+	return s
+}
+
+// SetPolicyDocument sets the PolicyDocument field's value.
+func (s *CoreNetworkPolicy) SetPolicyDocument(v aws.JSONValue) *CoreNetworkPolicy {
+	s.PolicyDocument = v
+	return s
+}
+
+// SetPolicyErrors sets the PolicyErrors field's value.
+func (s *CoreNetworkPolicy) SetPolicyErrors(v []*CoreNetworkPolicyError) *CoreNetworkPolicy {
+	s.PolicyErrors = v
+	return s
+}
+
+// SetPolicyVersionId sets the PolicyVersionId field's value.
+func (s *CoreNetworkPolicy) SetPolicyVersionId(v int64) *CoreNetworkPolicy {
+	s.PolicyVersionId = &v
+	return s
+}
+
+// Provides details about an error in a core network policy.
+type CoreNetworkPolicyError struct {
+	_ struct{} `type:"structure"`
+
+	// The error code associated with a core network policy error.
+	//
+	// ErrorCode is a required field
+	ErrorCode *string `type:"string" required:"true"`
+
+	// The message associated with a core network policy error code.
+	//
+	// Message is a required field
+	Message *string `type:"string" required:"true"`
+
+	// The JSON path where the error was discovered in the policy document.
+	Path *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkPolicyError) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkPolicyError) GoString() string {
+	return s.String()
+}
+
+// SetErrorCode sets the ErrorCode field's value.
+func (s *CoreNetworkPolicyError) SetErrorCode(v string) *CoreNetworkPolicyError {
+	s.ErrorCode = &v
+	return s
+}
+
+// SetMessage sets the Message field's value.
+func (s *CoreNetworkPolicyError) SetMessage(v string) *CoreNetworkPolicyError {
+	s.Message = &v
+	return s
+}
+
+// SetPath sets the Path field's value.
+func (s *CoreNetworkPolicyError) SetPath(v string) *CoreNetworkPolicyError {
+	s.Path = &v
+	return s
+}
+
+// Describes a core network policy exception.
+type CoreNetworkPolicyException struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// Describes a core network policy exception.
+	Errors []*CoreNetworkPolicyError `type:"list"`
+
+	Message_ *string `locationName:"Message" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkPolicyException) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkPolicyException) GoString() string {
+	return s.String()
+}
+
+func newErrorCoreNetworkPolicyException(v protocol.ResponseMetadata) error {
+	return &CoreNetworkPolicyException{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *CoreNetworkPolicyException) Code() string {
+	return "CoreNetworkPolicyException"
+}
+
+// Message returns the exception's message.
+func (s *CoreNetworkPolicyException) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *CoreNetworkPolicyException) OrigErr() error {
+	return nil
+}
+
+func (s *CoreNetworkPolicyException) Error() string {
+	return fmt.Sprintf("%s: %s\n%s", s.Code(), s.Message(), s.String())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *CoreNetworkPolicyException) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *CoreNetworkPolicyException) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
+// Describes a core network policy version.
+type CoreNetworkPolicyVersion struct {
+	_ struct{} `type:"structure"`
+
+	// Whether a core network policy is the current policy or the most recently
+	// submitted policy.
+	Alias *string `type:"string" enum:"CoreNetworkPolicyAlias"`
+
+	// The status of the policy version change set.
+	ChangeSetState *string `type:"string" enum:"ChangeSetState"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `type:"string"`
+
+	// The timestamp when a core network policy version was created.
+	CreatedAt *time.Time `type:"timestamp"`
+
+	// The description of a core network policy version.
+	Description *string `type:"string"`
+
+	// The ID of the policy version.
+	PolicyVersionId *int64 `type:"integer"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkPolicyVersion) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkPolicyVersion) GoString() string {
+	return s.String()
+}
+
+// SetAlias sets the Alias field's value.
+func (s *CoreNetworkPolicyVersion) SetAlias(v string) *CoreNetworkPolicyVersion {
+	s.Alias = &v
+	return s
+}
+
+// SetChangeSetState sets the ChangeSetState field's value.
+func (s *CoreNetworkPolicyVersion) SetChangeSetState(v string) *CoreNetworkPolicyVersion {
+	s.ChangeSetState = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *CoreNetworkPolicyVersion) SetCoreNetworkId(v string) *CoreNetworkPolicyVersion {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetCreatedAt sets the CreatedAt field's value.
+func (s *CoreNetworkPolicyVersion) SetCreatedAt(v time.Time) *CoreNetworkPolicyVersion {
+	s.CreatedAt = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *CoreNetworkPolicyVersion) SetDescription(v string) *CoreNetworkPolicyVersion {
+	s.Description = &v
+	return s
+}
+
+// SetPolicyVersionId sets the PolicyVersionId field's value.
+func (s *CoreNetworkPolicyVersion) SetPolicyVersionId(v int64) *CoreNetworkPolicyVersion {
+	s.PolicyVersionId = &v
+	return s
+}
+
+// Describes a core network segment, which are dedicated routes. Only attachments
+// within this segment can communicate with each other.
+type CoreNetworkSegment struct {
+	_ struct{} `type:"structure"`
+
+	// The Regions where the edges are located.
+	EdgeLocations []*string `type:"list"`
+
+	// The name of a core network segment.
+	Name *string `type:"string"`
+
+	// The shared segments of a core network.
+	SharedSegments []*string `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkSegment) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkSegment) GoString() string {
+	return s.String()
+}
+
+// SetEdgeLocations sets the EdgeLocations field's value.
+func (s *CoreNetworkSegment) SetEdgeLocations(v []*string) *CoreNetworkSegment {
+	s.EdgeLocations = v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *CoreNetworkSegment) SetName(v string) *CoreNetworkSegment {
+	s.Name = &v
+	return s
+}
+
+// SetSharedSegments sets the SharedSegments field's value.
+func (s *CoreNetworkSegment) SetSharedSegments(v []*string) *CoreNetworkSegment {
+	s.SharedSegments = v
+	return s
+}
+
+// Returns details about a core network edge.
+type CoreNetworkSegmentEdgeIdentifier struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `type:"string"`
+
+	// The Region where the segment edge is located.
+	EdgeLocation *string `min:"1" type:"string"`
+
+	// The name of the segment edge.
+	SegmentName *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkSegmentEdgeIdentifier) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkSegmentEdgeIdentifier) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CoreNetworkSegmentEdgeIdentifier) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CoreNetworkSegmentEdgeIdentifier"}
+	if s.EdgeLocation != nil && len(*s.EdgeLocation) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("EdgeLocation", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *CoreNetworkSegmentEdgeIdentifier) SetCoreNetworkId(v string) *CoreNetworkSegmentEdgeIdentifier {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetEdgeLocation sets the EdgeLocation field's value.
+func (s *CoreNetworkSegmentEdgeIdentifier) SetEdgeLocation(v string) *CoreNetworkSegmentEdgeIdentifier {
+	s.EdgeLocation = &v
+	return s
+}
+
+// SetSegmentName sets the SegmentName field's value.
+func (s *CoreNetworkSegmentEdgeIdentifier) SetSegmentName(v string) *CoreNetworkSegmentEdgeIdentifier {
+	s.SegmentName = &v
+	return s
+}
+
+// Returns summary information about a core network.
+type CoreNetworkSummary struct {
+	_ struct{} `type:"structure"`
+
+	// a core network ARN.
+	CoreNetworkArn *string `type:"string"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `type:"string"`
+
+	// The description of a core network.
+	Description *string `type:"string"`
+
+	// The global network ID.
+	GlobalNetworkId *string `type:"string"`
+
+	// The ID of the account owner.
+	OwnerAccountId *string `min:"12" type:"string"`
+
+	// The state of a core network.
+	State *string `type:"string" enum:"CoreNetworkState"`
+
+	// The key-value tags associated with a core network summary.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkSummary) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CoreNetworkSummary) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworkArn sets the CoreNetworkArn field's value.
+func (s *CoreNetworkSummary) SetCoreNetworkArn(v string) *CoreNetworkSummary {
+	s.CoreNetworkArn = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *CoreNetworkSummary) SetCoreNetworkId(v string) *CoreNetworkSummary {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *CoreNetworkSummary) SetDescription(v string) *CoreNetworkSummary {
+	s.Description = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *CoreNetworkSummary) SetGlobalNetworkId(v string) *CoreNetworkSummary {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetOwnerAccountId sets the OwnerAccountId field's value.
+func (s *CoreNetworkSummary) SetOwnerAccountId(v string) *CoreNetworkSummary {
+	s.OwnerAccountId = &v
+	return s
+}
+
+// SetState sets the State field's value.
+func (s *CoreNetworkSummary) SetState(v string) *CoreNetworkSummary {
+	s.State = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CoreNetworkSummary) SetTags(v []*Tag) *CoreNetworkSummary {
+	s.Tags = v
+	return s
+}
+
+type CreateConnectAttachmentInput struct {
+	_ struct{} `type:"structure"`
+
+	// The client token associated with the request.
+	ClientToken *string `type:"string" idempotencyToken:"true"`
+
+	// The ID of a core network where you want to create the attachment.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `type:"string" required:"true"`
+
+	// The Region where the edge is located.
+	//
+	// EdgeLocation is a required field
+	EdgeLocation *string `min:"1" type:"string" required:"true"`
+
+	// Options for creating an attachment.
+	//
+	// Options is a required field
+	Options *ConnectAttachmentOptions `type:"structure" required:"true"`
+
+	// The list of key-value tags associated with the request.
+	Tags []*Tag `type:"list"`
+
+	// The ID of the attachment between the two connections.
+	//
+	// TransportAttachmentId is a required field
+	TransportAttachmentId *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectAttachmentInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectAttachmentInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateConnectAttachmentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateConnectAttachmentInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.EdgeLocation == nil {
+		invalidParams.Add(request.NewErrParamRequired("EdgeLocation"))
+	}
+	if s.EdgeLocation != nil && len(*s.EdgeLocation) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("EdgeLocation", 1))
+	}
+	if s.Options == nil {
+		invalidParams.Add(request.NewErrParamRequired("Options"))
+	}
+	if s.TransportAttachmentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("TransportAttachmentId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetClientToken sets the ClientToken field's value.
+func (s *CreateConnectAttachmentInput) SetClientToken(v string) *CreateConnectAttachmentInput {
+	s.ClientToken = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *CreateConnectAttachmentInput) SetCoreNetworkId(v string) *CreateConnectAttachmentInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetEdgeLocation sets the EdgeLocation field's value.
+func (s *CreateConnectAttachmentInput) SetEdgeLocation(v string) *CreateConnectAttachmentInput {
+	s.EdgeLocation = &v
+	return s
+}
+
+// SetOptions sets the Options field's value.
+func (s *CreateConnectAttachmentInput) SetOptions(v *ConnectAttachmentOptions) *CreateConnectAttachmentInput {
+	s.Options = v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CreateConnectAttachmentInput) SetTags(v []*Tag) *CreateConnectAttachmentInput {
+	s.Tags = v
+	return s
+}
+
+// SetTransportAttachmentId sets the TransportAttachmentId field's value.
+func (s *CreateConnectAttachmentInput) SetTransportAttachmentId(v string) *CreateConnectAttachmentInput {
+	s.TransportAttachmentId = &v
+	return s
+}
+
+type CreateConnectAttachmentOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The response to a Connect attachment request.
+	ConnectAttachment *ConnectAttachment `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectAttachmentOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectAttachmentOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnectAttachment sets the ConnectAttachment field's value.
+func (s *CreateConnectAttachmentOutput) SetConnectAttachment(v *ConnectAttachment) *CreateConnectAttachmentOutput {
+	s.ConnectAttachment = v
+	return s
+}
+
+type CreateConnectPeerInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Connect peer BGP options.
+	BgpOptions *BgpOptions `type:"structure"`
+
+	// The client token associated with the request.
+	ClientToken *string `type:"string" idempotencyToken:"true"`
+
+	// The ID of the connection attachment.
+	//
+	// ConnectAttachmentId is a required field
+	ConnectAttachmentId *string `type:"string" required:"true"`
+
+	// A Connect peer core network address.
+	CoreNetworkAddress *string `min:"1" type:"string"`
+
+	// The inside IP addresses used for BGP peering.
+	//
+	// InsideCidrBlocks is a required field
+	InsideCidrBlocks []*string `type:"list" required:"true"`
+
+	// The Connect peer address.
+	//
+	// PeerAddress is a required field
+	PeerAddress *string `min:"1" type:"string" required:"true"`
+
+	// The tags associated with the peer request.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectPeerInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectPeerInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateConnectPeerInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateConnectPeerInput"}
+	if s.ConnectAttachmentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectAttachmentId"))
+	}
+	if s.CoreNetworkAddress != nil && len(*s.CoreNetworkAddress) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CoreNetworkAddress", 1))
+	}
+	if s.InsideCidrBlocks == nil {
+		invalidParams.Add(request.NewErrParamRequired("InsideCidrBlocks"))
+	}
+	if s.PeerAddress == nil {
+		invalidParams.Add(request.NewErrParamRequired("PeerAddress"))
+	}
+	if s.PeerAddress != nil && len(*s.PeerAddress) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PeerAddress", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetBgpOptions sets the BgpOptions field's value.
+func (s *CreateConnectPeerInput) SetBgpOptions(v *BgpOptions) *CreateConnectPeerInput {
+	s.BgpOptions = v
+	return s
+}
+
+// SetClientToken sets the ClientToken field's value.
+func (s *CreateConnectPeerInput) SetClientToken(v string) *CreateConnectPeerInput {
+	s.ClientToken = &v
+	return s
+}
+
+// SetConnectAttachmentId sets the ConnectAttachmentId field's value.
+func (s *CreateConnectPeerInput) SetConnectAttachmentId(v string) *CreateConnectPeerInput {
+	s.ConnectAttachmentId = &v
+	return s
+}
+
+// SetCoreNetworkAddress sets the CoreNetworkAddress field's value.
+func (s *CreateConnectPeerInput) SetCoreNetworkAddress(v string) *CreateConnectPeerInput {
+	s.CoreNetworkAddress = &v
+	return s
+}
+
+// SetInsideCidrBlocks sets the InsideCidrBlocks field's value.
+func (s *CreateConnectPeerInput) SetInsideCidrBlocks(v []*string) *CreateConnectPeerInput {
+	s.InsideCidrBlocks = v
+	return s
+}
+
+// SetPeerAddress sets the PeerAddress field's value.
+func (s *CreateConnectPeerInput) SetPeerAddress(v string) *CreateConnectPeerInput {
+	s.PeerAddress = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CreateConnectPeerInput) SetTags(v []*Tag) *CreateConnectPeerInput {
+	s.Tags = v
+	return s
+}
+
+type CreateConnectPeerOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The response to the request.
+	ConnectPeer *ConnectPeer `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectPeerOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectPeerOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnectPeer sets the ConnectPeer field's value.
+func (s *CreateConnectPeerOutput) SetConnectPeer(v *ConnectPeer) *CreateConnectPeerOutput {
+	s.ConnectPeer = v
+	return s
+}
+
+type CreateConnectionInput struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the second device in the connection.
+	//
+	// ConnectedDeviceId is a required field
+	ConnectedDeviceId *string `type:"string" required:"true"`
+
+	// The ID of the link for the second device.
+	ConnectedLinkId *string `type:"string"`
+
+	// A description of the connection.
+	//
+	// Length Constraints: Maximum length of 256 characters.
+	Description *string `type:"string"`
+
+	// The ID of the first device in the connection.
+	//
+	// DeviceId is a required field
+	DeviceId *string `type:"string" required:"true"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The ID of the link for the first device.
+	LinkId *string `type:"string"`
+
+	// The tags to apply to the resource during creation.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateConnectionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateConnectionInput"}
+	if s.ConnectedDeviceId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectedDeviceId"))
+	}
+	if s.DeviceId == nil {
+		invalidParams.Add(request.NewErrParamRequired("DeviceId"))
+	}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetConnectedDeviceId sets the ConnectedDeviceId field's value.
+func (s *CreateConnectionInput) SetConnectedDeviceId(v string) *CreateConnectionInput {
+	s.ConnectedDeviceId = &v
+	return s
+}
+
+// SetConnectedLinkId sets the ConnectedLinkId field's value.
+func (s *CreateConnectionInput) SetConnectedLinkId(v string) *CreateConnectionInput {
+	s.ConnectedLinkId = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *CreateConnectionInput) SetDescription(v string) *CreateConnectionInput {
+	s.Description = &v
+	return s
+}
+
+// SetDeviceId sets the DeviceId field's value.
+func (s *CreateConnectionInput) SetDeviceId(v string) *CreateConnectionInput {
+	s.DeviceId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *CreateConnectionInput) SetGlobalNetworkId(v string) *CreateConnectionInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetLinkId sets the LinkId field's value.
+func (s *CreateConnectionInput) SetLinkId(v string) *CreateConnectionInput {
+	s.LinkId = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CreateConnectionInput) SetTags(v []*Tag) *CreateConnectionInput {
+	s.Tags = v
+	return s
+}
+
+type CreateConnectionOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Information about the connection.
+	Connection *Connection `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateConnectionOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnection sets the Connection field's value.
+func (s *CreateConnectionOutput) SetConnection(v *Connection) *CreateConnectionOutput {
+	s.Connection = v
+	return s
+}
+
+type CreateCoreNetworkInput struct {
+	_ struct{} `type:"structure"`
+
+	// The client token associated with a core network request.
+	ClientToken *string `type:"string" idempotencyToken:"true"`
+
+	// The description of a core network.
+	Description *string `type:"string"`
+
+	// The ID of the global network that a core network will be a part of.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `type:"string" required:"true"`
+
+	// The policy document for creating a core network.
+	PolicyDocument *string `type:"string"`
+
+	// Key-value tags associated with a core network request.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateCoreNetworkInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateCoreNetworkInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateCoreNetworkInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateCoreNetworkInput"}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetClientToken sets the ClientToken field's value.
+func (s *CreateCoreNetworkInput) SetClientToken(v string) *CreateCoreNetworkInput {
+	s.ClientToken = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *CreateCoreNetworkInput) SetDescription(v string) *CreateCoreNetworkInput {
+	s.Description = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *CreateCoreNetworkInput) SetGlobalNetworkId(v string) *CreateCoreNetworkInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetPolicyDocument sets the PolicyDocument field's value.
+func (s *CreateCoreNetworkInput) SetPolicyDocument(v string) *CreateCoreNetworkInput {
+	s.PolicyDocument = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CreateCoreNetworkInput) SetTags(v []*Tag) *CreateCoreNetworkInput {
+	s.Tags = v
+	return s
+}
+
+type CreateCoreNetworkOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Returns details about a core network.
+	CoreNetwork *CoreNetwork `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateCoreNetworkOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateCoreNetworkOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetwork sets the CoreNetwork field's value.
+func (s *CreateCoreNetworkOutput) SetCoreNetwork(v *CoreNetwork) *CreateCoreNetworkOutput {
+	s.CoreNetwork = v
+	return s
+}
+
 type CreateDeviceInput struct {
 	_ struct{} `type:"structure"`
 
+	// The Amazon Web Services location of the device, if applicable. For an on-premises
+	// device, you can omit this parameter.
+	AWSLocation *AWSLocation `type:"structure"`
+
 	// A description of the device.
 	//
-	// Length Constraints: Maximum length of 256 characters.
+	// Constraints: Maximum length of 256 characters.
 	Description *string `type:"string"`
 
 	// The ID of the global network.
@@ -3476,16 +11273,20 @@ type CreateDeviceInput struct {
 	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
 
 	// The location of the device.
-	Location *Location `type:"structure"`
+	//
+	// Location is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by CreateDeviceInput's
+	// String and GoString methods.
+	Location *Location `type:"structure" sensitive:"true"`
 
 	// The model of the device.
 	//
-	// Length Constraints: Maximum length of 128 characters.
+	// Constraints: Maximum length of 128 characters.
 	Model *string `type:"string"`
 
 	// The serial number of the device.
 	//
-	// Length Constraints: Maximum length of 128 characters.
+	// Constraints: Maximum length of 128 characters.
 	SerialNumber *string `type:"string"`
 
 	// The ID of the site.
@@ -3499,16 +11300,24 @@ type CreateDeviceInput struct {
 
 	// The vendor of the device.
 	//
-	// Length Constraints: Maximum length of 128 characters.
+	// Constraints: Maximum length of 128 characters.
 	Vendor *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDeviceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDeviceInput) GoString() string {
 	return s.String()
 }
@@ -3527,6 +11336,12 @@ func (s *CreateDeviceInput) Validate() error {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetAWSLocation sets the AWSLocation field's value.
+func (s *CreateDeviceInput) SetAWSLocation(v *AWSLocation) *CreateDeviceInput {
+	s.AWSLocation = v
+	return s
 }
 
 // SetDescription sets the Description field's value.
@@ -3590,12 +11405,20 @@ type CreateDeviceOutput struct {
 	Device *Device `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDeviceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDeviceOutput) GoString() string {
 	return s.String()
 }
@@ -3611,19 +11434,27 @@ type CreateGlobalNetworkInput struct {
 
 	// A description of the global network.
 	//
-	// Length Constraints: Maximum length of 256 characters.
+	// Constraints: Maximum length of 256 characters.
 	Description *string `type:"string"`
 
 	// The tags to apply to the resource during creation.
 	Tags []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateGlobalNetworkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateGlobalNetworkInput) GoString() string {
 	return s.String()
 }
@@ -3647,12 +11478,20 @@ type CreateGlobalNetworkOutput struct {
 	GlobalNetwork *GlobalNetwork `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateGlobalNetworkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateGlobalNetworkOutput) GoString() string {
 	return s.String()
 }
@@ -3673,7 +11512,7 @@ type CreateLinkInput struct {
 
 	// A description of the link.
 	//
-	// Length Constraints: Maximum length of 256 characters.
+	// Constraints: Maximum length of 256 characters.
 	Description *string `type:"string"`
 
 	// The ID of the global network.
@@ -3683,9 +11522,8 @@ type CreateLinkInput struct {
 
 	// The provider of the link.
 	//
-	// Constraints: Cannot include the following characters: | \ ^
-	//
-	// Length Constraints: Maximum length of 128 characters.
+	// Constraints: Maximum length of 128 characters. Cannot include the following
+	// characters: | \ ^
 	Provider *string `type:"string"`
 
 	// The ID of the site.
@@ -3698,18 +11536,25 @@ type CreateLinkInput struct {
 
 	// The type of the link.
 	//
-	// Constraints: Cannot include the following characters: | \ ^
-	//
-	// Length Constraints: Maximum length of 128 characters.
+	// Constraints: Maximum length of 128 characters. Cannot include the following
+	// characters: | \ ^
 	Type *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateLinkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateLinkInput) GoString() string {
 	return s.String()
 }
@@ -3785,12 +11630,20 @@ type CreateLinkOutput struct {
 	Link *Link `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateLinkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateLinkOutput) GoString() string {
 	return s.String()
 }
@@ -3806,7 +11659,7 @@ type CreateSiteInput struct {
 
 	// A description of your site.
 	//
-	// Length Constraints: Maximum length of 256 characters.
+	// Constraints: Maximum length of 256 characters.
 	Description *string `type:"string"`
 
 	// The ID of the global network.
@@ -3823,18 +11676,30 @@ type CreateSiteInput struct {
 	//    * Latitude: The latitude of the site.
 	//
 	//    * Longitude: The longitude of the site.
-	Location *Location `type:"structure"`
+	//
+	// Location is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by CreateSiteInput's
+	// String and GoString methods.
+	Location *Location `type:"structure" sensitive:"true"`
 
 	// The tags to apply to the resource during creation.
 	Tags []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSiteInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSiteInput) GoString() string {
 	return s.String()
 }
@@ -3886,12 +11751,20 @@ type CreateSiteOutput struct {
 	Site *Site `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSiteOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSiteOutput) GoString() string {
 	return s.String()
 }
@@ -3899,6 +11772,247 @@ func (s CreateSiteOutput) GoString() string {
 // SetSite sets the Site field's value.
 func (s *CreateSiteOutput) SetSite(v *Site) *CreateSiteOutput {
 	s.Site = v
+	return s
+}
+
+type CreateSiteToSiteVpnAttachmentInput struct {
+	_ struct{} `type:"structure"`
+
+	// The client token associated with the request.
+	ClientToken *string `type:"string" idempotencyToken:"true"`
+
+	// The ID of a core network where you're creating a site-to-site VPN attachment.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `type:"string" required:"true"`
+
+	// The tags associated with the request.
+	Tags []*Tag `type:"list"`
+
+	// The ARN identifying the VPN attachment.
+	//
+	// VpnConnectionArn is a required field
+	VpnConnectionArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateSiteToSiteVpnAttachmentInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateSiteToSiteVpnAttachmentInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateSiteToSiteVpnAttachmentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateSiteToSiteVpnAttachmentInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.VpnConnectionArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("VpnConnectionArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetClientToken sets the ClientToken field's value.
+func (s *CreateSiteToSiteVpnAttachmentInput) SetClientToken(v string) *CreateSiteToSiteVpnAttachmentInput {
+	s.ClientToken = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *CreateSiteToSiteVpnAttachmentInput) SetCoreNetworkId(v string) *CreateSiteToSiteVpnAttachmentInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CreateSiteToSiteVpnAttachmentInput) SetTags(v []*Tag) *CreateSiteToSiteVpnAttachmentInput {
+	s.Tags = v
+	return s
+}
+
+// SetVpnConnectionArn sets the VpnConnectionArn field's value.
+func (s *CreateSiteToSiteVpnAttachmentInput) SetVpnConnectionArn(v string) *CreateSiteToSiteVpnAttachmentInput {
+	s.VpnConnectionArn = &v
+	return s
+}
+
+type CreateSiteToSiteVpnAttachmentOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Details about a site-to-site VPN attachment.
+	SiteToSiteVpnAttachment *SiteToSiteVpnAttachment `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateSiteToSiteVpnAttachmentOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateSiteToSiteVpnAttachmentOutput) GoString() string {
+	return s.String()
+}
+
+// SetSiteToSiteVpnAttachment sets the SiteToSiteVpnAttachment field's value.
+func (s *CreateSiteToSiteVpnAttachmentOutput) SetSiteToSiteVpnAttachment(v *SiteToSiteVpnAttachment) *CreateSiteToSiteVpnAttachmentOutput {
+	s.SiteToSiteVpnAttachment = v
+	return s
+}
+
+type CreateVpcAttachmentInput struct {
+	_ struct{} `type:"structure"`
+
+	// The client token associated with the request.
+	ClientToken *string `type:"string" idempotencyToken:"true"`
+
+	// The ID of a core network for the VPC attachment.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `type:"string" required:"true"`
+
+	// Options for the VPC attachment.
+	Options *VpcOptions `type:"structure"`
+
+	// The subnet ARN of the VPC attachment.
+	//
+	// SubnetArns is a required field
+	SubnetArns []*string `type:"list" required:"true"`
+
+	// The key-value tags associated with the request.
+	Tags []*Tag `type:"list"`
+
+	// The ARN of the VPC.
+	//
+	// VpcArn is a required field
+	VpcArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateVpcAttachmentInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateVpcAttachmentInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateVpcAttachmentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateVpcAttachmentInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.SubnetArns == nil {
+		invalidParams.Add(request.NewErrParamRequired("SubnetArns"))
+	}
+	if s.VpcArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("VpcArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetClientToken sets the ClientToken field's value.
+func (s *CreateVpcAttachmentInput) SetClientToken(v string) *CreateVpcAttachmentInput {
+	s.ClientToken = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *CreateVpcAttachmentInput) SetCoreNetworkId(v string) *CreateVpcAttachmentInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetOptions sets the Options field's value.
+func (s *CreateVpcAttachmentInput) SetOptions(v *VpcOptions) *CreateVpcAttachmentInput {
+	s.Options = v
+	return s
+}
+
+// SetSubnetArns sets the SubnetArns field's value.
+func (s *CreateVpcAttachmentInput) SetSubnetArns(v []*string) *CreateVpcAttachmentInput {
+	s.SubnetArns = v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CreateVpcAttachmentInput) SetTags(v []*Tag) *CreateVpcAttachmentInput {
+	s.Tags = v
+	return s
+}
+
+// SetVpcArn sets the VpcArn field's value.
+func (s *CreateVpcAttachmentInput) SetVpcArn(v string) *CreateVpcAttachmentInput {
+	s.VpcArn = &v
+	return s
+}
+
+type CreateVpcAttachmentOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Provides details about the VPC attachment.
+	VpcAttachment *VpcAttachment `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateVpcAttachmentOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateVpcAttachmentOutput) GoString() string {
+	return s.String()
+}
+
+// SetVpcAttachment sets the VpcAttachment field's value.
+func (s *CreateVpcAttachmentOutput) SetVpcAttachment(v *VpcAttachment) *CreateVpcAttachmentOutput {
+	s.VpcAttachment = v
 	return s
 }
 
@@ -3922,12 +12036,20 @@ type CustomerGatewayAssociation struct {
 	State *string `type:"string" enum:"CustomerGatewayAssociationState"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CustomerGatewayAssociation) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CustomerGatewayAssociation) GoString() string {
 	return s.String()
 }
@@ -3962,8 +12084,439 @@ func (s *CustomerGatewayAssociation) SetState(v string) *CustomerGatewayAssociat
 	return s
 }
 
-type DeleteDeviceInput struct {
+type DeleteAttachmentInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the attachment to delete.
+	//
+	// AttachmentId is a required field
+	AttachmentId *string `location:"uri" locationName:"attachmentId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteAttachmentInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteAttachmentInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteAttachmentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteAttachmentInput"}
+	if s.AttachmentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("AttachmentId"))
+	}
+	if s.AttachmentId != nil && len(*s.AttachmentId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AttachmentId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAttachmentId sets the AttachmentId field's value.
+func (s *DeleteAttachmentInput) SetAttachmentId(v string) *DeleteAttachmentInput {
+	s.AttachmentId = &v
+	return s
+}
+
+type DeleteAttachmentOutput struct {
 	_ struct{} `type:"structure"`
+
+	// Information about the deleted attachment.
+	Attachment *Attachment `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteAttachmentOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteAttachmentOutput) GoString() string {
+	return s.String()
+}
+
+// SetAttachment sets the Attachment field's value.
+func (s *DeleteAttachmentOutput) SetAttachment(v *Attachment) *DeleteAttachmentOutput {
+	s.Attachment = v
+	return s
+}
+
+type DeleteConnectPeerInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the deleted Connect peer.
+	//
+	// ConnectPeerId is a required field
+	ConnectPeerId *string `location:"uri" locationName:"connectPeerId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteConnectPeerInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteConnectPeerInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteConnectPeerInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteConnectPeerInput"}
+	if s.ConnectPeerId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectPeerId"))
+	}
+	if s.ConnectPeerId != nil && len(*s.ConnectPeerId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ConnectPeerId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetConnectPeerId sets the ConnectPeerId field's value.
+func (s *DeleteConnectPeerInput) SetConnectPeerId(v string) *DeleteConnectPeerInput {
+	s.ConnectPeerId = &v
+	return s
+}
+
+type DeleteConnectPeerOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Information about the deleted Connect peer.
+	ConnectPeer *ConnectPeer `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteConnectPeerOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteConnectPeerOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnectPeer sets the ConnectPeer field's value.
+func (s *DeleteConnectPeerOutput) SetConnectPeer(v *ConnectPeer) *DeleteConnectPeerOutput {
+	s.ConnectPeer = v
+	return s
+}
+
+type DeleteConnectionInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the connection.
+	//
+	// ConnectionId is a required field
+	ConnectionId *string `location:"uri" locationName:"connectionId" type:"string" required:"true"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteConnectionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteConnectionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteConnectionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteConnectionInput"}
+	if s.ConnectionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectionId"))
+	}
+	if s.ConnectionId != nil && len(*s.ConnectionId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ConnectionId", 1))
+	}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetConnectionId sets the ConnectionId field's value.
+func (s *DeleteConnectionInput) SetConnectionId(v string) *DeleteConnectionInput {
+	s.ConnectionId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *DeleteConnectionInput) SetGlobalNetworkId(v string) *DeleteConnectionInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+type DeleteConnectionOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Information about the connection.
+	Connection *Connection `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteConnectionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteConnectionOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnection sets the Connection field's value.
+func (s *DeleteConnectionOutput) SetConnection(v *Connection) *DeleteConnectionOutput {
+	s.Connection = v
+	return s
+}
+
+type DeleteCoreNetworkInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The network ID of the deleted core network.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `location:"uri" locationName:"coreNetworkId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteCoreNetworkInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteCoreNetworkInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteCoreNetworkInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteCoreNetworkInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.CoreNetworkId != nil && len(*s.CoreNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CoreNetworkId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *DeleteCoreNetworkInput) SetCoreNetworkId(v string) *DeleteCoreNetworkInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+type DeleteCoreNetworkOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Information about the deleted core network.
+	CoreNetwork *CoreNetwork `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteCoreNetworkOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteCoreNetworkOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetwork sets the CoreNetwork field's value.
+func (s *DeleteCoreNetworkOutput) SetCoreNetwork(v *CoreNetwork) *DeleteCoreNetworkOutput {
+	s.CoreNetwork = v
+	return s
+}
+
+type DeleteCoreNetworkPolicyVersionInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of a core network for the deleted policy.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `location:"uri" locationName:"coreNetworkId" type:"string" required:"true"`
+
+	// The version ID of the deleted policy.
+	//
+	// PolicyVersionId is a required field
+	PolicyVersionId *int64 `location:"uri" locationName:"policyVersionId" type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteCoreNetworkPolicyVersionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteCoreNetworkPolicyVersionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteCoreNetworkPolicyVersionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteCoreNetworkPolicyVersionInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.CoreNetworkId != nil && len(*s.CoreNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CoreNetworkId", 1))
+	}
+	if s.PolicyVersionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PolicyVersionId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *DeleteCoreNetworkPolicyVersionInput) SetCoreNetworkId(v string) *DeleteCoreNetworkPolicyVersionInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetPolicyVersionId sets the PolicyVersionId field's value.
+func (s *DeleteCoreNetworkPolicyVersionInput) SetPolicyVersionId(v int64) *DeleteCoreNetworkPolicyVersionInput {
+	s.PolicyVersionId = &v
+	return s
+}
+
+type DeleteCoreNetworkPolicyVersionOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Returns information about the deleted policy version.
+	CoreNetworkPolicy *CoreNetworkPolicy `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteCoreNetworkPolicyVersionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteCoreNetworkPolicyVersionOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworkPolicy sets the CoreNetworkPolicy field's value.
+func (s *DeleteCoreNetworkPolicyVersionOutput) SetCoreNetworkPolicy(v *CoreNetworkPolicy) *DeleteCoreNetworkPolicyVersionOutput {
+	s.CoreNetworkPolicy = v
+	return s
+}
+
+type DeleteDeviceInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ID of the device.
 	//
@@ -3976,12 +12529,20 @@ type DeleteDeviceInput struct {
 	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDeviceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDeviceInput) GoString() string {
 	return s.String()
 }
@@ -4027,12 +12588,20 @@ type DeleteDeviceOutput struct {
 	Device *Device `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDeviceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDeviceOutput) GoString() string {
 	return s.String()
 }
@@ -4044,7 +12613,7 @@ func (s *DeleteDeviceOutput) SetDevice(v *Device) *DeleteDeviceOutput {
 }
 
 type DeleteGlobalNetworkInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ID of the global network.
 	//
@@ -4052,12 +12621,20 @@ type DeleteGlobalNetworkInput struct {
 	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteGlobalNetworkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteGlobalNetworkInput) GoString() string {
 	return s.String()
 }
@@ -4091,12 +12668,20 @@ type DeleteGlobalNetworkOutput struct {
 	GlobalNetwork *GlobalNetwork `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteGlobalNetworkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteGlobalNetworkOutput) GoString() string {
 	return s.String()
 }
@@ -4108,7 +12693,7 @@ func (s *DeleteGlobalNetworkOutput) SetGlobalNetwork(v *GlobalNetwork) *DeleteGl
 }
 
 type DeleteLinkInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ID of the global network.
 	//
@@ -4121,12 +12706,20 @@ type DeleteLinkInput struct {
 	LinkId *string `location:"uri" locationName:"linkId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteLinkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteLinkInput) GoString() string {
 	return s.String()
 }
@@ -4172,12 +12765,20 @@ type DeleteLinkOutput struct {
 	Link *Link `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteLinkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteLinkOutput) GoString() string {
 	return s.String()
 }
@@ -4188,8 +12789,79 @@ func (s *DeleteLinkOutput) SetLink(v *Link) *DeleteLinkOutput {
 	return s
 }
 
-type DeleteSiteInput struct {
+type DeleteResourcePolicyInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ARN of the policy to delete.
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `location:"uri" locationName:"resourceArn" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResourcePolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResourcePolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteResourcePolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteResourcePolicyInput"}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+	if s.ResourceArn != nil && len(*s.ResourceArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ResourceArn", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *DeleteResourcePolicyInput) SetResourceArn(v string) *DeleteResourcePolicyInput {
+	s.ResourceArn = &v
+	return s
+}
+
+type DeleteResourcePolicyOutput struct {
 	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResourcePolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResourcePolicyOutput) GoString() string {
+	return s.String()
+}
+
+type DeleteSiteInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ID of the global network.
 	//
@@ -4202,12 +12874,20 @@ type DeleteSiteInput struct {
 	SiteId *string `location:"uri" locationName:"siteId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteSiteInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteSiteInput) GoString() string {
 	return s.String()
 }
@@ -4253,12 +12933,20 @@ type DeleteSiteOutput struct {
 	Site *Site `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteSiteOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteSiteOutput) GoString() string {
 	return s.String()
 }
@@ -4270,7 +12958,7 @@ func (s *DeleteSiteOutput) SetSite(v *Site) *DeleteSiteOutput {
 }
 
 type DeregisterTransitGatewayInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ID of the global network.
 	//
@@ -4283,12 +12971,20 @@ type DeregisterTransitGatewayInput struct {
 	TransitGatewayArn *string `location:"uri" locationName:"transitGatewayArn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeregisterTransitGatewayInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeregisterTransitGatewayInput) GoString() string {
 	return s.String()
 }
@@ -4334,12 +13030,20 @@ type DeregisterTransitGatewayOutput struct {
 	TransitGatewayRegistration *TransitGatewayRegistration `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeregisterTransitGatewayOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeregisterTransitGatewayOutput) GoString() string {
 	return s.String()
 }
@@ -4351,7 +13055,7 @@ func (s *DeregisterTransitGatewayOutput) SetTransitGatewayRegistration(v *Transi
 }
 
 type DescribeGlobalNetworksInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The IDs of one or more global networks. The maximum is 10.
 	GlobalNetworkIds []*string `location:"querystring" locationName:"globalNetworkIds" type:"list"`
@@ -4363,12 +13067,20 @@ type DescribeGlobalNetworksInput struct {
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeGlobalNetworksInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeGlobalNetworksInput) GoString() string {
 	return s.String()
 }
@@ -4414,12 +13126,20 @@ type DescribeGlobalNetworksOutput struct {
 	NextToken *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeGlobalNetworksOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeGlobalNetworksOutput) GoString() string {
 	return s.String()
 }
@@ -4440,6 +13160,9 @@ func (s *DescribeGlobalNetworksOutput) SetNextToken(v string) *DescribeGlobalNet
 type Device struct {
 	_ struct{} `type:"structure"`
 
+	// The Amazon Web Services location of the device.
+	AWSLocation *AWSLocation `type:"structure"`
+
 	// The date and time that the site was created.
 	CreatedAt *time.Time `type:"timestamp"`
 
@@ -4456,7 +13179,11 @@ type Device struct {
 	GlobalNetworkId *string `type:"string"`
 
 	// The site location.
-	Location *Location `type:"structure"`
+	//
+	// Location is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by Device's
+	// String and GoString methods.
+	Location *Location `type:"structure" sensitive:"true"`
 
 	// The device model.
 	Model *string `type:"string"`
@@ -4480,14 +13207,28 @@ type Device struct {
 	Vendor *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Device) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Device) GoString() string {
 	return s.String()
+}
+
+// SetAWSLocation sets the AWSLocation field's value.
+func (s *Device) SetAWSLocation(v *AWSLocation) *Device {
+	s.AWSLocation = v
+	return s
 }
 
 // SetCreatedAt sets the CreatedAt field's value.
@@ -4568,11 +13309,107 @@ func (s *Device) SetVendor(v string) *Device {
 	return s
 }
 
-type DisassociateCustomerGatewayInput struct {
+type DisassociateConnectPeerInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the Connect peer to disassociate from a device.
+	//
+	// ConnectPeerId is a required field
+	ConnectPeerId *string `location:"uri" locationName:"connectPeerId" type:"string" required:"true"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateConnectPeerInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateConnectPeerInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DisassociateConnectPeerInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DisassociateConnectPeerInput"}
+	if s.ConnectPeerId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectPeerId"))
+	}
+	if s.ConnectPeerId != nil && len(*s.ConnectPeerId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ConnectPeerId", 1))
+	}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetConnectPeerId sets the ConnectPeerId field's value.
+func (s *DisassociateConnectPeerInput) SetConnectPeerId(v string) *DisassociateConnectPeerInput {
+	s.ConnectPeerId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *DisassociateConnectPeerInput) SetGlobalNetworkId(v string) *DisassociateConnectPeerInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+type DisassociateConnectPeerOutput struct {
 	_ struct{} `type:"structure"`
 
-	// The Amazon Resource Name (ARN) of the customer gateway. For more information,
-	// see Resources Defined by Amazon EC2 (https://docs.aws.amazon.com/IAM/latest/UserGuide/list_amazonec2.html#amazonec2-resources-for-iam-policies).
+	// Describes the Connect peer association.
+	ConnectPeerAssociation *ConnectPeerAssociation `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateConnectPeerOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateConnectPeerOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnectPeerAssociation sets the ConnectPeerAssociation field's value.
+func (s *DisassociateConnectPeerOutput) SetConnectPeerAssociation(v *ConnectPeerAssociation) *DisassociateConnectPeerOutput {
+	s.ConnectPeerAssociation = v
+	return s
+}
+
+type DisassociateCustomerGatewayInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The Amazon Resource Name (ARN) of the customer gateway.
 	//
 	// CustomerGatewayArn is a required field
 	CustomerGatewayArn *string `location:"uri" locationName:"customerGatewayArn" type:"string" required:"true"`
@@ -4583,12 +13420,20 @@ type DisassociateCustomerGatewayInput struct {
 	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateCustomerGatewayInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateCustomerGatewayInput) GoString() string {
 	return s.String()
 }
@@ -4634,12 +13479,20 @@ type DisassociateCustomerGatewayOutput struct {
 	CustomerGatewayAssociation *CustomerGatewayAssociation `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateCustomerGatewayOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateCustomerGatewayOutput) GoString() string {
 	return s.String()
 }
@@ -4651,7 +13504,7 @@ func (s *DisassociateCustomerGatewayOutput) SetCustomerGatewayAssociation(v *Cus
 }
 
 type DisassociateLinkInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ID of the device.
 	//
@@ -4669,12 +13522,20 @@ type DisassociateLinkInput struct {
 	LinkId *string `location:"querystring" locationName:"linkId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateLinkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateLinkInput) GoString() string {
 	return s.String()
 }
@@ -4726,12 +13587,20 @@ type DisassociateLinkOutput struct {
 	LinkAssociation *LinkAssociation `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateLinkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateLinkOutput) GoString() string {
 	return s.String()
 }
@@ -4742,12 +13611,902 @@ func (s *DisassociateLinkOutput) SetLinkAssociation(v *LinkAssociation) *Disasso
 	return s
 }
 
-type GetCustomerGatewayAssociationsInput struct {
+type DisassociateTransitGatewayConnectPeerInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The Amazon Resource Name (ARN) of the transit gateway Connect peer.
+	//
+	// TransitGatewayConnectPeerArn is a required field
+	TransitGatewayConnectPeerArn *string `location:"uri" locationName:"transitGatewayConnectPeerArn" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateTransitGatewayConnectPeerInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateTransitGatewayConnectPeerInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DisassociateTransitGatewayConnectPeerInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DisassociateTransitGatewayConnectPeerInput"}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.TransitGatewayConnectPeerArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("TransitGatewayConnectPeerArn"))
+	}
+	if s.TransitGatewayConnectPeerArn != nil && len(*s.TransitGatewayConnectPeerArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TransitGatewayConnectPeerArn", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *DisassociateTransitGatewayConnectPeerInput) SetGlobalNetworkId(v string) *DisassociateTransitGatewayConnectPeerInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetTransitGatewayConnectPeerArn sets the TransitGatewayConnectPeerArn field's value.
+func (s *DisassociateTransitGatewayConnectPeerInput) SetTransitGatewayConnectPeerArn(v string) *DisassociateTransitGatewayConnectPeerInput {
+	s.TransitGatewayConnectPeerArn = &v
+	return s
+}
+
+type DisassociateTransitGatewayConnectPeerOutput struct {
 	_ struct{} `type:"structure"`
 
-	// One or more customer gateway Amazon Resource Names (ARNs). For more information,
-	// see Resources Defined by Amazon EC2 (https://docs.aws.amazon.com/IAM/latest/UserGuide/list_amazonec2.html#amazonec2-resources-for-iam-policies).
-	// The maximum is 10.
+	// The transit gateway Connect peer association.
+	TransitGatewayConnectPeerAssociation *TransitGatewayConnectPeerAssociation `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateTransitGatewayConnectPeerOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateTransitGatewayConnectPeerOutput) GoString() string {
+	return s.String()
+}
+
+// SetTransitGatewayConnectPeerAssociation sets the TransitGatewayConnectPeerAssociation field's value.
+func (s *DisassociateTransitGatewayConnectPeerOutput) SetTransitGatewayConnectPeerAssociation(v *TransitGatewayConnectPeerAssociation) *DisassociateTransitGatewayConnectPeerOutput {
+	s.TransitGatewayConnectPeerAssociation = v
+	return s
+}
+
+type ExecuteCoreNetworkChangeSetInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of a core network.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `location:"uri" locationName:"coreNetworkId" type:"string" required:"true"`
+
+	// The ID of the policy version.
+	//
+	// PolicyVersionId is a required field
+	PolicyVersionId *int64 `location:"uri" locationName:"policyVersionId" type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExecuteCoreNetworkChangeSetInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExecuteCoreNetworkChangeSetInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ExecuteCoreNetworkChangeSetInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ExecuteCoreNetworkChangeSetInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.CoreNetworkId != nil && len(*s.CoreNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CoreNetworkId", 1))
+	}
+	if s.PolicyVersionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PolicyVersionId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *ExecuteCoreNetworkChangeSetInput) SetCoreNetworkId(v string) *ExecuteCoreNetworkChangeSetInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetPolicyVersionId sets the PolicyVersionId field's value.
+func (s *ExecuteCoreNetworkChangeSetInput) SetPolicyVersionId(v int64) *ExecuteCoreNetworkChangeSetInput {
+	s.PolicyVersionId = &v
+	return s
+}
+
+type ExecuteCoreNetworkChangeSetOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExecuteCoreNetworkChangeSetOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExecuteCoreNetworkChangeSetOutput) GoString() string {
+	return s.String()
+}
+
+type GetConnectAttachmentInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the attachment.
+	//
+	// AttachmentId is a required field
+	AttachmentId *string `location:"uri" locationName:"attachmentId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectAttachmentInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectAttachmentInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetConnectAttachmentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetConnectAttachmentInput"}
+	if s.AttachmentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("AttachmentId"))
+	}
+	if s.AttachmentId != nil && len(*s.AttachmentId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AttachmentId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAttachmentId sets the AttachmentId field's value.
+func (s *GetConnectAttachmentInput) SetAttachmentId(v string) *GetConnectAttachmentInput {
+	s.AttachmentId = &v
+	return s
+}
+
+type GetConnectAttachmentOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Details about the Connect attachment.
+	ConnectAttachment *ConnectAttachment `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectAttachmentOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectAttachmentOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnectAttachment sets the ConnectAttachment field's value.
+func (s *GetConnectAttachmentOutput) SetConnectAttachment(v *ConnectAttachment) *GetConnectAttachmentOutput {
+	s.ConnectAttachment = v
+	return s
+}
+
+type GetConnectPeerAssociationsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The IDs of the Connect peers.
+	ConnectPeerIds []*string `location:"querystring" locationName:"connectPeerIds" type:"list"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectPeerAssociationsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectPeerAssociationsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetConnectPeerAssociationsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetConnectPeerAssociationsInput"}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetConnectPeerIds sets the ConnectPeerIds field's value.
+func (s *GetConnectPeerAssociationsInput) SetConnectPeerIds(v []*string) *GetConnectPeerAssociationsInput {
+	s.ConnectPeerIds = v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *GetConnectPeerAssociationsInput) SetGlobalNetworkId(v string) *GetConnectPeerAssociationsInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *GetConnectPeerAssociationsInput) SetMaxResults(v int64) *GetConnectPeerAssociationsInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetConnectPeerAssociationsInput) SetNextToken(v string) *GetConnectPeerAssociationsInput {
+	s.NextToken = &v
+	return s
+}
+
+type GetConnectPeerAssociationsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Displays a list of Connect peer associations.
+	ConnectPeerAssociations []*ConnectPeerAssociation `type:"list"`
+
+	// The token for the next page of results.
+	NextToken *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectPeerAssociationsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectPeerAssociationsOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnectPeerAssociations sets the ConnectPeerAssociations field's value.
+func (s *GetConnectPeerAssociationsOutput) SetConnectPeerAssociations(v []*ConnectPeerAssociation) *GetConnectPeerAssociationsOutput {
+	s.ConnectPeerAssociations = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetConnectPeerAssociationsOutput) SetNextToken(v string) *GetConnectPeerAssociationsOutput {
+	s.NextToken = &v
+	return s
+}
+
+type GetConnectPeerInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the Connect peer.
+	//
+	// ConnectPeerId is a required field
+	ConnectPeerId *string `location:"uri" locationName:"connectPeerId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectPeerInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectPeerInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetConnectPeerInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetConnectPeerInput"}
+	if s.ConnectPeerId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectPeerId"))
+	}
+	if s.ConnectPeerId != nil && len(*s.ConnectPeerId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ConnectPeerId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetConnectPeerId sets the ConnectPeerId field's value.
+func (s *GetConnectPeerInput) SetConnectPeerId(v string) *GetConnectPeerInput {
+	s.ConnectPeerId = &v
+	return s
+}
+
+type GetConnectPeerOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Returns information about a core network Connect peer.
+	ConnectPeer *ConnectPeer `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectPeerOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectPeerOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnectPeer sets the ConnectPeer field's value.
+func (s *GetConnectPeerOutput) SetConnectPeer(v *ConnectPeer) *GetConnectPeerOutput {
+	s.ConnectPeer = v
+	return s
+}
+
+type GetConnectionsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// One or more connection IDs.
+	ConnectionIds []*string `location:"querystring" locationName:"connectionIds" type:"list"`
+
+	// The ID of the device.
+	DeviceId *string `location:"querystring" locationName:"deviceId" type:"string"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectionsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectionsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetConnectionsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetConnectionsInput"}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetConnectionIds sets the ConnectionIds field's value.
+func (s *GetConnectionsInput) SetConnectionIds(v []*string) *GetConnectionsInput {
+	s.ConnectionIds = v
+	return s
+}
+
+// SetDeviceId sets the DeviceId field's value.
+func (s *GetConnectionsInput) SetDeviceId(v string) *GetConnectionsInput {
+	s.DeviceId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *GetConnectionsInput) SetGlobalNetworkId(v string) *GetConnectionsInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *GetConnectionsInput) SetMaxResults(v int64) *GetConnectionsInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetConnectionsInput) SetNextToken(v string) *GetConnectionsInput {
+	s.NextToken = &v
+	return s
+}
+
+type GetConnectionsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Information about the connections.
+	Connections []*Connection `type:"list"`
+
+	// The token to use for the next page of results.
+	NextToken *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectionsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetConnectionsOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnections sets the Connections field's value.
+func (s *GetConnectionsOutput) SetConnections(v []*Connection) *GetConnectionsOutput {
+	s.Connections = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetConnectionsOutput) SetNextToken(v string) *GetConnectionsOutput {
+	s.NextToken = &v
+	return s
+}
+
+type GetCoreNetworkChangeSetInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of a core network.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `location:"uri" locationName:"coreNetworkId" type:"string" required:"true"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+
+	// The ID of the policy version.
+	//
+	// PolicyVersionId is a required field
+	PolicyVersionId *int64 `location:"uri" locationName:"policyVersionId" type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkChangeSetInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkChangeSetInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetCoreNetworkChangeSetInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetCoreNetworkChangeSetInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.CoreNetworkId != nil && len(*s.CoreNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CoreNetworkId", 1))
+	}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+	if s.PolicyVersionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PolicyVersionId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *GetCoreNetworkChangeSetInput) SetCoreNetworkId(v string) *GetCoreNetworkChangeSetInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *GetCoreNetworkChangeSetInput) SetMaxResults(v int64) *GetCoreNetworkChangeSetInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetCoreNetworkChangeSetInput) SetNextToken(v string) *GetCoreNetworkChangeSetInput {
+	s.NextToken = &v
+	return s
+}
+
+// SetPolicyVersionId sets the PolicyVersionId field's value.
+func (s *GetCoreNetworkChangeSetInput) SetPolicyVersionId(v int64) *GetCoreNetworkChangeSetInput {
+	s.PolicyVersionId = &v
+	return s
+}
+
+type GetCoreNetworkChangeSetOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Describes a core network changes.
+	CoreNetworkChanges []*CoreNetworkChange `type:"list"`
+
+	// The token for the next page of results.
+	NextToken *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkChangeSetOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkChangeSetOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworkChanges sets the CoreNetworkChanges field's value.
+func (s *GetCoreNetworkChangeSetOutput) SetCoreNetworkChanges(v []*CoreNetworkChange) *GetCoreNetworkChangeSetOutput {
+	s.CoreNetworkChanges = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetCoreNetworkChangeSetOutput) SetNextToken(v string) *GetCoreNetworkChangeSetOutput {
+	s.NextToken = &v
+	return s
+}
+
+type GetCoreNetworkInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of a core network.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `location:"uri" locationName:"coreNetworkId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetCoreNetworkInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetCoreNetworkInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.CoreNetworkId != nil && len(*s.CoreNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CoreNetworkId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *GetCoreNetworkInput) SetCoreNetworkId(v string) *GetCoreNetworkInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+type GetCoreNetworkOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Details about a core network.
+	CoreNetwork *CoreNetwork `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetwork sets the CoreNetwork field's value.
+func (s *GetCoreNetworkOutput) SetCoreNetwork(v *CoreNetwork) *GetCoreNetworkOutput {
+	s.CoreNetwork = v
+	return s
+}
+
+type GetCoreNetworkPolicyInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The alias of a core network policy
+	Alias *string `location:"querystring" locationName:"alias" type:"string" enum:"CoreNetworkPolicyAlias"`
+
+	// The ID of a core network.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `location:"uri" locationName:"coreNetworkId" type:"string" required:"true"`
+
+	// The ID of a core network policy version.
+	PolicyVersionId *int64 `location:"querystring" locationName:"policyVersionId" type:"integer"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkPolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkPolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetCoreNetworkPolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetCoreNetworkPolicyInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.CoreNetworkId != nil && len(*s.CoreNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CoreNetworkId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAlias sets the Alias field's value.
+func (s *GetCoreNetworkPolicyInput) SetAlias(v string) *GetCoreNetworkPolicyInput {
+	s.Alias = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *GetCoreNetworkPolicyInput) SetCoreNetworkId(v string) *GetCoreNetworkPolicyInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetPolicyVersionId sets the PolicyVersionId field's value.
+func (s *GetCoreNetworkPolicyInput) SetPolicyVersionId(v int64) *GetCoreNetworkPolicyInput {
+	s.PolicyVersionId = &v
+	return s
+}
+
+type GetCoreNetworkPolicyOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The details about a core network policy.
+	CoreNetworkPolicy *CoreNetworkPolicy `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkPolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetCoreNetworkPolicyOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworkPolicy sets the CoreNetworkPolicy field's value.
+func (s *GetCoreNetworkPolicyOutput) SetCoreNetworkPolicy(v *CoreNetworkPolicy) *GetCoreNetworkPolicyOutput {
+	s.CoreNetworkPolicy = v
+	return s
+}
+
+type GetCustomerGatewayAssociationsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// One or more customer gateway Amazon Resource Names (ARNs). The maximum is
+	// 10.
 	CustomerGatewayArns []*string `location:"querystring" locationName:"customerGatewayArns" type:"list"`
 
 	// The ID of the global network.
@@ -4762,12 +14521,20 @@ type GetCustomerGatewayAssociationsInput struct {
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCustomerGatewayAssociationsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCustomerGatewayAssociationsInput) GoString() string {
 	return s.String()
 }
@@ -4825,12 +14592,20 @@ type GetCustomerGatewayAssociationsOutput struct {
 	NextToken *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCustomerGatewayAssociationsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCustomerGatewayAssociationsOutput) GoString() string {
 	return s.String()
 }
@@ -4848,7 +14623,7 @@ func (s *GetCustomerGatewayAssociationsOutput) SetNextToken(v string) *GetCustom
 }
 
 type GetDevicesInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// One or more device IDs. The maximum is 10.
 	DeviceIds []*string `location:"querystring" locationName:"deviceIds" type:"list"`
@@ -4868,12 +14643,20 @@ type GetDevicesInput struct {
 	SiteId *string `location:"querystring" locationName:"siteId" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDevicesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDevicesInput) GoString() string {
 	return s.String()
 }
@@ -4937,12 +14720,20 @@ type GetDevicesOutput struct {
 	NextToken *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDevicesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDevicesOutput) GoString() string {
 	return s.String()
 }
@@ -4960,7 +14751,7 @@ func (s *GetDevicesOutput) SetNextToken(v string) *GetDevicesOutput {
 }
 
 type GetLinkAssociationsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ID of the device.
 	DeviceId *string `location:"querystring" locationName:"deviceId" type:"string"`
@@ -4980,12 +14771,20 @@ type GetLinkAssociationsInput struct {
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetLinkAssociationsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetLinkAssociationsInput) GoString() string {
 	return s.String()
 }
@@ -5049,12 +14848,20 @@ type GetLinkAssociationsOutput struct {
 	NextToken *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetLinkAssociationsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetLinkAssociationsOutput) GoString() string {
 	return s.String()
 }
@@ -5072,7 +14879,7 @@ func (s *GetLinkAssociationsOutput) SetNextToken(v string) *GetLinkAssociationsO
 }
 
 type GetLinksInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ID of the global network.
 	//
@@ -5098,12 +14905,20 @@ type GetLinksInput struct {
 	Type *string `location:"querystring" locationName:"type" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetLinksInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetLinksInput) GoString() string {
 	return s.String()
 }
@@ -5179,12 +14994,20 @@ type GetLinksOutput struct {
 	NextToken *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetLinksOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetLinksOutput) GoString() string {
 	return s.String()
 }
@@ -5201,8 +15024,1234 @@ func (s *GetLinksOutput) SetNextToken(v string) *GetLinksOutput {
 	return s
 }
 
-type GetSitesInput struct {
+type GetNetworkResourceCountsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+
+	// The resource type.
+	//
+	// The following are the supported resource types for Direct Connect:
+	//
+	//    * dxcon
+	//
+	//    * dx-gateway
+	//
+	//    * dx-vif
+	//
+	// The following are the supported resource types for Network Manager:
+	//
+	//    * connection
+	//
+	//    * device
+	//
+	//    * link
+	//
+	//    * site
+	//
+	// The following are the supported resource types for Amazon VPC:
+	//
+	//    * customer-gateway
+	//
+	//    * transit-gateway
+	//
+	//    * transit-gateway-attachment
+	//
+	//    * transit-gateway-connect-peer
+	//
+	//    * transit-gateway-route-table
+	//
+	//    * vpn-connection
+	ResourceType *string `location:"querystring" locationName:"resourceType" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourceCountsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourceCountsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetNetworkResourceCountsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetNetworkResourceCountsInput"}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *GetNetworkResourceCountsInput) SetGlobalNetworkId(v string) *GetNetworkResourceCountsInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *GetNetworkResourceCountsInput) SetMaxResults(v int64) *GetNetworkResourceCountsInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetNetworkResourceCountsInput) SetNextToken(v string) *GetNetworkResourceCountsInput {
+	s.NextToken = &v
+	return s
+}
+
+// SetResourceType sets the ResourceType field's value.
+func (s *GetNetworkResourceCountsInput) SetResourceType(v string) *GetNetworkResourceCountsInput {
+	s.ResourceType = &v
+	return s
+}
+
+type GetNetworkResourceCountsOutput struct {
 	_ struct{} `type:"structure"`
+
+	// The count of resources.
+	NetworkResourceCounts []*NetworkResourceCount `type:"list"`
+
+	// The token for the next page of results.
+	NextToken *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourceCountsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourceCountsOutput) GoString() string {
+	return s.String()
+}
+
+// SetNetworkResourceCounts sets the NetworkResourceCounts field's value.
+func (s *GetNetworkResourceCountsOutput) SetNetworkResourceCounts(v []*NetworkResourceCount) *GetNetworkResourceCountsOutput {
+	s.NetworkResourceCounts = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetNetworkResourceCountsOutput) SetNextToken(v string) *GetNetworkResourceCountsOutput {
+	s.NextToken = &v
+	return s
+}
+
+type GetNetworkResourceRelationshipsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The Amazon Web Services account ID.
+	AccountId *string `location:"querystring" locationName:"accountId" min:"12" type:"string"`
+
+	// The Amazon Web Services Region.
+	AwsRegion *string `location:"querystring" locationName:"awsRegion" min:"1" type:"string"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `location:"querystring" locationName:"coreNetworkId" type:"string"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+
+	// The ARN of the registered gateway.
+	RegisteredGatewayArn *string `location:"querystring" locationName:"registeredGatewayArn" type:"string"`
+
+	// The ARN of the gateway.
+	ResourceArn *string `location:"querystring" locationName:"resourceArn" type:"string"`
+
+	// The resource type.
+	//
+	// The following are the supported resource types for Direct Connect:
+	//
+	//    * dxcon
+	//
+	//    * dx-gateway
+	//
+	//    * dx-vif
+	//
+	// The following are the supported resource types for Network Manager:
+	//
+	//    * connection
+	//
+	//    * device
+	//
+	//    * link
+	//
+	//    * site
+	//
+	// The following are the supported resource types for Amazon VPC:
+	//
+	//    * customer-gateway
+	//
+	//    * transit-gateway
+	//
+	//    * transit-gateway-attachment
+	//
+	//    * transit-gateway-connect-peer
+	//
+	//    * transit-gateway-route-table
+	//
+	//    * vpn-connection
+	ResourceType *string `location:"querystring" locationName:"resourceType" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourceRelationshipsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourceRelationshipsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetNetworkResourceRelationshipsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetNetworkResourceRelationshipsInput"}
+	if s.AccountId != nil && len(*s.AccountId) < 12 {
+		invalidParams.Add(request.NewErrParamMinLen("AccountId", 12))
+	}
+	if s.AwsRegion != nil && len(*s.AwsRegion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AwsRegion", 1))
+	}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAccountId sets the AccountId field's value.
+func (s *GetNetworkResourceRelationshipsInput) SetAccountId(v string) *GetNetworkResourceRelationshipsInput {
+	s.AccountId = &v
+	return s
+}
+
+// SetAwsRegion sets the AwsRegion field's value.
+func (s *GetNetworkResourceRelationshipsInput) SetAwsRegion(v string) *GetNetworkResourceRelationshipsInput {
+	s.AwsRegion = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *GetNetworkResourceRelationshipsInput) SetCoreNetworkId(v string) *GetNetworkResourceRelationshipsInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *GetNetworkResourceRelationshipsInput) SetGlobalNetworkId(v string) *GetNetworkResourceRelationshipsInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *GetNetworkResourceRelationshipsInput) SetMaxResults(v int64) *GetNetworkResourceRelationshipsInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetNetworkResourceRelationshipsInput) SetNextToken(v string) *GetNetworkResourceRelationshipsInput {
+	s.NextToken = &v
+	return s
+}
+
+// SetRegisteredGatewayArn sets the RegisteredGatewayArn field's value.
+func (s *GetNetworkResourceRelationshipsInput) SetRegisteredGatewayArn(v string) *GetNetworkResourceRelationshipsInput {
+	s.RegisteredGatewayArn = &v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *GetNetworkResourceRelationshipsInput) SetResourceArn(v string) *GetNetworkResourceRelationshipsInput {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetResourceType sets the ResourceType field's value.
+func (s *GetNetworkResourceRelationshipsInput) SetResourceType(v string) *GetNetworkResourceRelationshipsInput {
+	s.ResourceType = &v
+	return s
+}
+
+type GetNetworkResourceRelationshipsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The token for the next page of results.
+	NextToken *string `type:"string"`
+
+	// The resource relationships.
+	Relationships []*Relationship `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourceRelationshipsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourceRelationshipsOutput) GoString() string {
+	return s.String()
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetNetworkResourceRelationshipsOutput) SetNextToken(v string) *GetNetworkResourceRelationshipsOutput {
+	s.NextToken = &v
+	return s
+}
+
+// SetRelationships sets the Relationships field's value.
+func (s *GetNetworkResourceRelationshipsOutput) SetRelationships(v []*Relationship) *GetNetworkResourceRelationshipsOutput {
+	s.Relationships = v
+	return s
+}
+
+type GetNetworkResourcesInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The Amazon Web Services account ID.
+	AccountId *string `location:"querystring" locationName:"accountId" min:"12" type:"string"`
+
+	// The Amazon Web Services Region.
+	AwsRegion *string `location:"querystring" locationName:"awsRegion" min:"1" type:"string"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `location:"querystring" locationName:"coreNetworkId" type:"string"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+
+	// The ARN of the gateway.
+	RegisteredGatewayArn *string `location:"querystring" locationName:"registeredGatewayArn" type:"string"`
+
+	// The ARN of the resource.
+	ResourceArn *string `location:"querystring" locationName:"resourceArn" type:"string"`
+
+	// The resource type.
+	//
+	// The following are the supported resource types for Direct Connect:
+	//
+	//    * dxcon - The definition model is Connection (https://docs.aws.amazon.com/directconnect/latest/APIReference/API_Connection.html).
+	//
+	//    * dx-gateway - The definition model is DirectConnectGateway (https://docs.aws.amazon.com/directconnect/latest/APIReference/API_DirectConnectGateway.html).
+	//
+	//    * dx-vif - The definition model is VirtualInterface (https://docs.aws.amazon.com/directconnect/latest/APIReference/API_VirtualInterface.html).
+	//
+	// The following are the supported resource types for Network Manager:
+	//
+	//    * connection - The definition model is Connection (https://docs.aws.amazon.com/networkmanager/latest/APIReference/API_Connection.html).
+	//
+	//    * device - The definition model is Device (https://docs.aws.amazon.com/networkmanager/latest/APIReference/API_Device.html).
+	//
+	//    * link - The definition model is Link (https://docs.aws.amazon.com/networkmanager/latest/APIReference/API_Link.html).
+	//
+	//    * site - The definition model is Site (https://docs.aws.amazon.com/networkmanager/latest/APIReference/API_Site.html).
+	//
+	// The following are the supported resource types for Amazon VPC:
+	//
+	//    * customer-gateway - The definition model is CustomerGateway (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_CustomerGateway.html).
+	//
+	//    * transit-gateway - The definition model is TransitGateway (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_TransitGateway.html).
+	//
+	//    * transit-gateway-attachment - The definition model is TransitGatewayAttachment
+	//    (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_TransitGatewayAttachment.html).
+	//
+	//    * transit-gateway-connect-peer - The definition model is TransitGatewayConnectPeer
+	//    (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_TransitGatewayConnectPeer.html).
+	//
+	//    * transit-gateway-route-table - The definition model is TransitGatewayRouteTable
+	//    (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_TransitGatewayRouteTable.html).
+	//
+	//    * vpn-connection - The definition model is VpnConnection (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_VpnConnection.html).
+	ResourceType *string `location:"querystring" locationName:"resourceType" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourcesInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourcesInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetNetworkResourcesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetNetworkResourcesInput"}
+	if s.AccountId != nil && len(*s.AccountId) < 12 {
+		invalidParams.Add(request.NewErrParamMinLen("AccountId", 12))
+	}
+	if s.AwsRegion != nil && len(*s.AwsRegion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AwsRegion", 1))
+	}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAccountId sets the AccountId field's value.
+func (s *GetNetworkResourcesInput) SetAccountId(v string) *GetNetworkResourcesInput {
+	s.AccountId = &v
+	return s
+}
+
+// SetAwsRegion sets the AwsRegion field's value.
+func (s *GetNetworkResourcesInput) SetAwsRegion(v string) *GetNetworkResourcesInput {
+	s.AwsRegion = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *GetNetworkResourcesInput) SetCoreNetworkId(v string) *GetNetworkResourcesInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *GetNetworkResourcesInput) SetGlobalNetworkId(v string) *GetNetworkResourcesInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *GetNetworkResourcesInput) SetMaxResults(v int64) *GetNetworkResourcesInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetNetworkResourcesInput) SetNextToken(v string) *GetNetworkResourcesInput {
+	s.NextToken = &v
+	return s
+}
+
+// SetRegisteredGatewayArn sets the RegisteredGatewayArn field's value.
+func (s *GetNetworkResourcesInput) SetRegisteredGatewayArn(v string) *GetNetworkResourcesInput {
+	s.RegisteredGatewayArn = &v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *GetNetworkResourcesInput) SetResourceArn(v string) *GetNetworkResourcesInput {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetResourceType sets the ResourceType field's value.
+func (s *GetNetworkResourcesInput) SetResourceType(v string) *GetNetworkResourcesInput {
+	s.ResourceType = &v
+	return s
+}
+
+type GetNetworkResourcesOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The network resources.
+	NetworkResources []*NetworkResource `type:"list"`
+
+	// The token for the next page of results.
+	NextToken *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourcesOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkResourcesOutput) GoString() string {
+	return s.String()
+}
+
+// SetNetworkResources sets the NetworkResources field's value.
+func (s *GetNetworkResourcesOutput) SetNetworkResources(v []*NetworkResource) *GetNetworkResourcesOutput {
+	s.NetworkResources = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetNetworkResourcesOutput) SetNextToken(v string) *GetNetworkResourcesOutput {
+	s.NextToken = &v
+	return s
+}
+
+type GetNetworkRoutesInput struct {
+	_ struct{} `type:"structure"`
+
+	// Filter by route table destination. Possible Values: TRANSIT_GATEWAY_ATTACHMENT_ID,
+	// RESOURCE_ID, or RESOURCE_TYPE.
+	DestinationFilters map[string][]*string `type:"map"`
+
+	// An exact CIDR block.
+	ExactCidrMatches []*string `type:"list"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The most specific route that matches the traffic (longest prefix match).
+	LongestPrefixMatches []*string `type:"list"`
+
+	// The IDs of the prefix lists.
+	PrefixListIds []*string `type:"list"`
+
+	// The ID of the route table.
+	//
+	// RouteTableIdentifier is a required field
+	RouteTableIdentifier *RouteTableIdentifier `type:"structure" required:"true"`
+
+	// The route states.
+	States []*string `type:"list"`
+
+	// The routes with a subnet that match the specified CIDR filter.
+	SubnetOfMatches []*string `type:"list"`
+
+	// The routes with a CIDR that encompasses the CIDR filter. Example: If you
+	// specify 10.0.1.0/30, then the result returns 10.0.1.0/29.
+	SupernetOfMatches []*string `type:"list"`
+
+	// The route types.
+	Types []*string `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkRoutesInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkRoutesInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetNetworkRoutesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetNetworkRoutesInput"}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.RouteTableIdentifier == nil {
+		invalidParams.Add(request.NewErrParamRequired("RouteTableIdentifier"))
+	}
+	if s.RouteTableIdentifier != nil {
+		if err := s.RouteTableIdentifier.Validate(); err != nil {
+			invalidParams.AddNested("RouteTableIdentifier", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDestinationFilters sets the DestinationFilters field's value.
+func (s *GetNetworkRoutesInput) SetDestinationFilters(v map[string][]*string) *GetNetworkRoutesInput {
+	s.DestinationFilters = v
+	return s
+}
+
+// SetExactCidrMatches sets the ExactCidrMatches field's value.
+func (s *GetNetworkRoutesInput) SetExactCidrMatches(v []*string) *GetNetworkRoutesInput {
+	s.ExactCidrMatches = v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *GetNetworkRoutesInput) SetGlobalNetworkId(v string) *GetNetworkRoutesInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetLongestPrefixMatches sets the LongestPrefixMatches field's value.
+func (s *GetNetworkRoutesInput) SetLongestPrefixMatches(v []*string) *GetNetworkRoutesInput {
+	s.LongestPrefixMatches = v
+	return s
+}
+
+// SetPrefixListIds sets the PrefixListIds field's value.
+func (s *GetNetworkRoutesInput) SetPrefixListIds(v []*string) *GetNetworkRoutesInput {
+	s.PrefixListIds = v
+	return s
+}
+
+// SetRouteTableIdentifier sets the RouteTableIdentifier field's value.
+func (s *GetNetworkRoutesInput) SetRouteTableIdentifier(v *RouteTableIdentifier) *GetNetworkRoutesInput {
+	s.RouteTableIdentifier = v
+	return s
+}
+
+// SetStates sets the States field's value.
+func (s *GetNetworkRoutesInput) SetStates(v []*string) *GetNetworkRoutesInput {
+	s.States = v
+	return s
+}
+
+// SetSubnetOfMatches sets the SubnetOfMatches field's value.
+func (s *GetNetworkRoutesInput) SetSubnetOfMatches(v []*string) *GetNetworkRoutesInput {
+	s.SubnetOfMatches = v
+	return s
+}
+
+// SetSupernetOfMatches sets the SupernetOfMatches field's value.
+func (s *GetNetworkRoutesInput) SetSupernetOfMatches(v []*string) *GetNetworkRoutesInput {
+	s.SupernetOfMatches = v
+	return s
+}
+
+// SetTypes sets the Types field's value.
+func (s *GetNetworkRoutesInput) SetTypes(v []*string) *GetNetworkRoutesInput {
+	s.Types = v
+	return s
+}
+
+type GetNetworkRoutesOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Describes a core network segment edge.
+	CoreNetworkSegmentEdge *CoreNetworkSegmentEdgeIdentifier `type:"structure"`
+
+	// The network routes.
+	NetworkRoutes []*NetworkRoute `type:"list"`
+
+	// The ARN of the route table.
+	RouteTableArn *string `type:"string"`
+
+	// The route table creation time.
+	RouteTableTimestamp *time.Time `type:"timestamp"`
+
+	// The route table type.
+	RouteTableType *string `type:"string" enum:"RouteTableType"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkRoutesOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkRoutesOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworkSegmentEdge sets the CoreNetworkSegmentEdge field's value.
+func (s *GetNetworkRoutesOutput) SetCoreNetworkSegmentEdge(v *CoreNetworkSegmentEdgeIdentifier) *GetNetworkRoutesOutput {
+	s.CoreNetworkSegmentEdge = v
+	return s
+}
+
+// SetNetworkRoutes sets the NetworkRoutes field's value.
+func (s *GetNetworkRoutesOutput) SetNetworkRoutes(v []*NetworkRoute) *GetNetworkRoutesOutput {
+	s.NetworkRoutes = v
+	return s
+}
+
+// SetRouteTableArn sets the RouteTableArn field's value.
+func (s *GetNetworkRoutesOutput) SetRouteTableArn(v string) *GetNetworkRoutesOutput {
+	s.RouteTableArn = &v
+	return s
+}
+
+// SetRouteTableTimestamp sets the RouteTableTimestamp field's value.
+func (s *GetNetworkRoutesOutput) SetRouteTableTimestamp(v time.Time) *GetNetworkRoutesOutput {
+	s.RouteTableTimestamp = &v
+	return s
+}
+
+// SetRouteTableType sets the RouteTableType field's value.
+func (s *GetNetworkRoutesOutput) SetRouteTableType(v string) *GetNetworkRoutesOutput {
+	s.RouteTableType = &v
+	return s
+}
+
+type GetNetworkTelemetryInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The Amazon Web Services account ID.
+	AccountId *string `location:"querystring" locationName:"accountId" min:"12" type:"string"`
+
+	// The Amazon Web Services Region.
+	AwsRegion *string `location:"querystring" locationName:"awsRegion" min:"1" type:"string"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `location:"querystring" locationName:"coreNetworkId" type:"string"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+
+	// The ARN of the gateway.
+	RegisteredGatewayArn *string `location:"querystring" locationName:"registeredGatewayArn" type:"string"`
+
+	// The ARN of the resource.
+	ResourceArn *string `location:"querystring" locationName:"resourceArn" type:"string"`
+
+	// The resource type.
+	//
+	// The following are the supported resource types for Direct Connect:
+	//
+	//    * dxcon
+	//
+	//    * dx-gateway
+	//
+	//    * dx-vif
+	//
+	// The following are the supported resource types for Network Manager:
+	//
+	//    * connection
+	//
+	//    * device
+	//
+	//    * link
+	//
+	//    * site
+	//
+	// The following are the supported resource types for Amazon VPC:
+	//
+	//    * customer-gateway
+	//
+	//    * transit-gateway
+	//
+	//    * transit-gateway-attachment
+	//
+	//    * transit-gateway-connect-peer
+	//
+	//    * transit-gateway-route-table
+	//
+	//    * vpn-connection
+	ResourceType *string `location:"querystring" locationName:"resourceType" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkTelemetryInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkTelemetryInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetNetworkTelemetryInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetNetworkTelemetryInput"}
+	if s.AccountId != nil && len(*s.AccountId) < 12 {
+		invalidParams.Add(request.NewErrParamMinLen("AccountId", 12))
+	}
+	if s.AwsRegion != nil && len(*s.AwsRegion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AwsRegion", 1))
+	}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAccountId sets the AccountId field's value.
+func (s *GetNetworkTelemetryInput) SetAccountId(v string) *GetNetworkTelemetryInput {
+	s.AccountId = &v
+	return s
+}
+
+// SetAwsRegion sets the AwsRegion field's value.
+func (s *GetNetworkTelemetryInput) SetAwsRegion(v string) *GetNetworkTelemetryInput {
+	s.AwsRegion = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *GetNetworkTelemetryInput) SetCoreNetworkId(v string) *GetNetworkTelemetryInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *GetNetworkTelemetryInput) SetGlobalNetworkId(v string) *GetNetworkTelemetryInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *GetNetworkTelemetryInput) SetMaxResults(v int64) *GetNetworkTelemetryInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetNetworkTelemetryInput) SetNextToken(v string) *GetNetworkTelemetryInput {
+	s.NextToken = &v
+	return s
+}
+
+// SetRegisteredGatewayArn sets the RegisteredGatewayArn field's value.
+func (s *GetNetworkTelemetryInput) SetRegisteredGatewayArn(v string) *GetNetworkTelemetryInput {
+	s.RegisteredGatewayArn = &v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *GetNetworkTelemetryInput) SetResourceArn(v string) *GetNetworkTelemetryInput {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetResourceType sets the ResourceType field's value.
+func (s *GetNetworkTelemetryInput) SetResourceType(v string) *GetNetworkTelemetryInput {
+	s.ResourceType = &v
+	return s
+}
+
+type GetNetworkTelemetryOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The network telemetry.
+	NetworkTelemetry []*NetworkTelemetry `type:"list"`
+
+	// The token for the next page of results.
+	NextToken *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkTelemetryOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetNetworkTelemetryOutput) GoString() string {
+	return s.String()
+}
+
+// SetNetworkTelemetry sets the NetworkTelemetry field's value.
+func (s *GetNetworkTelemetryOutput) SetNetworkTelemetry(v []*NetworkTelemetry) *GetNetworkTelemetryOutput {
+	s.NetworkTelemetry = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetNetworkTelemetryOutput) SetNextToken(v string) *GetNetworkTelemetryOutput {
+	s.NextToken = &v
+	return s
+}
+
+type GetResourcePolicyInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ARN of the resource.
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `location:"uri" locationName:"resourceArn" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResourcePolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResourcePolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetResourcePolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetResourcePolicyInput"}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+	if s.ResourceArn != nil && len(*s.ResourceArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ResourceArn", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *GetResourcePolicyInput) SetResourceArn(v string) *GetResourcePolicyInput {
+	s.ResourceArn = &v
+	return s
+}
+
+type GetResourcePolicyOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The resource policy document.
+	PolicyDocument aws.JSONValue `type:"jsonvalue"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResourcePolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetResourcePolicyOutput) GoString() string {
+	return s.String()
+}
+
+// SetPolicyDocument sets the PolicyDocument field's value.
+func (s *GetResourcePolicyOutput) SetPolicyDocument(v aws.JSONValue) *GetResourcePolicyOutput {
+	s.PolicyDocument = v
+	return s
+}
+
+type GetRouteAnalysisInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The ID of the route analysis.
+	//
+	// RouteAnalysisId is a required field
+	RouteAnalysisId *string `location:"uri" locationName:"routeAnalysisId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRouteAnalysisInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRouteAnalysisInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetRouteAnalysisInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetRouteAnalysisInput"}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.RouteAnalysisId == nil {
+		invalidParams.Add(request.NewErrParamRequired("RouteAnalysisId"))
+	}
+	if s.RouteAnalysisId != nil && len(*s.RouteAnalysisId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RouteAnalysisId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *GetRouteAnalysisInput) SetGlobalNetworkId(v string) *GetRouteAnalysisInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetRouteAnalysisId sets the RouteAnalysisId field's value.
+func (s *GetRouteAnalysisInput) SetRouteAnalysisId(v string) *GetRouteAnalysisInput {
+	s.RouteAnalysisId = &v
+	return s
+}
+
+type GetRouteAnalysisOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The route analysis.
+	RouteAnalysis *RouteAnalysis `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRouteAnalysisOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetRouteAnalysisOutput) GoString() string {
+	return s.String()
+}
+
+// SetRouteAnalysis sets the RouteAnalysis field's value.
+func (s *GetRouteAnalysisOutput) SetRouteAnalysis(v *RouteAnalysis) *GetRouteAnalysisOutput {
+	s.RouteAnalysis = v
+	return s
+}
+
+type GetSiteToSiteVpnAttachmentInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the attachment.
+	//
+	// AttachmentId is a required field
+	AttachmentId *string `location:"uri" locationName:"attachmentId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetSiteToSiteVpnAttachmentInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetSiteToSiteVpnAttachmentInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetSiteToSiteVpnAttachmentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetSiteToSiteVpnAttachmentInput"}
+	if s.AttachmentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("AttachmentId"))
+	}
+	if s.AttachmentId != nil && len(*s.AttachmentId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AttachmentId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAttachmentId sets the AttachmentId field's value.
+func (s *GetSiteToSiteVpnAttachmentInput) SetAttachmentId(v string) *GetSiteToSiteVpnAttachmentInput {
+	s.AttachmentId = &v
+	return s
+}
+
+type GetSiteToSiteVpnAttachmentOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Describes the site-to-site attachment.
+	SiteToSiteVpnAttachment *SiteToSiteVpnAttachment `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetSiteToSiteVpnAttachmentOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetSiteToSiteVpnAttachmentOutput) GoString() string {
+	return s.String()
+}
+
+// SetSiteToSiteVpnAttachment sets the SiteToSiteVpnAttachment field's value.
+func (s *GetSiteToSiteVpnAttachmentOutput) SetSiteToSiteVpnAttachment(v *SiteToSiteVpnAttachment) *GetSiteToSiteVpnAttachmentOutput {
+	s.SiteToSiteVpnAttachment = v
+	return s
+}
+
+type GetSitesInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ID of the global network.
 	//
@@ -5219,12 +16268,20 @@ type GetSitesInput struct {
 	SiteIds []*string `location:"querystring" locationName:"siteIds" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSitesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSitesInput) GoString() string {
 	return s.String()
 }
@@ -5282,12 +16339,20 @@ type GetSitesOutput struct {
 	Sites []*Site `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSitesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSitesOutput) GoString() string {
 	return s.String()
 }
@@ -5304,8 +16369,127 @@ func (s *GetSitesOutput) SetSites(v []*Site) *GetSitesOutput {
 	return s
 }
 
-type GetTransitGatewayRegistrationsInput struct {
+type GetTransitGatewayConnectPeerAssociationsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+
+	// One or more transit gateway Connect peer Amazon Resource Names (ARNs).
+	TransitGatewayConnectPeerArns []*string `location:"querystring" locationName:"transitGatewayConnectPeerArns" type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetTransitGatewayConnectPeerAssociationsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetTransitGatewayConnectPeerAssociationsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetTransitGatewayConnectPeerAssociationsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetTransitGatewayConnectPeerAssociationsInput"}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *GetTransitGatewayConnectPeerAssociationsInput) SetGlobalNetworkId(v string) *GetTransitGatewayConnectPeerAssociationsInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *GetTransitGatewayConnectPeerAssociationsInput) SetMaxResults(v int64) *GetTransitGatewayConnectPeerAssociationsInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetTransitGatewayConnectPeerAssociationsInput) SetNextToken(v string) *GetTransitGatewayConnectPeerAssociationsInput {
+	s.NextToken = &v
+	return s
+}
+
+// SetTransitGatewayConnectPeerArns sets the TransitGatewayConnectPeerArns field's value.
+func (s *GetTransitGatewayConnectPeerAssociationsInput) SetTransitGatewayConnectPeerArns(v []*string) *GetTransitGatewayConnectPeerAssociationsInput {
+	s.TransitGatewayConnectPeerArns = v
+	return s
+}
+
+type GetTransitGatewayConnectPeerAssociationsOutput struct {
 	_ struct{} `type:"structure"`
+
+	// The token to use for the next page of results.
+	NextToken *string `type:"string"`
+
+	// Information about the transit gateway Connect peer associations.
+	TransitGatewayConnectPeerAssociations []*TransitGatewayConnectPeerAssociation `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetTransitGatewayConnectPeerAssociationsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetTransitGatewayConnectPeerAssociationsOutput) GoString() string {
+	return s.String()
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *GetTransitGatewayConnectPeerAssociationsOutput) SetNextToken(v string) *GetTransitGatewayConnectPeerAssociationsOutput {
+	s.NextToken = &v
+	return s
+}
+
+// SetTransitGatewayConnectPeerAssociations sets the TransitGatewayConnectPeerAssociations field's value.
+func (s *GetTransitGatewayConnectPeerAssociationsOutput) SetTransitGatewayConnectPeerAssociations(v []*TransitGatewayConnectPeerAssociation) *GetTransitGatewayConnectPeerAssociationsOutput {
+	s.TransitGatewayConnectPeerAssociations = v
+	return s
+}
+
+type GetTransitGatewayRegistrationsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ID of the global network.
 	//
@@ -5323,12 +16507,20 @@ type GetTransitGatewayRegistrationsInput struct {
 	TransitGatewayArns []*string `location:"querystring" locationName:"transitGatewayArns" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetTransitGatewayRegistrationsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetTransitGatewayRegistrationsInput) GoString() string {
 	return s.String()
 }
@@ -5386,12 +16578,20 @@ type GetTransitGatewayRegistrationsOutput struct {
 	TransitGatewayRegistrations []*TransitGatewayRegistration `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetTransitGatewayRegistrationsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetTransitGatewayRegistrationsOutput) GoString() string {
 	return s.String()
 }
@@ -5408,7 +16608,89 @@ func (s *GetTransitGatewayRegistrationsOutput) SetTransitGatewayRegistrations(v 
 	return s
 }
 
-// Describes a global network.
+type GetVpcAttachmentInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the attachment.
+	//
+	// AttachmentId is a required field
+	AttachmentId *string `location:"uri" locationName:"attachmentId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetVpcAttachmentInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetVpcAttachmentInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *GetVpcAttachmentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "GetVpcAttachmentInput"}
+	if s.AttachmentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("AttachmentId"))
+	}
+	if s.AttachmentId != nil && len(*s.AttachmentId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AttachmentId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAttachmentId sets the AttachmentId field's value.
+func (s *GetVpcAttachmentInput) SetAttachmentId(v string) *GetVpcAttachmentInput {
+	s.AttachmentId = &v
+	return s
+}
+
+type GetVpcAttachmentOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Returns details about a VPC attachment.
+	VpcAttachment *VpcAttachment `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetVpcAttachmentOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s GetVpcAttachmentOutput) GoString() string {
+	return s.String()
+}
+
+// SetVpcAttachment sets the VpcAttachment field's value.
+func (s *GetVpcAttachmentOutput) SetVpcAttachment(v *VpcAttachment) *GetVpcAttachmentOutput {
+	s.VpcAttachment = v
+	return s
+}
+
+// Describes a global network. This is a single private network acting as a
+// high-level container for your network objects, including an Amazon Web Services-manged
+// Core Network.
 type GlobalNetwork struct {
 	_ struct{} `type:"structure"`
 
@@ -5431,12 +16713,20 @@ type GlobalNetwork struct {
 	Tags []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GlobalNetwork) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GlobalNetwork) GoString() string {
 	return s.String()
 }
@@ -5488,12 +16778,20 @@ type InternalServerException struct {
 	RetryAfterSeconds *int64 `location:"header" locationName:"Retry-After" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalServerException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalServerException) GoString() string {
 	return s.String()
 }
@@ -5574,12 +16872,20 @@ type Link struct {
 	Type *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Link) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Link) GoString() string {
 	return s.String()
 }
@@ -5667,12 +16973,20 @@ type LinkAssociation struct {
 	LinkId *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LinkAssociation) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LinkAssociation) GoString() string {
 	return s.String()
 }
@@ -5701,8 +17015,454 @@ func (s *LinkAssociation) SetLinkId(v string) *LinkAssociation {
 	return s
 }
 
-type ListTagsForResourceInput struct {
+type ListAttachmentsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The type of attachment.
+	AttachmentType *string `location:"querystring" locationName:"attachmentType" type:"string" enum:"AttachmentType"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `location:"querystring" locationName:"coreNetworkId" type:"string"`
+
+	// The Region where the edge is located.
+	EdgeLocation *string `location:"querystring" locationName:"edgeLocation" min:"1" type:"string"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+
+	// The state of the attachment.
+	State *string `location:"querystring" locationName:"state" type:"string" enum:"AttachmentState"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListAttachmentsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListAttachmentsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListAttachmentsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListAttachmentsInput"}
+	if s.EdgeLocation != nil && len(*s.EdgeLocation) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("EdgeLocation", 1))
+	}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAttachmentType sets the AttachmentType field's value.
+func (s *ListAttachmentsInput) SetAttachmentType(v string) *ListAttachmentsInput {
+	s.AttachmentType = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *ListAttachmentsInput) SetCoreNetworkId(v string) *ListAttachmentsInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetEdgeLocation sets the EdgeLocation field's value.
+func (s *ListAttachmentsInput) SetEdgeLocation(v string) *ListAttachmentsInput {
+	s.EdgeLocation = &v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *ListAttachmentsInput) SetMaxResults(v int64) *ListAttachmentsInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListAttachmentsInput) SetNextToken(v string) *ListAttachmentsInput {
+	s.NextToken = &v
+	return s
+}
+
+// SetState sets the State field's value.
+func (s *ListAttachmentsInput) SetState(v string) *ListAttachmentsInput {
+	s.State = &v
+	return s
+}
+
+type ListAttachmentsOutput struct {
 	_ struct{} `type:"structure"`
+
+	// Describes the list of attachments.
+	Attachments []*Attachment `type:"list"`
+
+	// The token for the next page of results.
+	NextToken *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListAttachmentsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListAttachmentsOutput) GoString() string {
+	return s.String()
+}
+
+// SetAttachments sets the Attachments field's value.
+func (s *ListAttachmentsOutput) SetAttachments(v []*Attachment) *ListAttachmentsOutput {
+	s.Attachments = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListAttachmentsOutput) SetNextToken(v string) *ListAttachmentsOutput {
+	s.NextToken = &v
+	return s
+}
+
+type ListConnectPeersInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the attachment.
+	ConnectAttachmentId *string `location:"querystring" locationName:"connectAttachmentId" type:"string"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `location:"querystring" locationName:"coreNetworkId" type:"string"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListConnectPeersInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListConnectPeersInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListConnectPeersInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListConnectPeersInput"}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetConnectAttachmentId sets the ConnectAttachmentId field's value.
+func (s *ListConnectPeersInput) SetConnectAttachmentId(v string) *ListConnectPeersInput {
+	s.ConnectAttachmentId = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *ListConnectPeersInput) SetCoreNetworkId(v string) *ListConnectPeersInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *ListConnectPeersInput) SetMaxResults(v int64) *ListConnectPeersInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListConnectPeersInput) SetNextToken(v string) *ListConnectPeersInput {
+	s.NextToken = &v
+	return s
+}
+
+type ListConnectPeersOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Describes the Connect peers.
+	ConnectPeers []*ConnectPeerSummary `type:"list"`
+
+	// The token for the next page of results.
+	NextToken *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListConnectPeersOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListConnectPeersOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnectPeers sets the ConnectPeers field's value.
+func (s *ListConnectPeersOutput) SetConnectPeers(v []*ConnectPeerSummary) *ListConnectPeersOutput {
+	s.ConnectPeers = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListConnectPeersOutput) SetNextToken(v string) *ListConnectPeersOutput {
+	s.NextToken = &v
+	return s
+}
+
+type ListCoreNetworkPolicyVersionsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of a core network.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `location:"uri" locationName:"coreNetworkId" type:"string" required:"true"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListCoreNetworkPolicyVersionsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListCoreNetworkPolicyVersionsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListCoreNetworkPolicyVersionsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListCoreNetworkPolicyVersionsInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.CoreNetworkId != nil && len(*s.CoreNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CoreNetworkId", 1))
+	}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *ListCoreNetworkPolicyVersionsInput) SetCoreNetworkId(v string) *ListCoreNetworkPolicyVersionsInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *ListCoreNetworkPolicyVersionsInput) SetMaxResults(v int64) *ListCoreNetworkPolicyVersionsInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListCoreNetworkPolicyVersionsInput) SetNextToken(v string) *ListCoreNetworkPolicyVersionsInput {
+	s.NextToken = &v
+	return s
+}
+
+type ListCoreNetworkPolicyVersionsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Describes core network policy versions.
+	CoreNetworkPolicyVersions []*CoreNetworkPolicyVersion `type:"list"`
+
+	// The token for the next page of results.
+	NextToken *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListCoreNetworkPolicyVersionsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListCoreNetworkPolicyVersionsOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworkPolicyVersions sets the CoreNetworkPolicyVersions field's value.
+func (s *ListCoreNetworkPolicyVersionsOutput) SetCoreNetworkPolicyVersions(v []*CoreNetworkPolicyVersion) *ListCoreNetworkPolicyVersionsOutput {
+	s.CoreNetworkPolicyVersions = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListCoreNetworkPolicyVersionsOutput) SetNextToken(v string) *ListCoreNetworkPolicyVersionsOutput {
+	s.NextToken = &v
+	return s
+}
+
+type ListCoreNetworksInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The maximum number of results to return.
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	// The token for the next page of results.
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListCoreNetworksInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListCoreNetworksInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListCoreNetworksInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListCoreNetworksInput"}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *ListCoreNetworksInput) SetMaxResults(v int64) *ListCoreNetworksInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListCoreNetworksInput) SetNextToken(v string) *ListCoreNetworksInput {
+	s.NextToken = &v
+	return s
+}
+
+type ListCoreNetworksOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Describes the list of core networks.
+	CoreNetworks []*CoreNetworkSummary `type:"list"`
+
+	// The token for the next page of results.
+	NextToken *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListCoreNetworksOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListCoreNetworksOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworks sets the CoreNetworks field's value.
+func (s *ListCoreNetworksOutput) SetCoreNetworks(v []*CoreNetworkSummary) *ListCoreNetworksOutput {
+	s.CoreNetworks = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListCoreNetworksOutput) SetNextToken(v string) *ListCoreNetworksOutput {
+	s.NextToken = &v
+	return s
+}
+
+type ListTagsForResourceInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The Amazon Resource Name (ARN) of the resource.
 	//
@@ -5710,12 +17470,20 @@ type ListTagsForResourceInput struct {
 	ResourceArn *string `location:"uri" locationName:"resourceArn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) GoString() string {
 	return s.String()
 }
@@ -5749,12 +17517,20 @@ type ListTagsForResourceOutput struct {
 	TagList []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) GoString() string {
 	return s.String()
 }
@@ -5767,7 +17543,7 @@ func (s *ListTagsForResourceOutput) SetTagList(v []*Tag) *ListTagsForResourceOut
 
 // Describes a location.
 type Location struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" sensitive:"true"`
 
 	// The physical address.
 	Address *string `type:"string"`
@@ -5779,12 +17555,20 @@ type Location struct {
 	Longitude *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Location) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Location) GoString() string {
 	return s.String()
 }
@@ -5807,6 +17591,836 @@ func (s *Location) SetLongitude(v string) *Location {
 	return s
 }
 
+// Describes a network resource.
+type NetworkResource struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Web Services account ID.
+	AccountId *string `min:"12" type:"string"`
+
+	// The Amazon Web Services Region.
+	AwsRegion *string `min:"1" type:"string"`
+
+	// a core network ID.
+	CoreNetworkId *string `type:"string"`
+
+	// Information about the resource, in JSON format. Network Manager gets this
+	// information by describing the resource using its Describe API call.
+	Definition *string `type:"string"`
+
+	// The time that the resource definition was retrieved.
+	DefinitionTimestamp *time.Time `type:"timestamp"`
+
+	// The resource metadata.
+	Metadata map[string]*string `type:"map"`
+
+	// The ARN of the gateway.
+	RegisteredGatewayArn *string `type:"string"`
+
+	// The ARN of the resource.
+	ResourceArn *string `type:"string"`
+
+	// The ID of the resource.
+	ResourceId *string `type:"string"`
+
+	// The resource type.
+	//
+	// The following are the supported resource types for Direct Connect:
+	//
+	//    * dxcon
+	//
+	//    * dx-gateway
+	//
+	//    * dx-vif
+	//
+	// The following are the supported resource types for Network Manager:
+	//
+	//    * connection
+	//
+	//    * device
+	//
+	//    * link
+	//
+	//    * site
+	//
+	// The following are the supported resource types for Amazon VPC:
+	//
+	//    * customer-gateway
+	//
+	//    * transit-gateway
+	//
+	//    * transit-gateway-attachment
+	//
+	//    * transit-gateway-connect-peer
+	//
+	//    * transit-gateway-route-table
+	//
+	//    * vpn-connection
+	ResourceType *string `type:"string"`
+
+	// The tags.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkResource) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkResource) GoString() string {
+	return s.String()
+}
+
+// SetAccountId sets the AccountId field's value.
+func (s *NetworkResource) SetAccountId(v string) *NetworkResource {
+	s.AccountId = &v
+	return s
+}
+
+// SetAwsRegion sets the AwsRegion field's value.
+func (s *NetworkResource) SetAwsRegion(v string) *NetworkResource {
+	s.AwsRegion = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *NetworkResource) SetCoreNetworkId(v string) *NetworkResource {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetDefinition sets the Definition field's value.
+func (s *NetworkResource) SetDefinition(v string) *NetworkResource {
+	s.Definition = &v
+	return s
+}
+
+// SetDefinitionTimestamp sets the DefinitionTimestamp field's value.
+func (s *NetworkResource) SetDefinitionTimestamp(v time.Time) *NetworkResource {
+	s.DefinitionTimestamp = &v
+	return s
+}
+
+// SetMetadata sets the Metadata field's value.
+func (s *NetworkResource) SetMetadata(v map[string]*string) *NetworkResource {
+	s.Metadata = v
+	return s
+}
+
+// SetRegisteredGatewayArn sets the RegisteredGatewayArn field's value.
+func (s *NetworkResource) SetRegisteredGatewayArn(v string) *NetworkResource {
+	s.RegisteredGatewayArn = &v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *NetworkResource) SetResourceArn(v string) *NetworkResource {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetResourceId sets the ResourceId field's value.
+func (s *NetworkResource) SetResourceId(v string) *NetworkResource {
+	s.ResourceId = &v
+	return s
+}
+
+// SetResourceType sets the ResourceType field's value.
+func (s *NetworkResource) SetResourceType(v string) *NetworkResource {
+	s.ResourceType = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *NetworkResource) SetTags(v []*Tag) *NetworkResource {
+	s.Tags = v
+	return s
+}
+
+// Describes a resource count.
+type NetworkResourceCount struct {
+	_ struct{} `type:"structure"`
+
+	// The resource count.
+	Count *int64 `type:"integer"`
+
+	// The resource type.
+	ResourceType *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkResourceCount) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkResourceCount) GoString() string {
+	return s.String()
+}
+
+// SetCount sets the Count field's value.
+func (s *NetworkResourceCount) SetCount(v int64) *NetworkResourceCount {
+	s.Count = &v
+	return s
+}
+
+// SetResourceType sets the ResourceType field's value.
+func (s *NetworkResourceCount) SetResourceType(v string) *NetworkResourceCount {
+	s.ResourceType = &v
+	return s
+}
+
+// Describes a network resource.
+type NetworkResourceSummary struct {
+	_ struct{} `type:"structure"`
+
+	// Information about the resource, in JSON format. Network Manager gets this
+	// information by describing the resource using its Describe API call.
+	Definition *string `type:"string"`
+
+	// Indicates whether this is a middlebox appliance.
+	IsMiddlebox *bool `type:"boolean"`
+
+	// The value for the Name tag.
+	NameTag *string `type:"string"`
+
+	// The ARN of the gateway.
+	RegisteredGatewayArn *string `type:"string"`
+
+	// The ARN of the resource.
+	ResourceArn *string `type:"string"`
+
+	// The resource type.
+	ResourceType *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkResourceSummary) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkResourceSummary) GoString() string {
+	return s.String()
+}
+
+// SetDefinition sets the Definition field's value.
+func (s *NetworkResourceSummary) SetDefinition(v string) *NetworkResourceSummary {
+	s.Definition = &v
+	return s
+}
+
+// SetIsMiddlebox sets the IsMiddlebox field's value.
+func (s *NetworkResourceSummary) SetIsMiddlebox(v bool) *NetworkResourceSummary {
+	s.IsMiddlebox = &v
+	return s
+}
+
+// SetNameTag sets the NameTag field's value.
+func (s *NetworkResourceSummary) SetNameTag(v string) *NetworkResourceSummary {
+	s.NameTag = &v
+	return s
+}
+
+// SetRegisteredGatewayArn sets the RegisteredGatewayArn field's value.
+func (s *NetworkResourceSummary) SetRegisteredGatewayArn(v string) *NetworkResourceSummary {
+	s.RegisteredGatewayArn = &v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *NetworkResourceSummary) SetResourceArn(v string) *NetworkResourceSummary {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetResourceType sets the ResourceType field's value.
+func (s *NetworkResourceSummary) SetResourceType(v string) *NetworkResourceSummary {
+	s.ResourceType = &v
+	return s
+}
+
+// Describes a network route.
+type NetworkRoute struct {
+	_ struct{} `type:"structure"`
+
+	// A unique identifier for the route, such as a CIDR block.
+	DestinationCidrBlock *string `type:"string"`
+
+	// The destinations.
+	Destinations []*NetworkRouteDestination `type:"list"`
+
+	// The ID of the prefix list.
+	PrefixListId *string `type:"string"`
+
+	// The route state. The possible values are active and blackhole.
+	State *string `type:"string" enum:"RouteState"`
+
+	// The route type. The possible values are propagated and static.
+	Type *string `type:"string" enum:"RouteType"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkRoute) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkRoute) GoString() string {
+	return s.String()
+}
+
+// SetDestinationCidrBlock sets the DestinationCidrBlock field's value.
+func (s *NetworkRoute) SetDestinationCidrBlock(v string) *NetworkRoute {
+	s.DestinationCidrBlock = &v
+	return s
+}
+
+// SetDestinations sets the Destinations field's value.
+func (s *NetworkRoute) SetDestinations(v []*NetworkRouteDestination) *NetworkRoute {
+	s.Destinations = v
+	return s
+}
+
+// SetPrefixListId sets the PrefixListId field's value.
+func (s *NetworkRoute) SetPrefixListId(v string) *NetworkRoute {
+	s.PrefixListId = &v
+	return s
+}
+
+// SetState sets the State field's value.
+func (s *NetworkRoute) SetState(v string) *NetworkRoute {
+	s.State = &v
+	return s
+}
+
+// SetType sets the Type field's value.
+func (s *NetworkRoute) SetType(v string) *NetworkRoute {
+	s.Type = &v
+	return s
+}
+
+// Describes the destination of a network route.
+type NetworkRouteDestination struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of a core network attachment.
+	CoreNetworkAttachmentId *string `type:"string"`
+
+	// The edge location for the network destination.
+	EdgeLocation *string `min:"1" type:"string"`
+
+	// The ID of the resource.
+	ResourceId *string `type:"string"`
+
+	// The resource type.
+	ResourceType *string `type:"string"`
+
+	// The name of the segment.
+	SegmentName *string `type:"string"`
+
+	// The ID of the transit gateway attachment.
+	TransitGatewayAttachmentId *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkRouteDestination) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkRouteDestination) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworkAttachmentId sets the CoreNetworkAttachmentId field's value.
+func (s *NetworkRouteDestination) SetCoreNetworkAttachmentId(v string) *NetworkRouteDestination {
+	s.CoreNetworkAttachmentId = &v
+	return s
+}
+
+// SetEdgeLocation sets the EdgeLocation field's value.
+func (s *NetworkRouteDestination) SetEdgeLocation(v string) *NetworkRouteDestination {
+	s.EdgeLocation = &v
+	return s
+}
+
+// SetResourceId sets the ResourceId field's value.
+func (s *NetworkRouteDestination) SetResourceId(v string) *NetworkRouteDestination {
+	s.ResourceId = &v
+	return s
+}
+
+// SetResourceType sets the ResourceType field's value.
+func (s *NetworkRouteDestination) SetResourceType(v string) *NetworkRouteDestination {
+	s.ResourceType = &v
+	return s
+}
+
+// SetSegmentName sets the SegmentName field's value.
+func (s *NetworkRouteDestination) SetSegmentName(v string) *NetworkRouteDestination {
+	s.SegmentName = &v
+	return s
+}
+
+// SetTransitGatewayAttachmentId sets the TransitGatewayAttachmentId field's value.
+func (s *NetworkRouteDestination) SetTransitGatewayAttachmentId(v string) *NetworkRouteDestination {
+	s.TransitGatewayAttachmentId = &v
+	return s
+}
+
+// Describes the telemetry information for a resource.
+type NetworkTelemetry struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Web Services account ID.
+	AccountId *string `min:"12" type:"string"`
+
+	// The address.
+	Address *string `type:"string"`
+
+	// The Amazon Web Services Region.
+	AwsRegion *string `min:"1" type:"string"`
+
+	// The ID of a core network.
+	CoreNetworkId *string `type:"string"`
+
+	// The connection health.
+	Health *ConnectionHealth `type:"structure"`
+
+	// The ARN of the gateway.
+	RegisteredGatewayArn *string `type:"string"`
+
+	// The ARN of the resource.
+	ResourceArn *string `type:"string"`
+
+	// The ID of the resource.
+	ResourceId *string `type:"string"`
+
+	// The resource type.
+	ResourceType *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkTelemetry) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NetworkTelemetry) GoString() string {
+	return s.String()
+}
+
+// SetAccountId sets the AccountId field's value.
+func (s *NetworkTelemetry) SetAccountId(v string) *NetworkTelemetry {
+	s.AccountId = &v
+	return s
+}
+
+// SetAddress sets the Address field's value.
+func (s *NetworkTelemetry) SetAddress(v string) *NetworkTelemetry {
+	s.Address = &v
+	return s
+}
+
+// SetAwsRegion sets the AwsRegion field's value.
+func (s *NetworkTelemetry) SetAwsRegion(v string) *NetworkTelemetry {
+	s.AwsRegion = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *NetworkTelemetry) SetCoreNetworkId(v string) *NetworkTelemetry {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetHealth sets the Health field's value.
+func (s *NetworkTelemetry) SetHealth(v *ConnectionHealth) *NetworkTelemetry {
+	s.Health = v
+	return s
+}
+
+// SetRegisteredGatewayArn sets the RegisteredGatewayArn field's value.
+func (s *NetworkTelemetry) SetRegisteredGatewayArn(v string) *NetworkTelemetry {
+	s.RegisteredGatewayArn = &v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *NetworkTelemetry) SetResourceArn(v string) *NetworkTelemetry {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetResourceId sets the ResourceId field's value.
+func (s *NetworkTelemetry) SetResourceId(v string) *NetworkTelemetry {
+	s.ResourceId = &v
+	return s
+}
+
+// SetResourceType sets the ResourceType field's value.
+func (s *NetworkTelemetry) SetResourceType(v string) *NetworkTelemetry {
+	s.ResourceType = &v
+	return s
+}
+
+// Describes a path component.
+type PathComponent struct {
+	_ struct{} `type:"structure"`
+
+	// The destination CIDR block in the route table.
+	DestinationCidrBlock *string `type:"string"`
+
+	// The resource.
+	Resource *NetworkResourceSummary `type:"structure"`
+
+	// The sequence number in the path. The destination is 0.
+	Sequence *int64 `type:"integer"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PathComponent) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PathComponent) GoString() string {
+	return s.String()
+}
+
+// SetDestinationCidrBlock sets the DestinationCidrBlock field's value.
+func (s *PathComponent) SetDestinationCidrBlock(v string) *PathComponent {
+	s.DestinationCidrBlock = &v
+	return s
+}
+
+// SetResource sets the Resource field's value.
+func (s *PathComponent) SetResource(v *NetworkResourceSummary) *PathComponent {
+	s.Resource = v
+	return s
+}
+
+// SetSequence sets the Sequence field's value.
+func (s *PathComponent) SetSequence(v int64) *PathComponent {
+	s.Sequence = &v
+	return s
+}
+
+// Describes a proposed segment change. In some cases, the segment change must
+// first be evaluated and accepted.
+type ProposedSegmentChange struct {
+	_ struct{} `type:"structure"`
+
+	// The rule number in the policy document that applies to this change.
+	AttachmentPolicyRuleNumber *int64 `type:"integer"`
+
+	// The name of the segment to change.
+	SegmentName *string `type:"string"`
+
+	// The key-value tags that changed for the segment.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ProposedSegmentChange) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ProposedSegmentChange) GoString() string {
+	return s.String()
+}
+
+// SetAttachmentPolicyRuleNumber sets the AttachmentPolicyRuleNumber field's value.
+func (s *ProposedSegmentChange) SetAttachmentPolicyRuleNumber(v int64) *ProposedSegmentChange {
+	s.AttachmentPolicyRuleNumber = &v
+	return s
+}
+
+// SetSegmentName sets the SegmentName field's value.
+func (s *ProposedSegmentChange) SetSegmentName(v string) *ProposedSegmentChange {
+	s.SegmentName = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *ProposedSegmentChange) SetTags(v []*Tag) *ProposedSegmentChange {
+	s.Tags = v
+	return s
+}
+
+type PutCoreNetworkPolicyInput struct {
+	_ struct{} `type:"structure"`
+
+	// The client token associated with the request.
+	ClientToken *string `type:"string" idempotencyToken:"true"`
+
+	// The ID of a core network.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `location:"uri" locationName:"coreNetworkId" type:"string" required:"true"`
+
+	// a core network policy description.
+	Description *string `type:"string"`
+
+	// The ID of a core network policy.
+	LatestVersionId *int64 `type:"integer"`
+
+	// The policy document.
+	//
+	// PolicyDocument is a required field
+	PolicyDocument aws.JSONValue `type:"jsonvalue" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutCoreNetworkPolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutCoreNetworkPolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutCoreNetworkPolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutCoreNetworkPolicyInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.CoreNetworkId != nil && len(*s.CoreNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CoreNetworkId", 1))
+	}
+	if s.PolicyDocument == nil {
+		invalidParams.Add(request.NewErrParamRequired("PolicyDocument"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetClientToken sets the ClientToken field's value.
+func (s *PutCoreNetworkPolicyInput) SetClientToken(v string) *PutCoreNetworkPolicyInput {
+	s.ClientToken = &v
+	return s
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *PutCoreNetworkPolicyInput) SetCoreNetworkId(v string) *PutCoreNetworkPolicyInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *PutCoreNetworkPolicyInput) SetDescription(v string) *PutCoreNetworkPolicyInput {
+	s.Description = &v
+	return s
+}
+
+// SetLatestVersionId sets the LatestVersionId field's value.
+func (s *PutCoreNetworkPolicyInput) SetLatestVersionId(v int64) *PutCoreNetworkPolicyInput {
+	s.LatestVersionId = &v
+	return s
+}
+
+// SetPolicyDocument sets the PolicyDocument field's value.
+func (s *PutCoreNetworkPolicyInput) SetPolicyDocument(v aws.JSONValue) *PutCoreNetworkPolicyInput {
+	s.PolicyDocument = v
+	return s
+}
+
+type PutCoreNetworkPolicyOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Describes the changed core network policy.
+	CoreNetworkPolicy *CoreNetworkPolicy `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutCoreNetworkPolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutCoreNetworkPolicyOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworkPolicy sets the CoreNetworkPolicy field's value.
+func (s *PutCoreNetworkPolicyOutput) SetCoreNetworkPolicy(v *CoreNetworkPolicy) *PutCoreNetworkPolicyOutput {
+	s.CoreNetworkPolicy = v
+	return s
+}
+
+type PutResourcePolicyInput struct {
+	_ struct{} `type:"structure"`
+
+	// The JSON resource policy document.
+	//
+	// PolicyDocument is a required field
+	PolicyDocument aws.JSONValue `type:"jsonvalue" required:"true"`
+
+	// The ARN of the resource policy.
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `location:"uri" locationName:"resourceArn" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutResourcePolicyInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutResourcePolicyInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PutResourcePolicyInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PutResourcePolicyInput"}
+	if s.PolicyDocument == nil {
+		invalidParams.Add(request.NewErrParamRequired("PolicyDocument"))
+	}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+	if s.ResourceArn != nil && len(*s.ResourceArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ResourceArn", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetPolicyDocument sets the PolicyDocument field's value.
+func (s *PutResourcePolicyInput) SetPolicyDocument(v aws.JSONValue) *PutResourcePolicyInput {
+	s.PolicyDocument = v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *PutResourcePolicyInput) SetResourceArn(v string) *PutResourcePolicyInput {
+	s.ResourceArn = &v
+	return s
+}
+
+type PutResourcePolicyOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutResourcePolicyOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PutResourcePolicyOutput) GoString() string {
+	return s.String()
+}
+
 type RegisterTransitGatewayInput struct {
 	_ struct{} `type:"structure"`
 
@@ -5815,19 +18429,26 @@ type RegisterTransitGatewayInput struct {
 	// GlobalNetworkId is a required field
 	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
 
-	// The Amazon Resource Name (ARN) of the transit gateway. For more information,
-	// see Resources Defined by Amazon EC2 (https://docs.aws.amazon.com/IAM/latest/UserGuide/list_amazonec2.html#amazonec2-resources-for-iam-policies).
+	// The Amazon Resource Name (ARN) of the transit gateway.
 	//
 	// TransitGatewayArn is a required field
 	TransitGatewayArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RegisterTransitGatewayInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RegisterTransitGatewayInput) GoString() string {
 	return s.String()
 }
@@ -5870,12 +18491,20 @@ type RegisterTransitGatewayOutput struct {
 	TransitGatewayRegistration *TransitGatewayRegistration `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RegisterTransitGatewayOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RegisterTransitGatewayOutput) GoString() string {
 	return s.String()
 }
@@ -5886,10 +18515,134 @@ func (s *RegisterTransitGatewayOutput) SetTransitGatewayRegistration(v *TransitG
 	return s
 }
 
+type RejectAttachmentInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of the attachment.
+	//
+	// AttachmentId is a required field
+	AttachmentId *string `location:"uri" locationName:"attachmentId" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RejectAttachmentInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RejectAttachmentInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RejectAttachmentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RejectAttachmentInput"}
+	if s.AttachmentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("AttachmentId"))
+	}
+	if s.AttachmentId != nil && len(*s.AttachmentId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AttachmentId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAttachmentId sets the AttachmentId field's value.
+func (s *RejectAttachmentInput) SetAttachmentId(v string) *RejectAttachmentInput {
+	s.AttachmentId = &v
+	return s
+}
+
+type RejectAttachmentOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Describes the rejected attachment request.
+	Attachment *Attachment `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RejectAttachmentOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RejectAttachmentOutput) GoString() string {
+	return s.String()
+}
+
+// SetAttachment sets the Attachment field's value.
+func (s *RejectAttachmentOutput) SetAttachment(v *Attachment) *RejectAttachmentOutput {
+	s.Attachment = v
+	return s
+}
+
+// Describes a resource relationship.
+type Relationship struct {
+	_ struct{} `type:"structure"`
+
+	// The ARN of the resource.
+	From *string `type:"string"`
+
+	// The ARN of the resource.
+	To *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Relationship) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Relationship) GoString() string {
+	return s.String()
+}
+
+// SetFrom sets the From field's value.
+func (s *Relationship) SetFrom(v string) *Relationship {
+	s.From = &v
+	return s
+}
+
+// SetTo sets the To field's value.
+func (s *Relationship) SetTo(v string) *Relationship {
+	s.To = &v
+	return s
+}
+
 // The specified resource could not be found.
 type ResourceNotFoundException struct {
 	_            struct{}                  `type:"structure"`
 	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// The specified resource could not be found.
+	Context map[string]*string `type:"map"`
 
 	Message_ *string `locationName:"Message" type:"string"`
 
@@ -5904,12 +18657,20 @@ type ResourceNotFoundException struct {
 	ResourceType *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) GoString() string {
 	return s.String()
 }
@@ -5952,6 +18713,502 @@ func (s *ResourceNotFoundException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
+type RestoreCoreNetworkPolicyVersionInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The ID of a core network.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `location:"uri" locationName:"coreNetworkId" type:"string" required:"true"`
+
+	// The ID of the policy version to restore.
+	//
+	// PolicyVersionId is a required field
+	PolicyVersionId *int64 `location:"uri" locationName:"policyVersionId" type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RestoreCoreNetworkPolicyVersionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RestoreCoreNetworkPolicyVersionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RestoreCoreNetworkPolicyVersionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RestoreCoreNetworkPolicyVersionInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.CoreNetworkId != nil && len(*s.CoreNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CoreNetworkId", 1))
+	}
+	if s.PolicyVersionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("PolicyVersionId"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *RestoreCoreNetworkPolicyVersionInput) SetCoreNetworkId(v string) *RestoreCoreNetworkPolicyVersionInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetPolicyVersionId sets the PolicyVersionId field's value.
+func (s *RestoreCoreNetworkPolicyVersionInput) SetPolicyVersionId(v int64) *RestoreCoreNetworkPolicyVersionInput {
+	s.PolicyVersionId = &v
+	return s
+}
+
+type RestoreCoreNetworkPolicyVersionOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Describes the restored core network policy.
+	CoreNetworkPolicy *CoreNetworkPolicy `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RestoreCoreNetworkPolicyVersionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RestoreCoreNetworkPolicyVersionOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetworkPolicy sets the CoreNetworkPolicy field's value.
+func (s *RestoreCoreNetworkPolicyVersionOutput) SetCoreNetworkPolicy(v *CoreNetworkPolicy) *RestoreCoreNetworkPolicyVersionOutput {
+	s.CoreNetworkPolicy = v
+	return s
+}
+
+// Describes a route analysis.
+type RouteAnalysis struct {
+	_ struct{} `type:"structure"`
+
+	// The destination.
+	Destination *RouteAnalysisEndpointOptions `type:"structure"`
+
+	// The forward path.
+	ForwardPath *RouteAnalysisPath `type:"structure"`
+
+	// The ID of the global network.
+	GlobalNetworkId *string `type:"string"`
+
+	// Indicates whether to analyze the return path. The return path is not analyzed
+	// if the forward path analysis does not succeed.
+	IncludeReturnPath *bool `type:"boolean"`
+
+	// The ID of the AWS account that created the route analysis.
+	OwnerAccountId *string `min:"12" type:"string"`
+
+	// The return path.
+	ReturnPath *RouteAnalysisPath `type:"structure"`
+
+	// The ID of the route analysis.
+	RouteAnalysisId *string `type:"string"`
+
+	// The source.
+	Source *RouteAnalysisEndpointOptions `type:"structure"`
+
+	// The time that the analysis started.
+	StartTimestamp *time.Time `type:"timestamp"`
+
+	// The status of the route analysis.
+	Status *string `type:"string" enum:"RouteAnalysisStatus"`
+
+	// Indicates whether to include the location of middlebox appliances in the
+	// route analysis.
+	UseMiddleboxes *bool `type:"boolean"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteAnalysis) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteAnalysis) GoString() string {
+	return s.String()
+}
+
+// SetDestination sets the Destination field's value.
+func (s *RouteAnalysis) SetDestination(v *RouteAnalysisEndpointOptions) *RouteAnalysis {
+	s.Destination = v
+	return s
+}
+
+// SetForwardPath sets the ForwardPath field's value.
+func (s *RouteAnalysis) SetForwardPath(v *RouteAnalysisPath) *RouteAnalysis {
+	s.ForwardPath = v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *RouteAnalysis) SetGlobalNetworkId(v string) *RouteAnalysis {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetIncludeReturnPath sets the IncludeReturnPath field's value.
+func (s *RouteAnalysis) SetIncludeReturnPath(v bool) *RouteAnalysis {
+	s.IncludeReturnPath = &v
+	return s
+}
+
+// SetOwnerAccountId sets the OwnerAccountId field's value.
+func (s *RouteAnalysis) SetOwnerAccountId(v string) *RouteAnalysis {
+	s.OwnerAccountId = &v
+	return s
+}
+
+// SetReturnPath sets the ReturnPath field's value.
+func (s *RouteAnalysis) SetReturnPath(v *RouteAnalysisPath) *RouteAnalysis {
+	s.ReturnPath = v
+	return s
+}
+
+// SetRouteAnalysisId sets the RouteAnalysisId field's value.
+func (s *RouteAnalysis) SetRouteAnalysisId(v string) *RouteAnalysis {
+	s.RouteAnalysisId = &v
+	return s
+}
+
+// SetSource sets the Source field's value.
+func (s *RouteAnalysis) SetSource(v *RouteAnalysisEndpointOptions) *RouteAnalysis {
+	s.Source = v
+	return s
+}
+
+// SetStartTimestamp sets the StartTimestamp field's value.
+func (s *RouteAnalysis) SetStartTimestamp(v time.Time) *RouteAnalysis {
+	s.StartTimestamp = &v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *RouteAnalysis) SetStatus(v string) *RouteAnalysis {
+	s.Status = &v
+	return s
+}
+
+// SetUseMiddleboxes sets the UseMiddleboxes field's value.
+func (s *RouteAnalysis) SetUseMiddleboxes(v bool) *RouteAnalysis {
+	s.UseMiddleboxes = &v
+	return s
+}
+
+// Describes the status of an analysis at completion.
+type RouteAnalysisCompletion struct {
+	_ struct{} `type:"structure"`
+
+	// The reason code. Available only if a connection is not found.
+	//
+	//    * BLACKHOLE_ROUTE_FOR_DESTINATION_FOUND - Found a black hole route with
+	//    the destination CIDR block.
+	//
+	//    * CYCLIC_PATH_DETECTED - Found the same resource multiple times while
+	//    traversing the path.
+	//
+	//    * INACTIVE_ROUTE_FOR_DESTINATION_FOUND - Found an inactive route with
+	//    the destination CIDR block.
+	//
+	//    * MAX_HOPS_EXCEEDED - Analysis exceeded 64 hops without finding the destination.
+	//
+	//    * ROUTE_NOT_FOUND - Cannot find a route table with the destination CIDR
+	//    block.
+	//
+	//    * TGW_ATTACH_ARN_NO_MATCH - Found an attachment, but not with the correct
+	//    destination ARN.
+	//
+	//    * TGW_ATTACH_NOT_FOUND - Cannot find an attachment.
+	//
+	//    * TGW_ATTACH_NOT_IN_TGW - Found an attachment, but not to the correct
+	//    transit gateway.
+	//
+	//    * TGW_ATTACH_STABLE_ROUTE_TABLE_NOT_FOUND - The state of the route table
+	//    association is not associated.
+	ReasonCode *string `type:"string" enum:"RouteAnalysisCompletionReasonCode"`
+
+	// Additional information about the path. Available only if a connection is
+	// not found.
+	ReasonContext map[string]*string `type:"map"`
+
+	// The result of the analysis. If the status is NOT_CONNECTED, check the reason
+	// code.
+	ResultCode *string `type:"string" enum:"RouteAnalysisCompletionResultCode"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteAnalysisCompletion) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteAnalysisCompletion) GoString() string {
+	return s.String()
+}
+
+// SetReasonCode sets the ReasonCode field's value.
+func (s *RouteAnalysisCompletion) SetReasonCode(v string) *RouteAnalysisCompletion {
+	s.ReasonCode = &v
+	return s
+}
+
+// SetReasonContext sets the ReasonContext field's value.
+func (s *RouteAnalysisCompletion) SetReasonContext(v map[string]*string) *RouteAnalysisCompletion {
+	s.ReasonContext = v
+	return s
+}
+
+// SetResultCode sets the ResultCode field's value.
+func (s *RouteAnalysisCompletion) SetResultCode(v string) *RouteAnalysisCompletion {
+	s.ResultCode = &v
+	return s
+}
+
+// Describes a source or a destination.
+type RouteAnalysisEndpointOptions struct {
+	_ struct{} `type:"structure"`
+
+	// The IP address.
+	IpAddress *string `min:"1" type:"string"`
+
+	// The ARN of the transit gateway.
+	TransitGatewayArn *string `type:"string"`
+
+	// The ARN of the transit gateway attachment.
+	TransitGatewayAttachmentArn *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteAnalysisEndpointOptions) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteAnalysisEndpointOptions) GoString() string {
+	return s.String()
+}
+
+// SetIpAddress sets the IpAddress field's value.
+func (s *RouteAnalysisEndpointOptions) SetIpAddress(v string) *RouteAnalysisEndpointOptions {
+	s.IpAddress = &v
+	return s
+}
+
+// SetTransitGatewayArn sets the TransitGatewayArn field's value.
+func (s *RouteAnalysisEndpointOptions) SetTransitGatewayArn(v string) *RouteAnalysisEndpointOptions {
+	s.TransitGatewayArn = &v
+	return s
+}
+
+// SetTransitGatewayAttachmentArn sets the TransitGatewayAttachmentArn field's value.
+func (s *RouteAnalysisEndpointOptions) SetTransitGatewayAttachmentArn(v string) *RouteAnalysisEndpointOptions {
+	s.TransitGatewayAttachmentArn = &v
+	return s
+}
+
+// Describes a source or a destination.
+type RouteAnalysisEndpointOptionsSpecification struct {
+	_ struct{} `type:"structure"`
+
+	// The IP address.
+	IpAddress *string `min:"1" type:"string"`
+
+	// The ARN of the transit gateway attachment.
+	TransitGatewayAttachmentArn *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteAnalysisEndpointOptionsSpecification) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteAnalysisEndpointOptionsSpecification) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RouteAnalysisEndpointOptionsSpecification) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RouteAnalysisEndpointOptionsSpecification"}
+	if s.IpAddress != nil && len(*s.IpAddress) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("IpAddress", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetIpAddress sets the IpAddress field's value.
+func (s *RouteAnalysisEndpointOptionsSpecification) SetIpAddress(v string) *RouteAnalysisEndpointOptionsSpecification {
+	s.IpAddress = &v
+	return s
+}
+
+// SetTransitGatewayAttachmentArn sets the TransitGatewayAttachmentArn field's value.
+func (s *RouteAnalysisEndpointOptionsSpecification) SetTransitGatewayAttachmentArn(v string) *RouteAnalysisEndpointOptionsSpecification {
+	s.TransitGatewayAttachmentArn = &v
+	return s
+}
+
+// Describes a route analysis path.
+type RouteAnalysisPath struct {
+	_ struct{} `type:"structure"`
+
+	// The status of the analysis at completion.
+	CompletionStatus *RouteAnalysisCompletion `type:"structure"`
+
+	// The route analysis path.
+	Path []*PathComponent `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteAnalysisPath) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteAnalysisPath) GoString() string {
+	return s.String()
+}
+
+// SetCompletionStatus sets the CompletionStatus field's value.
+func (s *RouteAnalysisPath) SetCompletionStatus(v *RouteAnalysisCompletion) *RouteAnalysisPath {
+	s.CompletionStatus = v
+	return s
+}
+
+// SetPath sets the Path field's value.
+func (s *RouteAnalysisPath) SetPath(v []*PathComponent) *RouteAnalysisPath {
+	s.Path = v
+	return s
+}
+
+// Describes a route table.
+type RouteTableIdentifier struct {
+	_ struct{} `type:"structure"`
+
+	// The segment edge in a core network.
+	CoreNetworkSegmentEdge *CoreNetworkSegmentEdgeIdentifier `type:"structure"`
+
+	// The ARN of the transit gateway route table.
+	TransitGatewayRouteTableArn *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteTableIdentifier) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RouteTableIdentifier) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RouteTableIdentifier) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RouteTableIdentifier"}
+	if s.CoreNetworkSegmentEdge != nil {
+		if err := s.CoreNetworkSegmentEdge.Validate(); err != nil {
+			invalidParams.AddNested("CoreNetworkSegmentEdge", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCoreNetworkSegmentEdge sets the CoreNetworkSegmentEdge field's value.
+func (s *RouteTableIdentifier) SetCoreNetworkSegmentEdge(v *CoreNetworkSegmentEdgeIdentifier) *RouteTableIdentifier {
+	s.CoreNetworkSegmentEdge = v
+	return s
+}
+
+// SetTransitGatewayRouteTableArn sets the TransitGatewayRouteTableArn field's value.
+func (s *RouteTableIdentifier) SetTransitGatewayRouteTableArn(v string) *RouteTableIdentifier {
+	s.TransitGatewayRouteTableArn = &v
+	return s
+}
+
 // A service limit was exceeded.
 type ServiceQuotaExceededException struct {
 	_            struct{}                  `type:"structure"`
@@ -5977,12 +19234,20 @@ type ServiceQuotaExceededException struct {
 	ServiceCode *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ServiceQuotaExceededException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ServiceQuotaExceededException) GoString() string {
 	return s.String()
 }
@@ -6039,7 +19304,11 @@ type Site struct {
 	GlobalNetworkId *string `type:"string"`
 
 	// The location of the site.
-	Location *Location `type:"structure"`
+	//
+	// Location is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by Site's
+	// String and GoString methods.
+	Location *Location `type:"structure" sensitive:"true"`
 
 	// The Amazon Resource Name (ARN) of the site.
 	SiteArn *string `type:"string"`
@@ -6054,12 +19323,20 @@ type Site struct {
 	Tags []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Site) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Site) GoString() string {
 	return s.String()
 }
@@ -6112,27 +19389,213 @@ func (s *Site) SetTags(v []*Tag) *Site {
 	return s
 }
 
+// Creates a site-to-site VPN attachment.
+type SiteToSiteVpnAttachment struct {
+	_ struct{} `type:"structure"`
+
+	// Provides details about a site-to-site VPN attachment.
+	Attachment *Attachment `type:"structure"`
+
+	// The ARN of the site-to-site VPN attachment.
+	VpnConnectionArn *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s SiteToSiteVpnAttachment) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s SiteToSiteVpnAttachment) GoString() string {
+	return s.String()
+}
+
+// SetAttachment sets the Attachment field's value.
+func (s *SiteToSiteVpnAttachment) SetAttachment(v *Attachment) *SiteToSiteVpnAttachment {
+	s.Attachment = v
+	return s
+}
+
+// SetVpnConnectionArn sets the VpnConnectionArn field's value.
+func (s *SiteToSiteVpnAttachment) SetVpnConnectionArn(v string) *SiteToSiteVpnAttachment {
+	s.VpnConnectionArn = &v
+	return s
+}
+
+type StartRouteAnalysisInput struct {
+	_ struct{} `type:"structure"`
+
+	// The destination.
+	//
+	// Destination is a required field
+	Destination *RouteAnalysisEndpointOptionsSpecification `type:"structure" required:"true"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// Indicates whether to analyze the return path. The default is false.
+	IncludeReturnPath *bool `type:"boolean"`
+
+	// The source from which traffic originates.
+	//
+	// Source is a required field
+	Source *RouteAnalysisEndpointOptionsSpecification `type:"structure" required:"true"`
+
+	// Indicates whether to include the location of middlebox appliances in the
+	// route analysis. The default is false.
+	UseMiddleboxes *bool `type:"boolean"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StartRouteAnalysisInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StartRouteAnalysisInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *StartRouteAnalysisInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "StartRouteAnalysisInput"}
+	if s.Destination == nil {
+		invalidParams.Add(request.NewErrParamRequired("Destination"))
+	}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.Source == nil {
+		invalidParams.Add(request.NewErrParamRequired("Source"))
+	}
+	if s.Destination != nil {
+		if err := s.Destination.Validate(); err != nil {
+			invalidParams.AddNested("Destination", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Source != nil {
+		if err := s.Source.Validate(); err != nil {
+			invalidParams.AddNested("Source", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDestination sets the Destination field's value.
+func (s *StartRouteAnalysisInput) SetDestination(v *RouteAnalysisEndpointOptionsSpecification) *StartRouteAnalysisInput {
+	s.Destination = v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *StartRouteAnalysisInput) SetGlobalNetworkId(v string) *StartRouteAnalysisInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetIncludeReturnPath sets the IncludeReturnPath field's value.
+func (s *StartRouteAnalysisInput) SetIncludeReturnPath(v bool) *StartRouteAnalysisInput {
+	s.IncludeReturnPath = &v
+	return s
+}
+
+// SetSource sets the Source field's value.
+func (s *StartRouteAnalysisInput) SetSource(v *RouteAnalysisEndpointOptionsSpecification) *StartRouteAnalysisInput {
+	s.Source = v
+	return s
+}
+
+// SetUseMiddleboxes sets the UseMiddleboxes field's value.
+func (s *StartRouteAnalysisInput) SetUseMiddleboxes(v bool) *StartRouteAnalysisInput {
+	s.UseMiddleboxes = &v
+	return s
+}
+
+type StartRouteAnalysisOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The route analysis.
+	RouteAnalysis *RouteAnalysis `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StartRouteAnalysisOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StartRouteAnalysisOutput) GoString() string {
+	return s.String()
+}
+
+// SetRouteAnalysis sets the RouteAnalysis field's value.
+func (s *StartRouteAnalysisOutput) SetRouteAnalysis(v *RouteAnalysis) *StartRouteAnalysisOutput {
+	s.RouteAnalysis = v
+	return s
+}
+
 // Describes a tag.
 type Tag struct {
 	_ struct{} `type:"structure"`
 
 	// The tag key.
 	//
-	// Length Constraints: Maximum length of 128 characters.
+	// Constraints: Maximum length of 128 characters.
 	Key *string `type:"string"`
 
 	// The tag value.
 	//
-	// Length Constraints: Maximum length of 256 characters.
+	// Constraints: Maximum length of 256 characters.
 	Value *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) GoString() string {
 	return s.String()
 }
@@ -6163,12 +19626,20 @@ type TagResourceInput struct {
 	Tags []*Tag `type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) GoString() string {
 	return s.String()
 }
@@ -6208,12 +19679,20 @@ type TagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) GoString() string {
 	return s.String()
 }
@@ -6229,12 +19708,20 @@ type ThrottlingException struct {
 	RetryAfterSeconds *int64 `location:"header" locationName:"Retry-After" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ThrottlingException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ThrottlingException) GoString() string {
 	return s.String()
 }
@@ -6277,6 +19764,74 @@ func (s *ThrottlingException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
+// Describes a transit gateway Connect peer association.
+type TransitGatewayConnectPeerAssociation struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the device.
+	DeviceId *string `type:"string"`
+
+	// The ID of the global network.
+	GlobalNetworkId *string `type:"string"`
+
+	// The ID of the link.
+	LinkId *string `type:"string"`
+
+	// The state of the association.
+	State *string `type:"string" enum:"TransitGatewayConnectPeerAssociationState"`
+
+	// The Amazon Resource Name (ARN) of the transit gateway Connect peer.
+	TransitGatewayConnectPeerArn *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TransitGatewayConnectPeerAssociation) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TransitGatewayConnectPeerAssociation) GoString() string {
+	return s.String()
+}
+
+// SetDeviceId sets the DeviceId field's value.
+func (s *TransitGatewayConnectPeerAssociation) SetDeviceId(v string) *TransitGatewayConnectPeerAssociation {
+	s.DeviceId = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *TransitGatewayConnectPeerAssociation) SetGlobalNetworkId(v string) *TransitGatewayConnectPeerAssociation {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetLinkId sets the LinkId field's value.
+func (s *TransitGatewayConnectPeerAssociation) SetLinkId(v string) *TransitGatewayConnectPeerAssociation {
+	s.LinkId = &v
+	return s
+}
+
+// SetState sets the State field's value.
+func (s *TransitGatewayConnectPeerAssociation) SetState(v string) *TransitGatewayConnectPeerAssociation {
+	s.State = &v
+	return s
+}
+
+// SetTransitGatewayConnectPeerArn sets the TransitGatewayConnectPeerArn field's value.
+func (s *TransitGatewayConnectPeerAssociation) SetTransitGatewayConnectPeerArn(v string) *TransitGatewayConnectPeerAssociation {
+	s.TransitGatewayConnectPeerArn = &v
+	return s
+}
+
 // Describes the registration of a transit gateway to a global network.
 type TransitGatewayRegistration struct {
 	_ struct{} `type:"structure"`
@@ -6291,12 +19846,20 @@ type TransitGatewayRegistration struct {
 	TransitGatewayArn *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransitGatewayRegistration) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransitGatewayRegistration) GoString() string {
 	return s.String()
 }
@@ -6330,12 +19893,20 @@ type TransitGatewayRegistrationStateReason struct {
 	Message *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransitGatewayRegistrationStateReason) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TransitGatewayRegistrationStateReason) GoString() string {
 	return s.String()
 }
@@ -6353,7 +19924,7 @@ func (s *TransitGatewayRegistrationStateReason) SetMessage(v string) *TransitGat
 }
 
 type UntagResourceInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The Amazon Resource Name (ARN) of the resource.
 	//
@@ -6366,12 +19937,20 @@ type UntagResourceInput struct {
 	TagKeys []*string `location:"querystring" locationName:"tagKeys" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) GoString() string {
 	return s.String()
 }
@@ -6411,22 +19990,249 @@ type UntagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) GoString() string {
 	return s.String()
+}
+
+type UpdateConnectionInput struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the link for the second device in the connection.
+	ConnectedLinkId *string `type:"string"`
+
+	// The ID of the connection.
+	//
+	// ConnectionId is a required field
+	ConnectionId *string `location:"uri" locationName:"connectionId" type:"string" required:"true"`
+
+	// A description of the connection.
+	//
+	// Length Constraints: Maximum length of 256 characters.
+	Description *string `type:"string"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The ID of the link for the first device in the connection.
+	LinkId *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateConnectionInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateConnectionInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateConnectionInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateConnectionInput"}
+	if s.ConnectionId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ConnectionId"))
+	}
+	if s.ConnectionId != nil && len(*s.ConnectionId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ConnectionId", 1))
+	}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetConnectedLinkId sets the ConnectedLinkId field's value.
+func (s *UpdateConnectionInput) SetConnectedLinkId(v string) *UpdateConnectionInput {
+	s.ConnectedLinkId = &v
+	return s
+}
+
+// SetConnectionId sets the ConnectionId field's value.
+func (s *UpdateConnectionInput) SetConnectionId(v string) *UpdateConnectionInput {
+	s.ConnectionId = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *UpdateConnectionInput) SetDescription(v string) *UpdateConnectionInput {
+	s.Description = &v
+	return s
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *UpdateConnectionInput) SetGlobalNetworkId(v string) *UpdateConnectionInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetLinkId sets the LinkId field's value.
+func (s *UpdateConnectionInput) SetLinkId(v string) *UpdateConnectionInput {
+	s.LinkId = &v
+	return s
+}
+
+type UpdateConnectionOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Information about the connection.
+	Connection *Connection `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateConnectionOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateConnectionOutput) GoString() string {
+	return s.String()
+}
+
+// SetConnection sets the Connection field's value.
+func (s *UpdateConnectionOutput) SetConnection(v *Connection) *UpdateConnectionOutput {
+	s.Connection = v
+	return s
+}
+
+type UpdateCoreNetworkInput struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of a core network.
+	//
+	// CoreNetworkId is a required field
+	CoreNetworkId *string `location:"uri" locationName:"coreNetworkId" type:"string" required:"true"`
+
+	// The description of the update.
+	Description *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateCoreNetworkInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateCoreNetworkInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateCoreNetworkInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateCoreNetworkInput"}
+	if s.CoreNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("CoreNetworkId"))
+	}
+	if s.CoreNetworkId != nil && len(*s.CoreNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("CoreNetworkId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCoreNetworkId sets the CoreNetworkId field's value.
+func (s *UpdateCoreNetworkInput) SetCoreNetworkId(v string) *UpdateCoreNetworkInput {
+	s.CoreNetworkId = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *UpdateCoreNetworkInput) SetDescription(v string) *UpdateCoreNetworkInput {
+	s.Description = &v
+	return s
+}
+
+type UpdateCoreNetworkOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Returns information about a core network update.
+	CoreNetwork *CoreNetwork `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateCoreNetworkOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateCoreNetworkOutput) GoString() string {
+	return s.String()
+}
+
+// SetCoreNetwork sets the CoreNetwork field's value.
+func (s *UpdateCoreNetworkOutput) SetCoreNetwork(v *CoreNetwork) *UpdateCoreNetworkOutput {
+	s.CoreNetwork = v
+	return s
 }
 
 type UpdateDeviceInput struct {
 	_ struct{} `type:"structure"`
 
+	// The Amazon Web Services location of the device, if applicable. For an on-premises
+	// device, you can omit this parameter.
+	AWSLocation *AWSLocation `type:"structure"`
+
 	// A description of the device.
 	//
-	// Length Constraints: Maximum length of 256 characters.
+	// Constraints: Maximum length of 256 characters.
 	Description *string `type:"string"`
 
 	// The ID of the device.
@@ -6440,16 +20246,20 @@ type UpdateDeviceInput struct {
 	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
 
 	// Describes a location.
-	Location *Location `type:"structure"`
+	//
+	// Location is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by UpdateDeviceInput's
+	// String and GoString methods.
+	Location *Location `type:"structure" sensitive:"true"`
 
 	// The model of the device.
 	//
-	// Length Constraints: Maximum length of 128 characters.
+	// Constraints: Maximum length of 128 characters.
 	Model *string `type:"string"`
 
 	// The serial number of the device.
 	//
-	// Length Constraints: Maximum length of 128 characters.
+	// Constraints: Maximum length of 128 characters.
 	SerialNumber *string `type:"string"`
 
 	// The ID of the site.
@@ -6460,16 +20270,24 @@ type UpdateDeviceInput struct {
 
 	// The vendor of the device.
 	//
-	// Length Constraints: Maximum length of 128 characters.
+	// Constraints: Maximum length of 128 characters.
 	Vendor *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDeviceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDeviceInput) GoString() string {
 	return s.String()
 }
@@ -6494,6 +20312,12 @@ func (s *UpdateDeviceInput) Validate() error {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetAWSLocation sets the AWSLocation field's value.
+func (s *UpdateDeviceInput) SetAWSLocation(v *AWSLocation) *UpdateDeviceInput {
+	s.AWSLocation = v
+	return s
 }
 
 // SetDescription sets the Description field's value.
@@ -6557,12 +20381,20 @@ type UpdateDeviceOutput struct {
 	Device *Device `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDeviceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDeviceOutput) GoString() string {
 	return s.String()
 }
@@ -6578,7 +20410,7 @@ type UpdateGlobalNetworkInput struct {
 
 	// A description of the global network.
 	//
-	// Length Constraints: Maximum length of 256 characters.
+	// Constraints: Maximum length of 256 characters.
 	Description *string `type:"string"`
 
 	// The ID of your global network.
@@ -6587,12 +20419,20 @@ type UpdateGlobalNetworkInput struct {
 	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGlobalNetworkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGlobalNetworkInput) GoString() string {
 	return s.String()
 }
@@ -6632,12 +20472,20 @@ type UpdateGlobalNetworkOutput struct {
 	GlobalNetwork *GlobalNetwork `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGlobalNetworkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGlobalNetworkOutput) GoString() string {
 	return s.String()
 }
@@ -6656,7 +20504,7 @@ type UpdateLinkInput struct {
 
 	// A description of the link.
 	//
-	// Length Constraints: Maximum length of 256 characters.
+	// Constraints: Maximum length of 256 characters.
 	Description *string `type:"string"`
 
 	// The ID of the global network.
@@ -6671,21 +20519,29 @@ type UpdateLinkInput struct {
 
 	// The provider of the link.
 	//
-	// Length Constraints: Maximum length of 128 characters.
+	// Constraints: Maximum length of 128 characters.
 	Provider *string `type:"string"`
 
 	// The type of the link.
 	//
-	// Length Constraints: Maximum length of 128 characters.
+	// Constraints: Maximum length of 128 characters.
 	Type *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateLinkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateLinkInput) GoString() string {
 	return s.String()
 }
@@ -6755,12 +20611,20 @@ type UpdateLinkOutput struct {
 	Link *Link `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateLinkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateLinkOutput) GoString() string {
 	return s.String()
 }
@@ -6771,12 +20635,132 @@ func (s *UpdateLinkOutput) SetLink(v *Link) *UpdateLinkOutput {
 	return s
 }
 
+type UpdateNetworkResourceMetadataInput struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the global network.
+	//
+	// GlobalNetworkId is a required field
+	GlobalNetworkId *string `location:"uri" locationName:"globalNetworkId" type:"string" required:"true"`
+
+	// The resource metadata.
+	//
+	// Metadata is a required field
+	Metadata map[string]*string `type:"map" required:"true"`
+
+	// The ARN of the resource.
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `location:"uri" locationName:"resourceArn" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateNetworkResourceMetadataInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateNetworkResourceMetadataInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateNetworkResourceMetadataInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateNetworkResourceMetadataInput"}
+	if s.GlobalNetworkId == nil {
+		invalidParams.Add(request.NewErrParamRequired("GlobalNetworkId"))
+	}
+	if s.GlobalNetworkId != nil && len(*s.GlobalNetworkId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("GlobalNetworkId", 1))
+	}
+	if s.Metadata == nil {
+		invalidParams.Add(request.NewErrParamRequired("Metadata"))
+	}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+	if s.ResourceArn != nil && len(*s.ResourceArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ResourceArn", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetGlobalNetworkId sets the GlobalNetworkId field's value.
+func (s *UpdateNetworkResourceMetadataInput) SetGlobalNetworkId(v string) *UpdateNetworkResourceMetadataInput {
+	s.GlobalNetworkId = &v
+	return s
+}
+
+// SetMetadata sets the Metadata field's value.
+func (s *UpdateNetworkResourceMetadataInput) SetMetadata(v map[string]*string) *UpdateNetworkResourceMetadataInput {
+	s.Metadata = v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *UpdateNetworkResourceMetadataInput) SetResourceArn(v string) *UpdateNetworkResourceMetadataInput {
+	s.ResourceArn = &v
+	return s
+}
+
+type UpdateNetworkResourceMetadataOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The updated resource metadata.
+	Metadata map[string]*string `type:"map"`
+
+	// The ARN of the resource.
+	ResourceArn *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateNetworkResourceMetadataOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateNetworkResourceMetadataOutput) GoString() string {
+	return s.String()
+}
+
+// SetMetadata sets the Metadata field's value.
+func (s *UpdateNetworkResourceMetadataOutput) SetMetadata(v map[string]*string) *UpdateNetworkResourceMetadataOutput {
+	s.Metadata = v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *UpdateNetworkResourceMetadataOutput) SetResourceArn(v string) *UpdateNetworkResourceMetadataOutput {
+	s.ResourceArn = &v
+	return s
+}
+
 type UpdateSiteInput struct {
 	_ struct{} `type:"structure"`
 
 	// A description of your site.
 	//
-	// Length Constraints: Maximum length of 256 characters.
+	// Constraints: Maximum length of 256 characters.
 	Description *string `type:"string"`
 
 	// The ID of the global network.
@@ -6791,7 +20775,11 @@ type UpdateSiteInput struct {
 	//    * Latitude: The latitude of the site.
 	//
 	//    * Longitude: The longitude of the site.
-	Location *Location `type:"structure"`
+	//
+	// Location is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by UpdateSiteInput's
+	// String and GoString methods.
+	Location *Location `type:"structure" sensitive:"true"`
 
 	// The ID of your site.
 	//
@@ -6799,12 +20787,20 @@ type UpdateSiteInput struct {
 	SiteId *string `location:"uri" locationName:"siteId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSiteInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSiteInput) GoString() string {
 	return s.String()
 }
@@ -6862,12 +20858,20 @@ type UpdateSiteOutput struct {
 	Site *Site `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSiteOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSiteOutput) GoString() string {
 	return s.String()
 }
@@ -6875,6 +20879,113 @@ func (s UpdateSiteOutput) GoString() string {
 // SetSite sets the Site field's value.
 func (s *UpdateSiteOutput) SetSite(v *Site) *UpdateSiteOutput {
 	s.Site = v
+	return s
+}
+
+type UpdateVpcAttachmentInput struct {
+	_ struct{} `type:"structure"`
+
+	// Adds a subnet ARN to the VPC attachment.
+	AddSubnetArns []*string `type:"list"`
+
+	// The ID of the attachment.
+	//
+	// AttachmentId is a required field
+	AttachmentId *string `location:"uri" locationName:"attachmentId" type:"string" required:"true"`
+
+	// Additional options for updating the VPC attachment.
+	Options *VpcOptions `type:"structure"`
+
+	// Removes a subnet ARN from the attachment.
+	RemoveSubnetArns []*string `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateVpcAttachmentInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateVpcAttachmentInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateVpcAttachmentInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateVpcAttachmentInput"}
+	if s.AttachmentId == nil {
+		invalidParams.Add(request.NewErrParamRequired("AttachmentId"))
+	}
+	if s.AttachmentId != nil && len(*s.AttachmentId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AttachmentId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAddSubnetArns sets the AddSubnetArns field's value.
+func (s *UpdateVpcAttachmentInput) SetAddSubnetArns(v []*string) *UpdateVpcAttachmentInput {
+	s.AddSubnetArns = v
+	return s
+}
+
+// SetAttachmentId sets the AttachmentId field's value.
+func (s *UpdateVpcAttachmentInput) SetAttachmentId(v string) *UpdateVpcAttachmentInput {
+	s.AttachmentId = &v
+	return s
+}
+
+// SetOptions sets the Options field's value.
+func (s *UpdateVpcAttachmentInput) SetOptions(v *VpcOptions) *UpdateVpcAttachmentInput {
+	s.Options = v
+	return s
+}
+
+// SetRemoveSubnetArns sets the RemoveSubnetArns field's value.
+func (s *UpdateVpcAttachmentInput) SetRemoveSubnetArns(v []*string) *UpdateVpcAttachmentInput {
+	s.RemoveSubnetArns = v
+	return s
+}
+
+type UpdateVpcAttachmentOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Describes the updated VPC attachment.
+	VpcAttachment *VpcAttachment `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateVpcAttachmentOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateVpcAttachmentOutput) GoString() string {
+	return s.String()
+}
+
+// SetVpcAttachment sets the VpcAttachment field's value.
+func (s *UpdateVpcAttachmentOutput) SetVpcAttachment(v *VpcAttachment) *UpdateVpcAttachmentOutput {
+	s.VpcAttachment = v
 	return s
 }
 
@@ -6892,12 +21003,20 @@ type ValidationException struct {
 	Reason *string `type:"string" enum:"ValidationExceptionReason"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ValidationException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ValidationException) GoString() string {
 	return s.String()
 }
@@ -6955,12 +21074,20 @@ type ValidationExceptionField struct {
 	Name *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ValidationExceptionField) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ValidationExceptionField) GoString() string {
 	return s.String()
 }
@@ -6975,6 +21102,376 @@ func (s *ValidationExceptionField) SetMessage(v string) *ValidationExceptionFiel
 func (s *ValidationExceptionField) SetName(v string) *ValidationExceptionField {
 	s.Name = &v
 	return s
+}
+
+// Describes a VPC attachment.
+type VpcAttachment struct {
+	_ struct{} `type:"structure"`
+
+	// Provides details about the VPC attachment.
+	Attachment *Attachment `type:"structure"`
+
+	// Provides details about the VPC attachment.
+	Options *VpcOptions `type:"structure"`
+
+	// The subnet ARNs.
+	SubnetArns []*string `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s VpcAttachment) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s VpcAttachment) GoString() string {
+	return s.String()
+}
+
+// SetAttachment sets the Attachment field's value.
+func (s *VpcAttachment) SetAttachment(v *Attachment) *VpcAttachment {
+	s.Attachment = v
+	return s
+}
+
+// SetOptions sets the Options field's value.
+func (s *VpcAttachment) SetOptions(v *VpcOptions) *VpcAttachment {
+	s.Options = v
+	return s
+}
+
+// SetSubnetArns sets the SubnetArns field's value.
+func (s *VpcAttachment) SetSubnetArns(v []*string) *VpcAttachment {
+	s.SubnetArns = v
+	return s
+}
+
+// Describes the VPC options.
+type VpcOptions struct {
+	_ struct{} `type:"structure"`
+
+	// Indicates whether IPv6 is supported.
+	Ipv6Support *bool `type:"boolean"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s VpcOptions) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s VpcOptions) GoString() string {
+	return s.String()
+}
+
+// SetIpv6Support sets the Ipv6Support field's value.
+func (s *VpcOptions) SetIpv6Support(v bool) *VpcOptions {
+	s.Ipv6Support = &v
+	return s
+}
+
+const (
+	// AttachmentStateRejected is a AttachmentState enum value
+	AttachmentStateRejected = "REJECTED"
+
+	// AttachmentStatePendingAttachmentAcceptance is a AttachmentState enum value
+	AttachmentStatePendingAttachmentAcceptance = "PENDING_ATTACHMENT_ACCEPTANCE"
+
+	// AttachmentStateCreating is a AttachmentState enum value
+	AttachmentStateCreating = "CREATING"
+
+	// AttachmentStateFailed is a AttachmentState enum value
+	AttachmentStateFailed = "FAILED"
+
+	// AttachmentStateAvailable is a AttachmentState enum value
+	AttachmentStateAvailable = "AVAILABLE"
+
+	// AttachmentStateUpdating is a AttachmentState enum value
+	AttachmentStateUpdating = "UPDATING"
+
+	// AttachmentStatePendingNetworkUpdate is a AttachmentState enum value
+	AttachmentStatePendingNetworkUpdate = "PENDING_NETWORK_UPDATE"
+
+	// AttachmentStatePendingTagAcceptance is a AttachmentState enum value
+	AttachmentStatePendingTagAcceptance = "PENDING_TAG_ACCEPTANCE"
+
+	// AttachmentStateDeleting is a AttachmentState enum value
+	AttachmentStateDeleting = "DELETING"
+)
+
+// AttachmentState_Values returns all elements of the AttachmentState enum
+func AttachmentState_Values() []string {
+	return []string{
+		AttachmentStateRejected,
+		AttachmentStatePendingAttachmentAcceptance,
+		AttachmentStateCreating,
+		AttachmentStateFailed,
+		AttachmentStateAvailable,
+		AttachmentStateUpdating,
+		AttachmentStatePendingNetworkUpdate,
+		AttachmentStatePendingTagAcceptance,
+		AttachmentStateDeleting,
+	}
+}
+
+const (
+	// AttachmentTypeConnect is a AttachmentType enum value
+	AttachmentTypeConnect = "CONNECT"
+
+	// AttachmentTypeSiteToSiteVpn is a AttachmentType enum value
+	AttachmentTypeSiteToSiteVpn = "SITE_TO_SITE_VPN"
+
+	// AttachmentTypeVpc is a AttachmentType enum value
+	AttachmentTypeVpc = "VPC"
+)
+
+// AttachmentType_Values returns all elements of the AttachmentType enum
+func AttachmentType_Values() []string {
+	return []string{
+		AttachmentTypeConnect,
+		AttachmentTypeSiteToSiteVpn,
+		AttachmentTypeVpc,
+	}
+}
+
+const (
+	// ChangeActionAdd is a ChangeAction enum value
+	ChangeActionAdd = "ADD"
+
+	// ChangeActionModify is a ChangeAction enum value
+	ChangeActionModify = "MODIFY"
+
+	// ChangeActionRemove is a ChangeAction enum value
+	ChangeActionRemove = "REMOVE"
+)
+
+// ChangeAction_Values returns all elements of the ChangeAction enum
+func ChangeAction_Values() []string {
+	return []string{
+		ChangeActionAdd,
+		ChangeActionModify,
+		ChangeActionRemove,
+	}
+}
+
+const (
+	// ChangeSetStatePendingGeneration is a ChangeSetState enum value
+	ChangeSetStatePendingGeneration = "PENDING_GENERATION"
+
+	// ChangeSetStateFailedGeneration is a ChangeSetState enum value
+	ChangeSetStateFailedGeneration = "FAILED_GENERATION"
+
+	// ChangeSetStateReadyToExecute is a ChangeSetState enum value
+	ChangeSetStateReadyToExecute = "READY_TO_EXECUTE"
+
+	// ChangeSetStateExecuting is a ChangeSetState enum value
+	ChangeSetStateExecuting = "EXECUTING"
+
+	// ChangeSetStateExecutionSucceeded is a ChangeSetState enum value
+	ChangeSetStateExecutionSucceeded = "EXECUTION_SUCCEEDED"
+
+	// ChangeSetStateOutOfDate is a ChangeSetState enum value
+	ChangeSetStateOutOfDate = "OUT_OF_DATE"
+)
+
+// ChangeSetState_Values returns all elements of the ChangeSetState enum
+func ChangeSetState_Values() []string {
+	return []string{
+		ChangeSetStatePendingGeneration,
+		ChangeSetStateFailedGeneration,
+		ChangeSetStateReadyToExecute,
+		ChangeSetStateExecuting,
+		ChangeSetStateExecutionSucceeded,
+		ChangeSetStateOutOfDate,
+	}
+}
+
+const (
+	// ChangeTypeCoreNetworkSegment is a ChangeType enum value
+	ChangeTypeCoreNetworkSegment = "CORE_NETWORK_SEGMENT"
+
+	// ChangeTypeCoreNetworkEdge is a ChangeType enum value
+	ChangeTypeCoreNetworkEdge = "CORE_NETWORK_EDGE"
+
+	// ChangeTypeAttachmentMapping is a ChangeType enum value
+	ChangeTypeAttachmentMapping = "ATTACHMENT_MAPPING"
+
+	// ChangeTypeAttachmentRoutePropagation is a ChangeType enum value
+	ChangeTypeAttachmentRoutePropagation = "ATTACHMENT_ROUTE_PROPAGATION"
+
+	// ChangeTypeAttachmentRouteStatic is a ChangeType enum value
+	ChangeTypeAttachmentRouteStatic = "ATTACHMENT_ROUTE_STATIC"
+)
+
+// ChangeType_Values returns all elements of the ChangeType enum
+func ChangeType_Values() []string {
+	return []string{
+		ChangeTypeCoreNetworkSegment,
+		ChangeTypeCoreNetworkEdge,
+		ChangeTypeAttachmentMapping,
+		ChangeTypeAttachmentRoutePropagation,
+		ChangeTypeAttachmentRouteStatic,
+	}
+}
+
+const (
+	// ConnectPeerAssociationStatePending is a ConnectPeerAssociationState enum value
+	ConnectPeerAssociationStatePending = "PENDING"
+
+	// ConnectPeerAssociationStateAvailable is a ConnectPeerAssociationState enum value
+	ConnectPeerAssociationStateAvailable = "AVAILABLE"
+
+	// ConnectPeerAssociationStateDeleting is a ConnectPeerAssociationState enum value
+	ConnectPeerAssociationStateDeleting = "DELETING"
+
+	// ConnectPeerAssociationStateDeleted is a ConnectPeerAssociationState enum value
+	ConnectPeerAssociationStateDeleted = "DELETED"
+)
+
+// ConnectPeerAssociationState_Values returns all elements of the ConnectPeerAssociationState enum
+func ConnectPeerAssociationState_Values() []string {
+	return []string{
+		ConnectPeerAssociationStatePending,
+		ConnectPeerAssociationStateAvailable,
+		ConnectPeerAssociationStateDeleting,
+		ConnectPeerAssociationStateDeleted,
+	}
+}
+
+const (
+	// ConnectPeerStateCreating is a ConnectPeerState enum value
+	ConnectPeerStateCreating = "CREATING"
+
+	// ConnectPeerStateFailed is a ConnectPeerState enum value
+	ConnectPeerStateFailed = "FAILED"
+
+	// ConnectPeerStateAvailable is a ConnectPeerState enum value
+	ConnectPeerStateAvailable = "AVAILABLE"
+
+	// ConnectPeerStateDeleting is a ConnectPeerState enum value
+	ConnectPeerStateDeleting = "DELETING"
+)
+
+// ConnectPeerState_Values returns all elements of the ConnectPeerState enum
+func ConnectPeerState_Values() []string {
+	return []string{
+		ConnectPeerStateCreating,
+		ConnectPeerStateFailed,
+		ConnectPeerStateAvailable,
+		ConnectPeerStateDeleting,
+	}
+}
+
+const (
+	// ConnectionStatePending is a ConnectionState enum value
+	ConnectionStatePending = "PENDING"
+
+	// ConnectionStateAvailable is a ConnectionState enum value
+	ConnectionStateAvailable = "AVAILABLE"
+
+	// ConnectionStateDeleting is a ConnectionState enum value
+	ConnectionStateDeleting = "DELETING"
+
+	// ConnectionStateUpdating is a ConnectionState enum value
+	ConnectionStateUpdating = "UPDATING"
+)
+
+// ConnectionState_Values returns all elements of the ConnectionState enum
+func ConnectionState_Values() []string {
+	return []string{
+		ConnectionStatePending,
+		ConnectionStateAvailable,
+		ConnectionStateDeleting,
+		ConnectionStateUpdating,
+	}
+}
+
+const (
+	// ConnectionStatusUp is a ConnectionStatus enum value
+	ConnectionStatusUp = "UP"
+
+	// ConnectionStatusDown is a ConnectionStatus enum value
+	ConnectionStatusDown = "DOWN"
+)
+
+// ConnectionStatus_Values returns all elements of the ConnectionStatus enum
+func ConnectionStatus_Values() []string {
+	return []string{
+		ConnectionStatusUp,
+		ConnectionStatusDown,
+	}
+}
+
+const (
+	// ConnectionTypeBgp is a ConnectionType enum value
+	ConnectionTypeBgp = "BGP"
+
+	// ConnectionTypeIpsec is a ConnectionType enum value
+	ConnectionTypeIpsec = "IPSEC"
+)
+
+// ConnectionType_Values returns all elements of the ConnectionType enum
+func ConnectionType_Values() []string {
+	return []string{
+		ConnectionTypeBgp,
+		ConnectionTypeIpsec,
+	}
+}
+
+const (
+	// CoreNetworkPolicyAliasLive is a CoreNetworkPolicyAlias enum value
+	CoreNetworkPolicyAliasLive = "LIVE"
+
+	// CoreNetworkPolicyAliasLatest is a CoreNetworkPolicyAlias enum value
+	CoreNetworkPolicyAliasLatest = "LATEST"
+)
+
+// CoreNetworkPolicyAlias_Values returns all elements of the CoreNetworkPolicyAlias enum
+func CoreNetworkPolicyAlias_Values() []string {
+	return []string{
+		CoreNetworkPolicyAliasLive,
+		CoreNetworkPolicyAliasLatest,
+	}
+}
+
+const (
+	// CoreNetworkStateCreating is a CoreNetworkState enum value
+	CoreNetworkStateCreating = "CREATING"
+
+	// CoreNetworkStateUpdating is a CoreNetworkState enum value
+	CoreNetworkStateUpdating = "UPDATING"
+
+	// CoreNetworkStateAvailable is a CoreNetworkState enum value
+	CoreNetworkStateAvailable = "AVAILABLE"
+
+	// CoreNetworkStateDeleting is a CoreNetworkState enum value
+	CoreNetworkStateDeleting = "DELETING"
+)
+
+// CoreNetworkState_Values returns all elements of the CoreNetworkState enum
+func CoreNetworkState_Values() []string {
+	return []string{
+		CoreNetworkStateCreating,
+		CoreNetworkStateUpdating,
+		CoreNetworkStateAvailable,
+		CoreNetworkStateDeleting,
+	}
 }
 
 const (
@@ -7098,6 +21595,142 @@ func LinkState_Values() []string {
 }
 
 const (
+	// RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentNotFound is a RouteAnalysisCompletionReasonCode enum value
+	RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentNotFound = "TRANSIT_GATEWAY_ATTACHMENT_NOT_FOUND"
+
+	// RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentNotInTransitGateway is a RouteAnalysisCompletionReasonCode enum value
+	RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentNotInTransitGateway = "TRANSIT_GATEWAY_ATTACHMENT_NOT_IN_TRANSIT_GATEWAY"
+
+	// RouteAnalysisCompletionReasonCodeCyclicPathDetected is a RouteAnalysisCompletionReasonCode enum value
+	RouteAnalysisCompletionReasonCodeCyclicPathDetected = "CYCLIC_PATH_DETECTED"
+
+	// RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentStableRouteTableNotFound is a RouteAnalysisCompletionReasonCode enum value
+	RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentStableRouteTableNotFound = "TRANSIT_GATEWAY_ATTACHMENT_STABLE_ROUTE_TABLE_NOT_FOUND"
+
+	// RouteAnalysisCompletionReasonCodeRouteNotFound is a RouteAnalysisCompletionReasonCode enum value
+	RouteAnalysisCompletionReasonCodeRouteNotFound = "ROUTE_NOT_FOUND"
+
+	// RouteAnalysisCompletionReasonCodeBlackholeRouteForDestinationFound is a RouteAnalysisCompletionReasonCode enum value
+	RouteAnalysisCompletionReasonCodeBlackholeRouteForDestinationFound = "BLACKHOLE_ROUTE_FOR_DESTINATION_FOUND"
+
+	// RouteAnalysisCompletionReasonCodeInactiveRouteForDestinationFound is a RouteAnalysisCompletionReasonCode enum value
+	RouteAnalysisCompletionReasonCodeInactiveRouteForDestinationFound = "INACTIVE_ROUTE_FOR_DESTINATION_FOUND"
+
+	// RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentAttachArnNoMatch is a RouteAnalysisCompletionReasonCode enum value
+	RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentAttachArnNoMatch = "TRANSIT_GATEWAY_ATTACHMENT_ATTACH_ARN_NO_MATCH"
+
+	// RouteAnalysisCompletionReasonCodeMaxHopsExceeded is a RouteAnalysisCompletionReasonCode enum value
+	RouteAnalysisCompletionReasonCodeMaxHopsExceeded = "MAX_HOPS_EXCEEDED"
+
+	// RouteAnalysisCompletionReasonCodePossibleMiddlebox is a RouteAnalysisCompletionReasonCode enum value
+	RouteAnalysisCompletionReasonCodePossibleMiddlebox = "POSSIBLE_MIDDLEBOX"
+
+	// RouteAnalysisCompletionReasonCodeNoDestinationArnProvided is a RouteAnalysisCompletionReasonCode enum value
+	RouteAnalysisCompletionReasonCodeNoDestinationArnProvided = "NO_DESTINATION_ARN_PROVIDED"
+)
+
+// RouteAnalysisCompletionReasonCode_Values returns all elements of the RouteAnalysisCompletionReasonCode enum
+func RouteAnalysisCompletionReasonCode_Values() []string {
+	return []string{
+		RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentNotFound,
+		RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentNotInTransitGateway,
+		RouteAnalysisCompletionReasonCodeCyclicPathDetected,
+		RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentStableRouteTableNotFound,
+		RouteAnalysisCompletionReasonCodeRouteNotFound,
+		RouteAnalysisCompletionReasonCodeBlackholeRouteForDestinationFound,
+		RouteAnalysisCompletionReasonCodeInactiveRouteForDestinationFound,
+		RouteAnalysisCompletionReasonCodeTransitGatewayAttachmentAttachArnNoMatch,
+		RouteAnalysisCompletionReasonCodeMaxHopsExceeded,
+		RouteAnalysisCompletionReasonCodePossibleMiddlebox,
+		RouteAnalysisCompletionReasonCodeNoDestinationArnProvided,
+	}
+}
+
+const (
+	// RouteAnalysisCompletionResultCodeConnected is a RouteAnalysisCompletionResultCode enum value
+	RouteAnalysisCompletionResultCodeConnected = "CONNECTED"
+
+	// RouteAnalysisCompletionResultCodeNotConnected is a RouteAnalysisCompletionResultCode enum value
+	RouteAnalysisCompletionResultCodeNotConnected = "NOT_CONNECTED"
+)
+
+// RouteAnalysisCompletionResultCode_Values returns all elements of the RouteAnalysisCompletionResultCode enum
+func RouteAnalysisCompletionResultCode_Values() []string {
+	return []string{
+		RouteAnalysisCompletionResultCodeConnected,
+		RouteAnalysisCompletionResultCodeNotConnected,
+	}
+}
+
+const (
+	// RouteAnalysisStatusRunning is a RouteAnalysisStatus enum value
+	RouteAnalysisStatusRunning = "RUNNING"
+
+	// RouteAnalysisStatusCompleted is a RouteAnalysisStatus enum value
+	RouteAnalysisStatusCompleted = "COMPLETED"
+
+	// RouteAnalysisStatusFailed is a RouteAnalysisStatus enum value
+	RouteAnalysisStatusFailed = "FAILED"
+)
+
+// RouteAnalysisStatus_Values returns all elements of the RouteAnalysisStatus enum
+func RouteAnalysisStatus_Values() []string {
+	return []string{
+		RouteAnalysisStatusRunning,
+		RouteAnalysisStatusCompleted,
+		RouteAnalysisStatusFailed,
+	}
+}
+
+const (
+	// RouteStateActive is a RouteState enum value
+	RouteStateActive = "ACTIVE"
+
+	// RouteStateBlackhole is a RouteState enum value
+	RouteStateBlackhole = "BLACKHOLE"
+)
+
+// RouteState_Values returns all elements of the RouteState enum
+func RouteState_Values() []string {
+	return []string{
+		RouteStateActive,
+		RouteStateBlackhole,
+	}
+}
+
+const (
+	// RouteTableTypeTransitGatewayRouteTable is a RouteTableType enum value
+	RouteTableTypeTransitGatewayRouteTable = "TRANSIT_GATEWAY_ROUTE_TABLE"
+
+	// RouteTableTypeCoreNetworkSegment is a RouteTableType enum value
+	RouteTableTypeCoreNetworkSegment = "CORE_NETWORK_SEGMENT"
+)
+
+// RouteTableType_Values returns all elements of the RouteTableType enum
+func RouteTableType_Values() []string {
+	return []string{
+		RouteTableTypeTransitGatewayRouteTable,
+		RouteTableTypeCoreNetworkSegment,
+	}
+}
+
+const (
+	// RouteTypePropagated is a RouteType enum value
+	RouteTypePropagated = "PROPAGATED"
+
+	// RouteTypeStatic is a RouteType enum value
+	RouteTypeStatic = "STATIC"
+)
+
+// RouteType_Values returns all elements of the RouteType enum
+func RouteType_Values() []string {
+	return []string{
+		RouteTypePropagated,
+		RouteTypeStatic,
+	}
+}
+
+const (
 	// SiteStatePending is a SiteState enum value
 	SiteStatePending = "PENDING"
 
@@ -7118,6 +21751,30 @@ func SiteState_Values() []string {
 		SiteStateAvailable,
 		SiteStateDeleting,
 		SiteStateUpdating,
+	}
+}
+
+const (
+	// TransitGatewayConnectPeerAssociationStatePending is a TransitGatewayConnectPeerAssociationState enum value
+	TransitGatewayConnectPeerAssociationStatePending = "PENDING"
+
+	// TransitGatewayConnectPeerAssociationStateAvailable is a TransitGatewayConnectPeerAssociationState enum value
+	TransitGatewayConnectPeerAssociationStateAvailable = "AVAILABLE"
+
+	// TransitGatewayConnectPeerAssociationStateDeleting is a TransitGatewayConnectPeerAssociationState enum value
+	TransitGatewayConnectPeerAssociationStateDeleting = "DELETING"
+
+	// TransitGatewayConnectPeerAssociationStateDeleted is a TransitGatewayConnectPeerAssociationState enum value
+	TransitGatewayConnectPeerAssociationStateDeleted = "DELETED"
+)
+
+// TransitGatewayConnectPeerAssociationState_Values returns all elements of the TransitGatewayConnectPeerAssociationState enum
+func TransitGatewayConnectPeerAssociationState_Values() []string {
+	return []string{
+		TransitGatewayConnectPeerAssociationStatePending,
+		TransitGatewayConnectPeerAssociationStateAvailable,
+		TransitGatewayConnectPeerAssociationStateDeleting,
+		TransitGatewayConnectPeerAssociationStateDeleted,
 	}
 }
 
@@ -7146,6 +21803,18 @@ func TransitGatewayRegistrationState_Values() []string {
 		TransitGatewayRegistrationStateDeleting,
 		TransitGatewayRegistrationStateDeleted,
 		TransitGatewayRegistrationStateFailed,
+	}
+}
+
+const (
+	// TunnelProtocolGre is a TunnelProtocol enum value
+	TunnelProtocolGre = "GRE"
+)
+
+// TunnelProtocol_Values returns all elements of the TunnelProtocol enum
+func TunnelProtocol_Values() []string {
+	return []string{
+		TunnelProtocolGre,
 	}
 }
 

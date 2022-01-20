@@ -57,8 +57,8 @@ const (
 	// "AccountOwnerNotVerifiedException".
 	//
 	// You can't invite an existing account to your organization until you verify
-	// that you own the email address associated with the master account. For more
-	// information, see Email Address Verification (http://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_create.html#about-email-verification)
+	// that you own the email address associated with the management account. For
+	// more information, see Email Address Verification (http://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_create.html#about-email-verification)
 	// in the AWS Organizations User Guide.
 	ErrCodeAccountOwnerNotVerifiedException = "AccountOwnerNotVerifiedException"
 
@@ -96,9 +96,10 @@ const (
 	// Some of the reasons in the following list might not be applicable to this
 	// specific API or operation.
 	//
-	//    * ACCOUNT_CANNOT_LEAVE_ORGANIZAION: You attempted to remove the master
-	//    account from the organization. You can't remove the master account. Instead,
-	//    after you remove all member accounts, delete the organization itself.
+	//    * ACCOUNT_CANNOT_LEAVE_ORGANIZATION: You attempted to remove the management
+	//    account from the organization. You can't remove the management account.
+	//    Instead, after you remove all member accounts, delete the organization
+	//    itself.
 	//
 	//    * ACCOUNT_CANNOT_LEAVE_WITHOUT_EULA: You attempted to remove an account
 	//    from the organization that doesn't yet have enough information to exist
@@ -130,7 +131,7 @@ const (
 	//    AWS Support (https://console.aws.amazon.com/support/home#/).
 	//
 	//    * CANNOT_REGISTER_MASTER_AS_DELEGATED_ADMINISTRATOR: You attempted to
-	//    register the master account of the organization as a delegated administrator
+	//    register the management account of the organization as a delegated administrator
 	//    for an AWS service integrated with Organizations. You can designate only
 	//    a member account as a delegated administrator.
 	//
@@ -155,30 +156,30 @@ const (
 	//    handshakes that you can send in one day.
 	//
 	//    * MASTER_ACCOUNT_ADDRESS_DOES_NOT_MATCH_MARKETPLACE: To create an account
-	//    in this organization, you first must migrate the organization's master
-	//    account to the marketplace that corresponds to the master account's address.
-	//    For example, accounts with India addresses must be associated with the
-	//    AISPL marketplace. All accounts in an organization must be associated
+	//    in this organization, you first must migrate the organization's management
+	//    account to the marketplace that corresponds to the management account's
+	//    address. For example, accounts with India addresses must be associated
+	//    with the AISPL marketplace. All accounts in an organization must be associated
 	//    with the same marketplace.
 	//
 	//    * MASTER_ACCOUNT_MISSING_BUSINESS_LICENSE: Applies only to the AWS Regions
-	//    in China. To create an organization, the master must have an valid business
+	//    in China. To create an organization, the master must have a valid business
 	//    license. For more information, contact customer support.
 	//
 	//    * MASTER_ACCOUNT_MISSING_CONTACT_INFO: To complete this operation, you
-	//    must first provide a valid contact address and phone number for the master
+	//    must first provide a valid contact address and phone number for the management
 	//    account. Then try the operation again.
 	//
 	//    * MASTER_ACCOUNT_NOT_GOVCLOUD_ENABLED: To complete this operation, the
-	//    master account must have an associated account in the AWS GovCloud (US-West)
-	//    Region. For more information, see AWS Organizations (http://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-organizations.html)
+	//    management account must have an associated account in the AWS GovCloud
+	//    (US-West) Region. For more information, see AWS Organizations (http://docs.aws.amazon.com/govcloud-us/latest/UserGuide/govcloud-organizations.html)
 	//    in the AWS GovCloud User Guide.
 	//
 	//    * MASTER_ACCOUNT_PAYMENT_INSTRUMENT_REQUIRED: To create an organization
-	//    with this master account, you first must associate a valid payment instrument,
-	//    such as a credit card, with the account. Follow the steps at To leave
-	//    an organization when all required account information has not yet been
-	//    provided (http://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_remove.html#leave-without-all-info)
+	//    with this management account, you first must associate a valid payment
+	//    instrument, such as a credit card, with the account. Follow the steps
+	//    at To leave an organization when all required account information has
+	//    not yet been provided (http://docs.aws.amazon.com/organizations/latest/userguide/orgs_manage_accounts_remove.html#leave-without-all-info)
 	//    in the AWS Organizations User Guide.
 	//
 	//    * MAX_DELEGATED_ADMINISTRATORS_FOR_SERVICE_LIMIT_EXCEEDED: You attempted
@@ -276,10 +277,10 @@ const (
 	// ErrCodeEffectivePolicyNotFoundException for service response error code
 	// "EffectivePolicyNotFoundException".
 	//
-	// If you ran this action on the master account, this policy type is not enabled.
-	// If you ran the action on a member account, the account doesn't have an effective
-	// policy of this type. Contact the administrator of your organization about
-	// attaching a policy of this type to the account.
+	// If you ran this action on the management account, this policy type is not
+	// enabled. If you ran the action on a member account, the account doesn't have
+	// an effective policy of this type. Contact the administrator of your organization
+	// about attaching a policy of this type to the account.
 	ErrCodeEffectivePolicyNotFoundException = "EffectivePolicyNotFoundException"
 
 	// ErrCodeFinalizingOrganizationException for service response error code
@@ -327,6 +328,10 @@ const (
 	//    * ORGANIZATION_ALREADY_HAS_ALL_FEATURES: The handshake request is invalid
 	//    because the organization has already enabled all features.
 	//
+	//    * ORGANIZATION_IS_ALREADY_PENDING_ALL_FEATURES_MIGRATION: The handshake
+	//    request is invalid because the organization has already started the process
+	//    to enable all features.
+	//
 	//    * ORGANIZATION_FROM_DIFFERENT_SELLER_OF_RECORD: The request failed because
 	//    the account is from a different marketplace than the accounts in the organization.
 	//    For example, accounts with India addresses must be associated with the
@@ -365,12 +370,20 @@ const (
 	// Some of the reasons in the following list might not be applicable to this
 	// specific API or operation.
 	//
+	//    * DUPLICATE_TAG_KEY: Tag keys must be unique among the tags attached to
+	//    the same entity.
+	//
 	//    * IMMUTABLE_POLICY: You specified a policy that is managed by AWS and
 	//    can't be modified.
 	//
 	//    * INPUT_REQUIRED: You must include a value for all required parameters.
 	//
+	//    * INVALID_EMAIL_ADDRESS_TARGET: You specified an invalid email address
+	//    for the invited account owner.
+	//
 	//    * INVALID_ENUM: You specified an invalid value.
+	//
+	//    * INVALID_ENUM_POLICY_TYPE: You specified an invalid policy type string.
 	//
 	//    * INVALID_FULL_NAME_TARGET: You specified a full name that contains invalid
 	//    characters.
@@ -420,6 +433,12 @@ const (
 	//
 	//    * MOVING_ACCOUNT_BETWEEN_DIFFERENT_ROOTS: You can move an account only
 	//    between entities in the same root.
+	//
+	//    * TARGET_NOT_SUPPORTED: You can't perform the specified operation on that
+	//    target entity.
+	//
+	//    * UNRECOGNIZED_SERVICE_PRINCIPAL: You specified a service principal that
+	//    isn't recognized.
 	ErrCodeInvalidInputException = "InvalidInputException"
 
 	// ErrCodeMalformedPolicyDocumentException for service response error code
@@ -434,16 +453,17 @@ const (
 	// ErrCodeMasterCannotLeaveOrganizationException for service response error code
 	// "MasterCannotLeaveOrganizationException".
 	//
-	// You can't remove a master account from an organization. If you want the master
-	// account to become a member account in another organization, you must first
-	// delete the current organization of the master account.
+	// You can't remove a management account from an organization. If you want the
+	// management account to become a member account in another organization, you
+	// must first delete the current organization of the management account.
 	ErrCodeMasterCannotLeaveOrganizationException = "MasterCannotLeaveOrganizationException"
 
 	// ErrCodeOrganizationNotEmptyException for service response error code
 	// "OrganizationNotEmptyException".
 	//
 	// The organization isn't empty. To delete an organization, you must first remove
-	// all accounts except the master account, delete all OUs, and delete all policies.
+	// all accounts except the management account, delete all OUs, and delete all
+	// policies.
 	ErrCodeOrganizationNotEmptyException = "OrganizationNotEmptyException"
 
 	// ErrCodeOrganizationalUnitNotEmptyException for service response error code
@@ -539,7 +559,7 @@ const (
 	// ErrCodeTargetNotFoundException for service response error code
 	// "TargetNotFoundException".
 	//
-	// We can't find a root, OU, or account with the TargetId that you specified.
+	// We can't find a root, OU, account, or policy with the TargetId that you specified.
 	ErrCodeTargetNotFoundException = "TargetNotFoundException"
 
 	// ErrCodeTooManyRequestsException for service response error code

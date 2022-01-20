@@ -26,10 +26,16 @@ const (
 	// The specified device is currently offline.
 	ErrCodeDeviceOfflineException = "DeviceOfflineException"
 
+	// ErrCodeDeviceRetiredException for service response error code
+	// "DeviceRetiredException".
+	//
+	// The specified device has been retired.
+	ErrCodeDeviceRetiredException = "DeviceRetiredException"
+
 	// ErrCodeInternalServiceException for service response error code
 	// "InternalServiceException".
 	//
-	// The request processing has failed because of an unknown error, exception
+	// The request processing has failed because of an unknown error, exception,
 	// or failure.
 	ErrCodeInternalServiceException = "InternalServiceException"
 
@@ -42,7 +48,7 @@ const (
 	// ErrCodeServiceQuotaExceededException for service response error code
 	// "ServiceQuotaExceededException".
 	//
-	// The request failed because a service quota is met.
+	// The request failed because a service quota is exceeded.
 	ErrCodeServiceQuotaExceededException = "ServiceQuotaExceededException"
 
 	// ErrCodeThrottlingException for service response error code
@@ -62,6 +68,7 @@ var exceptionFromCode = map[string]func(protocol.ResponseMetadata) error{
 	"AccessDeniedException":         newErrorAccessDeniedException,
 	"ConflictException":             newErrorConflictException,
 	"DeviceOfflineException":        newErrorDeviceOfflineException,
+	"DeviceRetiredException":        newErrorDeviceRetiredException,
 	"InternalServiceException":      newErrorInternalServiceException,
 	"ResourceNotFoundException":     newErrorResourceNotFoundException,
 	"ServiceQuotaExceededException": newErrorServiceQuotaExceededException,

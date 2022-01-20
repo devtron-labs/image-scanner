@@ -57,11 +57,11 @@ func (c *StorageGateway) ActivateGatewayRequest(input *ActivateGatewayInput) (re
 // ActivateGateway API operation for AWS Storage Gateway.
 //
 // Activates the gateway you previously deployed on your host. In the activation
-// process, you specify information such as the AWS Region that you want to
-// use for storing snapshots or tapes, the time zone for scheduled snapshots
-// the gateway snapshot schedule window, an activation key, and a name for your
-// gateway. The activation process also associates your gateway with your account.
-// For more information, see UpdateGatewayInformation.
+// process, you specify information such as the Amazon Web Services Region that
+// you want to use for storing snapshots or tapes, the time zone for scheduled
+// snapshots the gateway snapshot schedule window, an activation key, and a
+// name for your gateway. The activation process also associates your gateway
+// with your account. For more information, see UpdateGatewayInformation.
 //
 // You must turn on the gateway VM before you can activate your gateway.
 //
@@ -149,7 +149,7 @@ func (c *StorageGateway) AddCacheRequest(input *AddCacheInput) (req *request.Req
 //
 // Configures one or more gateway local disks as cache for a gateway. This operation
 // is only supported in the cached volume, tape, and file gateway type (see
-// How AWS Storage Gateway works (architecture) (https://docs.aws.amazon.com/storagegateway/latest/userguide/StorageGatewayConcepts.html).
+// How Storage Gateway works (architecture) (https://docs.aws.amazon.com/storagegateway/latest/userguide/StorageGatewayConcepts.html).
 //
 // In the request, you specify the gateway Amazon Resource Name (ARN) to which
 // you want to add cache, and one or more disk IDs that you want to configure
@@ -241,7 +241,7 @@ func (c *StorageGateway) AddTagsToResourceRequest(input *AddTagsToResourceInput)
 // to resources, which you can use to categorize these resources. For example,
 // you can categorize resources by purpose, owner, environment, or team. Each
 // tag consists of a key and a value, which you define. You can add tags to
-// the following AWS Storage Gateway resources:
+// the following Storage Gateway resources:
 //
 //    * Storage gateways of all types
 //
@@ -250,6 +250,8 @@ func (c *StorageGateway) AddTagsToResourceRequest(input *AddTagsToResourceInput)
 //    * Virtual tapes
 //
 //    * NFS and SMB file shares
+//
+//    * File System associations
 //
 // You can create a maximum of 50 tags for each resource. Virtual tapes and
 // storage volumes that are recovered to a new gateway maintain their tags.
@@ -337,7 +339,7 @@ func (c *StorageGateway) AddUploadBufferRequest(input *AddUploadBufferInput) (re
 // AddUploadBuffer API operation for AWS Storage Gateway.
 //
 // Configures one or more gateway local disks as upload buffer for a specified
-// gateway. This operation is supported for the stored volume, cached volume
+// gateway. This operation is supported for the stored volume, cached volume,
 // and tape gateway types.
 //
 // In the request, you specify the gateway Amazon Resource Name (ARN) to which
@@ -561,6 +563,93 @@ func (c *StorageGateway) AssignTapePool(input *AssignTapePoolInput) (*AssignTape
 // for more information on using Contexts.
 func (c *StorageGateway) AssignTapePoolWithContext(ctx aws.Context, input *AssignTapePoolInput, opts ...request.Option) (*AssignTapePoolOutput, error) {
 	req, out := c.AssignTapePoolRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opAssociateFileSystem = "AssociateFileSystem"
+
+// AssociateFileSystemRequest generates a "aws/request.Request" representing the
+// client's request for the AssociateFileSystem operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See AssociateFileSystem for more information on using the AssociateFileSystem
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the AssociateFileSystemRequest method.
+//    req, resp := client.AssociateFileSystemRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/AssociateFileSystem
+func (c *StorageGateway) AssociateFileSystemRequest(input *AssociateFileSystemInput) (req *request.Request, output *AssociateFileSystemOutput) {
+	op := &request.Operation{
+		Name:       opAssociateFileSystem,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &AssociateFileSystemInput{}
+	}
+
+	output = &AssociateFileSystemOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// AssociateFileSystem API operation for AWS Storage Gateway.
+//
+// Associate an Amazon FSx file system with the FSx File Gateway. After the
+// association process is complete, the file shares on the Amazon FSx file system
+// are available for access through the gateway. This operation only supports
+// the FSx File Gateway type.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation AssociateFileSystem for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/AssociateFileSystem
+func (c *StorageGateway) AssociateFileSystem(input *AssociateFileSystemInput) (*AssociateFileSystemOutput, error) {
+	req, out := c.AssociateFileSystemRequest(input)
+	return out, req.Send()
+}
+
+// AssociateFileSystemWithContext is the same as AssociateFileSystem with the addition of
+// the ability to pass a context and additional request options.
+//
+// See AssociateFileSystem for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) AssociateFileSystemWithContext(ctx aws.Context, input *AssociateFileSystemInput, opts ...request.Option) (*AssociateFileSystemOutput, error) {
+	req, out := c.AssociateFileSystemRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -970,19 +1059,22 @@ func (c *StorageGateway) CreateNFSFileShareRequest(input *CreateNFSFileShareInpu
 
 // CreateNFSFileShare API operation for AWS Storage Gateway.
 //
-// Creates a Network File System (NFS) file share on an existing file gateway.
+// Creates a Network File System (NFS) file share on an existing S3 File Gateway.
 // In Storage Gateway, a file share is a file system mount point backed by Amazon
 // S3 cloud storage. Storage Gateway exposes file shares using an NFS interface.
-// This operation is only supported for file gateways.
+// This operation is only supported for S3 File Gateways.
 //
-// File gateway requires AWS Security Token Service (AWS STS) to be activated
-// to enable you to create a file share. Make sure AWS STS is activated in the
-// AWS Region you are creating your file gateway in. If AWS STS is not activated
-// in the AWS Region, activate it. For information about how to activate AWS
-// STS, see Activating and deactivating AWS STS in an AWS Region (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
-// in the AWS Identity and Access Management User Guide.
+// S3 File gateway requires Security Token Service (Amazon Web Services STS)
+// to be activated to enable you to create a file share. Make sure Amazon Web
+// Services STS is activated in the Amazon Web Services Region you are creating
+// your S3 File Gateway in. If Amazon Web Services STS is not activated in the
+// Amazon Web Services Region, activate it. For information about how to activate
+// Amazon Web Services STS, see Activating and deactivating Amazon Web Services
+// STS in an Amazon Web Services Region (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
+// in the Identity and Access Management User Guide.
 //
-// File gateway does not support creating hard or symbolic links on a file share.
+// S3 File Gateways do not support creating hard or symbolic links on a file
+// share.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1066,17 +1158,19 @@ func (c *StorageGateway) CreateSMBFileShareRequest(input *CreateSMBFileShareInpu
 
 // CreateSMBFileShare API operation for AWS Storage Gateway.
 //
-// Creates a Server Message Block (SMB) file share on an existing file gateway.
+// Creates a Server Message Block (SMB) file share on an existing S3 File Gateway.
 // In Storage Gateway, a file share is a file system mount point backed by Amazon
-// S3 cloud storage. Storage Gateway expose file shares using an SMB interface.
-// This operation is only supported for file gateways.
+// S3 cloud storage. Storage Gateway exposes file shares using an SMB interface.
+// This operation is only supported for S3 File Gateways.
 //
-// File gateways require AWS Security Token Service (AWS STS) to be activated
-// to enable you to create a file share. Make sure that AWS STS is activated
-// in the AWS Region you are creating your file gateway in. If AWS STS is not
-// activated in this AWS Region, activate it. For information about how to activate
-// AWS STS, see Activating and deactivating AWS STS in an AWS Region (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
-// in the AWS Identity and Access Management User Guide.
+// S3 File Gateways require Security Token Service (Amazon Web Services STS)
+// to be activated to enable you to create a file share. Make sure that Amazon
+// Web Services STS is activated in the Amazon Web Services Region you are creating
+// your S3 File Gateway in. If Amazon Web Services STS is not activated in this
+// Amazon Web Services Region, activate it. For information about how to activate
+// Amazon Web Services STS, see Activating and deactivating Amazon Web Services
+// STS in an Amazon Web Services Region (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
+// in the Identity and Access Management User Guide.
 //
 // File gateways don't support creating hard or symbolic links on a file share.
 //
@@ -1164,21 +1258,21 @@ func (c *StorageGateway) CreateSnapshotRequest(input *CreateSnapshotInput) (req 
 //
 // Initiates a snapshot of a volume.
 //
-// AWS Storage Gateway provides the ability to back up point-in-time snapshots
-// of your data to Amazon Simple Storage (Amazon S3) for durable off-site recovery,
-// as well as import the data to an Amazon Elastic Block Store (EBS) volume
-// in Amazon Elastic Compute Cloud (EC2). You can take snapshots of your gateway
-// volume on a scheduled or ad hoc basis. This API enables you to take ad-hoc
-// snapshot. For more information, see Editing a snapshot schedule (https://docs.aws.amazon.com/storagegateway/latest/userguide/managing-volumes.html#SchedulingSnapshot).
+// Storage Gateway provides the ability to back up point-in-time snapshots of
+// your data to Amazon Simple Storage (Amazon S3) for durable off-site recovery,
+// and also import the data to an Amazon Elastic Block Store (EBS) volume in
+// Amazon Elastic Compute Cloud (EC2). You can take snapshots of your gateway
+// volume on a scheduled or ad hoc basis. This API enables you to take an ad
+// hoc snapshot. For more information, see Editing a snapshot schedule (https://docs.aws.amazon.com/storagegateway/latest/userguide/managing-volumes.html#SchedulingSnapshot).
 //
-// In the CreateSnapshot request you identify the volume by providing its Amazon
+// In the CreateSnapshot request, you identify the volume by providing its Amazon
 // Resource Name (ARN). You must also provide description for the snapshot.
-// When AWS Storage Gateway takes the snapshot of specified volume, the snapshot
-// and description appears in the AWS Storage Gateway Console. In response,
-// AWS Storage Gateway returns you a snapshot ID. You can use this snapshot
-// ID to check the snapshot progress or later use it when you want to create
-// a volume from a snapshot. This operation is only supported in stored and
-// cached volume gateway type.
+// When Storage Gateway takes the snapshot of specified volume, the snapshot
+// and description appears in the Storage Gateway console. In response, Storage
+// Gateway returns you a snapshot ID. You can use this snapshot ID to check
+// the snapshot progress or later use it when you want to create a volume from
+// a snapshot. This operation is only supported in stored and cached volume
+// gateway type.
 //
 // To list or delete a snapshot, you must use the Amazon EC2 API. For more information,
 // see DescribeSnapshots (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/API_DescribeSnapshots.html)
@@ -1285,8 +1379,8 @@ func (c *StorageGateway) CreateSnapshotFromVolumeRecoveryPointRequest(input *Cre
 // In the CreateSnapshotFromVolumeRecoveryPoint request, you identify the volume
 // by providing its Amazon Resource Name (ARN). You must also provide a description
 // for the snapshot. When the gateway takes a snapshot of the specified volume,
-// the snapshot and its description appear in the AWS Storage Gateway console.
-// In response, the gateway returns you a snapshot ID. You can use this snapshot
+// the snapshot and its description appear in the Storage Gateway console. In
+// response, the gateway returns you a snapshot ID. You can use this snapshot
 // ID to check the snapshot progress or later use it when you want to create
 // a volume from a snapshot.
 //
@@ -1389,8 +1483,8 @@ func (c *StorageGateway) CreateStorediSCSIVolumeRequest(input *CreateStorediSCSI
 // snapshot, or create an empty volume. If you choose to create an empty gateway
 // volume, then any existing data on the disk is erased.
 //
-// In the request you must specify the gateway and the disk information on which
-// you are creating the volume. In response, the gateway creates the volume
+// In the request, you must specify the gateway and the disk information on
+// which you are creating the volume. In response, the gateway creates the volume
 // and returns volume information such as the volume Amazon Resource Name (ARN),
 // its size, and the iSCSI target ARN that initiators can use to connect to
 // the volume target.
@@ -1428,6 +1522,91 @@ func (c *StorageGateway) CreateStorediSCSIVolume(input *CreateStorediSCSIVolumeI
 // for more information on using Contexts.
 func (c *StorageGateway) CreateStorediSCSIVolumeWithContext(ctx aws.Context, input *CreateStorediSCSIVolumeInput, opts ...request.Option) (*CreateStorediSCSIVolumeOutput, error) {
 	req, out := c.CreateStorediSCSIVolumeRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateTapePool = "CreateTapePool"
+
+// CreateTapePoolRequest generates a "aws/request.Request" representing the
+// client's request for the CreateTapePool operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateTapePool for more information on using the CreateTapePool
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateTapePoolRequest method.
+//    req, resp := client.CreateTapePoolRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/CreateTapePool
+func (c *StorageGateway) CreateTapePoolRequest(input *CreateTapePoolInput) (req *request.Request, output *CreateTapePoolOutput) {
+	op := &request.Operation{
+		Name:       opCreateTapePool,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &CreateTapePoolInput{}
+	}
+
+	output = &CreateTapePoolOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateTapePool API operation for AWS Storage Gateway.
+//
+// Creates a new custom tape pool. You can use custom tape pool to enable tape
+// retention lock on tapes that are archived in the custom pool.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation CreateTapePool for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/CreateTapePool
+func (c *StorageGateway) CreateTapePool(input *CreateTapePoolInput) (*CreateTapePoolOutput, error) {
+	req, out := c.CreateTapePoolRequest(input)
+	return out, req.Send()
+}
+
+// CreateTapePoolWithContext is the same as CreateTapePool with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateTapePool for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) CreateTapePoolWithContext(ctx aws.Context, input *CreateTapePoolInput, opts ...request.Option) (*CreateTapePoolOutput, error) {
+	req, out := c.CreateTapePoolRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -1478,7 +1657,7 @@ func (c *StorageGateway) CreateTapeWithBarcodeRequest(input *CreateTapeWithBarco
 // CreateTapeWithBarcode API operation for AWS Storage Gateway.
 //
 // Creates a virtual tape by using your own barcode. You write data to the virtual
-// tape and then archive the tape. A barcode is unique and can not be reused
+// tape and then archive the tape. A barcode is unique and cannot be reused
 // if it has already been used on a tape. This applies to barcodes used on deleted
 // tapes. This operation is only supported in the tape gateway type.
 //
@@ -1746,8 +1925,8 @@ func (c *StorageGateway) DeleteBandwidthRateLimitRequest(input *DeleteBandwidthR
 // upload and download bandwidth rate limit, or you can delete both. If you
 // delete only one of the limits, the other limit remains unchanged. To specify
 // which gateway to work with, use the Amazon Resource Name (ARN) of the gateway
-// in your request. This operation is supported for the stored volume, cached
-// volume and tape gateway types.
+// in your request. This operation is supported only for the stored volume,
+// cached volume, and tape gateway types.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1917,8 +2096,8 @@ func (c *StorageGateway) DeleteFileShareRequest(input *DeleteFileShareInput) (re
 
 // DeleteFileShare API operation for AWS Storage Gateway.
 //
-// Deletes a file share from a file gateway. This operation is only supported
-// for file gateways.
+// Deletes a file share from an S3 File Gateway. This operation is only supported
+// for S3 File Gateways.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -2017,7 +2196,7 @@ func (c *StorageGateway) DeleteGatewayRequest(input *DeleteGatewayInput) (req *r
 // for these snapshots. You can choose to remove all remaining Amazon EBS snapshots
 // by canceling your Amazon EC2 subscription. If you prefer not to cancel your
 // Amazon EC2 subscription, you can delete your snapshots using the Amazon EC2
-// console. For more information, see the AWS Storage Gateway detail page (http://aws.amazon.com/storagegateway).
+// console. For more information, see the Storage Gateway detail page (http://aws.amazon.com/storagegateway).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -2105,7 +2284,7 @@ func (c *StorageGateway) DeleteSnapshotScheduleRequest(input *DeleteSnapshotSche
 //
 // You can take snapshots of your gateway volumes on a scheduled or ad hoc basis.
 // This API action enables you to delete a snapshot schedule for a volume. For
-// more information, see Backing up your volumes (https://docs.aws.amazon.com/storagegatewaylatest/userguide/backing-up-volumes.html).
+// more information, see Backing up your volumes (https://docs.aws.amazon.com/storagegateway/latest/userguide/backing-up-volumes.html).
 // In the DeleteSnapshotSchedule request, you identify the volume by providing
 // its Amazon Resource Name (ARN). This operation is only supported in stored
 // and cached volume gateway types.
@@ -2322,6 +2501,92 @@ func (c *StorageGateway) DeleteTapeArchiveWithContext(ctx aws.Context, input *De
 	return out, req.Send()
 }
 
+const opDeleteTapePool = "DeleteTapePool"
+
+// DeleteTapePoolRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteTapePool operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteTapePool for more information on using the DeleteTapePool
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteTapePoolRequest method.
+//    req, resp := client.DeleteTapePoolRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/DeleteTapePool
+func (c *StorageGateway) DeleteTapePoolRequest(input *DeleteTapePoolInput) (req *request.Request, output *DeleteTapePoolOutput) {
+	op := &request.Operation{
+		Name:       opDeleteTapePool,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DeleteTapePoolInput{}
+	}
+
+	output = &DeleteTapePoolOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DeleteTapePool API operation for AWS Storage Gateway.
+//
+// Delete a custom tape pool. A custom tape pool can only be deleted if there
+// are no tapes in the pool and if there are no automatic tape creation policies
+// that reference the custom tape pool.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation DeleteTapePool for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/DeleteTapePool
+func (c *StorageGateway) DeleteTapePool(input *DeleteTapePoolInput) (*DeleteTapePoolOutput, error) {
+	req, out := c.DeleteTapePoolRequest(input)
+	return out, req.Send()
+}
+
+// DeleteTapePoolWithContext is the same as DeleteTapePool with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteTapePool for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) DeleteTapePoolWithContext(ctx aws.Context, input *DeleteTapePoolInput, opts ...request.Option) (*DeleteTapePoolOutput, error) {
+	req, out := c.DeleteTapePoolRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opDeleteVolume = "DeleteVolume"
 
 // DeleteVolumeRequest generates a "aws/request.Request" representing the
@@ -2464,7 +2729,7 @@ func (c *StorageGateway) DescribeAvailabilityMonitorTestRequest(input *DescribeA
 
 // DescribeAvailabilityMonitorTest API operation for AWS Storage Gateway.
 //
-// Returns information about the most recent High Availability monitoring test
+// Returns information about the most recent high availability monitoring test
 // that was performed on the host in a cluster. If a test isn't performed, the
 // status and start time in the response would be null.
 //
@@ -2552,10 +2817,11 @@ func (c *StorageGateway) DescribeBandwidthRateLimitRequest(input *DescribeBandwi
 //
 // Returns the bandwidth rate limits of a gateway. By default, these limits
 // are not set, which means no bandwidth rate limiting is in effect. This operation
-// is supported for the stored volume, cached volume and tape gateway types.
+// is supported only for the stored volume, cached volume, and tape gateway
+// types. To describe bandwidth rate limits for S3 file gateways, use DescribeBandwidthRateLimitSchedule.
 //
-// This operation only returns a value for a bandwidth rate limit only if the
-// limit is set. If no limits are set for the gateway, then this operation returns
+// This operation returns a value for a bandwidth rate limit only if the limit
+// is set. If no limits are set for the gateway, then this operation returns
 // only the gateway ARN in the response body. To specify which gateway to describe,
 // use the Amazon Resource Name (ARN) of the gateway in your request.
 //
@@ -2592,6 +2858,108 @@ func (c *StorageGateway) DescribeBandwidthRateLimit(input *DescribeBandwidthRate
 // for more information on using Contexts.
 func (c *StorageGateway) DescribeBandwidthRateLimitWithContext(ctx aws.Context, input *DescribeBandwidthRateLimitInput, opts ...request.Option) (*DescribeBandwidthRateLimitOutput, error) {
 	req, out := c.DescribeBandwidthRateLimitRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDescribeBandwidthRateLimitSchedule = "DescribeBandwidthRateLimitSchedule"
+
+// DescribeBandwidthRateLimitScheduleRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeBandwidthRateLimitSchedule operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DescribeBandwidthRateLimitSchedule for more information on using the DescribeBandwidthRateLimitSchedule
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DescribeBandwidthRateLimitScheduleRequest method.
+//    req, resp := client.DescribeBandwidthRateLimitScheduleRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/DescribeBandwidthRateLimitSchedule
+func (c *StorageGateway) DescribeBandwidthRateLimitScheduleRequest(input *DescribeBandwidthRateLimitScheduleInput) (req *request.Request, output *DescribeBandwidthRateLimitScheduleOutput) {
+	op := &request.Operation{
+		Name:       opDescribeBandwidthRateLimitSchedule,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DescribeBandwidthRateLimitScheduleInput{}
+	}
+
+	output = &DescribeBandwidthRateLimitScheduleOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DescribeBandwidthRateLimitSchedule API operation for AWS Storage Gateway.
+//
+// Returns information about the bandwidth rate limit schedule of a gateway.
+// By default, gateways do not have bandwidth rate limit schedules, which means
+// no bandwidth rate limiting is in effect. This operation is supported only
+// for volume, tape and S3 file gateways. FSx file gateways do not support bandwidth
+// rate limits.
+//
+// This operation returns information about a gateway's bandwidth rate limit
+// schedule. A bandwidth rate limit schedule consists of one or more bandwidth
+// rate limit intervals. A bandwidth rate limit interval defines a period of
+// time on one or more days of the week, during which bandwidth rate limits
+// are specified for uploading, downloading, or both.
+//
+// A bandwidth rate limit interval consists of one or more days of the week,
+// a start hour and minute, an ending hour and minute, and bandwidth rate limits
+// for uploading and downloading
+//
+// If no bandwidth rate limit schedule intervals are set for the gateway, this
+// operation returns an empty response. To specify which gateway to describe,
+// use the Amazon Resource Name (ARN) of the gateway in your request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation DescribeBandwidthRateLimitSchedule for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/DescribeBandwidthRateLimitSchedule
+func (c *StorageGateway) DescribeBandwidthRateLimitSchedule(input *DescribeBandwidthRateLimitScheduleInput) (*DescribeBandwidthRateLimitScheduleOutput, error) {
+	req, out := c.DescribeBandwidthRateLimitScheduleRequest(input)
+	return out, req.Send()
+}
+
+// DescribeBandwidthRateLimitScheduleWithContext is the same as DescribeBandwidthRateLimitSchedule with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DescribeBandwidthRateLimitSchedule for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) DescribeBandwidthRateLimitScheduleWithContext(ctx aws.Context, input *DescribeBandwidthRateLimitScheduleInput, opts ...request.Option) (*DescribeBandwidthRateLimitScheduleOutput, error) {
+	req, out := c.DescribeBandwidthRateLimitScheduleRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -2733,8 +3101,8 @@ func (c *StorageGateway) DescribeCachediSCSIVolumesRequest(input *DescribeCached
 // operation is only supported in the cached volume gateway types.
 //
 // The list of gateway volumes in the request must be from one gateway. In the
-// response, AWS Storage Gateway returns volume information sorted by volume
-// Amazon Resource Name (ARN).
+// response, Storage Gateway returns volume information sorted by volume Amazon
+// Resource Name (ARN).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -2855,6 +3223,91 @@ func (c *StorageGateway) DescribeChapCredentials(input *DescribeChapCredentialsI
 // for more information on using Contexts.
 func (c *StorageGateway) DescribeChapCredentialsWithContext(ctx aws.Context, input *DescribeChapCredentialsInput, opts ...request.Option) (*DescribeChapCredentialsOutput, error) {
 	req, out := c.DescribeChapCredentialsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDescribeFileSystemAssociations = "DescribeFileSystemAssociations"
+
+// DescribeFileSystemAssociationsRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeFileSystemAssociations operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DescribeFileSystemAssociations for more information on using the DescribeFileSystemAssociations
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DescribeFileSystemAssociationsRequest method.
+//    req, resp := client.DescribeFileSystemAssociationsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/DescribeFileSystemAssociations
+func (c *StorageGateway) DescribeFileSystemAssociationsRequest(input *DescribeFileSystemAssociationsInput) (req *request.Request, output *DescribeFileSystemAssociationsOutput) {
+	op := &request.Operation{
+		Name:       opDescribeFileSystemAssociations,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DescribeFileSystemAssociationsInput{}
+	}
+
+	output = &DescribeFileSystemAssociationsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DescribeFileSystemAssociations API operation for AWS Storage Gateway.
+//
+// Gets the file system association information. This operation is only supported
+// for FSx File Gateways.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation DescribeFileSystemAssociations for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/DescribeFileSystemAssociations
+func (c *StorageGateway) DescribeFileSystemAssociations(input *DescribeFileSystemAssociationsInput) (*DescribeFileSystemAssociationsOutput, error) {
+	req, out := c.DescribeFileSystemAssociationsRequest(input)
+	return out, req.Send()
+}
+
+// DescribeFileSystemAssociationsWithContext is the same as DescribeFileSystemAssociations with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DescribeFileSystemAssociations for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) DescribeFileSystemAssociationsWithContext(ctx aws.Context, input *DescribeFileSystemAssociationsInput, opts ...request.Option) (*DescribeFileSystemAssociationsOutput, error) {
+	req, out := c.DescribeFileSystemAssociationsRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -3077,7 +3530,7 @@ func (c *StorageGateway) DescribeNFSFileSharesRequest(input *DescribeNFSFileShar
 // DescribeNFSFileShares API operation for AWS Storage Gateway.
 //
 // Gets a description for one or more Network File System (NFS) file shares
-// from a file gateway. This operation is only supported for file gateways.
+// from an S3 File Gateway. This operation is only supported for S3 File Gateways.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -3162,7 +3615,7 @@ func (c *StorageGateway) DescribeSMBFileSharesRequest(input *DescribeSMBFileShar
 // DescribeSMBFileShares API operation for AWS Storage Gateway.
 //
 // Gets a description for one or more Server Message Block (SMB) file shares
-// from a file gateway. This operation is only supported for file gateways.
+// from a S3 File Gateway. This operation is only supported for S3 File Gateways.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -3420,8 +3873,8 @@ func (c *StorageGateway) DescribeStorediSCSIVolumesRequest(input *DescribeStored
 //
 // Returns the description of the gateway volumes specified in the request.
 // The list of gateway volumes in the request must be from one gateway. In the
-// response, AWS Storage Gateway returns volume information sorted by volume
-// ARNs. This operation is only supported in stored volume gateway type.
+// response, Storage Gateway returns volume information sorted by volume ARNs.
+// This operation is only supported in stored volume gateway type.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -3514,7 +3967,7 @@ func (c *StorageGateway) DescribeTapeArchivesRequest(input *DescribeTapeArchives
 // Returns a description of specified virtual tapes in the virtual tape shelf
 // (VTS). This operation is only supported in the tape gateway type.
 //
-// If a specific TapeARN is not specified, AWS Storage Gateway returns a description
+// If a specific TapeARN is not specified, Storage Gateway returns a description
 // of all virtual tapes found in the VTS associated with your account.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -4039,7 +4492,7 @@ func (c *StorageGateway) DescribeVTLDevicesRequest(input *DescribeVTLDevicesInpu
 // DescribeVTLDevices API operation for AWS Storage Gateway.
 //
 // Returns a description of virtual tape library (VTL) devices for the specified
-// tape gateway. In the response, AWS Storage Gateway returns VTL device information.
+// tape gateway. In the response, Storage Gateway returns VTL device information.
 //
 // This operation is only supported in the tape gateway type.
 //
@@ -4405,6 +4858,93 @@ func (c *StorageGateway) DisableGatewayWithContext(ctx aws.Context, input *Disab
 	return out, req.Send()
 }
 
+const opDisassociateFileSystem = "DisassociateFileSystem"
+
+// DisassociateFileSystemRequest generates a "aws/request.Request" representing the
+// client's request for the DisassociateFileSystem operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DisassociateFileSystem for more information on using the DisassociateFileSystem
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DisassociateFileSystemRequest method.
+//    req, resp := client.DisassociateFileSystemRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/DisassociateFileSystem
+func (c *StorageGateway) DisassociateFileSystemRequest(input *DisassociateFileSystemInput) (req *request.Request, output *DisassociateFileSystemOutput) {
+	op := &request.Operation{
+		Name:       opDisassociateFileSystem,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DisassociateFileSystemInput{}
+	}
+
+	output = &DisassociateFileSystemOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DisassociateFileSystem API operation for AWS Storage Gateway.
+//
+// Disassociates an Amazon FSx file system from the specified gateway. After
+// the disassociation process finishes, the gateway can no longer access the
+// Amazon FSx file system. This operation is only supported in the FSx File
+// Gateway type.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation DisassociateFileSystem for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/DisassociateFileSystem
+func (c *StorageGateway) DisassociateFileSystem(input *DisassociateFileSystemInput) (*DisassociateFileSystemOutput, error) {
+	req, out := c.DisassociateFileSystemRequest(input)
+	return out, req.Send()
+}
+
+// DisassociateFileSystemWithContext is the same as DisassociateFileSystem with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DisassociateFileSystem for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) DisassociateFileSystemWithContext(ctx aws.Context, input *DisassociateFileSystemInput, opts ...request.Option) (*DisassociateFileSystemOutput, error) {
+	req, out := c.DisassociateFileSystemRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opJoinDomain = "JoinDomain"
 
 // JoinDomainRequest generates a "aws/request.Request" representing the
@@ -4627,9 +5167,9 @@ func (c *StorageGateway) ListFileSharesRequest(input *ListFileSharesInput) (req 
 
 // ListFileShares API operation for AWS Storage Gateway.
 //
-// Gets a list of the file shares for a specific file gateway, or the list of
-// file shares that belong to the calling user account. This operation is only
-// supported for file gateways.
+// Gets a list of the file shares for a specific S3 File Gateway, or the list
+// of file shares that belong to the calling user account. This operation is
+// only supported for S3 File Gateways.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -4721,6 +5261,150 @@ func (c *StorageGateway) ListFileSharesPagesWithContext(ctx aws.Context, input *
 	return p.Err()
 }
 
+const opListFileSystemAssociations = "ListFileSystemAssociations"
+
+// ListFileSystemAssociationsRequest generates a "aws/request.Request" representing the
+// client's request for the ListFileSystemAssociations operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListFileSystemAssociations for more information on using the ListFileSystemAssociations
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListFileSystemAssociationsRequest method.
+//    req, resp := client.ListFileSystemAssociationsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/ListFileSystemAssociations
+func (c *StorageGateway) ListFileSystemAssociationsRequest(input *ListFileSystemAssociationsInput) (req *request.Request, output *ListFileSystemAssociationsOutput) {
+	op := &request.Operation{
+		Name:       opListFileSystemAssociations,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"Marker"},
+			OutputTokens:    []string{"NextMarker"},
+			LimitToken:      "Limit",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &ListFileSystemAssociationsInput{}
+	}
+
+	output = &ListFileSystemAssociationsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListFileSystemAssociations API operation for AWS Storage Gateway.
+//
+// Gets a list of FileSystemAssociationSummary objects. Each object contains
+// a summary of a file system association. This operation is only supported
+// for FSx File Gateways.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation ListFileSystemAssociations for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/ListFileSystemAssociations
+func (c *StorageGateway) ListFileSystemAssociations(input *ListFileSystemAssociationsInput) (*ListFileSystemAssociationsOutput, error) {
+	req, out := c.ListFileSystemAssociationsRequest(input)
+	return out, req.Send()
+}
+
+// ListFileSystemAssociationsWithContext is the same as ListFileSystemAssociations with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListFileSystemAssociations for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) ListFileSystemAssociationsWithContext(ctx aws.Context, input *ListFileSystemAssociationsInput, opts ...request.Option) (*ListFileSystemAssociationsOutput, error) {
+	req, out := c.ListFileSystemAssociationsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// ListFileSystemAssociationsPages iterates over the pages of a ListFileSystemAssociations operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListFileSystemAssociations method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListFileSystemAssociations operation.
+//    pageNum := 0
+//    err := client.ListFileSystemAssociationsPages(params,
+//        func(page *storagegateway.ListFileSystemAssociationsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *StorageGateway) ListFileSystemAssociationsPages(input *ListFileSystemAssociationsInput, fn func(*ListFileSystemAssociationsOutput, bool) bool) error {
+	return c.ListFileSystemAssociationsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// ListFileSystemAssociationsPagesWithContext same as ListFileSystemAssociationsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) ListFileSystemAssociationsPagesWithContext(ctx aws.Context, input *ListFileSystemAssociationsInput, fn func(*ListFileSystemAssociationsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *ListFileSystemAssociationsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.ListFileSystemAssociationsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*ListFileSystemAssociationsOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
 const opListGateways = "ListGateways"
 
 // ListGatewaysRequest generates a "aws/request.Request" representing the
@@ -4771,8 +5455,9 @@ func (c *StorageGateway) ListGatewaysRequest(input *ListGatewaysInput) (req *req
 
 // ListGateways API operation for AWS Storage Gateway.
 //
-// Lists gateways owned by an AWS account in an AWS Region specified in the
-// request. The returned list is ordered by gateway Amazon Resource Name (ARN).
+// Lists gateways owned by an Amazon Web Services account in an Amazon Web Services
+// Region specified in the request. The returned list is ordered by gateway
+// Amazon Resource Name (ARN).
 //
 // By default, the operation returns a maximum of 100 gateways. This operation
 // supports pagination that allows you to optionally reduce the number of gateways
@@ -5102,6 +5787,156 @@ func (c *StorageGateway) ListTagsForResourcePagesWithContext(ctx aws.Context, in
 
 	for p.Next() {
 		if !fn(p.Page().(*ListTagsForResourceOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opListTapePools = "ListTapePools"
+
+// ListTapePoolsRequest generates a "aws/request.Request" representing the
+// client's request for the ListTapePools operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListTapePools for more information on using the ListTapePools
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListTapePoolsRequest method.
+//    req, resp := client.ListTapePoolsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/ListTapePools
+func (c *StorageGateway) ListTapePoolsRequest(input *ListTapePoolsInput) (req *request.Request, output *ListTapePoolsOutput) {
+	op := &request.Operation{
+		Name:       opListTapePools,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"Marker"},
+			OutputTokens:    []string{"Marker"},
+			LimitToken:      "Limit",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &ListTapePoolsInput{}
+	}
+
+	output = &ListTapePoolsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListTapePools API operation for AWS Storage Gateway.
+//
+// Lists custom tape pools. You specify custom tape pools to list by specifying
+// one or more custom tape pool Amazon Resource Names (ARNs). If you don't specify
+// a custom tape pool ARN, the operation lists all custom tape pools.
+//
+// This operation supports pagination. You can optionally specify the Limit
+// parameter in the body to limit the number of tape pools in the response.
+// If the number of tape pools returned in the response is truncated, the response
+// includes a Marker element that you can use in your subsequent request to
+// retrieve the next set of tape pools.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation ListTapePools for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/ListTapePools
+func (c *StorageGateway) ListTapePools(input *ListTapePoolsInput) (*ListTapePoolsOutput, error) {
+	req, out := c.ListTapePoolsRequest(input)
+	return out, req.Send()
+}
+
+// ListTapePoolsWithContext is the same as ListTapePools with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListTapePools for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) ListTapePoolsWithContext(ctx aws.Context, input *ListTapePoolsInput, opts ...request.Option) (*ListTapePoolsOutput, error) {
+	req, out := c.ListTapePoolsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// ListTapePoolsPages iterates over the pages of a ListTapePools operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListTapePools method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListTapePools operation.
+//    pageNum := 0
+//    err := client.ListTapePoolsPages(params,
+//        func(page *storagegateway.ListTapePoolsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *StorageGateway) ListTapePoolsPages(input *ListTapePoolsInput, fn func(*ListTapePoolsOutput, bool) bool) error {
+	return c.ListTapePoolsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// ListTapePoolsPagesWithContext same as ListTapePoolsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) ListTapePoolsPagesWithContext(ctx aws.Context, input *ListTapePoolsInput, fn func(*ListTapePoolsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *ListTapePoolsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.ListTapePoolsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*ListTapePoolsOutput), !p.HasNextPage()) {
 			break
 		}
 	}
@@ -5638,17 +6473,17 @@ func (c *StorageGateway) NotifyWhenUploadedRequest(input *NotifyWhenUploadedInpu
 // Sends you notification through CloudWatch Events when all files written to
 // your file share have been uploaded to Amazon S3.
 //
-// AWS Storage Gateway can send a notification through Amazon CloudWatch Events
+// Storage Gateway can send a notification through Amazon CloudWatch Events
 // when all files written to your file share up to that point in time have been
 // uploaded to Amazon S3. These files include files written to the file share
 // up to the time that you make a request for notification. When the upload
 // is done, Storage Gateway sends you notification through an Amazon CloudWatch
 // Event. You can configure CloudWatch Events to send the notification through
-// event targets such as Amazon SNS or AWS Lambda function. This operation is
-// only supported for file gateways.
+// event targets such as Amazon SNS or Lambda function. This operation is only
+// supported for S3 File Gateways.
 //
 // For more information, see Getting file upload notification (https://docs.aws.amazon.com/storagegateway/latest/userguide/monitoring-file-gateway.html#get-upload-notification)
-// in the AWS Storage Gateway User Guide.
+// in the Storage Gateway User Guide.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -5732,33 +6567,39 @@ func (c *StorageGateway) RefreshCacheRequest(input *RefreshCacheInput) (req *req
 
 // RefreshCache API operation for AWS Storage Gateway.
 //
-// Refreshes the cache for the specified file share. This operation finds objects
-// in the Amazon S3 bucket that were added, removed, or replaced since the gateway
-// last listed the bucket's contents and cached the results. This operation
-// is only supported in the file gateway type. You can subscribe to be notified
-// through an Amazon CloudWatch event when your RefreshCache operation completes.
-// For more information, see Getting notified about file operations (https://docs.aws.amazon.com/storagegateway/latest/userguide/monitoring-file-gateway.html#get-notification)
-// in the AWS Storage Gateway User Guide.
+// Refreshes the cached inventory of objects for the specified file share. This
+// operation finds objects in the Amazon S3 bucket that were added, removed,
+// or replaced since the gateway last listed the bucket's contents and cached
+// the results. This operation does not import files into the S3 File Gateway
+// cache storage. It only updates the cached inventory to reflect changes in
+// the inventory of the objects in the S3 bucket. This operation is only supported
+// in the S3 File Gateway types.
+//
+// You can subscribe to be notified through an Amazon CloudWatch event when
+// your RefreshCache operation completes. For more information, see Getting
+// notified about file operations (https://docs.aws.amazon.com/storagegateway/latest/userguide/monitoring-file-gateway.html#get-notification)
+// in the Storage Gateway User Guide. This operation is Only supported for S3
+// File Gateways.
 //
 // When this API is called, it only initiates the refresh operation. When the
 // API call completes and returns a success code, it doesn't necessarily mean
 // that the file refresh has completed. You should use the refresh-complete
 // notification to determine that the operation has completed before you check
 // for new files on the gateway file share. You can subscribe to be notified
-// through an CloudWatch event when your RefreshCache operation completes.
+// through a CloudWatch event when your RefreshCache operation completes.
 //
-// Throttle limit: This API is asynchronous so the gateway will accept no more
+// Throttle limit: This API is asynchronous, so the gateway will accept no more
 // than two refreshes at any time. We recommend using the refresh-complete CloudWatch
 // event notification before issuing additional requests. For more information,
 // see Getting notified about file operations (https://docs.aws.amazon.com/storagegateway/latest/userguide/monitoring-file-gateway.html#get-notification)
-// in the AWS Storage Gateway User Guide.
+// in the Storage Gateway User Guide.
 //
 // If you invoke the RefreshCache API when two requests are already being processed,
 // any new request will cause an InvalidGatewayRequestException error because
 // too many requests were sent to the server.
 //
 // For more information, see Getting notified about file operations (https://docs.aws.amazon.com/storagegateway/latest/userguide/monitoring-file-gateway.html#get-notification)
-// in the AWS Storage Gateway User Guide.
+// in the Storage Gateway User Guide.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -6297,6 +7138,7 @@ func (c *StorageGateway) SetSMBGuestPasswordRequest(input *SetSMBGuestPasswordIn
 //
 // Sets the password for the guest user smbguest. The smbguest user is the user
 // when the authentication method for the file share is set to GuestAccess.
+// This operation only supported for S3 File Gateways
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -6762,7 +7604,8 @@ func (c *StorageGateway) UpdateBandwidthRateLimitRequest(input *UpdateBandwidthR
 // Updates the bandwidth rate limits of a gateway. You can update both the upload
 // and download bandwidth rate limit or specify only one of the two. If you
 // don't set a bandwidth rate limit, the existing rate limit remains. This operation
-// is supported for the stored volume, cached volume, and tape gateway types.
+// is supported only for the stored volume, cached volume, and tape gateway
+// types. To update bandwidth rate limits for S3 file gateways, use UpdateBandwidthRateLimitSchedule.
 //
 // By default, a gateway's bandwidth rate limits are not set. If you don't set
 // any limit, the gateway does not have any limitations on its bandwidth usage
@@ -6804,6 +7647,94 @@ func (c *StorageGateway) UpdateBandwidthRateLimit(input *UpdateBandwidthRateLimi
 // for more information on using Contexts.
 func (c *StorageGateway) UpdateBandwidthRateLimitWithContext(ctx aws.Context, input *UpdateBandwidthRateLimitInput, opts ...request.Option) (*UpdateBandwidthRateLimitOutput, error) {
 	req, out := c.UpdateBandwidthRateLimitRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opUpdateBandwidthRateLimitSchedule = "UpdateBandwidthRateLimitSchedule"
+
+// UpdateBandwidthRateLimitScheduleRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateBandwidthRateLimitSchedule operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateBandwidthRateLimitSchedule for more information on using the UpdateBandwidthRateLimitSchedule
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateBandwidthRateLimitScheduleRequest method.
+//    req, resp := client.UpdateBandwidthRateLimitScheduleRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/UpdateBandwidthRateLimitSchedule
+func (c *StorageGateway) UpdateBandwidthRateLimitScheduleRequest(input *UpdateBandwidthRateLimitScheduleInput) (req *request.Request, output *UpdateBandwidthRateLimitScheduleOutput) {
+	op := &request.Operation{
+		Name:       opUpdateBandwidthRateLimitSchedule,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &UpdateBandwidthRateLimitScheduleInput{}
+	}
+
+	output = &UpdateBandwidthRateLimitScheduleOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateBandwidthRateLimitSchedule API operation for AWS Storage Gateway.
+//
+// Updates the bandwidth rate limit schedule for a specified gateway. By default,
+// gateways do not have bandwidth rate limit schedules, which means no bandwidth
+// rate limiting is in effect. Use this to initiate or update a gateway's bandwidth
+// rate limit schedule. This operation is supported only for volume, tape and
+// S3 file gateways. FSx file gateways do not support bandwidth rate limits.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation UpdateBandwidthRateLimitSchedule for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/UpdateBandwidthRateLimitSchedule
+func (c *StorageGateway) UpdateBandwidthRateLimitSchedule(input *UpdateBandwidthRateLimitScheduleInput) (*UpdateBandwidthRateLimitScheduleOutput, error) {
+	req, out := c.UpdateBandwidthRateLimitScheduleRequest(input)
+	return out, req.Send()
+}
+
+// UpdateBandwidthRateLimitScheduleWithContext is the same as UpdateBandwidthRateLimitSchedule with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateBandwidthRateLimitSchedule for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) UpdateBandwidthRateLimitScheduleWithContext(ctx aws.Context, input *UpdateBandwidthRateLimitScheduleInput, opts ...request.Option) (*UpdateBandwidthRateLimitScheduleOutput, error) {
+	req, out := c.UpdateBandwidthRateLimitScheduleRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -6899,6 +7830,91 @@ func (c *StorageGateway) UpdateChapCredentialsWithContext(ctx aws.Context, input
 	return out, req.Send()
 }
 
+const opUpdateFileSystemAssociation = "UpdateFileSystemAssociation"
+
+// UpdateFileSystemAssociationRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateFileSystemAssociation operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateFileSystemAssociation for more information on using the UpdateFileSystemAssociation
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateFileSystemAssociationRequest method.
+//    req, resp := client.UpdateFileSystemAssociationRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/UpdateFileSystemAssociation
+func (c *StorageGateway) UpdateFileSystemAssociationRequest(input *UpdateFileSystemAssociationInput) (req *request.Request, output *UpdateFileSystemAssociationOutput) {
+	op := &request.Operation{
+		Name:       opUpdateFileSystemAssociation,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &UpdateFileSystemAssociationInput{}
+	}
+
+	output = &UpdateFileSystemAssociationOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateFileSystemAssociation API operation for AWS Storage Gateway.
+//
+// Updates a file system association. This operation is only supported in the
+// FSx File Gateways.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation UpdateFileSystemAssociation for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/UpdateFileSystemAssociation
+func (c *StorageGateway) UpdateFileSystemAssociation(input *UpdateFileSystemAssociationInput) (*UpdateFileSystemAssociationOutput, error) {
+	req, out := c.UpdateFileSystemAssociationRequest(input)
+	return out, req.Send()
+}
+
+// UpdateFileSystemAssociationWithContext is the same as UpdateFileSystemAssociation with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateFileSystemAssociation for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) UpdateFileSystemAssociationWithContext(ctx aws.Context, input *UpdateFileSystemAssociationInput, opts ...request.Option) (*UpdateFileSystemAssociationOutput, error) {
+	req, out := c.UpdateFileSystemAssociationRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opUpdateGatewayInformation = "UpdateGatewayInformation"
 
 // UpdateGatewayInformationRequest generates a "aws/request.Request" representing the
@@ -6947,7 +7963,7 @@ func (c *StorageGateway) UpdateGatewayInformationRequest(input *UpdateGatewayInf
 // zone. To specify which gateway to update, use the Amazon Resource Name (ARN)
 // of the gateway in your request.
 //
-// For Gateways activated after September 2, 2015, the gateway's ARN contains
+// For gateways activated after September 2, 2015, the gateway's ARN contains
 // the gateway ID rather than the gateway name. However, changing the name of
 // the gateway has no effect on the gateway's ARN.
 //
@@ -7218,12 +8234,12 @@ func (c *StorageGateway) UpdateNFSFileShareRequest(input *UpdateNFSFileShareInpu
 // UpdateNFSFileShare API operation for AWS Storage Gateway.
 //
 // Updates a Network File System (NFS) file share. This operation is only supported
-// in the file gateway type.
+// in S3 File Gateways.
 //
 // To leave a file share field unchanged, set the corresponding input field
 // to null.
 //
-// Updates the following file share setting:
+// Updates the following file share settings:
 //
 //    * Default storage class for your S3 bucket
 //
@@ -7234,9 +8250,6 @@ func (c *StorageGateway) UpdateNFSFileShareRequest(input *UpdateNFSFileShareInpu
 //    * Squash settings
 //
 //    * Write status of your file share
-//
-// To leave a file share field unchanged, set the corresponding input field
-// to null. This operation is only supported in file gateways.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -7320,17 +8333,20 @@ func (c *StorageGateway) UpdateSMBFileShareRequest(input *UpdateSMBFileShareInpu
 
 // UpdateSMBFileShare API operation for AWS Storage Gateway.
 //
-// Updates a Server Message Block (SMB) file share.
+// Updates a Server Message Block (SMB) file share. This operation is only supported
+// for S3 File Gateways.
 //
 // To leave a file share field unchanged, set the corresponding input field
-// to null. This operation is only supported for file gateways.
+// to null.
 //
-// File gateways require AWS Security Token Service (AWS STS) to be activated
-// to enable you to create a file share. Make sure that AWS STS is activated
-// in the AWS Region you are creating your file gateway in. If AWS STS is not
-// activated in this AWS Region, activate it. For information about how to activate
-// AWS STS, see Activating and deactivating AWS STS in an AWS Region (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
-// in the AWS Identity and Access Management User Guide.
+// File gateways require Security Token Service (Amazon Web Services STS) to
+// be activated to enable you to create a file share. Make sure that Amazon
+// Web Services STS is activated in the Amazon Web Services Region you are creating
+// your file gateway in. If Amazon Web Services STS is not activated in this
+// Amazon Web Services Region, activate it. For information about how to activate
+// Amazon Web Services STS, see Activating and deactivating Amazon Web Services
+// STS in an Amazon Web Services Region (https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp_enable-regions.html)
+// in the Identity and Access Management User Guide.
 //
 // File gateways don't support creating hard or symbolic links on a file share.
 //
@@ -7367,6 +8383,176 @@ func (c *StorageGateway) UpdateSMBFileShare(input *UpdateSMBFileShareInput) (*Up
 // for more information on using Contexts.
 func (c *StorageGateway) UpdateSMBFileShareWithContext(ctx aws.Context, input *UpdateSMBFileShareInput, opts ...request.Option) (*UpdateSMBFileShareOutput, error) {
 	req, out := c.UpdateSMBFileShareRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opUpdateSMBFileShareVisibility = "UpdateSMBFileShareVisibility"
+
+// UpdateSMBFileShareVisibilityRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateSMBFileShareVisibility operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateSMBFileShareVisibility for more information on using the UpdateSMBFileShareVisibility
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateSMBFileShareVisibilityRequest method.
+//    req, resp := client.UpdateSMBFileShareVisibilityRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/UpdateSMBFileShareVisibility
+func (c *StorageGateway) UpdateSMBFileShareVisibilityRequest(input *UpdateSMBFileShareVisibilityInput) (req *request.Request, output *UpdateSMBFileShareVisibilityOutput) {
+	op := &request.Operation{
+		Name:       opUpdateSMBFileShareVisibility,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &UpdateSMBFileShareVisibilityInput{}
+	}
+
+	output = &UpdateSMBFileShareVisibilityOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateSMBFileShareVisibility API operation for AWS Storage Gateway.
+//
+// Controls whether the shares on an S3 File Gateway are visible in a net view
+// or browse list. The operation is only supported for S3 File Gateways.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation UpdateSMBFileShareVisibility for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/UpdateSMBFileShareVisibility
+func (c *StorageGateway) UpdateSMBFileShareVisibility(input *UpdateSMBFileShareVisibilityInput) (*UpdateSMBFileShareVisibilityOutput, error) {
+	req, out := c.UpdateSMBFileShareVisibilityRequest(input)
+	return out, req.Send()
+}
+
+// UpdateSMBFileShareVisibilityWithContext is the same as UpdateSMBFileShareVisibility with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateSMBFileShareVisibility for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) UpdateSMBFileShareVisibilityWithContext(ctx aws.Context, input *UpdateSMBFileShareVisibilityInput, opts ...request.Option) (*UpdateSMBFileShareVisibilityOutput, error) {
+	req, out := c.UpdateSMBFileShareVisibilityRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opUpdateSMBLocalGroups = "UpdateSMBLocalGroups"
+
+// UpdateSMBLocalGroupsRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateSMBLocalGroups operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateSMBLocalGroups for more information on using the UpdateSMBLocalGroups
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateSMBLocalGroupsRequest method.
+//    req, resp := client.UpdateSMBLocalGroupsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/UpdateSMBLocalGroups
+func (c *StorageGateway) UpdateSMBLocalGroupsRequest(input *UpdateSMBLocalGroupsInput) (req *request.Request, output *UpdateSMBLocalGroupsOutput) {
+	op := &request.Operation{
+		Name:       opUpdateSMBLocalGroups,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &UpdateSMBLocalGroupsInput{}
+	}
+
+	output = &UpdateSMBLocalGroupsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateSMBLocalGroups API operation for AWS Storage Gateway.
+//
+// Updates the list of Active Directory users and groups that have special permissions
+// for SMB file shares on the gateway.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS Storage Gateway's
+// API operation UpdateSMBLocalGroups for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidGatewayRequestException
+//   An exception occurred because an invalid gateway request was issued to the
+//   service. For more information, see the error and message fields.
+//
+//   * InternalServerError
+//   An internal server error has occurred during the request. For more information,
+//   see the error and message fields.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/storagegateway-2013-06-30/UpdateSMBLocalGroups
+func (c *StorageGateway) UpdateSMBLocalGroups(input *UpdateSMBLocalGroupsInput) (*UpdateSMBLocalGroupsOutput, error) {
+	req, out := c.UpdateSMBLocalGroupsRequest(input)
+	return out, req.Send()
+}
+
+// UpdateSMBLocalGroupsWithContext is the same as UpdateSMBLocalGroups with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateSMBLocalGroups for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *StorageGateway) UpdateSMBLocalGroupsWithContext(ctx aws.Context, input *UpdateSMBLocalGroupsInput, opts ...request.Option) (*UpdateSMBLocalGroupsOutput, error) {
+	req, out := c.UpdateSMBLocalGroupsRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -7669,7 +8855,7 @@ type ActivateGatewayInput struct {
 	// the actual configuration of your gateway.
 	//
 	// For more information, see Getting activation key (https://docs.aws.amazon.com/storagegateway/latest/userguide/get-activation-key.html)
-	// in the AWS Storage Gateway User Guide.
+	// in the Storage Gateway User Guide.
 	//
 	// ActivationKey is a required field
 	ActivationKey *string `min:"1" type:"string" required:"true"`
@@ -7679,15 +8865,16 @@ type ActivateGatewayInput struct {
 	// GatewayName is a required field
 	GatewayName *string `min:"2" type:"string" required:"true"`
 
-	// A value that indicates the AWS Region where you want to store your data.
-	// The gateway AWS Region specified must be the same AWS Region as the AWS Region
-	// in your Host header in the request. For more information about available
-	// AWS Regions and endpoints for AWS Storage Gateway, see AWS Storage Gateway
-	// endpoints and quotas (https://docs.aws.amazon.com/general/latest/gr/sg.html)
-	// in the AWS General Reference.
+	// A value that indicates the Amazon Web Services Region where you want to store
+	// your data. The gateway Amazon Web Services Region specified must be the same
+	// Amazon Web Services Region as the Amazon Web Services Region in your Host
+	// header in the request. For more information about available Amazon Web Services
+	// Regions and endpoints for Storage Gateway, see Storage Gateway endpoints
+	// and quotas (https://docs.aws.amazon.com/general/latest/gr/sg.html) in the
+	// Amazon Web Services General Reference.
 	//
-	// Valid Values: See AWS Storage Gateway endpoints and quotas (https://docs.aws.amazon.com/general/latest/gr/sg.html)
-	// in the AWS General Reference.
+	// Valid Values: See Storage Gateway endpoints and quotas (https://docs.aws.amazon.com/general/latest/gr/sg.html)
+	// in the Amazon Web Services General Reference.
 	//
 	// GatewayRegion is a required field
 	GatewayRegion *string `min:"1" type:"string" required:"true"`
@@ -7705,13 +8892,13 @@ type ActivateGatewayInput struct {
 	// is critical to all later functions of the gateway and cannot be changed after
 	// activation. The default value is CACHED.
 	//
-	// Valid Values: STORED | CACHED | VTL | FILE_S3
+	// Valid Values: STORED | CACHED | VTL | VTL_SNOW | FILE_S3 | FILE_FSX_SMB
 	GatewayType *string `min:"2" type:"string"`
 
 	// The value that indicates the type of medium changer to use for tape gateway.
 	// This field is optional.
 	//
-	// Valid Values: STK-L700 | AWS-Gateway-VTL
+	// Valid Values: STK-L700 | AWS-Gateway-VTL | IBM-03584L32-0402
 	MediumChangerType *string `min:"2" type:"string"`
 
 	// A list of up to 50 tags that you can assign to the gateway. Each tag is a
@@ -7730,12 +8917,20 @@ type ActivateGatewayInput struct {
 	TapeDriveType *string `min:"2" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ActivateGatewayInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ActivateGatewayInput) GoString() string {
 	return s.String()
 }
@@ -7841,10 +9036,10 @@ func (s *ActivateGatewayInput) SetTapeDriveType(v string) *ActivateGatewayInput 
 	return s
 }
 
-// AWS Storage Gateway returns the Amazon Resource Name (ARN) of the activated
-// gateway. It is a string made of information such as your account, gateway
-// name, and AWS Region. This ARN is used to reference the gateway in other
-// API operations as well as resource-based authorization.
+// Storage Gateway returns the Amazon Resource Name (ARN) of the activated gateway.
+// It is a string made of information such as your account, gateway name, and
+// Amazon Web Services Region. This ARN is used to reference the gateway in
+// other API operations as well as resource-based authorization.
 //
 // For gateways activated prior to September 02, 2015, the gateway ARN contains
 // the gateway name rather than the gateway ID. Changing the name of the gateway
@@ -7853,16 +9048,24 @@ type ActivateGatewayOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ActivateGatewayOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ActivateGatewayOutput) GoString() string {
 	return s.String()
 }
@@ -7884,18 +9087,26 @@ type AddCacheInput struct {
 	DiskIds []*string `type:"list" required:"true"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddCacheInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddCacheInput) GoString() string {
 	return s.String()
 }
@@ -7935,16 +9146,24 @@ type AddCacheOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddCacheOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddCacheOutput) GoString() string {
 	return s.String()
 }
@@ -7976,12 +9195,20 @@ type AddTagsToResourceInput struct {
 	Tags []*Tag `type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddTagsToResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddTagsToResourceInput) GoString() string {
 	return s.String()
 }
@@ -8035,12 +9262,20 @@ type AddTagsToResourceOutput struct {
 	ResourceARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddTagsToResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddTagsToResourceOutput) GoString() string {
 	return s.String()
 }
@@ -8062,18 +9297,26 @@ type AddUploadBufferInput struct {
 	DiskIds []*string `type:"list" required:"true"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddUploadBufferInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddUploadBufferInput) GoString() string {
 	return s.String()
 }
@@ -8113,16 +9356,24 @@ type AddUploadBufferOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddUploadBufferOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddUploadBufferOutput) GoString() string {
 	return s.String()
 }
@@ -8147,18 +9398,26 @@ type AddWorkingStorageInput struct {
 	DiskIds []*string `type:"list" required:"true"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddWorkingStorageInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddWorkingStorageInput) GoString() string {
 	return s.String()
 }
@@ -8200,16 +9459,24 @@ type AddWorkingStorageOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddWorkingStorageOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddWorkingStorageOutput) GoString() string {
 	return s.String()
 }
@@ -8222,6 +9489,15 @@ func (s *AddWorkingStorageOutput) SetGatewayARN(v string) *AddWorkingStorageOutp
 
 type AssignTapePoolInput struct {
 	_ struct{} `type:"structure"`
+
+	// Set permissions to bypass governance retention. If the lock type of the archived
+	// tape is Governance, the tape's archived age is not older than RetentionLockInDays,
+	// and the user does not already have BypassGovernanceRetention, setting this
+	// to TRUE enables the user to bypass the retention lock. This parameter is
+	// set to true by default for calls from the console.
+	//
+	// Valid values: TRUE | FALSE
+	BypassGovernanceRetention *bool `type:"boolean"`
 
 	// The ID of the pool that you want to add your tape to for archiving. The tape
 	// in this pool is archived in the S3 storage class that is associated with
@@ -8241,12 +9517,20 @@ type AssignTapePoolInput struct {
 	TapeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssignTapePoolInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssignTapePoolInput) GoString() string {
 	return s.String()
 }
@@ -8273,6 +9557,12 @@ func (s *AssignTapePoolInput) Validate() error {
 	return nil
 }
 
+// SetBypassGovernanceRetention sets the BypassGovernanceRetention field's value.
+func (s *AssignTapePoolInput) SetBypassGovernanceRetention(v bool) *AssignTapePoolInput {
+	s.BypassGovernanceRetention = &v
+	return s
+}
+
 // SetPoolId sets the PoolId field's value.
 func (s *AssignTapePoolInput) SetPoolId(v string) *AssignTapePoolInput {
 	s.PoolId = &v
@@ -8293,12 +9583,20 @@ type AssignTapePoolOutput struct {
 	TapeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssignTapePoolOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssignTapePoolOutput) GoString() string {
 	return s.String()
 }
@@ -8306,6 +9604,214 @@ func (s AssignTapePoolOutput) GoString() string {
 // SetTapeARN sets the TapeARN field's value.
 func (s *AssignTapePoolOutput) SetTapeARN(v string) *AssignTapePoolOutput {
 	s.TapeARN = &v
+	return s
+}
+
+type AssociateFileSystemInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the storage used for the audit logs.
+	AuditDestinationARN *string `type:"string"`
+
+	// The refresh cache information for the file share or FSx file systems.
+	CacheAttributes *CacheAttributes `type:"structure"`
+
+	// A unique string value that you supply that is used by the FSx File Gateway
+	// to ensure idempotent file system association creation.
+	//
+	// ClientToken is a required field
+	ClientToken *string `min:"5" type:"string" required:"true"`
+
+	// Specifies the network configuration information for the gateway associated
+	// with the Amazon FSx file system.
+	//
+	// If multiple file systems are associated with this gateway, this parameter's
+	// IpAddresses field is required.
+	EndpointNetworkConfiguration *EndpointNetworkConfiguration `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	//
+	// GatewayARN is a required field
+	GatewayARN *string `min:"50" type:"string" required:"true"`
+
+	// The Amazon Resource Name (ARN) of the Amazon FSx file system to associate
+	// with the FSx File Gateway.
+	//
+	// LocationARN is a required field
+	LocationARN *string `min:"8" type:"string" required:"true"`
+
+	// The password of the user credential.
+	//
+	// Password is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by AssociateFileSystemInput's
+	// String and GoString methods.
+	//
+	// Password is a required field
+	Password *string `min:"1" type:"string" required:"true" sensitive:"true"`
+
+	// A list of up to 50 tags that can be assigned to the file system association.
+	// Each tag is a key-value pair.
+	Tags []*Tag `type:"list"`
+
+	// The user name of the user credential that has permission to access the root
+	// share D$ of the Amazon FSx file system. The user account must belong to the
+	// Amazon FSx delegated admin user group.
+	//
+	// UserName is a required field
+	UserName *string `min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateFileSystemInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateFileSystemInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AssociateFileSystemInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AssociateFileSystemInput"}
+	if s.ClientToken == nil {
+		invalidParams.Add(request.NewErrParamRequired("ClientToken"))
+	}
+	if s.ClientToken != nil && len(*s.ClientToken) < 5 {
+		invalidParams.Add(request.NewErrParamMinLen("ClientToken", 5))
+	}
+	if s.GatewayARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("GatewayARN"))
+	}
+	if s.GatewayARN != nil && len(*s.GatewayARN) < 50 {
+		invalidParams.Add(request.NewErrParamMinLen("GatewayARN", 50))
+	}
+	if s.LocationARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("LocationARN"))
+	}
+	if s.LocationARN != nil && len(*s.LocationARN) < 8 {
+		invalidParams.Add(request.NewErrParamMinLen("LocationARN", 8))
+	}
+	if s.Password == nil {
+		invalidParams.Add(request.NewErrParamRequired("Password"))
+	}
+	if s.Password != nil && len(*s.Password) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Password", 1))
+	}
+	if s.UserName == nil {
+		invalidParams.Add(request.NewErrParamRequired("UserName"))
+	}
+	if s.UserName != nil && len(*s.UserName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("UserName", 1))
+	}
+	if s.Tags != nil {
+		for i, v := range s.Tags {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Tags", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAuditDestinationARN sets the AuditDestinationARN field's value.
+func (s *AssociateFileSystemInput) SetAuditDestinationARN(v string) *AssociateFileSystemInput {
+	s.AuditDestinationARN = &v
+	return s
+}
+
+// SetCacheAttributes sets the CacheAttributes field's value.
+func (s *AssociateFileSystemInput) SetCacheAttributes(v *CacheAttributes) *AssociateFileSystemInput {
+	s.CacheAttributes = v
+	return s
+}
+
+// SetClientToken sets the ClientToken field's value.
+func (s *AssociateFileSystemInput) SetClientToken(v string) *AssociateFileSystemInput {
+	s.ClientToken = &v
+	return s
+}
+
+// SetEndpointNetworkConfiguration sets the EndpointNetworkConfiguration field's value.
+func (s *AssociateFileSystemInput) SetEndpointNetworkConfiguration(v *EndpointNetworkConfiguration) *AssociateFileSystemInput {
+	s.EndpointNetworkConfiguration = v
+	return s
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *AssociateFileSystemInput) SetGatewayARN(v string) *AssociateFileSystemInput {
+	s.GatewayARN = &v
+	return s
+}
+
+// SetLocationARN sets the LocationARN field's value.
+func (s *AssociateFileSystemInput) SetLocationARN(v string) *AssociateFileSystemInput {
+	s.LocationARN = &v
+	return s
+}
+
+// SetPassword sets the Password field's value.
+func (s *AssociateFileSystemInput) SetPassword(v string) *AssociateFileSystemInput {
+	s.Password = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *AssociateFileSystemInput) SetTags(v []*Tag) *AssociateFileSystemInput {
+	s.Tags = v
+	return s
+}
+
+// SetUserName sets the UserName field's value.
+func (s *AssociateFileSystemInput) SetUserName(v string) *AssociateFileSystemInput {
+	s.UserName = &v
+	return s
+}
+
+type AssociateFileSystemOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The ARN of the newly created file system association.
+	FileSystemAssociationARN *string `min:"50" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateFileSystemOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AssociateFileSystemOutput) GoString() string {
+	return s.String()
+}
+
+// SetFileSystemAssociationARN sets the FileSystemAssociationARN field's value.
+func (s *AssociateFileSystemOutput) SetFileSystemAssociationARN(v string) *AssociateFileSystemOutput {
+	s.FileSystemAssociationARN = &v
 	return s
 }
 
@@ -8348,12 +9854,20 @@ type AttachVolumeInput struct {
 	VolumeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AttachVolumeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AttachVolumeInput) GoString() string {
 	return s.String()
 }
@@ -8431,12 +9945,20 @@ type AttachVolumeOutput struct {
 	VolumeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AttachVolumeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AttachVolumeOutput) GoString() string {
 	return s.String()
 }
@@ -8464,16 +9986,24 @@ type AutomaticTapeCreationPolicyInfo struct {
 	AutomaticTapeCreationRules []*AutomaticTapeCreationRule `min:"1" type:"list"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AutomaticTapeCreationPolicyInfo) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AutomaticTapeCreationPolicyInfo) GoString() string {
 	return s.String()
 }
@@ -8491,14 +10021,16 @@ func (s *AutomaticTapeCreationPolicyInfo) SetGatewayARN(v string) *AutomaticTape
 }
 
 // An automatic tape creation policy consists of automatic tape creation rules
-// where each rule defines when and how to create new tapes.
+// where each rule defines when and how to create new tapes. For more information
+// about automatic tape creation, see Creating Tapes Automatically (https://docs.aws.amazon.com/storagegateway/latest/userguide/GettingStartedCreateTapes.html#CreateTapesAutomatically).
 type AutomaticTapeCreationRule struct {
 	_ struct{} `type:"structure"`
 
 	// The minimum number of available virtual tapes that the gateway maintains
 	// at all times. If the number of tapes on the gateway goes below this value,
 	// the gateway creates as many new tapes as are needed to have MinimumNumTapes
-	// on the gateway.
+	// on the gateway. For more information about automatic tape creation, see Creating
+	// Tapes Automatically (https://docs.aws.amazon.com/storagegateway/latest/userguide/GettingStartedCreateTapes.html#CreateTapesAutomatically).
 	//
 	// MinimumNumTapes is a required field
 	MinimumNumTapes *int64 `min:"1" type:"integer" required:"true"`
@@ -8527,14 +10059,26 @@ type AutomaticTapeCreationRule struct {
 	//
 	// TapeSizeInBytes is a required field
 	TapeSizeInBytes *int64 `type:"long" required:"true"`
+
+	// Set to true to indicate that tapes are to be archived as write-once-read-many
+	// (WORM). Set to false when WORM is not enabled for tapes.
+	Worm *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AutomaticTapeCreationRule) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AutomaticTapeCreationRule) GoString() string {
 	return s.String()
 }
@@ -8594,25 +10138,184 @@ func (s *AutomaticTapeCreationRule) SetTapeSizeInBytes(v int64) *AutomaticTapeCr
 	return s
 }
 
-// Lists refresh cache information.
+// SetWorm sets the Worm field's value.
+func (s *AutomaticTapeCreationRule) SetWorm(v bool) *AutomaticTapeCreationRule {
+	s.Worm = &v
+	return s
+}
+
+// Describes a bandwidth rate limit interval for a gateway. A bandwidth rate
+// limit schedule consists of one or more bandwidth rate limit intervals. A
+// bandwidth rate limit interval defines a period of time on one or more days
+// of the week, during which bandwidth rate limits are specified for uploading,
+// downloading, or both.
+type BandwidthRateLimitInterval struct {
+	_ struct{} `type:"structure"`
+
+	// The average download rate limit component of the bandwidth rate limit interval,
+	// in bits per second. This field does not appear in the response if the download
+	// rate limit is not set.
+	AverageDownloadRateLimitInBitsPerSec *int64 `min:"102400" type:"long"`
+
+	// The average upload rate limit component of the bandwidth rate limit interval,
+	// in bits per second. This field does not appear in the response if the upload
+	// rate limit is not set.
+	AverageUploadRateLimitInBitsPerSec *int64 `min:"51200" type:"long"`
+
+	// The days of the week component of the bandwidth rate limit interval, represented
+	// as ordinal numbers from 0 to 6, where 0 represents Sunday and 6 represents
+	// Saturday.
+	//
+	// DaysOfWeek is a required field
+	DaysOfWeek []*int64 `min:"1" type:"list" required:"true"`
+
+	// The hour of the day to end the bandwidth rate limit interval.
+	//
+	// EndHourOfDay is a required field
+	EndHourOfDay *int64 `type:"integer" required:"true"`
+
+	// The minute of the hour to end the bandwidth rate limit interval.
+	//
+	// The bandwidth rate limit interval ends at the end of the minute. To end an
+	// interval at the end of an hour, use the value 59.
+	//
+	// EndMinuteOfHour is a required field
+	EndMinuteOfHour *int64 `type:"integer" required:"true"`
+
+	// The hour of the day to start the bandwidth rate limit interval.
+	//
+	// StartHourOfDay is a required field
+	StartHourOfDay *int64 `type:"integer" required:"true"`
+
+	// The minute of the hour to start the bandwidth rate limit interval. The interval
+	// begins at the start of that minute. To begin an interval exactly at the start
+	// of the hour, use the value 0.
+	//
+	// StartMinuteOfHour is a required field
+	StartMinuteOfHour *int64 `type:"integer" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s BandwidthRateLimitInterval) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s BandwidthRateLimitInterval) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *BandwidthRateLimitInterval) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "BandwidthRateLimitInterval"}
+	if s.AverageDownloadRateLimitInBitsPerSec != nil && *s.AverageDownloadRateLimitInBitsPerSec < 102400 {
+		invalidParams.Add(request.NewErrParamMinValue("AverageDownloadRateLimitInBitsPerSec", 102400))
+	}
+	if s.AverageUploadRateLimitInBitsPerSec != nil && *s.AverageUploadRateLimitInBitsPerSec < 51200 {
+		invalidParams.Add(request.NewErrParamMinValue("AverageUploadRateLimitInBitsPerSec", 51200))
+	}
+	if s.DaysOfWeek == nil {
+		invalidParams.Add(request.NewErrParamRequired("DaysOfWeek"))
+	}
+	if s.DaysOfWeek != nil && len(s.DaysOfWeek) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DaysOfWeek", 1))
+	}
+	if s.EndHourOfDay == nil {
+		invalidParams.Add(request.NewErrParamRequired("EndHourOfDay"))
+	}
+	if s.EndMinuteOfHour == nil {
+		invalidParams.Add(request.NewErrParamRequired("EndMinuteOfHour"))
+	}
+	if s.StartHourOfDay == nil {
+		invalidParams.Add(request.NewErrParamRequired("StartHourOfDay"))
+	}
+	if s.StartMinuteOfHour == nil {
+		invalidParams.Add(request.NewErrParamRequired("StartMinuteOfHour"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAverageDownloadRateLimitInBitsPerSec sets the AverageDownloadRateLimitInBitsPerSec field's value.
+func (s *BandwidthRateLimitInterval) SetAverageDownloadRateLimitInBitsPerSec(v int64) *BandwidthRateLimitInterval {
+	s.AverageDownloadRateLimitInBitsPerSec = &v
+	return s
+}
+
+// SetAverageUploadRateLimitInBitsPerSec sets the AverageUploadRateLimitInBitsPerSec field's value.
+func (s *BandwidthRateLimitInterval) SetAverageUploadRateLimitInBitsPerSec(v int64) *BandwidthRateLimitInterval {
+	s.AverageUploadRateLimitInBitsPerSec = &v
+	return s
+}
+
+// SetDaysOfWeek sets the DaysOfWeek field's value.
+func (s *BandwidthRateLimitInterval) SetDaysOfWeek(v []*int64) *BandwidthRateLimitInterval {
+	s.DaysOfWeek = v
+	return s
+}
+
+// SetEndHourOfDay sets the EndHourOfDay field's value.
+func (s *BandwidthRateLimitInterval) SetEndHourOfDay(v int64) *BandwidthRateLimitInterval {
+	s.EndHourOfDay = &v
+	return s
+}
+
+// SetEndMinuteOfHour sets the EndMinuteOfHour field's value.
+func (s *BandwidthRateLimitInterval) SetEndMinuteOfHour(v int64) *BandwidthRateLimitInterval {
+	s.EndMinuteOfHour = &v
+	return s
+}
+
+// SetStartHourOfDay sets the StartHourOfDay field's value.
+func (s *BandwidthRateLimitInterval) SetStartHourOfDay(v int64) *BandwidthRateLimitInterval {
+	s.StartHourOfDay = &v
+	return s
+}
+
+// SetStartMinuteOfHour sets the StartMinuteOfHour field's value.
+func (s *BandwidthRateLimitInterval) SetStartMinuteOfHour(v int64) *BandwidthRateLimitInterval {
+	s.StartMinuteOfHour = &v
+	return s
+}
+
+// The refresh cache information for the file share or FSx file systems.
 type CacheAttributes struct {
 	_ struct{} `type:"structure"`
 
 	// Refreshes a file share's cache by using Time To Live (TTL). TTL is the length
 	// of time since the last refresh after which access to the directory would
 	// cause the file gateway to first refresh that directory's contents from the
-	// Amazon S3 bucket. The TTL duration is in seconds.
+	// Amazon S3 bucket or Amazon FSx file system. The TTL duration is in seconds.
 	//
-	// Valid Values: 300 to 2,592,000 seconds (5 minutes to 30 days)
+	// Valid Values:0, 300 to 2,592,000 seconds (5 minutes to 30 days)
 	CacheStaleTimeoutInSeconds *int64 `type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CacheAttributes) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CacheAttributes) GoString() string {
 	return s.String()
 }
@@ -8628,7 +10331,7 @@ type CachediSCSIVolume struct {
 	_ struct{} `type:"structure"`
 
 	// The date the volume was created. Volumes created prior to March 28, 2017
-	// don’t have this time stamp.
+	// don’t have this timestamp.
 	CreatedDate *time.Time `type:"timestamp"`
 
 	// The Amazon Resource Name (ARN) of a symmetric customer master key (CMK) used
@@ -8637,7 +10340,7 @@ type CachediSCSIVolume struct {
 	KMSKey *string `min:"7" type:"string"`
 
 	// If the cached volume was created from a snapshot, this field contains the
-	// snapshot ID used, e.g. snap-78e22663. Otherwise, this field is not included.
+	// snapshot ID used, e.g., snap-78e22663. Otherwise, this field is not included.
 	SourceSnapshotId *string `type:"string"`
 
 	// The name of the iSCSI target used by an initiator to connect to a volume
@@ -8657,7 +10360,7 @@ type CachediSCSIVolume struct {
 	// gateway (https://docs.aws.amazon.com/storagegateway/latest/userguide/managing-volumes.html#attach-detach-volume).
 	VolumeAttachmentStatus *string `min:"3" type:"string"`
 
-	// The unique identifier of the volume, e.g. vol-AE4B946D.
+	// The unique identifier of the volume, e.g., vol-AE4B946D.
 	VolumeId *string `min:"12" type:"string"`
 
 	// Represents the percentage complete if the volume is restoring or bootstrapping
@@ -8690,12 +10393,20 @@ type CachediSCSIVolume struct {
 	VolumeiSCSIAttributes *VolumeiSCSIAttributes `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachediSCSIVolume) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CachediSCSIVolume) GoString() string {
 	return s.String()
 }
@@ -8783,7 +10494,7 @@ type CancelArchivalInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -8795,12 +10506,20 @@ type CancelArchivalInput struct {
 	TapeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelArchivalInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelArchivalInput) GoString() string {
 	return s.String()
 }
@@ -8848,12 +10567,20 @@ type CancelArchivalOutput struct {
 	TapeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelArchivalOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelArchivalOutput) GoString() string {
 	return s.String()
 }
@@ -8869,7 +10596,7 @@ type CancelRetrievalInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -8881,12 +10608,20 @@ type CancelRetrievalInput struct {
 	TapeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelRetrievalInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelRetrievalInput) GoString() string {
 	return s.String()
 }
@@ -8934,12 +10669,20 @@ type CancelRetrievalOutput struct {
 	TapeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelRetrievalOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelRetrievalOutput) GoString() string {
 	return s.String()
 }
@@ -8960,10 +10703,18 @@ type ChapInfo struct {
 
 	// The secret key that the initiator (for example, the Windows client) must
 	// provide to participate in mutual CHAP with the target.
+	//
+	// SecretToAuthenticateInitiator is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by ChapInfo's
+	// String and GoString methods.
 	SecretToAuthenticateInitiator *string `min:"1" type:"string" sensitive:"true"`
 
 	// The secret key that the target must provide to participate in mutual CHAP
-	// with the initiator (e.g. Windows client).
+	// with the initiator (e.g., Windows client).
+	//
+	// SecretToAuthenticateTarget is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by ChapInfo's
+	// String and GoString methods.
 	SecretToAuthenticateTarget *string `min:"1" type:"string" sensitive:"true"`
 
 	// The Amazon Resource Name (ARN) of the volume.
@@ -8973,12 +10724,20 @@ type ChapInfo struct {
 	TargetARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ChapInfo) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ChapInfo) GoString() string {
 	return s.String()
 }
@@ -9017,13 +10776,13 @@ type CreateCachediSCSIVolumeInput struct {
 	ClientToken *string `min:"5" type:"string" required:"true"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 
-	// Set to true to use Amazon S3 server-side encryption with your own AWS KMS
-	// key, or false to use a key managed by Amazon S3. Optional.
+	// Set to true to use Amazon S3 server-side encryption with your own KMS key,
+	// or false to use a key managed by Amazon S3. Optional.
 	//
 	// Valid Values: true | false
 	KMSEncrypted *bool `type:"boolean"`
@@ -9081,12 +10840,20 @@ type CreateCachediSCSIVolumeInput struct {
 	VolumeSizeInBytes *int64 `type:"long" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCachediSCSIVolumeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCachediSCSIVolumeInput) GoString() string {
 	return s.String()
 }
@@ -9212,12 +10979,20 @@ type CreateCachediSCSIVolumeOutput struct {
 	VolumeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCachediSCSIVolumeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCachediSCSIVolumeOutput) GoString() string {
 	return s.String()
 }
@@ -9238,32 +11013,43 @@ func (s *CreateCachediSCSIVolumeOutput) SetVolumeARN(v string) *CreateCachediSCS
 type CreateNFSFileShareInput struct {
 	_ struct{} `type:"structure"`
 
-	// Refresh cache information.
+	// The Amazon Resource Name (ARN) of the storage used for audit logs.
+	AuditDestinationARN *string `type:"string"`
+
+	// Specifies the Region of the S3 bucket where the NFS file share stores files.
+	//
+	// This parameter is required for NFS file shares that connect to Amazon S3
+	// through a VPC endpoint, a VPC access point, or an access point alias that
+	// points to a VPC access point.
+	BucketRegion *string `min:"1" type:"string"`
+
+	// Specifies refresh cache information for the file share.
 	CacheAttributes *CacheAttributes `type:"structure"`
 
-	// The list of clients that are allowed to access the file gateway. The list
+	// The list of clients that are allowed to access the S3 File Gateway. The list
 	// must contain either valid IP addresses or valid CIDR blocks.
 	ClientList []*string `min:"1" type:"list"`
 
-	// A unique string value that you supply that is used by file gateway to ensure
-	// idempotent file share creation.
+	// A unique string value that you supply that is used by S3 File Gateway to
+	// ensure idempotent file share creation.
 	//
 	// ClientToken is a required field
 	ClientToken *string `min:"5" type:"string" required:"true"`
 
 	// The default storage class for objects put into an Amazon S3 bucket by the
-	// file gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
+	// S3 File Gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
 	//
 	// Valid Values: S3_STANDARD | S3_INTELLIGENT_TIERING | S3_STANDARD_IA | S3_ONEZONE_IA
 	DefaultStorageClass *string `min:"5" type:"string"`
 
 	// The name of the file share. Optional.
 	//
-	// FileShareName must be set if an S3 prefix name is set in LocationARN.
+	// FileShareName must be set if an S3 prefix name is set in LocationARN, or
+	// if an access point or access point alias is used.
 	FileShareName *string `min:"1" type:"string"`
 
-	// The Amazon Resource Name (ARN) of the file gateway on which you want to create
-	// a file share.
+	// The Amazon Resource Name (ARN) of the S3 File Gateway on which you want to
+	// create a file share.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -9275,8 +11061,8 @@ type CreateNFSFileShareInput struct {
 	// Valid Values: true | false
 	GuessMIMETypeEnabled *bool `type:"boolean"`
 
-	// Set to true to use Amazon S3 server-side encryption with your own AWS KMS
-	// key, or false to use a key managed by Amazon S3. Optional.
+	// Set to true to use Amazon S3 server-side encryption with your own KMS key,
+	// or false to use a key managed by Amazon S3. Optional.
 	//
 	// Valid Values: true | false
 	KMSEncrypted *bool `type:"boolean"`
@@ -9286,8 +11072,29 @@ type CreateNFSFileShareInput struct {
 	// CMKs. This value can only be set when KMSEncrypted is true. Optional.
 	KMSKey *string `min:"7" type:"string"`
 
-	// The ARN of the backend storage used for storing file data. A prefix name
-	// can be added to the S3 bucket name. It must end with a "/".
+	// A custom ARN for the backend storage used for storing data for file shares.
+	// It includes a resource ARN with an optional prefix concatenation. The prefix
+	// must end with a forward slash (/).
+	//
+	// You can specify LocationARN as a bucket ARN, access point ARN or access point
+	// alias, as shown in the following examples.
+	//
+	// Bucket ARN:
+	//
+	// arn:aws:s3:::my-bucket/prefix/
+	//
+	// Access point ARN:
+	//
+	// arn:aws:s3:region:account-id:accesspoint/access-point-name/prefix/
+	//
+	// If you specify an access point, the bucket policy must be configured to delegate
+	// access control to the access point. For information, see Delegating access
+	// control to access points (https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-policies.html#access-points-delegating-control)
+	// in the Amazon S3 User Guide.
+	//
+	// Access point alias:
+	//
+	// test-ap-ab123cdef4gehijklmn5opqrstuvuse1a-s3alias
 	//
 	// LocationARN is a required field
 	LocationARN *string `min:"16" type:"string" required:"true"`
@@ -9295,9 +11102,29 @@ type CreateNFSFileShareInput struct {
 	// File share default values. Optional.
 	NFSFileShareDefaults *NFSFileShareDefaults `type:"structure"`
 
+	// The notification policy of the file share. SettlingTimeInSeconds controls
+	// the number of seconds to wait after the last point in time a client wrote
+	// to a file before generating an ObjectUploaded notification. Because clients
+	// can make many small writes to files, it's best to set this parameter for
+	// as long as possible to avoid generating multiple notifications for the same
+	// file in a small time period.
+	//
+	// SettlingTimeInSeconds has no effect on the timing of the object uploading
+	// to Amazon S3, only the timing of the notification.
+	//
+	// The following example sets NotificationPolicy on with SettlingTimeInSeconds
+	// set to 60.
+	//
+	// {\"Upload\": {\"SettlingTimeInSeconds\": 60}}
+	//
+	// The following example sets NotificationPolicy off.
+	//
+	// {}
+	NotificationPolicy *string `min:"2" type:"string"`
+
 	// A value that sets the access control list (ACL) permission for objects in
-	// the S3 bucket that a file gateway puts objects into. The default value is
-	// private.
+	// the S3 bucket that a S3 File Gateway puts objects into. The default value
+	// is private.
 	ObjectACL *string `type:"string" enum:"ObjectACL"`
 
 	// A value that sets the write status of a file share. Set this value to true
@@ -9318,8 +11145,8 @@ type CreateNFSFileShareInput struct {
 	// Valid Values: true | false
 	RequesterPays *bool `type:"boolean"`
 
-	// The ARN of the AWS Identity and Access Management (IAM) role that a file
-	// gateway assumes when it accesses the underlying storage.
+	// The ARN of the Identity and Access Management (IAM) role that an S3 File
+	// Gateway assumes when it accesses the underlying storage.
 	//
 	// Role is a required field
 	Role *string `min:"20" type:"string" required:"true"`
@@ -9343,14 +11170,30 @@ type CreateNFSFileShareInput struct {
 	// maximum length of a tag's key is 128 characters, and the maximum length for
 	// a tag's value is 256.
 	Tags []*Tag `type:"list"`
+
+	// Specifies the DNS name for the VPC endpoint that the NFS file share uses
+	// to connect to Amazon S3.
+	//
+	// This parameter is required for NFS file shares that connect to Amazon S3
+	// through a VPC endpoint, a VPC access point, or an access point alias that
+	// points to a VPC access point.
+	VPCEndpointDNSName *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateNFSFileShareInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateNFSFileShareInput) GoString() string {
 	return s.String()
 }
@@ -9358,6 +11201,9 @@ func (s CreateNFSFileShareInput) GoString() string {
 // Validate inspects the fields of the type to determine if they are valid.
 func (s *CreateNFSFileShareInput) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "CreateNFSFileShareInput"}
+	if s.BucketRegion != nil && len(*s.BucketRegion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("BucketRegion", 1))
+	}
 	if s.ClientList != nil && len(s.ClientList) < 1 {
 		invalidParams.Add(request.NewErrParamMinLen("ClientList", 1))
 	}
@@ -9388,6 +11234,9 @@ func (s *CreateNFSFileShareInput) Validate() error {
 	if s.LocationARN != nil && len(*s.LocationARN) < 16 {
 		invalidParams.Add(request.NewErrParamMinLen("LocationARN", 16))
 	}
+	if s.NotificationPolicy != nil && len(*s.NotificationPolicy) < 2 {
+		invalidParams.Add(request.NewErrParamMinLen("NotificationPolicy", 2))
+	}
 	if s.Role == nil {
 		invalidParams.Add(request.NewErrParamRequired("Role"))
 	}
@@ -9396,6 +11245,9 @@ func (s *CreateNFSFileShareInput) Validate() error {
 	}
 	if s.Squash != nil && len(*s.Squash) < 5 {
 		invalidParams.Add(request.NewErrParamMinLen("Squash", 5))
+	}
+	if s.VPCEndpointDNSName != nil && len(*s.VPCEndpointDNSName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("VPCEndpointDNSName", 1))
 	}
 	if s.NFSFileShareDefaults != nil {
 		if err := s.NFSFileShareDefaults.Validate(); err != nil {
@@ -9417,6 +11269,18 @@ func (s *CreateNFSFileShareInput) Validate() error {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetAuditDestinationARN sets the AuditDestinationARN field's value.
+func (s *CreateNFSFileShareInput) SetAuditDestinationARN(v string) *CreateNFSFileShareInput {
+	s.AuditDestinationARN = &v
+	return s
+}
+
+// SetBucketRegion sets the BucketRegion field's value.
+func (s *CreateNFSFileShareInput) SetBucketRegion(v string) *CreateNFSFileShareInput {
+	s.BucketRegion = &v
+	return s
 }
 
 // SetCacheAttributes sets the CacheAttributes field's value.
@@ -9485,6 +11349,12 @@ func (s *CreateNFSFileShareInput) SetNFSFileShareDefaults(v *NFSFileShareDefault
 	return s
 }
 
+// SetNotificationPolicy sets the NotificationPolicy field's value.
+func (s *CreateNFSFileShareInput) SetNotificationPolicy(v string) *CreateNFSFileShareInput {
+	s.NotificationPolicy = &v
+	return s
+}
+
 // SetObjectACL sets the ObjectACL field's value.
 func (s *CreateNFSFileShareInput) SetObjectACL(v string) *CreateNFSFileShareInput {
 	s.ObjectACL = &v
@@ -9521,6 +11391,12 @@ func (s *CreateNFSFileShareInput) SetTags(v []*Tag) *CreateNFSFileShareInput {
 	return s
 }
 
+// SetVPCEndpointDNSName sets the VPCEndpointDNSName field's value.
+func (s *CreateNFSFileShareInput) SetVPCEndpointDNSName(v string) *CreateNFSFileShareInput {
+	s.VPCEndpointDNSName = &v
+	return s
+}
+
 // CreateNFSFileShareOutput
 type CreateNFSFileShareOutput struct {
 	_ struct{} `type:"structure"`
@@ -9529,12 +11405,20 @@ type CreateNFSFileShareOutput struct {
 	FileShareARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateNFSFileShareOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateNFSFileShareOutput) GoString() string {
 	return s.String()
 }
@@ -9549,6 +11433,10 @@ func (s *CreateNFSFileShareOutput) SetFileShareARN(v string) *CreateNFSFileShare
 type CreateSMBFileShareInput struct {
 	_ struct{} `type:"structure"`
 
+	// The files and folders on this share will only be visible to users with read
+	// access.
+	AccessBasedEnumeration *bool `type:"boolean"`
+
 	// A list of users or groups in the Active Directory that will be granted administrator
 	// privileges on the file share. These users can do all file operations as the
 	// super-user. Acceptable formats include: DOMAIN\User1, user1, @group1, and
@@ -9558,7 +11446,7 @@ type CreateSMBFileShareInput struct {
 	// they like on the file share, regardless of file permissions.
 	AdminUserList []*string `type:"list"`
 
-	// The Amazon Resource Name (ARN) of the storage used for the audit logs.
+	// The Amazon Resource Name (ARN) of the storage used for audit logs.
 	AuditDestinationARN *string `type:"string"`
 
 	// The authentication method that users use to access the file share. The default
@@ -9567,7 +11455,14 @@ type CreateSMBFileShareInput struct {
 	// Valid Values: ActiveDirectory | GuestAccess
 	Authentication *string `min:"5" type:"string"`
 
-	// Refresh cache information.
+	// Specifies the Region of the S3 bucket where the SMB file share stores files.
+	//
+	// This parameter is required for SMB file shares that connect to Amazon S3
+	// through a VPC endpoint, a VPC access point, or an access point alias that
+	// points to a VPC access point.
+	BucketRegion *string `min:"1" type:"string"`
+
+	// Specifies refresh cache information for the file share.
 	CacheAttributes *CacheAttributes `type:"structure"`
 
 	// The case of an object name in an Amazon S3 bucket. For ClientSpecified, the
@@ -9575,24 +11470,25 @@ type CreateSMBFileShareInput struct {
 	// the case sensitivity. The default value is ClientSpecified.
 	CaseSensitivity *string `type:"string" enum:"CaseSensitivity"`
 
-	// A unique string value that you supply that is used by file gateway to ensure
-	// idempotent file share creation.
+	// A unique string value that you supply that is used by S3 File Gateway to
+	// ensure idempotent file share creation.
 	//
 	// ClientToken is a required field
 	ClientToken *string `min:"5" type:"string" required:"true"`
 
 	// The default storage class for objects put into an Amazon S3 bucket by the
-	// file gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
+	// S3 File Gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
 	//
 	// Valid Values: S3_STANDARD | S3_INTELLIGENT_TIERING | S3_STANDARD_IA | S3_ONEZONE_IA
 	DefaultStorageClass *string `min:"5" type:"string"`
 
 	// The name of the file share. Optional.
 	//
-	// FileShareName must be set if an S3 prefix name is set in LocationARN.
+	// FileShareName must be set if an S3 prefix name is set in LocationARN, or
+	// if an access point or access point alias is used.
 	FileShareName *string `min:"1" type:"string"`
 
-	// The ARN of the file gateway on which you want to create a file share.
+	// The ARN of the S3 File Gateway on which you want to create a file share.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -9610,8 +11506,8 @@ type CreateSMBFileShareInput struct {
 	// be set if Authentication is set to ActiveDirectory.
 	InvalidUserList []*string `type:"list"`
 
-	// Set to true to use Amazon S3 server-side encryption with your own AWS KMS
-	// key, or false to use a key managed by Amazon S3. Optional.
+	// Set to true to use Amazon S3 server-side encryption with your own KMS key,
+	// or false to use a key managed by Amazon S3. Optional.
 	//
 	// Valid Values: true | false
 	KMSEncrypted *bool `type:"boolean"`
@@ -9621,16 +11517,66 @@ type CreateSMBFileShareInput struct {
 	// CMKs. This value can only be set when KMSEncrypted is true. Optional.
 	KMSKey *string `min:"7" type:"string"`
 
-	// The ARN of the backend storage used for storing file data. A prefix name
-	// can be added to the S3 bucket name. It must end with a "/".
+	// A custom ARN for the backend storage used for storing data for file shares.
+	// It includes a resource ARN with an optional prefix concatenation. The prefix
+	// must end with a forward slash (/).
+	//
+	// You can specify LocationARN as a bucket ARN, access point ARN or access point
+	// alias, as shown in the following examples.
+	//
+	// Bucket ARN:
+	//
+	// arn:aws:s3:::my-bucket/prefix/
+	//
+	// Access point ARN:
+	//
+	// arn:aws:s3:region:account-id:accesspoint/access-point-name/prefix/
+	//
+	// If you specify an access point, the bucket policy must be configured to delegate
+	// access control to the access point. For information, see Delegating access
+	// control to access points (https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-policies.html#access-points-delegating-control)
+	// in the Amazon S3 User Guide.
+	//
+	// Access point alias:
+	//
+	// test-ap-ab123cdef4gehijklmn5opqrstuvuse1a-s3alias
 	//
 	// LocationARN is a required field
 	LocationARN *string `min:"16" type:"string" required:"true"`
 
+	// The notification policy of the file share. SettlingTimeInSeconds controls
+	// the number of seconds to wait after the last point in time a client wrote
+	// to a file before generating an ObjectUploaded notification. Because clients
+	// can make many small writes to files, it's best to set this parameter for
+	// as long as possible to avoid generating multiple notifications for the same
+	// file in a small time period.
+	//
+	// SettlingTimeInSeconds has no effect on the timing of the object uploading
+	// to Amazon S3, only the timing of the notification.
+	//
+	// The following example sets NotificationPolicy on with SettlingTimeInSeconds
+	// set to 60.
+	//
+	// {\"Upload\": {\"SettlingTimeInSeconds\": 60}}
+	//
+	// The following example sets NotificationPolicy off.
+	//
+	// {}
+	NotificationPolicy *string `min:"2" type:"string"`
+
 	// A value that sets the access control list (ACL) permission for objects in
-	// the S3 bucket that a file gateway puts objects into. The default value is
-	// private.
+	// the S3 bucket that a S3 File Gateway puts objects into. The default value
+	// is private.
 	ObjectACL *string `type:"string" enum:"ObjectACL"`
+
+	// Specifies whether opportunistic locking is enabled for the SMB file share.
+	//
+	// Enabling opportunistic locking on case-sensitive shares is not recommended
+	// for workloads that involve access to files with the same name in different
+	// case.
+	//
+	// Valid Values: true | false
+	OplocksEnabled *bool `type:"boolean"`
 
 	// A value that sets the write status of a file share. Set this value to true
 	// to set the write status to read-only, otherwise set to false.
@@ -9650,8 +11596,8 @@ type CreateSMBFileShareInput struct {
 	// Valid Values: true | false
 	RequesterPays *bool `type:"boolean"`
 
-	// The ARN of the AWS Identity and Access Management (IAM) role that a file
-	// gateway assumes when it accesses the underlying storage.
+	// The ARN of the Identity and Access Management (IAM) role that an S3 File
+	// Gateway assumes when it accesses the underlying storage.
 	//
 	// Role is a required field
 	Role *string `min:"20" type:"string" required:"true"`
@@ -9662,7 +11608,7 @@ type CreateSMBFileShareInput struct {
 	//
 	// For more information, see Using Microsoft Windows ACLs to control access
 	// to an SMB file share (https://docs.aws.amazon.com/storagegateway/latest/userguide/smb-acl.html)
-	// in the AWS Storage Gateway User Guide.
+	// in the Storage Gateway User Guide.
 	//
 	// Valid Values: true | false
 	SMBACLEnabled *bool `type:"boolean"`
@@ -9676,6 +11622,14 @@ type CreateSMBFileShareInput struct {
 	// a tag's value is 256.
 	Tags []*Tag `type:"list"`
 
+	// Specifies the DNS name for the VPC endpoint that the SMB file share uses
+	// to connect to Amazon S3.
+	//
+	// This parameter is required for SMB file shares that connect to Amazon S3
+	// through a VPC endpoint, a VPC access point, or an access point alias that
+	// points to a VPC access point.
+	VPCEndpointDNSName *string `min:"1" type:"string"`
+
 	// A list of users or groups in the Active Directory that are allowed to access
 	// the file share. A group must be prefixed with the @ character. Acceptable
 	// formats include: DOMAIN\User1, user1, @group1, and @DOMAIN\group1. Can only
@@ -9683,12 +11637,20 @@ type CreateSMBFileShareInput struct {
 	ValidUserList []*string `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSMBFileShareInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSMBFileShareInput) GoString() string {
 	return s.String()
 }
@@ -9698,6 +11660,9 @@ func (s *CreateSMBFileShareInput) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "CreateSMBFileShareInput"}
 	if s.Authentication != nil && len(*s.Authentication) < 5 {
 		invalidParams.Add(request.NewErrParamMinLen("Authentication", 5))
+	}
+	if s.BucketRegion != nil && len(*s.BucketRegion) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("BucketRegion", 1))
 	}
 	if s.ClientToken == nil {
 		invalidParams.Add(request.NewErrParamRequired("ClientToken"))
@@ -9726,11 +11691,17 @@ func (s *CreateSMBFileShareInput) Validate() error {
 	if s.LocationARN != nil && len(*s.LocationARN) < 16 {
 		invalidParams.Add(request.NewErrParamMinLen("LocationARN", 16))
 	}
+	if s.NotificationPolicy != nil && len(*s.NotificationPolicy) < 2 {
+		invalidParams.Add(request.NewErrParamMinLen("NotificationPolicy", 2))
+	}
 	if s.Role == nil {
 		invalidParams.Add(request.NewErrParamRequired("Role"))
 	}
 	if s.Role != nil && len(*s.Role) < 20 {
 		invalidParams.Add(request.NewErrParamMinLen("Role", 20))
+	}
+	if s.VPCEndpointDNSName != nil && len(*s.VPCEndpointDNSName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("VPCEndpointDNSName", 1))
 	}
 	if s.Tags != nil {
 		for i, v := range s.Tags {
@@ -9749,6 +11720,12 @@ func (s *CreateSMBFileShareInput) Validate() error {
 	return nil
 }
 
+// SetAccessBasedEnumeration sets the AccessBasedEnumeration field's value.
+func (s *CreateSMBFileShareInput) SetAccessBasedEnumeration(v bool) *CreateSMBFileShareInput {
+	s.AccessBasedEnumeration = &v
+	return s
+}
+
 // SetAdminUserList sets the AdminUserList field's value.
 func (s *CreateSMBFileShareInput) SetAdminUserList(v []*string) *CreateSMBFileShareInput {
 	s.AdminUserList = v
@@ -9764,6 +11741,12 @@ func (s *CreateSMBFileShareInput) SetAuditDestinationARN(v string) *CreateSMBFil
 // SetAuthentication sets the Authentication field's value.
 func (s *CreateSMBFileShareInput) SetAuthentication(v string) *CreateSMBFileShareInput {
 	s.Authentication = &v
+	return s
+}
+
+// SetBucketRegion sets the BucketRegion field's value.
+func (s *CreateSMBFileShareInput) SetBucketRegion(v string) *CreateSMBFileShareInput {
+	s.BucketRegion = &v
 	return s
 }
 
@@ -9833,9 +11816,21 @@ func (s *CreateSMBFileShareInput) SetLocationARN(v string) *CreateSMBFileShareIn
 	return s
 }
 
+// SetNotificationPolicy sets the NotificationPolicy field's value.
+func (s *CreateSMBFileShareInput) SetNotificationPolicy(v string) *CreateSMBFileShareInput {
+	s.NotificationPolicy = &v
+	return s
+}
+
 // SetObjectACL sets the ObjectACL field's value.
 func (s *CreateSMBFileShareInput) SetObjectACL(v string) *CreateSMBFileShareInput {
 	s.ObjectACL = &v
+	return s
+}
+
+// SetOplocksEnabled sets the OplocksEnabled field's value.
+func (s *CreateSMBFileShareInput) SetOplocksEnabled(v bool) *CreateSMBFileShareInput {
+	s.OplocksEnabled = &v
 	return s
 }
 
@@ -9869,6 +11864,12 @@ func (s *CreateSMBFileShareInput) SetTags(v []*Tag) *CreateSMBFileShareInput {
 	return s
 }
 
+// SetVPCEndpointDNSName sets the VPCEndpointDNSName field's value.
+func (s *CreateSMBFileShareInput) SetVPCEndpointDNSName(v string) *CreateSMBFileShareInput {
+	s.VPCEndpointDNSName = &v
+	return s
+}
+
 // SetValidUserList sets the ValidUserList field's value.
 func (s *CreateSMBFileShareInput) SetValidUserList(v []*string) *CreateSMBFileShareInput {
 	s.ValidUserList = v
@@ -9883,12 +11884,20 @@ type CreateSMBFileShareOutput struct {
 	FileShareARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSMBFileShareOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSMBFileShareOutput) GoString() string {
 	return s.String()
 }
@@ -9904,7 +11913,7 @@ type CreateSnapshotFromVolumeRecoveryPointInput struct {
 
 	// Textual description of the snapshot that appears in the Amazon EC2 console,
 	// Elastic Block Store snapshots panel in the Description field, and in the
-	// AWS Storage Gateway snapshot Details pane, Description field.
+	// Storage Gateway snapshot Details pane, Description field.
 	//
 	// SnapshotDescription is a required field
 	SnapshotDescription *string `min:"1" type:"string" required:"true"`
@@ -9925,12 +11934,20 @@ type CreateSnapshotFromVolumeRecoveryPointInput struct {
 	VolumeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSnapshotFromVolumeRecoveryPointInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSnapshotFromVolumeRecoveryPointInput) GoString() string {
 	return s.String()
 }
@@ -9999,12 +12016,20 @@ type CreateSnapshotFromVolumeRecoveryPointOutput struct {
 	VolumeRecoveryPointTime *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSnapshotFromVolumeRecoveryPointOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSnapshotFromVolumeRecoveryPointOutput) GoString() string {
 	return s.String()
 }
@@ -10037,7 +12062,7 @@ type CreateSnapshotInput struct {
 
 	// Textual description of the snapshot that appears in the Amazon EC2 console,
 	// Elastic Block Store snapshots panel in the Description field, and in the
-	// AWS Storage Gateway snapshot Details pane, Description field.
+	// Storage Gateway snapshot Details pane, Description field.
 	//
 	// SnapshotDescription is a required field
 	SnapshotDescription *string `min:"1" type:"string" required:"true"`
@@ -10058,12 +12083,20 @@ type CreateSnapshotInput struct {
 	VolumeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSnapshotInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSnapshotInput) GoString() string {
 	return s.String()
 }
@@ -10131,12 +12164,20 @@ type CreateSnapshotOutput struct {
 	VolumeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSnapshotOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateSnapshotOutput) GoString() string {
 	return s.String()
 }
@@ -10175,13 +12216,13 @@ type CreateStorediSCSIVolumeInput struct {
 	DiskId *string `min:"1" type:"string" required:"true"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 
-	// Set to true to use Amazon S3 server-side encryption with your own AWS KMS
-	// key, or false to use a key managed by Amazon S3. Optional.
+	// Set to true to use Amazon S3 server-side encryption with your own KMS key,
+	// or false to use a key managed by Amazon S3. Optional.
 	//
 	// Valid Values: true | false
 	KMSEncrypted *bool `type:"boolean"`
@@ -10200,7 +12241,7 @@ type CreateStorediSCSIVolumeInput struct {
 	// NetworkInterfaceId is a required field
 	NetworkInterfaceId *string `type:"string" required:"true"`
 
-	// Set to true true if you want to preserve the data on the local disk. Otherwise,
+	// Set to true if you want to preserve the data on the local disk. Otherwise,
 	// set to false to create an empty volume.
 	//
 	// Valid Values: true | false
@@ -10208,7 +12249,7 @@ type CreateStorediSCSIVolumeInput struct {
 	// PreserveExistingData is a required field
 	PreserveExistingData *bool `type:"boolean" required:"true"`
 
-	// The snapshot ID (e.g. "snap-1122aabb") of the snapshot to restore as the
+	// The snapshot ID (e.g., "snap-1122aabb") of the snapshot to restore as the
 	// new stored volume. Specify this field if you want to create the iSCSI storage
 	// volume from a snapshot; otherwise, do not include this field. To list snapshots
 	// for your account use DescribeSnapshots (https://docs.aws.amazon.com/AWSEC2/latest/APIReference/ApiReference-query-DescribeSnapshots.html)
@@ -10236,12 +12277,20 @@ type CreateStorediSCSIVolumeInput struct {
 	TargetName *string `min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStorediSCSIVolumeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStorediSCSIVolumeInput) GoString() string {
 	return s.String()
 }
@@ -10362,12 +12411,20 @@ type CreateStorediSCSIVolumeOutput struct {
 	VolumeSizeInBytes *int64 `type:"long"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStorediSCSIVolumeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStorediSCSIVolumeOutput) GoString() string {
 	return s.String()
 }
@@ -10390,19 +12447,166 @@ func (s *CreateStorediSCSIVolumeOutput) SetVolumeSizeInBytes(v int64) *CreateSto
 	return s
 }
 
+type CreateTapePoolInput struct {
+	_ struct{} `type:"structure"`
+
+	// The name of the new custom tape pool.
+	//
+	// PoolName is a required field
+	PoolName *string `min:"1" type:"string" required:"true"`
+
+	// Tape retention lock time is set in days. Tape retention lock can be enabled
+	// for up to 100 years (36,500 days).
+	RetentionLockTimeInDays *int64 `type:"integer"`
+
+	// Tape retention lock can be configured in two modes. When configured in governance
+	// mode, Amazon Web Services accounts with specific IAM permissions are authorized
+	// to remove the tape retention lock from archived virtual tapes. When configured
+	// in compliance mode, the tape retention lock cannot be removed by any user,
+	// including the root Amazon Web Services account.
+	RetentionLockType *string `type:"string" enum:"RetentionLockType"`
+
+	// The storage class that is associated with the new custom pool. When you use
+	// your backup application to eject the tape, the tape is archived directly
+	// into the storage class (S3 Glacier or S3 Glacier Deep Archive) that corresponds
+	// to the pool.
+	//
+	// StorageClass is a required field
+	StorageClass *string `type:"string" required:"true" enum:"TapeStorageClass"`
+
+	// A list of up to 50 tags that can be assigned to tape pool. Each tag is a
+	// key-value pair.
+	//
+	// Valid characters for key and value are letters, spaces, and numbers representable
+	// in UTF-8 format, and the following special characters: + - = . _ : / @. The
+	// maximum length of a tag's key is 128 characters, and the maximum length for
+	// a tag's value is 256.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateTapePoolInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateTapePoolInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateTapePoolInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateTapePoolInput"}
+	if s.PoolName == nil {
+		invalidParams.Add(request.NewErrParamRequired("PoolName"))
+	}
+	if s.PoolName != nil && len(*s.PoolName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PoolName", 1))
+	}
+	if s.StorageClass == nil {
+		invalidParams.Add(request.NewErrParamRequired("StorageClass"))
+	}
+	if s.Tags != nil {
+		for i, v := range s.Tags {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Tags", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetPoolName sets the PoolName field's value.
+func (s *CreateTapePoolInput) SetPoolName(v string) *CreateTapePoolInput {
+	s.PoolName = &v
+	return s
+}
+
+// SetRetentionLockTimeInDays sets the RetentionLockTimeInDays field's value.
+func (s *CreateTapePoolInput) SetRetentionLockTimeInDays(v int64) *CreateTapePoolInput {
+	s.RetentionLockTimeInDays = &v
+	return s
+}
+
+// SetRetentionLockType sets the RetentionLockType field's value.
+func (s *CreateTapePoolInput) SetRetentionLockType(v string) *CreateTapePoolInput {
+	s.RetentionLockType = &v
+	return s
+}
+
+// SetStorageClass sets the StorageClass field's value.
+func (s *CreateTapePoolInput) SetStorageClass(v string) *CreateTapePoolInput {
+	s.StorageClass = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CreateTapePoolInput) SetTags(v []*Tag) *CreateTapePoolInput {
+	s.Tags = v
+	return s
+}
+
+type CreateTapePoolOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The unique Amazon Resource Name (ARN) that represents the custom tape pool.
+	// Use the ListTapePools operation to return a list of tape pools for your account
+	// and Amazon Web Services Region.
+	PoolARN *string `min:"50" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateTapePoolOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateTapePoolOutput) GoString() string {
+	return s.String()
+}
+
+// SetPoolARN sets the PoolARN field's value.
+func (s *CreateTapePoolOutput) SetPoolARN(v string) *CreateTapePoolOutput {
+	s.PoolARN = &v
+	return s
+}
+
 // CreateTapeWithBarcodeInput
 type CreateTapeWithBarcodeInput struct {
 	_ struct{} `type:"structure"`
 
 	// The unique Amazon Resource Name (ARN) that represents the gateway to associate
 	// the virtual tape with. Use the ListGateways operation to return a list of
-	// gateways for your account and AWS Region.
+	// gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 
-	// Set to true to use Amazon S3 server-side encryption with your own AWS KMS
-	// key, or false to use a key managed by Amazon S3. Optional.
+	// Set to true to use Amazon S3 server-side encryption with your own KMS key,
+	// or false to use a key managed by Amazon S3. Optional.
 	//
 	// Valid Values: true | false
 	KMSEncrypted *bool `type:"boolean"`
@@ -10444,14 +12648,26 @@ type CreateTapeWithBarcodeInput struct {
 	//
 	// TapeSizeInBytes is a required field
 	TapeSizeInBytes *int64 `type:"long" required:"true"`
+
+	// Set to TRUE if the tape you are creating is to be configured as a write-once-read-many
+	// (WORM) tape.
+	Worm *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateTapeWithBarcodeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateTapeWithBarcodeInput) GoString() string {
 	return s.String()
 }
@@ -10539,6 +12755,12 @@ func (s *CreateTapeWithBarcodeInput) SetTapeSizeInBytes(v int64) *CreateTapeWith
 	return s
 }
 
+// SetWorm sets the Worm field's value.
+func (s *CreateTapeWithBarcodeInput) SetWorm(v bool) *CreateTapeWithBarcodeInput {
+	s.Worm = &v
+	return s
+}
+
 // CreateTapeOutput
 type CreateTapeWithBarcodeOutput struct {
 	_ struct{} `type:"structure"`
@@ -10548,12 +12770,20 @@ type CreateTapeWithBarcodeOutput struct {
 	TapeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateTapeWithBarcodeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateTapeWithBarcodeOutput) GoString() string {
 	return s.String()
 }
@@ -10578,13 +12808,13 @@ type CreateTapesInput struct {
 
 	// The unique Amazon Resource Name (ARN) that represents the gateway to associate
 	// the virtual tapes with. Use the ListGateways operation to return a list of
-	// gateways for your account and AWS Region.
+	// gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 
-	// Set to true to use Amazon S3 server-side encryption with your own AWS KMS
-	// key, or false to use a key managed by Amazon S3. Optional.
+	// Set to true to use Amazon S3 server-side encryption with your own KMS key,
+	// or false to use a key managed by Amazon S3. Optional.
 	//
 	// Valid Values: true | false
 	KMSEncrypted *bool `type:"boolean"`
@@ -10620,7 +12850,7 @@ type CreateTapesInput struct {
 	// A prefix that you append to the barcode of the virtual tape you are creating.
 	// This prefix makes the barcode unique.
 	//
-	// The prefix must be 1 to 4 characters in length and must be one of the uppercase
+	// The prefix must be 1-4 characters in length and must be one of the uppercase
 	// letters from A to Z.
 	//
 	// TapeBarcodePrefix is a required field
@@ -10632,14 +12862,26 @@ type CreateTapesInput struct {
 	//
 	// TapeSizeInBytes is a required field
 	TapeSizeInBytes *int64 `type:"long" required:"true"`
+
+	// Set to TRUE if the tape you are creating is to be configured as a write-once-read-many
+	// (WORM) tape.
+	Worm *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateTapesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateTapesInput) GoString() string {
 	return s.String()
 }
@@ -10751,6 +12993,12 @@ func (s *CreateTapesInput) SetTapeSizeInBytes(v int64) *CreateTapesInput {
 	return s
 }
 
+// SetWorm sets the Worm field's value.
+func (s *CreateTapesInput) SetWorm(v bool) *CreateTapesInput {
+	s.Worm = &v
+	return s
+}
+
 // CreateTapeOutput
 type CreateTapesOutput struct {
 	_ struct{} `type:"structure"`
@@ -10760,12 +13008,20 @@ type CreateTapesOutput struct {
 	TapeARNs []*string `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateTapesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateTapesOutput) GoString() string {
 	return s.String()
 }
@@ -10780,18 +13036,26 @@ type DeleteAutomaticTapeCreationPolicyInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAutomaticTapeCreationPolicyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAutomaticTapeCreationPolicyInput) GoString() string {
 	return s.String()
 }
@@ -10822,16 +13086,24 @@ type DeleteAutomaticTapeCreationPolicyOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAutomaticTapeCreationPolicyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAutomaticTapeCreationPolicyOutput) GoString() string {
 	return s.String()
 }
@@ -10851,24 +13123,32 @@ type DeleteBandwidthRateLimitInput struct {
 	// One of the BandwidthType values that indicates the gateway bandwidth rate
 	// limit to delete.
 	//
-	// Valid Values: Upload | Download | All
+	// Valid Values: UPLOAD | DOWNLOAD | ALL
 	//
 	// BandwidthType is a required field
 	BandwidthType *string `min:"3" type:"string" required:"true"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteBandwidthRateLimitInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteBandwidthRateLimitInput) GoString() string {
 	return s.String()
 }
@@ -10913,16 +13193,24 @@ type DeleteBandwidthRateLimitOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteBandwidthRateLimitOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteBandwidthRateLimitOutput) GoString() string {
 	return s.String()
 }
@@ -10953,12 +13241,20 @@ type DeleteChapCredentialsInput struct {
 	TargetARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteChapCredentialsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteChapCredentialsInput) GoString() string {
 	return s.String()
 }
@@ -11008,12 +13304,20 @@ type DeleteChapCredentialsOutput struct {
 	TargetARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteChapCredentialsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteChapCredentialsOutput) GoString() string {
 	return s.String()
 }
@@ -11040,20 +13344,29 @@ type DeleteFileShareInput struct {
 	FileShareARN *string `min:"50" type:"string" required:"true"`
 
 	// If this value is set to true, the operation deletes a file share immediately
-	// and aborts all data uploads to AWS. Otherwise, the file share is not deleted
-	// until all data is uploaded to AWS. This process aborts the data upload process,
-	// and the file share enters the FORCE_DELETING status.
+	// and aborts all data uploads to Amazon Web Services. Otherwise, the file share
+	// is not deleted until all data is uploaded to Amazon Web Services. This process
+	// aborts the data upload process, and the file share enters the FORCE_DELETING
+	// status.
 	//
 	// Valid Values: true | false
 	ForceDelete *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFileShareInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFileShareInput) GoString() string {
 	return s.String()
 }
@@ -11094,12 +13407,20 @@ type DeleteFileShareOutput struct {
 	FileShareARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFileShareOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFileShareOutput) GoString() string {
 	return s.String()
 }
@@ -11115,18 +13436,26 @@ type DeleteGatewayInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteGatewayInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteGatewayInput) GoString() string {
 	return s.String()
 }
@@ -11158,16 +13487,24 @@ type DeleteGatewayOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteGatewayOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteGatewayOutput) GoString() string {
 	return s.String()
 }
@@ -11187,12 +13524,20 @@ type DeleteSnapshotScheduleInput struct {
 	VolumeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteSnapshotScheduleInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteSnapshotScheduleInput) GoString() string {
 	return s.String()
 }
@@ -11226,12 +13571,20 @@ type DeleteSnapshotScheduleOutput struct {
 	VolumeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteSnapshotScheduleOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteSnapshotScheduleOutput) GoString() string {
 	return s.String()
 }
@@ -11246,6 +13599,12 @@ func (s *DeleteSnapshotScheduleOutput) SetVolumeARN(v string) *DeleteSnapshotSch
 type DeleteTapeArchiveInput struct {
 	_ struct{} `type:"structure"`
 
+	// Set to TRUE to delete an archived tape that belongs to a custom pool with
+	// tape retention lock. Only archived tapes with tape retention lock set to
+	// governance can be deleted. Archived tapes with tape retention lock set to
+	// compliance can't be deleted.
+	BypassGovernanceRetention *bool `type:"boolean"`
+
 	// The Amazon Resource Name (ARN) of the virtual tape to delete from the virtual
 	// tape shelf (VTS).
 	//
@@ -11253,12 +13612,20 @@ type DeleteTapeArchiveInput struct {
 	TapeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTapeArchiveInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTapeArchiveInput) GoString() string {
 	return s.String()
 }
@@ -11279,6 +13646,12 @@ func (s *DeleteTapeArchiveInput) Validate() error {
 	return nil
 }
 
+// SetBypassGovernanceRetention sets the BypassGovernanceRetention field's value.
+func (s *DeleteTapeArchiveInput) SetBypassGovernanceRetention(v bool) *DeleteTapeArchiveInput {
+	s.BypassGovernanceRetention = &v
+	return s
+}
+
 // SetTapeARN sets the TapeARN field's value.
 func (s *DeleteTapeArchiveInput) SetTapeARN(v string) *DeleteTapeArchiveInput {
 	s.TapeARN = &v
@@ -11294,12 +13667,20 @@ type DeleteTapeArchiveOutput struct {
 	TapeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTapeArchiveOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTapeArchiveOutput) GoString() string {
 	return s.String()
 }
@@ -11314,9 +13695,15 @@ func (s *DeleteTapeArchiveOutput) SetTapeARN(v string) *DeleteTapeArchiveOutput 
 type DeleteTapeInput struct {
 	_ struct{} `type:"structure"`
 
+	// Set to TRUE to delete an archived tape that belongs to a custom pool with
+	// tape retention lock. Only archived tapes with tape retention lock set to
+	// governance can be deleted. Archived tapes with tape retention lock set to
+	// compliance can't be deleted.
+	BypassGovernanceRetention *bool `type:"boolean"`
+
 	// The unique Amazon Resource Name (ARN) of the gateway that the virtual tape
 	// to delete is associated with. Use the ListGateways operation to return a
-	// list of gateways for your account and AWS Region.
+	// list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -11327,12 +13714,20 @@ type DeleteTapeInput struct {
 	TapeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTapeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTapeInput) GoString() string {
 	return s.String()
 }
@@ -11359,6 +13754,12 @@ func (s *DeleteTapeInput) Validate() error {
 	return nil
 }
 
+// SetBypassGovernanceRetention sets the BypassGovernanceRetention field's value.
+func (s *DeleteTapeInput) SetBypassGovernanceRetention(v bool) *DeleteTapeInput {
+	s.BypassGovernanceRetention = &v
+	return s
+}
+
 // SetGatewayARN sets the GatewayARN field's value.
 func (s *DeleteTapeInput) SetGatewayARN(v string) *DeleteTapeInput {
 	s.GatewayARN = &v
@@ -11379,12 +13780,20 @@ type DeleteTapeOutput struct {
 	TapeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTapeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteTapeOutput) GoString() string {
 	return s.String()
 }
@@ -11392,6 +13801,86 @@ func (s DeleteTapeOutput) GoString() string {
 // SetTapeARN sets the TapeARN field's value.
 func (s *DeleteTapeOutput) SetTapeARN(v string) *DeleteTapeOutput {
 	s.TapeARN = &v
+	return s
+}
+
+type DeleteTapePoolInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the custom tape pool to delete.
+	//
+	// PoolARN is a required field
+	PoolARN *string `min:"50" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteTapePoolInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteTapePoolInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteTapePoolInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteTapePoolInput"}
+	if s.PoolARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("PoolARN"))
+	}
+	if s.PoolARN != nil && len(*s.PoolARN) < 50 {
+		invalidParams.Add(request.NewErrParamMinLen("PoolARN", 50))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetPoolARN sets the PoolARN field's value.
+func (s *DeleteTapePoolInput) SetPoolARN(v string) *DeleteTapePoolInput {
+	s.PoolARN = &v
+	return s
+}
+
+type DeleteTapePoolOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the custom tape pool being deleted.
+	PoolARN *string `min:"50" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteTapePoolOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteTapePoolOutput) GoString() string {
+	return s.String()
+}
+
+// SetPoolARN sets the PoolARN field's value.
+func (s *DeleteTapePoolOutput) SetPoolARN(v string) *DeleteTapePoolOutput {
+	s.PoolARN = &v
 	return s
 }
 
@@ -11406,12 +13895,20 @@ type DeleteVolumeInput struct {
 	VolumeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteVolumeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteVolumeInput) GoString() string {
 	return s.String()
 }
@@ -11448,12 +13945,20 @@ type DeleteVolumeOutput struct {
 	VolumeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteVolumeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteVolumeOutput) GoString() string {
 	return s.String()
 }
@@ -11468,18 +13973,26 @@ type DescribeAvailabilityMonitorTestInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAvailabilityMonitorTestInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAvailabilityMonitorTestInput) GoString() string {
 	return s.String()
 }
@@ -11510,24 +14023,32 @@ type DescribeAvailabilityMonitorTestOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
-	// The time the High Availability monitoring test was started. If a test hasn't
+	// The time the high availability monitoring test was started. If a test hasn't
 	// been performed, the value of this field is null.
 	StartTime *time.Time `type:"timestamp"`
 
-	// The status of the High Availability monitoring test. If a test hasn't been
+	// The status of the high availability monitoring test. If a test hasn't been
 	// performed, the value of this field is null.
 	Status *string `type:"string" enum:"AvailabilityMonitorTestStatus"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAvailabilityMonitorTestOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAvailabilityMonitorTestOutput) GoString() string {
 	return s.String()
 }
@@ -11555,18 +14076,26 @@ type DescribeBandwidthRateLimitInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeBandwidthRateLimitInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeBandwidthRateLimitInput) GoString() string {
 	return s.String()
 }
@@ -11606,16 +14135,24 @@ type DescribeBandwidthRateLimitOutput struct {
 	AverageUploadRateLimitInBitsPerSec *int64 `min:"51200" type:"long"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeBandwidthRateLimitOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeBandwidthRateLimitOutput) GoString() string {
 	return s.String()
 }
@@ -11638,22 +14175,122 @@ func (s *DescribeBandwidthRateLimitOutput) SetGatewayARN(v string) *DescribeBand
 	return s
 }
 
-type DescribeCacheInput struct {
+type DescribeBandwidthRateLimitScheduleInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeBandwidthRateLimitScheduleInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeBandwidthRateLimitScheduleInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeBandwidthRateLimitScheduleInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeBandwidthRateLimitScheduleInput"}
+	if s.GatewayARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("GatewayARN"))
+	}
+	if s.GatewayARN != nil && len(*s.GatewayARN) < 50 {
+		invalidParams.Add(request.NewErrParamMinLen("GatewayARN", 50))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *DescribeBandwidthRateLimitScheduleInput) SetGatewayARN(v string) *DescribeBandwidthRateLimitScheduleInput {
+	s.GatewayARN = &v
+	return s
+}
+
+type DescribeBandwidthRateLimitScheduleOutput struct {
+	_ struct{} `type:"structure"`
+
+	// An array that contains the bandwidth rate limit intervals for a tape or volume
+	// gateway.
+	BandwidthRateLimitIntervals []*BandwidthRateLimitInterval `type:"list"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	GatewayARN *string `min:"50" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeBandwidthRateLimitScheduleOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeBandwidthRateLimitScheduleOutput) GoString() string {
+	return s.String()
+}
+
+// SetBandwidthRateLimitIntervals sets the BandwidthRateLimitIntervals field's value.
+func (s *DescribeBandwidthRateLimitScheduleOutput) SetBandwidthRateLimitIntervals(v []*BandwidthRateLimitInterval) *DescribeBandwidthRateLimitScheduleOutput {
+	s.BandwidthRateLimitIntervals = v
+	return s
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *DescribeBandwidthRateLimitScheduleOutput) SetGatewayARN(v string) *DescribeBandwidthRateLimitScheduleOutput {
+	s.GatewayARN = &v
+	return s
+}
+
+type DescribeCacheInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	//
+	// GatewayARN is a required field
+	GatewayARN *string `min:"50" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCacheInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCacheInput) GoString() string {
 	return s.String()
 }
@@ -11687,8 +14324,8 @@ type DescribeCacheOutput struct {
 	CacheAllocatedInBytes *int64 `type:"long"`
 
 	// The file share's contribution to the overall percentage of the gateway's
-	// cache that has not been persisted to AWS. The sample is taken at the end
-	// of the reporting period.
+	// cache that has not been persisted to Amazon Web Services. The sample is taken
+	// at the end of the reporting period.
 	CacheDirtyPercentage *float64 `type:"double"`
 
 	// Percent of application read operations from the file shares that are served
@@ -11710,16 +14347,24 @@ type DescribeCacheOutput struct {
 	DiskIds []*string `type:"list"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCacheOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCacheOutput) GoString() string {
 	return s.String()
 }
@@ -11777,12 +14422,20 @@ type DescribeCachediSCSIVolumesInput struct {
 	VolumeARNs []*string `type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCachediSCSIVolumesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCachediSCSIVolumesInput) GoString() string {
 	return s.String()
 }
@@ -11815,12 +14468,20 @@ type DescribeCachediSCSIVolumesOutput struct {
 	CachediSCSIVolumes []*CachediSCSIVolume `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCachediSCSIVolumesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCachediSCSIVolumesOutput) GoString() string {
 	return s.String()
 }
@@ -11843,12 +14504,20 @@ type DescribeChapCredentialsInput struct {
 	TargetARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeChapCredentialsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeChapCredentialsInput) GoString() string {
 	return s.String()
 }
@@ -11897,12 +14566,20 @@ type DescribeChapCredentialsOutput struct {
 	ChapCredentials []*ChapInfo `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeChapCredentialsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeChapCredentialsOutput) GoString() string {
 	return s.String()
 }
@@ -11913,23 +14590,113 @@ func (s *DescribeChapCredentialsOutput) SetChapCredentials(v []*ChapInfo) *Descr
 	return s
 }
 
+type DescribeFileSystemAssociationsInput struct {
+	_ struct{} `type:"structure"`
+
+	// An array containing the Amazon Resource Name (ARN) of each file system association
+	// to be described.
+	//
+	// FileSystemAssociationARNList is a required field
+	FileSystemAssociationARNList []*string `min:"1" type:"list" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeFileSystemAssociationsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeFileSystemAssociationsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeFileSystemAssociationsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeFileSystemAssociationsInput"}
+	if s.FileSystemAssociationARNList == nil {
+		invalidParams.Add(request.NewErrParamRequired("FileSystemAssociationARNList"))
+	}
+	if s.FileSystemAssociationARNList != nil && len(s.FileSystemAssociationARNList) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FileSystemAssociationARNList", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFileSystemAssociationARNList sets the FileSystemAssociationARNList field's value.
+func (s *DescribeFileSystemAssociationsInput) SetFileSystemAssociationARNList(v []*string) *DescribeFileSystemAssociationsInput {
+	s.FileSystemAssociationARNList = v
+	return s
+}
+
+type DescribeFileSystemAssociationsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// An array containing the FileSystemAssociationInfo data type of each file
+	// system association to be described.
+	FileSystemAssociationInfoList []*FileSystemAssociationInfo `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeFileSystemAssociationsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeFileSystemAssociationsOutput) GoString() string {
+	return s.String()
+}
+
+// SetFileSystemAssociationInfoList sets the FileSystemAssociationInfoList field's value.
+func (s *DescribeFileSystemAssociationsOutput) SetFileSystemAssociationInfoList(v []*FileSystemAssociationInfo) *DescribeFileSystemAssociationsOutput {
+	s.FileSystemAssociationInfoList = v
+	return s
+}
+
 // A JSON object containing the ID of the gateway.
 type DescribeGatewayInformationInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeGatewayInformationInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeGatewayInformationInput) GoString() string {
 	return s.String()
 }
@@ -11960,7 +14727,7 @@ func (s *DescribeGatewayInformationInput) SetGatewayARN(v string) *DescribeGatew
 type DescribeGatewayInformationOutput struct {
 	_ struct{} `type:"structure"`
 
-	// The Amazon Resource Name (ARN) of the Amazon CloudWatch Log Group that is
+	// The Amazon Resource Name (ARN) of the Amazon CloudWatch log group that is
 	// used to monitor events in the gateway.
 	CloudWatchLogGroupARN *string `type:"string"`
 
@@ -11971,7 +14738,7 @@ type DescribeGatewayInformationOutput struct {
 	// The ID of the Amazon EC2 instance that was used to launch the gateway.
 	Ec2InstanceId *string `type:"string"`
 
-	// The AWS Region where the Amazon EC2 instance is located.
+	// The Amazon Web Services Region where the Amazon EC2 instance is located.
 	Ec2InstanceRegion *string `type:"string"`
 
 	// The type of endpoint for your gateway.
@@ -11980,8 +14747,11 @@ type DescribeGatewayInformationOutput struct {
 	EndpointType *string `min:"4" type:"string"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
+
+	// Specifies the size of the gateway's metadata cache.
+	GatewayCapacity *string `type:"string" enum:"GatewayCapacity"`
 
 	// The unique identifier assigned to your gateway during activation. This ID
 	// becomes part of the gateway Amazon Resource Name (ARN), which you use as
@@ -12004,8 +14774,13 @@ type DescribeGatewayInformationOutput struct {
 	// The type of the gateway.
 	GatewayType *string `min:"2" type:"string"`
 
-	// The type of hypervisor environment used by the host.
+	// The type of hardware or software platform on which the gateway is running.
 	HostEnvironment *string `type:"string" enum:"HostEnvironment"`
+
+	// A unique identifier for the specific instance of the host platform running
+	// the gateway. This value is only available for certain host environments,
+	// and its format depends on the host environment type.
+	HostEnvironmentId *string `min:"1" type:"string"`
 
 	// The date on which the last software update was applied to the gateway. If
 	// the gateway has never been updated, this field does not return a value in
@@ -12020,6 +14795,10 @@ type DescribeGatewayInformationOutput struct {
 	// Date after which this gateway will not receive software updates for new features.
 	SoftwareUpdatesEndDate *string `min:"1" type:"string"`
 
+	// A list of the metadata cache sizes that the gateway can support based on
+	// its current hardware specifications.
+	SupportedGatewayCapacities []*string `type:"list"`
+
 	// A list of up to 50 tags assigned to the gateway, sorted alphabetically by
 	// key name. Each tag is a key-value pair. For a gateway with more than 10 tags
 	// assigned, you can view all tags using the ListTagsForResource API operation.
@@ -12030,12 +14809,20 @@ type DescribeGatewayInformationOutput struct {
 	VPCEndpoint *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeGatewayInformationOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeGatewayInformationOutput) GoString() string {
 	return s.String()
 }
@@ -12073,6 +14860,12 @@ func (s *DescribeGatewayInformationOutput) SetEndpointType(v string) *DescribeGa
 // SetGatewayARN sets the GatewayARN field's value.
 func (s *DescribeGatewayInformationOutput) SetGatewayARN(v string) *DescribeGatewayInformationOutput {
 	s.GatewayARN = &v
+	return s
+}
+
+// SetGatewayCapacity sets the GatewayCapacity field's value.
+func (s *DescribeGatewayInformationOutput) SetGatewayCapacity(v string) *DescribeGatewayInformationOutput {
+	s.GatewayCapacity = &v
 	return s
 }
 
@@ -12118,6 +14911,12 @@ func (s *DescribeGatewayInformationOutput) SetHostEnvironment(v string) *Describ
 	return s
 }
 
+// SetHostEnvironmentId sets the HostEnvironmentId field's value.
+func (s *DescribeGatewayInformationOutput) SetHostEnvironmentId(v string) *DescribeGatewayInformationOutput {
+	s.HostEnvironmentId = &v
+	return s
+}
+
 // SetLastSoftwareUpdate sets the LastSoftwareUpdate field's value.
 func (s *DescribeGatewayInformationOutput) SetLastSoftwareUpdate(v string) *DescribeGatewayInformationOutput {
 	s.LastSoftwareUpdate = &v
@@ -12133,6 +14932,12 @@ func (s *DescribeGatewayInformationOutput) SetNextUpdateAvailabilityDate(v strin
 // SetSoftwareUpdatesEndDate sets the SoftwareUpdatesEndDate field's value.
 func (s *DescribeGatewayInformationOutput) SetSoftwareUpdatesEndDate(v string) *DescribeGatewayInformationOutput {
 	s.SoftwareUpdatesEndDate = &v
+	return s
+}
+
+// SetSupportedGatewayCapacities sets the SupportedGatewayCapacities field's value.
+func (s *DescribeGatewayInformationOutput) SetSupportedGatewayCapacities(v []*string) *DescribeGatewayInformationOutput {
+	s.SupportedGatewayCapacities = v
 	return s
 }
 
@@ -12153,18 +14958,26 @@ type DescribeMaintenanceStartTimeInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeMaintenanceStartTimeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeMaintenanceStartTimeInput) GoString() string {
 	return s.String()
 }
@@ -12216,7 +15029,7 @@ type DescribeMaintenanceStartTimeOutput struct {
 	DayOfWeek *int64 `type:"integer"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// The hour component of the maintenance start time represented as hh, where
@@ -12234,12 +15047,20 @@ type DescribeMaintenanceStartTimeOutput struct {
 	Timezone *string `min:"3" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeMaintenanceStartTimeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeMaintenanceStartTimeOutput) GoString() string {
 	return s.String()
 }
@@ -12291,12 +15112,20 @@ type DescribeNFSFileSharesInput struct {
 	FileShareARNList []*string `min:"1" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeNFSFileSharesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeNFSFileSharesInput) GoString() string {
 	return s.String()
 }
@@ -12331,12 +15160,20 @@ type DescribeNFSFileSharesOutput struct {
 	NFSFileShareInfoList []*NFSFileShareInfo `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeNFSFileSharesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeNFSFileSharesOutput) GoString() string {
 	return s.String()
 }
@@ -12358,12 +15195,20 @@ type DescribeSMBFileSharesInput struct {
 	FileShareARNList []*string `min:"1" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSMBFileSharesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSMBFileSharesInput) GoString() string {
 	return s.String()
 }
@@ -12398,12 +15243,20 @@ type DescribeSMBFileSharesOutput struct {
 	SMBFileShareInfoList []*SMBFileShareInfo `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSMBFileSharesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSMBFileSharesOutput) GoString() string {
 	return s.String()
 }
@@ -12418,18 +15271,26 @@ type DescribeSMBSettingsInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSMBSettingsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSMBSettingsInput) GoString() string {
 	return s.String()
 }
@@ -12484,21 +15345,30 @@ type DescribeSMBSettingsOutput struct {
 	// The name of the domain that the gateway is joined to.
 	DomainName *string `min:"1" type:"string"`
 
+	// The shares on this gateway appear when listing shares. Only supported for
+	// S3 File Gateways.
+	FileSharesVisible *bool `type:"boolean"`
+
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// This value is true if a password for the guest user smbguest is set, otherwise
-	// false.
+	// false. Only supported for S3 File Gateways.
 	//
 	// Valid Values: true | false
 	SMBGuestPasswordSet *bool `type:"boolean"`
+
+	// A list of Active Directory users and groups that have special permissions
+	// for SMB file shares on the gateway.
+	SMBLocalGroups *SMBLocalGroups `type:"structure"`
 
 	// The type of security strategy that was specified for file gateway.
 	//
 	//    * ClientSpecified: If you use this option, requests are established based
 	//    on what is negotiated by the client. This option is recommended when you
 	//    want to maximize compatibility across different clients in your environment.
+	//    Only supported for S3 File Gateways.
 	//
 	//    * MandatorySigning: If you use this option, file gateway only allows connections
 	//    from SMBv2 or SMBv3 clients that have signing enabled. This option works
@@ -12512,12 +15382,20 @@ type DescribeSMBSettingsOutput struct {
 	SMBSecurityStrategy *string `type:"string" enum:"SMBSecurityStrategy"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSMBSettingsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSMBSettingsOutput) GoString() string {
 	return s.String()
 }
@@ -12534,6 +15412,12 @@ func (s *DescribeSMBSettingsOutput) SetDomainName(v string) *DescribeSMBSettings
 	return s
 }
 
+// SetFileSharesVisible sets the FileSharesVisible field's value.
+func (s *DescribeSMBSettingsOutput) SetFileSharesVisible(v bool) *DescribeSMBSettingsOutput {
+	s.FileSharesVisible = &v
+	return s
+}
+
 // SetGatewayARN sets the GatewayARN field's value.
 func (s *DescribeSMBSettingsOutput) SetGatewayARN(v string) *DescribeSMBSettingsOutput {
 	s.GatewayARN = &v
@@ -12543,6 +15427,12 @@ func (s *DescribeSMBSettingsOutput) SetGatewayARN(v string) *DescribeSMBSettings
 // SetSMBGuestPasswordSet sets the SMBGuestPasswordSet field's value.
 func (s *DescribeSMBSettingsOutput) SetSMBGuestPasswordSet(v bool) *DescribeSMBSettingsOutput {
 	s.SMBGuestPasswordSet = &v
+	return s
+}
+
+// SetSMBLocalGroups sets the SMBLocalGroups field's value.
+func (s *DescribeSMBSettingsOutput) SetSMBLocalGroups(v *SMBLocalGroups) *DescribeSMBSettingsOutput {
+	s.SMBLocalGroups = v
 	return s
 }
 
@@ -12564,12 +15454,20 @@ type DescribeSnapshotScheduleInput struct {
 	VolumeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSnapshotScheduleInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSnapshotScheduleInput) GoString() string {
 	return s.String()
 }
@@ -12622,12 +15520,20 @@ type DescribeSnapshotScheduleOutput struct {
 	VolumeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSnapshotScheduleOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeSnapshotScheduleOutput) GoString() string {
 	return s.String()
 }
@@ -12680,12 +15586,20 @@ type DescribeStorediSCSIVolumesInput struct {
 	VolumeARNs []*string `type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeStorediSCSIVolumesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeStorediSCSIVolumesInput) GoString() string {
 	return s.String()
 }
@@ -12762,12 +15676,20 @@ type DescribeStorediSCSIVolumesOutput struct {
 	StorediSCSIVolumes []*StorediSCSIVolume `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeStorediSCSIVolumesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeStorediSCSIVolumesOutput) GoString() string {
 	return s.String()
 }
@@ -12795,12 +15717,20 @@ type DescribeTapeArchivesInput struct {
 	TapeARNs []*string `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapeArchivesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapeArchivesInput) GoString() string {
 	return s.String()
 }
@@ -12857,12 +15787,20 @@ type DescribeTapeArchivesOutput struct {
 	TapeArchives []*TapeArchive `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapeArchivesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapeArchivesOutput) GoString() string {
 	return s.String()
 }
@@ -12884,7 +15822,7 @@ type DescribeTapeRecoveryPointsInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -12898,12 +15836,20 @@ type DescribeTapeRecoveryPointsInput struct {
 	Marker *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapeRecoveryPointsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapeRecoveryPointsInput) GoString() string {
 	return s.String()
 }
@@ -12953,7 +15899,7 @@ type DescribeTapeRecoveryPointsOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// An opaque string that indicates the position at which the virtual tape recovery
@@ -12968,12 +15914,20 @@ type DescribeTapeRecoveryPointsOutput struct {
 	TapeRecoveryPointInfos []*TapeRecoveryPointInfo `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapeRecoveryPointsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapeRecoveryPointsOutput) GoString() string {
 	return s.String()
 }
@@ -13001,7 +15955,7 @@ type DescribeTapesInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -13025,12 +15979,20 @@ type DescribeTapesInput struct {
 	TapeARNs []*string `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapesInput) GoString() string {
 	return s.String()
 }
@@ -13085,8 +16047,8 @@ func (s *DescribeTapesInput) SetTapeARNs(v []*string) *DescribeTapesInput {
 type DescribeTapesOutput struct {
 	_ struct{} `type:"structure"`
 
-	// An opaque string which can be used as part of a subsequent DescribeTapes
-	// call to retrieve the next page of results.
+	// An opaque string that can be used as part of a subsequent DescribeTapes call
+	// to retrieve the next page of results.
 	//
 	// If a response does not contain a marker, then there are no more results to
 	// be retrieved.
@@ -13096,12 +16058,20 @@ type DescribeTapesOutput struct {
 	Tapes []*Tape `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeTapesOutput) GoString() string {
 	return s.String()
 }
@@ -13122,18 +16092,26 @@ type DescribeUploadBufferInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeUploadBufferInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeUploadBufferInput) GoString() string {
 	return s.String()
 }
@@ -13170,7 +16148,7 @@ type DescribeUploadBufferOutput struct {
 	DiskIds []*string `type:"list"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// The total number of bytes allocated in the gateway's as upload buffer.
@@ -13180,12 +16158,20 @@ type DescribeUploadBufferOutput struct {
 	UploadBufferUsedInBytes *int64 `type:"long"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeUploadBufferOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeUploadBufferOutput) GoString() string {
 	return s.String()
 }
@@ -13219,7 +16205,7 @@ type DescribeVTLDevicesInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -13241,12 +16227,20 @@ type DescribeVTLDevicesInput struct {
 	VTLDeviceARNs []*string `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeVTLDevicesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeVTLDevicesInput) GoString() string {
 	return s.String()
 }
@@ -13302,7 +16296,7 @@ type DescribeVTLDevicesOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// An opaque string that indicates the position at which the VTL devices that
@@ -13316,12 +16310,20 @@ type DescribeVTLDevicesOutput struct {
 	VTLDevices []*VTLDevice `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeVTLDevicesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeVTLDevicesOutput) GoString() string {
 	return s.String()
 }
@@ -13349,18 +16351,26 @@ type DescribeWorkingStorageInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeWorkingStorageInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeWorkingStorageInput) GoString() string {
 	return s.String()
 }
@@ -13398,7 +16408,7 @@ type DescribeWorkingStorageOutput struct {
 	DiskIds []*string `type:"list"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// The total working storage in bytes allocated for the gateway. If no working
@@ -13410,12 +16420,20 @@ type DescribeWorkingStorageOutput struct {
 	WorkingStorageUsedInBytes *int64 `type:"long"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeWorkingStorageOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeWorkingStorageOutput) GoString() string {
 	return s.String()
 }
@@ -13461,12 +16479,20 @@ type DetachVolumeInput struct {
 	VolumeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DetachVolumeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DetachVolumeInput) GoString() string {
 	return s.String()
 }
@@ -13507,12 +16533,20 @@ type DetachVolumeOutput struct {
 	VolumeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DetachVolumeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DetachVolumeOutput) GoString() string {
 	return s.String()
 }
@@ -13541,12 +16575,20 @@ type DeviceiSCSIAttributes struct {
 	TargetARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeviceiSCSIAttributes) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeviceiSCSIAttributes) GoString() string {
 	return s.String()
 }
@@ -13580,18 +16622,26 @@ type DisableGatewayInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableGatewayInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableGatewayInput) GoString() string {
 	return s.String()
 }
@@ -13626,12 +16676,20 @@ type DisableGatewayOutput struct {
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableGatewayOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisableGatewayOutput) GoString() string {
 	return s.String()
 }
@@ -13639,6 +16697,99 @@ func (s DisableGatewayOutput) GoString() string {
 // SetGatewayARN sets the GatewayARN field's value.
 func (s *DisableGatewayOutput) SetGatewayARN(v string) *DisableGatewayOutput {
 	s.GatewayARN = &v
+	return s
+}
+
+type DisassociateFileSystemInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the file system association to be deleted.
+	//
+	// FileSystemAssociationARN is a required field
+	FileSystemAssociationARN *string `min:"50" type:"string" required:"true"`
+
+	// If this value is set to true, the operation disassociates an Amazon FSx file
+	// system immediately. It ends all data uploads to the file system, and the
+	// file system association enters the FORCE_DELETING status. If this value is
+	// set to false, the Amazon FSx file system does not disassociate until all
+	// data is uploaded.
+	ForceDelete *bool `type:"boolean"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateFileSystemInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateFileSystemInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DisassociateFileSystemInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DisassociateFileSystemInput"}
+	if s.FileSystemAssociationARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("FileSystemAssociationARN"))
+	}
+	if s.FileSystemAssociationARN != nil && len(*s.FileSystemAssociationARN) < 50 {
+		invalidParams.Add(request.NewErrParamMinLen("FileSystemAssociationARN", 50))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFileSystemAssociationARN sets the FileSystemAssociationARN field's value.
+func (s *DisassociateFileSystemInput) SetFileSystemAssociationARN(v string) *DisassociateFileSystemInput {
+	s.FileSystemAssociationARN = &v
+	return s
+}
+
+// SetForceDelete sets the ForceDelete field's value.
+func (s *DisassociateFileSystemInput) SetForceDelete(v bool) *DisassociateFileSystemInput {
+	s.ForceDelete = &v
+	return s
+}
+
+type DisassociateFileSystemOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the deleted file system association.
+	FileSystemAssociationARN *string `min:"50" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateFileSystemOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DisassociateFileSystemOutput) GoString() string {
+	return s.String()
+}
+
+// SetFileSystemAssociationARN sets the FileSystemAssociationARN field's value.
+func (s *DisassociateFileSystemOutput) SetFileSystemAssociationARN(v string) *DisassociateFileSystemOutput {
+	s.FileSystemAssociationARN = &v
 	return s
 }
 
@@ -13677,12 +16828,20 @@ type Disk struct {
 	DiskStatus *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Disk) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Disk) GoString() string {
 	return s.String()
 }
@@ -13735,6 +16894,43 @@ func (s *Disk) SetDiskStatus(v string) *Disk {
 	return s
 }
 
+// Specifies network configuration information for the gateway associated with
+// the Amazon FSx file system.
+type EndpointNetworkConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// A list of gateway IP addresses on which the associated Amazon FSx file system
+	// is available.
+	//
+	// If multiple file systems are associated with this gateway, this field is
+	// required.
+	IpAddresses []*string `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EndpointNetworkConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EndpointNetworkConfiguration) GoString() string {
+	return s.String()
+}
+
+// SetIpAddresses sets the IpAddresses field's value.
+func (s *EndpointNetworkConfiguration) SetIpAddresses(v []*string) *EndpointNetworkConfiguration {
+	s.IpAddresses = v
+	return s
+}
+
 // Provides additional information about an error that was returned by the service.
 // See the errorCode and errorDetails members for more information about the
 // error.
@@ -13748,12 +16944,20 @@ type Error struct {
 	ErrorDetails map[string]*string `locationName:"errorDetails" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Error) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Error) GoString() string {
 	return s.String()
 }
@@ -13770,7 +16974,7 @@ func (s *Error) SetErrorDetails(v map[string]*string) *Error {
 	return s
 }
 
-// Describes a file share.
+// Describes a file share. Only supported S3 File Gateway.
 type FileShareInfo struct {
 	_ struct{} `type:"structure"`
 
@@ -13789,16 +16993,24 @@ type FileShareInfo struct {
 	FileShareType *string `type:"string" enum:"FileShareType"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FileShareInfo) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FileShareInfo) GoString() string {
 	return s.String()
 }
@@ -13833,6 +17045,215 @@ func (s *FileShareInfo) SetGatewayARN(v string) *FileShareInfo {
 	return s
 }
 
+// Describes the object returned by DescribeFileSystemAssociations that describes
+// a created file system association.
+type FileSystemAssociationInfo struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the storage used for the audit logs.
+	AuditDestinationARN *string `type:"string"`
+
+	// The refresh cache information for the file share or FSx file systems.
+	CacheAttributes *CacheAttributes `type:"structure"`
+
+	// Specifies network configuration information for the gateway associated with
+	// the Amazon FSx file system.
+	//
+	// If multiple file systems are associated with this gateway, this parameter's
+	// IpAddresses field is required.
+	EndpointNetworkConfiguration *EndpointNetworkConfiguration `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the file system association.
+	FileSystemAssociationARN *string `min:"50" type:"string"`
+
+	// The status of the file system association. Valid Values: AVAILABLE | CREATING
+	// | DELETING | FORCE_DELETING | UPDATING | ERROR
+	FileSystemAssociationStatus *string `min:"3" type:"string"`
+
+	// An array containing the FileSystemAssociationStatusDetail data type, which
+	// provides detailed information on file system association status.
+	FileSystemAssociationStatusDetails []*FileSystemAssociationStatusDetail `type:"list"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	GatewayARN *string `min:"50" type:"string"`
+
+	// The ARN of the backend Amazon FSx file system used for storing file data.
+	// For information, see FileSystem (https://docs.aws.amazon.com/fsx/latest/APIReference/API_FileSystem.html)
+	// in the Amazon FSx API Reference.
+	LocationARN *string `min:"8" type:"string"`
+
+	// A list of up to 50 tags assigned to the SMB file share, sorted alphabetically
+	// by key name. Each tag is a key-value pair.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FileSystemAssociationInfo) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FileSystemAssociationInfo) GoString() string {
+	return s.String()
+}
+
+// SetAuditDestinationARN sets the AuditDestinationARN field's value.
+func (s *FileSystemAssociationInfo) SetAuditDestinationARN(v string) *FileSystemAssociationInfo {
+	s.AuditDestinationARN = &v
+	return s
+}
+
+// SetCacheAttributes sets the CacheAttributes field's value.
+func (s *FileSystemAssociationInfo) SetCacheAttributes(v *CacheAttributes) *FileSystemAssociationInfo {
+	s.CacheAttributes = v
+	return s
+}
+
+// SetEndpointNetworkConfiguration sets the EndpointNetworkConfiguration field's value.
+func (s *FileSystemAssociationInfo) SetEndpointNetworkConfiguration(v *EndpointNetworkConfiguration) *FileSystemAssociationInfo {
+	s.EndpointNetworkConfiguration = v
+	return s
+}
+
+// SetFileSystemAssociationARN sets the FileSystemAssociationARN field's value.
+func (s *FileSystemAssociationInfo) SetFileSystemAssociationARN(v string) *FileSystemAssociationInfo {
+	s.FileSystemAssociationARN = &v
+	return s
+}
+
+// SetFileSystemAssociationStatus sets the FileSystemAssociationStatus field's value.
+func (s *FileSystemAssociationInfo) SetFileSystemAssociationStatus(v string) *FileSystemAssociationInfo {
+	s.FileSystemAssociationStatus = &v
+	return s
+}
+
+// SetFileSystemAssociationStatusDetails sets the FileSystemAssociationStatusDetails field's value.
+func (s *FileSystemAssociationInfo) SetFileSystemAssociationStatusDetails(v []*FileSystemAssociationStatusDetail) *FileSystemAssociationInfo {
+	s.FileSystemAssociationStatusDetails = v
+	return s
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *FileSystemAssociationInfo) SetGatewayARN(v string) *FileSystemAssociationInfo {
+	s.GatewayARN = &v
+	return s
+}
+
+// SetLocationARN sets the LocationARN field's value.
+func (s *FileSystemAssociationInfo) SetLocationARN(v string) *FileSystemAssociationInfo {
+	s.LocationARN = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *FileSystemAssociationInfo) SetTags(v []*Tag) *FileSystemAssociationInfo {
+	s.Tags = v
+	return s
+}
+
+// Detailed information on file system association status.
+type FileSystemAssociationStatusDetail struct {
+	_ struct{} `type:"structure"`
+
+	// The error code for a given file system association status.
+	ErrorCode *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FileSystemAssociationStatusDetail) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FileSystemAssociationStatusDetail) GoString() string {
+	return s.String()
+}
+
+// SetErrorCode sets the ErrorCode field's value.
+func (s *FileSystemAssociationStatusDetail) SetErrorCode(v string) *FileSystemAssociationStatusDetail {
+	s.ErrorCode = &v
+	return s
+}
+
+// Gets the summary returned by ListFileSystemAssociation, which is a summary
+// of a created file system association.
+type FileSystemAssociationSummary struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the file system association.
+	FileSystemAssociationARN *string `min:"50" type:"string"`
+
+	// The ID of the file system association.
+	FileSystemAssociationId *string `min:"10" type:"string"`
+
+	// The status of the file share. Valid Values: AVAILABLE | CREATING | DELETING
+	// | FORCE_DELETING | UPDATING | ERROR
+	FileSystemAssociationStatus *string `min:"3" type:"string"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	GatewayARN *string `min:"50" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FileSystemAssociationSummary) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FileSystemAssociationSummary) GoString() string {
+	return s.String()
+}
+
+// SetFileSystemAssociationARN sets the FileSystemAssociationARN field's value.
+func (s *FileSystemAssociationSummary) SetFileSystemAssociationARN(v string) *FileSystemAssociationSummary {
+	s.FileSystemAssociationARN = &v
+	return s
+}
+
+// SetFileSystemAssociationId sets the FileSystemAssociationId field's value.
+func (s *FileSystemAssociationSummary) SetFileSystemAssociationId(v string) *FileSystemAssociationSummary {
+	s.FileSystemAssociationId = &v
+	return s
+}
+
+// SetFileSystemAssociationStatus sets the FileSystemAssociationStatus field's value.
+func (s *FileSystemAssociationSummary) SetFileSystemAssociationStatus(v string) *FileSystemAssociationSummary {
+	s.FileSystemAssociationStatus = &v
+	return s
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *FileSystemAssociationSummary) SetGatewayARN(v string) *FileSystemAssociationSummary {
+	s.GatewayARN = &v
+	return s
+}
+
 // Describes a gateway object.
 type GatewayInfo struct {
 	_ struct{} `type:"structure"`
@@ -13840,11 +17261,11 @@ type GatewayInfo struct {
 	// The ID of the Amazon EC2 instance that was used to launch the gateway.
 	Ec2InstanceId *string `type:"string"`
 
-	// The AWS Region where the Amazon EC2 instance is located.
+	// The Amazon Web Services Region where the Amazon EC2 instance is located.
 	Ec2InstanceRegion *string `type:"string"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// The unique identifier assigned to your gateway during activation. This ID
@@ -13862,14 +17283,30 @@ type GatewayInfo struct {
 
 	// The type of the gateway.
 	GatewayType *string `min:"2" type:"string"`
+
+	// The type of hardware or software platform on which the gateway is running.
+	HostEnvironment *string `type:"string" enum:"HostEnvironment"`
+
+	// A unique identifier for the specific instance of the host platform running
+	// the gateway. This value is only available for certain host environments,
+	// and its format depends on the host environment type.
+	HostEnvironmentId *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GatewayInfo) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GatewayInfo) GoString() string {
 	return s.String()
 }
@@ -13916,6 +17353,18 @@ func (s *GatewayInfo) SetGatewayType(v string) *GatewayInfo {
 	return s
 }
 
+// SetHostEnvironment sets the HostEnvironment field's value.
+func (s *GatewayInfo) SetHostEnvironment(v string) *GatewayInfo {
+	s.HostEnvironment = &v
+	return s
+}
+
+// SetHostEnvironmentId sets the HostEnvironmentId field's value.
+func (s *GatewayInfo) SetHostEnvironmentId(v string) *GatewayInfo {
+	s.HostEnvironmentId = &v
+	return s
+}
+
 // An internal server error has occurred during the request. For more information,
 // see the error and message fields.
 type InternalServerError struct {
@@ -13930,12 +17379,20 @@ type InternalServerError struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalServerError) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalServerError) GoString() string {
 	return s.String()
 }
@@ -13991,12 +17448,20 @@ type InvalidGatewayRequestException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidGatewayRequestException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidGatewayRequestException) GoString() string {
 	return s.String()
 }
@@ -14054,7 +17519,7 @@ type JoinDomainInput struct {
 	DomainName *string `min:"1" type:"string" required:"true"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -14066,6 +17531,10 @@ type JoinDomainInput struct {
 
 	// Sets the password of the user who has permission to add the gateway to the
 	// Active Directory domain.
+	//
+	// Password is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by JoinDomainInput's
+	// String and GoString methods.
 	//
 	// Password is a required field
 	Password *string `min:"1" type:"string" required:"true" sensitive:"true"`
@@ -14083,12 +17552,20 @@ type JoinDomainInput struct {
 	UserName *string `min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JoinDomainInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JoinDomainInput) GoString() string {
 	return s.String()
 }
@@ -14201,12 +17678,20 @@ type JoinDomainOutput struct {
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JoinDomainOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JoinDomainOutput) GoString() string {
 	return s.String()
 }
@@ -14227,16 +17712,24 @@ type ListAutomaticTapeCreationPoliciesInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListAutomaticTapeCreationPoliciesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListAutomaticTapeCreationPoliciesInput) GoString() string {
 	return s.String()
 }
@@ -14269,12 +17762,20 @@ type ListAutomaticTapeCreationPoliciesOutput struct {
 	AutomaticTapeCreationPolicyInfos []*AutomaticTapeCreationPolicyInfo `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListAutomaticTapeCreationPoliciesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListAutomaticTapeCreationPoliciesOutput) GoString() string {
 	return s.String()
 }
@@ -14304,12 +17805,20 @@ type ListFileSharesInput struct {
 	Marker *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFileSharesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFileSharesInput) GoString() string {
 	return s.String()
 }
@@ -14355,7 +17864,7 @@ func (s *ListFileSharesInput) SetMarker(v string) *ListFileSharesInput {
 type ListFileSharesOutput struct {
 	_ struct{} `type:"structure"`
 
-	// An array of information about the file gateway's file shares.
+	// An array of information about the S3 File Gateway's file shares.
 	FileShareInfoList []*FileShareInfo `type:"list"`
 
 	// If the request includes Marker, the response returns that value in this field.
@@ -14367,12 +17876,20 @@ type ListFileSharesOutput struct {
 	NextMarker *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFileSharesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFileSharesOutput) GoString() string {
 	return s.String()
 }
@@ -14395,6 +17912,129 @@ func (s *ListFileSharesOutput) SetNextMarker(v string) *ListFileSharesOutput {
 	return s
 }
 
+type ListFileSystemAssociationsInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	GatewayARN *string `min:"50" type:"string"`
+
+	// The maximum number of file system associations to return in the response.
+	// If present, Limit must be an integer with a value greater than zero. Optional.
+	Limit *int64 `min:"1" type:"integer"`
+
+	// Opaque pagination token returned from a previous ListFileSystemAssociations
+	// operation. If present, Marker specifies where to continue the list from after
+	// a previous call to ListFileSystemAssociations. Optional.
+	Marker *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListFileSystemAssociationsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListFileSystemAssociationsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListFileSystemAssociationsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListFileSystemAssociationsInput"}
+	if s.GatewayARN != nil && len(*s.GatewayARN) < 50 {
+		invalidParams.Add(request.NewErrParamMinLen("GatewayARN", 50))
+	}
+	if s.Limit != nil && *s.Limit < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("Limit", 1))
+	}
+	if s.Marker != nil && len(*s.Marker) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Marker", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *ListFileSystemAssociationsInput) SetGatewayARN(v string) *ListFileSystemAssociationsInput {
+	s.GatewayARN = &v
+	return s
+}
+
+// SetLimit sets the Limit field's value.
+func (s *ListFileSystemAssociationsInput) SetLimit(v int64) *ListFileSystemAssociationsInput {
+	s.Limit = &v
+	return s
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListFileSystemAssociationsInput) SetMarker(v string) *ListFileSystemAssociationsInput {
+	s.Marker = &v
+	return s
+}
+
+type ListFileSystemAssociationsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// An array of information about the Amazon FSx gateway's file system associations.
+	FileSystemAssociationSummaryList []*FileSystemAssociationSummary `type:"list"`
+
+	// If the request includes Marker, the response returns that value in this field.
+	Marker *string `min:"1" type:"string"`
+
+	// If a value is present, there are more file system associations to return.
+	// In a subsequent request, use NextMarker as the value for Marker to retrieve
+	// the next set of file system associations.
+	NextMarker *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListFileSystemAssociationsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListFileSystemAssociationsOutput) GoString() string {
+	return s.String()
+}
+
+// SetFileSystemAssociationSummaryList sets the FileSystemAssociationSummaryList field's value.
+func (s *ListFileSystemAssociationsOutput) SetFileSystemAssociationSummaryList(v []*FileSystemAssociationSummary) *ListFileSystemAssociationsOutput {
+	s.FileSystemAssociationSummaryList = v
+	return s
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListFileSystemAssociationsOutput) SetMarker(v string) *ListFileSystemAssociationsOutput {
+	s.Marker = &v
+	return s
+}
+
+// SetNextMarker sets the NextMarker field's value.
+func (s *ListFileSystemAssociationsOutput) SetNextMarker(v string) *ListFileSystemAssociationsOutput {
+	s.NextMarker = &v
+	return s
+}
+
 // A JSON object containing zero or more of the following fields:
 //
 //    * ListGatewaysInput$Limit
@@ -14412,12 +18052,20 @@ type ListGatewaysInput struct {
 	Marker *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListGatewaysInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListGatewaysInput) GoString() string {
 	return s.String()
 }
@@ -14462,12 +18110,20 @@ type ListGatewaysOutput struct {
 	Marker *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListGatewaysOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListGatewaysOutput) GoString() string {
 	return s.String()
 }
@@ -14489,18 +18145,26 @@ type ListLocalDisksInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListLocalDisksInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListLocalDisksInput) GoString() string {
 	return s.String()
 }
@@ -14536,16 +18200,24 @@ type ListLocalDisksOutput struct {
 	Disks []*Disk `type:"list"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListLocalDisksOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListLocalDisksOutput) GoString() string {
 	return s.String()
 }
@@ -14581,12 +18253,20 @@ type ListTagsForResourceInput struct {
 	ResourceARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) GoString() string {
 	return s.String()
 }
@@ -14639,7 +18319,7 @@ type ListTagsForResourceOutput struct {
 	// list of tags.
 	Marker *string `min:"1" type:"string"`
 
-	// he Amazon Resource Name (ARN) of the resource for which you want to list
+	// The Amazon Resource Name (ARN) of the resource for which you want to list
 	// tags.
 	ResourceARN *string `min:"50" type:"string"`
 
@@ -14647,12 +18327,20 @@ type ListTagsForResourceOutput struct {
 	Tags []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) GoString() string {
 	return s.String()
 }
@@ -14672,6 +18360,119 @@ func (s *ListTagsForResourceOutput) SetResourceARN(v string) *ListTagsForResourc
 // SetTags sets the Tags field's value.
 func (s *ListTagsForResourceOutput) SetTags(v []*Tag) *ListTagsForResourceOutput {
 	s.Tags = v
+	return s
+}
+
+type ListTapePoolsInput struct {
+	_ struct{} `type:"structure"`
+
+	// An optional number limit for the tape pools in the list returned by this
+	// call.
+	Limit *int64 `min:"1" type:"integer"`
+
+	// A string that indicates the position at which to begin the returned list
+	// of tape pools.
+	Marker *string `min:"1" type:"string"`
+
+	// The Amazon Resource Name (ARN) of each of the custom tape pools you want
+	// to list. If you don't specify a custom tape pool ARN, the response lists
+	// all custom tape pools.
+	PoolARNs []*string `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListTapePoolsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListTapePoolsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListTapePoolsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListTapePoolsInput"}
+	if s.Limit != nil && *s.Limit < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("Limit", 1))
+	}
+	if s.Marker != nil && len(*s.Marker) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Marker", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetLimit sets the Limit field's value.
+func (s *ListTapePoolsInput) SetLimit(v int64) *ListTapePoolsInput {
+	s.Limit = &v
+	return s
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListTapePoolsInput) SetMarker(v string) *ListTapePoolsInput {
+	s.Marker = &v
+	return s
+}
+
+// SetPoolARNs sets the PoolARNs field's value.
+func (s *ListTapePoolsInput) SetPoolARNs(v []*string) *ListTapePoolsInput {
+	s.PoolARNs = v
+	return s
+}
+
+type ListTapePoolsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// A string that indicates the position at which to begin the returned list
+	// of tape pools. Use the marker in your next request to continue pagination
+	// of tape pools. If there are no more tape pools to list, this element does
+	// not appear in the response body.
+	Marker *string `min:"1" type:"string"`
+
+	// An array of PoolInfo objects, where each object describes a single custom
+	// tape pool. If there are no custom tape pools, the PoolInfos is an empty array.
+	PoolInfos []*PoolInfo `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListTapePoolsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListTapePoolsOutput) GoString() string {
+	return s.String()
+}
+
+// SetMarker sets the Marker field's value.
+func (s *ListTapePoolsOutput) SetMarker(v string) *ListTapePoolsOutput {
+	s.Marker = &v
+	return s
+}
+
+// SetPoolInfos sets the PoolInfos field's value.
+func (s *ListTapePoolsOutput) SetPoolInfos(v []*PoolInfo) *ListTapePoolsOutput {
+	s.PoolInfos = v
 	return s
 }
 
@@ -14698,12 +18499,20 @@ type ListTapesInput struct {
 	TapeARNs []*string `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTapesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTapesInput) GoString() string {
 	return s.String()
 }
@@ -14762,12 +18571,20 @@ type ListTapesOutput struct {
 	TapeInfos []*TapeInfo `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTapesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTapesOutput) GoString() string {
 	return s.String()
 }
@@ -14795,12 +18612,20 @@ type ListVolumeInitiatorsInput struct {
 	VolumeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumeInitiatorsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumeInitiatorsInput) GoString() string {
 	return s.String()
 }
@@ -14836,12 +18661,20 @@ type ListVolumeInitiatorsOutput struct {
 	Initiators []*string `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumeInitiatorsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumeInitiatorsOutput) GoString() string {
 	return s.String()
 }
@@ -14856,18 +18689,26 @@ type ListVolumeRecoveryPointsInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumeRecoveryPointsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumeRecoveryPointsInput) GoString() string {
 	return s.String()
 }
@@ -14898,19 +18739,27 @@ type ListVolumeRecoveryPointsOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// An array of VolumeRecoveryPointInfo objects.
 	VolumeRecoveryPointInfos []*VolumeRecoveryPointInfo `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumeRecoveryPointsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumeRecoveryPointsOutput) GoString() string {
 	return s.String()
 }
@@ -14936,7 +18785,7 @@ type ListVolumesInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// Specifies that the list of volumes returned be limited to the specified number
@@ -14949,12 +18798,20 @@ type ListVolumesInput struct {
 	Marker *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumesInput) GoString() string {
 	return s.String()
 }
@@ -15005,7 +18862,7 @@ type ListVolumesOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// Use the marker in your next request to continue pagination of iSCSI volumes.
@@ -15019,12 +18876,20 @@ type ListVolumesOutput struct {
 	VolumeInfos []*VolumeInfo `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListVolumesOutput) GoString() string {
 	return s.String()
 }
@@ -15051,8 +18916,8 @@ func (s *ListVolumesOutput) SetVolumeInfos(v []*VolumeInfo) *ListVolumesOutput {
 // folders stored as Amazon S3 objects in S3 buckets don't, by default, have
 // Unix file permissions assigned to them. Upon discovery in an S3 bucket by
 // Storage Gateway, the S3 objects that represent files and folders are assigned
-// these default Unix permissions. This operation is only supported for file
-// gateways.
+// these default Unix permissions. This operation is only supported for S3 File
+// Gateways.
 type NFSFileShareDefaults struct {
 	_ struct{} `type:"structure"`
 
@@ -15074,12 +18939,20 @@ type NFSFileShareDefaults struct {
 	OwnerId *int64 `type:"long"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NFSFileShareDefaults) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NFSFileShareDefaults) GoString() string {
 	return s.String()
 }
@@ -15125,20 +18998,30 @@ func (s *NFSFileShareDefaults) SetOwnerId(v int64) *NFSFileShareDefaults {
 }
 
 // The Unix file permissions and ownership information assigned, by default,
-// to native S3 objects when file gateway discovers them in S3 buckets. This
-// operation is only supported in file gateways.
+// to native S3 objects when an S3 File Gateway discovers them in S3 buckets.
+// This operation is only supported in S3 File Gateways.
 type NFSFileShareInfo struct {
 	_ struct{} `type:"structure"`
 
-	// Refresh cache information.
+	// The Amazon Resource Name (ARN) of the storage used for audit logs.
+	AuditDestinationARN *string `type:"string"`
+
+	// Specifies the Region of the S3 bucket where the NFS file share stores files.
+	//
+	// This parameter is required for NFS file shares that connect to Amazon S3
+	// through a VPC endpoint, a VPC access point, or an access point alias that
+	// points to a VPC access point.
+	BucketRegion *string `min:"1" type:"string"`
+
+	// Refresh cache information for the file share.
 	CacheAttributes *CacheAttributes `type:"structure"`
 
-	// The list of clients that are allowed to access the file gateway. The list
+	// The list of clients that are allowed to access the S3 File Gateway. The list
 	// must contain either valid IP addresses or valid CIDR blocks.
 	ClientList []*string `min:"1" type:"list"`
 
 	// The default storage class for objects put into an Amazon S3 bucket by the
-	// file gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
+	// S3 File Gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
 	//
 	// Valid Values: S3_STANDARD | S3_INTELLIGENT_TIERING | S3_STANDARD_IA | S3_ONEZONE_IA
 	DefaultStorageClass *string `min:"5" type:"string"`
@@ -15151,7 +19034,8 @@ type NFSFileShareInfo struct {
 
 	// The name of the file share. Optional.
 	//
-	// FileShareName must be set if an S3 prefix name is set in LocationARN.
+	// FileShareName must be set if an S3 prefix name is set in LocationARN, or
+	// if an access point or access point alias is used.
 	FileShareName *string `min:"1" type:"string"`
 
 	// The status of the file share.
@@ -15160,7 +19044,7 @@ type NFSFileShareInfo struct {
 	FileShareStatus *string `min:"3" type:"string"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// A value that enables guessing of the MIME type for uploaded objects based
@@ -15170,8 +19054,8 @@ type NFSFileShareInfo struct {
 	// Valid Values: true | false
 	GuessMIMETypeEnabled *bool `type:"boolean"`
 
-	// Set to true to use Amazon S3 server-side encryption with your own AWS KMS
-	// key, or false to use a key managed by Amazon S3. Optional.
+	// Set to true to use Amazon S3 server-side encryption with your own KMS key,
+	// or false to use a key managed by Amazon S3. Optional.
 	//
 	// Valid Values: true | false
 	KMSEncrypted *bool `type:"boolean"`
@@ -15181,21 +19065,62 @@ type NFSFileShareInfo struct {
 	// CMKs. This value can only be set when KMSEncrypted is true. Optional.
 	KMSKey *string `min:"7" type:"string"`
 
-	// The ARN of the backend storage used for storing file data. A prefix name
-	// can be added to the S3 bucket name. It must end with a "/".
+	// A custom ARN for the backend storage used for storing data for file shares.
+	// It includes a resource ARN with an optional prefix concatenation. The prefix
+	// must end with a forward slash (/).
+	//
+	// You can specify LocationARN as a bucket ARN, access point ARN or access point
+	// alias, as shown in the following examples.
+	//
+	// Bucket ARN:
+	//
+	// arn:aws:s3:::my-bucket/prefix/
+	//
+	// Access point ARN:
+	//
+	// arn:aws:s3:region:account-id:accesspoint/access-point-name/prefix/
+	//
+	// If you specify an access point, the bucket policy must be configured to delegate
+	// access control to the access point. For information, see Delegating access
+	// control to access points (https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-policies.html#access-points-delegating-control)
+	// in the Amazon S3 User Guide.
+	//
+	// Access point alias:
+	//
+	// test-ap-ab123cdef4gehijklmn5opqrstuvuse1a-s3alias
 	LocationARN *string `min:"16" type:"string"`
 
 	// Describes Network File System (NFS) file share default values. Files and
 	// folders stored as Amazon S3 objects in S3 buckets don't, by default, have
 	// Unix file permissions assigned to them. Upon discovery in an S3 bucket by
 	// Storage Gateway, the S3 objects that represent files and folders are assigned
-	// these default Unix permissions. This operation is only supported for file
-	// gateways.
+	// these default Unix permissions. This operation is only supported for S3 File
+	// Gateways.
 	NFSFileShareDefaults *NFSFileShareDefaults `type:"structure"`
 
+	// The notification policy of the file share. SettlingTimeInSeconds controls
+	// the number of seconds to wait after the last point in time a client wrote
+	// to a file before generating an ObjectUploaded notification. Because clients
+	// can make many small writes to files, it's best to set this parameter for
+	// as long as possible to avoid generating multiple notifications for the same
+	// file in a small time period.
+	//
+	// SettlingTimeInSeconds has no effect on the timing of the object uploading
+	// to Amazon S3, only the timing of the notification.
+	//
+	// The following example sets NotificationPolicy on with SettlingTimeInSeconds
+	// set to 60.
+	//
+	// {\"Upload\": {\"SettlingTimeInSeconds\": 60}}
+	//
+	// The following example sets NotificationPolicy off.
+	//
+	// {}
+	NotificationPolicy *string `min:"2" type:"string"`
+
 	// A value that sets the access control list (ACL) permission for objects in
-	// the S3 bucket that a file gateway puts objects into. The default value is
-	// private.
+	// the S3 bucket that an S3 File Gateway puts objects into. The default value
+	// is private.
 	ObjectACL *string `type:"string" enum:"ObjectACL"`
 
 	// The file share path used by the NFS client to identify the mount point.
@@ -15219,8 +19144,8 @@ type NFSFileShareInfo struct {
 	// Valid Values: true | false
 	RequesterPays *bool `type:"boolean"`
 
-	// The ARN of the IAM role that file gateway assumes when it accesses the underlying
-	// storage.
+	// The ARN of the IAM role that an S3 File Gateway assumes when it accesses
+	// the underlying storage.
 	Role *string `min:"20" type:"string"`
 
 	// The user mapped to anonymous user. Valid options are the following:
@@ -15236,16 +19161,44 @@ type NFSFileShareInfo struct {
 	// by key name. Each tag is a key-value pair. For a gateway with more than 10
 	// tags assigned, you can view all tags using the ListTagsForResource API operation.
 	Tags []*Tag `type:"list"`
+
+	// Specifies the DNS name for the VPC endpoint that the NFS file share uses
+	// to connect to Amazon S3.
+	//
+	// This parameter is required for NFS file shares that connect to Amazon S3
+	// through a VPC endpoint, a VPC access point, or an access point alias that
+	// points to a VPC access point.
+	VPCEndpointDNSName *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NFSFileShareInfo) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NFSFileShareInfo) GoString() string {
 	return s.String()
+}
+
+// SetAuditDestinationARN sets the AuditDestinationARN field's value.
+func (s *NFSFileShareInfo) SetAuditDestinationARN(v string) *NFSFileShareInfo {
+	s.AuditDestinationARN = &v
+	return s
+}
+
+// SetBucketRegion sets the BucketRegion field's value.
+func (s *NFSFileShareInfo) SetBucketRegion(v string) *NFSFileShareInfo {
+	s.BucketRegion = &v
+	return s
 }
 
 // SetCacheAttributes sets the CacheAttributes field's value.
@@ -15326,6 +19279,12 @@ func (s *NFSFileShareInfo) SetNFSFileShareDefaults(v *NFSFileShareDefaults) *NFS
 	return s
 }
 
+// SetNotificationPolicy sets the NotificationPolicy field's value.
+func (s *NFSFileShareInfo) SetNotificationPolicy(v string) *NFSFileShareInfo {
+	s.NotificationPolicy = &v
+	return s
+}
+
 // SetObjectACL sets the ObjectACL field's value.
 func (s *NFSFileShareInfo) SetObjectACL(v string) *NFSFileShareInfo {
 	s.ObjectACL = &v
@@ -15368,6 +19327,12 @@ func (s *NFSFileShareInfo) SetTags(v []*Tag) *NFSFileShareInfo {
 	return s
 }
 
+// SetVPCEndpointDNSName sets the VPCEndpointDNSName field's value.
+func (s *NFSFileShareInfo) SetVPCEndpointDNSName(v string) *NFSFileShareInfo {
+	s.VPCEndpointDNSName = &v
+	return s
+}
+
 // Describes a gateway's network interface.
 type NetworkInterface struct {
 	_ struct{} `type:"structure"`
@@ -15385,12 +19350,20 @@ type NetworkInterface struct {
 	MacAddress *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NetworkInterface) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NetworkInterface) GoString() string {
 	return s.String()
 }
@@ -15422,12 +19395,20 @@ type NotifyWhenUploadedInput struct {
 	FileShareARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NotifyWhenUploadedInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NotifyWhenUploadedInput) GoString() string {
 	return s.String()
 }
@@ -15465,12 +19446,20 @@ type NotifyWhenUploadedOutput struct {
 	NotificationId *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NotifyWhenUploadedOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NotifyWhenUploadedOutput) GoString() string {
 	return s.String()
 }
@@ -15484,6 +19473,94 @@ func (s *NotifyWhenUploadedOutput) SetFileShareARN(v string) *NotifyWhenUploaded
 // SetNotificationId sets the NotificationId field's value.
 func (s *NotifyWhenUploadedOutput) SetNotificationId(v string) *NotifyWhenUploadedOutput {
 	s.NotificationId = &v
+	return s
+}
+
+// Describes a custom tape pool.
+type PoolInfo struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the custom tape pool. Use the ListTapePools
+	// operation to return a list of custom tape pools for your account and Amazon
+	// Web Services Region.
+	PoolARN *string `min:"50" type:"string"`
+
+	// The name of the custom tape pool. PoolName can use all ASCII characters,
+	// except '/' and '\'.
+	PoolName *string `min:"1" type:"string"`
+
+	// Status of the custom tape pool. Pool can be ACTIVE or DELETED.
+	PoolStatus *string `type:"string" enum:"PoolStatus"`
+
+	// Tape retention lock time is set in days. Tape retention lock can be enabled
+	// for up to 100 years (36,500 days).
+	RetentionLockTimeInDays *int64 `type:"integer"`
+
+	// Tape retention lock type, which can be configured in two modes. When configured
+	// in governance mode, Amazon Web Services accounts with specific IAM permissions
+	// are authorized to remove the tape retention lock from archived virtual tapes.
+	// When configured in compliance mode, the tape retention lock cannot be removed
+	// by any user, including the root Amazon Web Services account.
+	RetentionLockType *string `type:"string" enum:"RetentionLockType"`
+
+	// The storage class that is associated with the custom pool. When you use your
+	// backup application to eject the tape, the tape is archived directly into
+	// the storage class (S3 Glacier or S3 Glacier Deep Archive) that corresponds
+	// to the pool.
+	StorageClass *string `type:"string" enum:"TapeStorageClass"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PoolInfo) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PoolInfo) GoString() string {
+	return s.String()
+}
+
+// SetPoolARN sets the PoolARN field's value.
+func (s *PoolInfo) SetPoolARN(v string) *PoolInfo {
+	s.PoolARN = &v
+	return s
+}
+
+// SetPoolName sets the PoolName field's value.
+func (s *PoolInfo) SetPoolName(v string) *PoolInfo {
+	s.PoolName = &v
+	return s
+}
+
+// SetPoolStatus sets the PoolStatus field's value.
+func (s *PoolInfo) SetPoolStatus(v string) *PoolInfo {
+	s.PoolStatus = &v
+	return s
+}
+
+// SetRetentionLockTimeInDays sets the RetentionLockTimeInDays field's value.
+func (s *PoolInfo) SetRetentionLockTimeInDays(v int64) *PoolInfo {
+	s.RetentionLockTimeInDays = &v
+	return s
+}
+
+// SetRetentionLockType sets the RetentionLockType field's value.
+func (s *PoolInfo) SetRetentionLockType(v string) *PoolInfo {
+	s.RetentionLockType = &v
+	return s
+}
+
+// SetStorageClass sets the StorageClass field's value.
+func (s *PoolInfo) SetStorageClass(v string) *PoolInfo {
+	s.StorageClass = &v
 	return s
 }
 
@@ -15514,12 +19591,20 @@ type RefreshCacheInput struct {
 	Recursive *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RefreshCacheInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RefreshCacheInput) GoString() string {
 	return s.String()
 }
@@ -15573,12 +19658,20 @@ type RefreshCacheOutput struct {
 	NotificationId *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RefreshCacheOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RefreshCacheOutput) GoString() string {
 	return s.String()
 }
@@ -15612,12 +19705,20 @@ type RemoveTagsFromResourceInput struct {
 	TagKeys []*string `type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveTagsFromResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveTagsFromResourceInput) GoString() string {
 	return s.String()
 }
@@ -15662,12 +19763,20 @@ type RemoveTagsFromResourceOutput struct {
 	ResourceARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveTagsFromResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveTagsFromResourceOutput) GoString() string {
 	return s.String()
 }
@@ -15682,18 +19791,26 @@ type ResetCacheInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResetCacheInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResetCacheInput) GoString() string {
 	return s.String()
 }
@@ -15724,16 +19841,24 @@ type ResetCacheOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResetCacheOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResetCacheOutput) GoString() string {
 	return s.String()
 }
@@ -15750,7 +19875,7 @@ type RetrieveTapeArchiveInput struct {
 
 	// The Amazon Resource Name (ARN) of the gateway you want to retrieve the virtual
 	// tape to. Use the ListGateways operation to return a list of gateways for
-	// your account and AWS Region.
+	// your account and Amazon Web Services Region.
 	//
 	// You retrieve archived virtual tapes to only one gateway and the gateway must
 	// be a tape gateway.
@@ -15765,12 +19890,20 @@ type RetrieveTapeArchiveInput struct {
 	TapeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveTapeArchiveInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveTapeArchiveInput) GoString() string {
 	return s.String()
 }
@@ -15817,12 +19950,20 @@ type RetrieveTapeArchiveOutput struct {
 	TapeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveTapeArchiveOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveTapeArchiveOutput) GoString() string {
 	return s.String()
 }
@@ -15838,7 +19979,7 @@ type RetrieveTapeRecoveryPointInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -15850,12 +19991,20 @@ type RetrieveTapeRecoveryPointInput struct {
 	TapeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveTapeRecoveryPointInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveTapeRecoveryPointInput) GoString() string {
 	return s.String()
 }
@@ -15903,12 +20052,20 @@ type RetrieveTapeRecoveryPointOutput struct {
 	TapeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveTapeRecoveryPointOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RetrieveTapeRecoveryPointOutput) GoString() string {
 	return s.String()
 }
@@ -15920,10 +20077,13 @@ func (s *RetrieveTapeRecoveryPointOutput) SetTapeARN(v string) *RetrieveTapeReco
 }
 
 // The Windows file permissions and ownership information assigned, by default,
-// to native S3 objects when file gateway discovers them in S3 buckets. This
-// operation is only supported for file gateways.
+// to native S3 objects when S3 File Gateway discovers them in S3 buckets. This
+// operation is only supported for S3 File Gateways.
 type SMBFileShareInfo struct {
 	_ struct{} `type:"structure"`
+
+	// Indicates whether AccessBasedEnumeration is enabled.
+	AccessBasedEnumeration *bool `type:"boolean"`
 
 	// A list of users or groups in the Active Directory that have administrator
 	// rights to the file share. A group must be prefixed with the @ character.
@@ -15931,7 +20091,7 @@ type SMBFileShareInfo struct {
 	// Can only be set if Authentication is set to ActiveDirectory.
 	AdminUserList []*string `type:"list"`
 
-	// The Amazon Resource Name (ARN) of the storage used for the audit logs.
+	// The Amazon Resource Name (ARN) of the storage used for audit logs.
 	AuditDestinationARN *string `type:"string"`
 
 	// The authentication method of the file share. The default is ActiveDirectory.
@@ -15939,7 +20099,14 @@ type SMBFileShareInfo struct {
 	// Valid Values: ActiveDirectory | GuestAccess
 	Authentication *string `min:"5" type:"string"`
 
-	// Refresh cache information.
+	// Specifies the Region of the S3 bucket where the SMB file share stores files.
+	//
+	// This parameter is required for SMB file shares that connect to Amazon S3
+	// through a VPC endpoint, a VPC access point, or an access point alias that
+	// points to a VPC access point.
+	BucketRegion *string `min:"1" type:"string"`
+
+	// Refresh cache information for the file share.
 	CacheAttributes *CacheAttributes `type:"structure"`
 
 	// The case of an object name in an Amazon S3 bucket. For ClientSpecified, the
@@ -15948,7 +20115,7 @@ type SMBFileShareInfo struct {
 	CaseSensitivity *string `type:"string" enum:"CaseSensitivity"`
 
 	// The default storage class for objects put into an Amazon S3 bucket by the
-	// file gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
+	// S3 File Gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
 	//
 	// Valid Values: S3_STANDARD | S3_INTELLIGENT_TIERING | S3_STANDARD_IA | S3_ONEZONE_IA
 	DefaultStorageClass *string `min:"5" type:"string"`
@@ -15961,7 +20128,8 @@ type SMBFileShareInfo struct {
 
 	// The name of the file share. Optional.
 	//
-	// FileShareName must be set if an S3 prefix name is set in LocationARN.
+	// FileShareName must be set if an S3 prefix name is set in LocationARN, or
+	// if an access point or access point alias is used.
 	FileShareName *string `min:"1" type:"string"`
 
 	// The status of the file share.
@@ -15970,7 +20138,7 @@ type SMBFileShareInfo struct {
 	FileShareStatus *string `min:"3" type:"string"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// A value that enables guessing of the MIME type for uploaded objects based
@@ -15986,8 +20154,8 @@ type SMBFileShareInfo struct {
 	// be set if Authentication is set to ActiveDirectory.
 	InvalidUserList []*string `type:"list"`
 
-	// Set to true to use Amazon S3 server-side encryption with your own AWS KMS
-	// key, or false to use a key managed by Amazon S3. Optional.
+	// Set to true to use Amazon S3 server-side encryption with your own KMS key,
+	// or false to use a key managed by Amazon S3. Optional.
 	//
 	// Valid Values: true | false
 	KMSEncrypted *bool `type:"boolean"`
@@ -15997,14 +20165,64 @@ type SMBFileShareInfo struct {
 	// CMKs. This value can only be set when KMSEncrypted is true. Optional.
 	KMSKey *string `min:"7" type:"string"`
 
-	// The ARN of the backend storage used for storing file data. A prefix name
-	// can be added to the S3 bucket name. It must end with a "/".
+	// A custom ARN for the backend storage used for storing data for file shares.
+	// It includes a resource ARN with an optional prefix concatenation. The prefix
+	// must end with a forward slash (/).
+	//
+	// You can specify LocationARN as a bucket ARN, access point ARN or access point
+	// alias, as shown in the following examples.
+	//
+	// Bucket ARN:
+	//
+	// arn:aws:s3:::my-bucket/prefix/
+	//
+	// Access point ARN:
+	//
+	// arn:aws:s3:region:account-id:accesspoint/access-point-name/prefix/
+	//
+	// If you specify an access point, the bucket policy must be configured to delegate
+	// access control to the access point. For information, see Delegating access
+	// control to access points (https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-policies.html#access-points-delegating-control)
+	// in the Amazon S3 User Guide.
+	//
+	// Access point alias:
+	//
+	// test-ap-ab123cdef4gehijklmn5opqrstuvuse1a-s3alias
 	LocationARN *string `min:"16" type:"string"`
 
+	// The notification policy of the file share. SettlingTimeInSeconds controls
+	// the number of seconds to wait after the last point in time a client wrote
+	// to a file before generating an ObjectUploaded notification. Because clients
+	// can make many small writes to files, it's best to set this parameter for
+	// as long as possible to avoid generating multiple notifications for the same
+	// file in a small time period.
+	//
+	// SettlingTimeInSeconds has no effect on the timing of the object uploading
+	// to Amazon S3, only the timing of the notification.
+	//
+	// The following example sets NotificationPolicy on with SettlingTimeInSeconds
+	// set to 60.
+	//
+	// {\"Upload\": {\"SettlingTimeInSeconds\": 60}}
+	//
+	// The following example sets NotificationPolicy off.
+	//
+	// {}
+	NotificationPolicy *string `min:"2" type:"string"`
+
 	// A value that sets the access control list (ACL) permission for objects in
-	// the S3 bucket that a file gateway puts objects into. The default value is
-	// private.
+	// the S3 bucket that an S3 File Gateway puts objects into. The default value
+	// is private.
 	ObjectACL *string `type:"string" enum:"ObjectACL"`
+
+	// Specifies whether opportunistic locking is enabled for the SMB file share.
+	//
+	// Enabling opportunistic locking on case-sensitive shares is not recommended
+	// for workloads that involve access to files with the same name in different
+	// case.
+	//
+	// Valid Values: true | false
+	OplocksEnabled *bool `type:"boolean"`
 
 	// The file share path used by the SMB client to identify the mount point.
 	Path *string `type:"string"`
@@ -16027,8 +20245,8 @@ type SMBFileShareInfo struct {
 	// Valid Values: true | false
 	RequesterPays *bool `type:"boolean"`
 
-	// The ARN of the IAM role that file gateway assumes when it accesses the underlying
-	// storage.
+	// The ARN of the IAM role that an S3 File Gateway assumes when it accesses
+	// the underlying storage.
 	Role *string `min:"20" type:"string"`
 
 	// If this value is set to true, it indicates that access control list (ACL)
@@ -16037,13 +20255,21 @@ type SMBFileShareInfo struct {
 	//
 	// For more information, see Using Microsoft Windows ACLs to control access
 	// to an SMB file share (https://docs.aws.amazon.com/storagegateway/latest/userguide/smb-acl.html)
-	// in the AWS Storage Gateway User Guide.
+	// in the Storage Gateway User Guide.
 	SMBACLEnabled *bool `type:"boolean"`
 
 	// A list of up to 50 tags assigned to the SMB file share, sorted alphabetically
 	// by key name. Each tag is a key-value pair. For a gateway with more than 10
 	// tags assigned, you can view all tags using the ListTagsForResource API operation.
 	Tags []*Tag `type:"list"`
+
+	// Specifies the DNS name for the VPC endpoint that the SMB file share uses
+	// to connect to Amazon S3.
+	//
+	// This parameter is required for SMB file shares that connect to Amazon S3
+	// through a VPC endpoint, a VPC access point, or an access point alias that
+	// points to a VPC access point.
+	VPCEndpointDNSName *string `min:"1" type:"string"`
 
 	// A list of users or groups in the Active Directory that are allowed to access
 	// the file share. A group must be prefixed with the @ character. Acceptable
@@ -16052,14 +20278,28 @@ type SMBFileShareInfo struct {
 	ValidUserList []*string `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SMBFileShareInfo) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SMBFileShareInfo) GoString() string {
 	return s.String()
+}
+
+// SetAccessBasedEnumeration sets the AccessBasedEnumeration field's value.
+func (s *SMBFileShareInfo) SetAccessBasedEnumeration(v bool) *SMBFileShareInfo {
+	s.AccessBasedEnumeration = &v
+	return s
 }
 
 // SetAdminUserList sets the AdminUserList field's value.
@@ -16077,6 +20317,12 @@ func (s *SMBFileShareInfo) SetAuditDestinationARN(v string) *SMBFileShareInfo {
 // SetAuthentication sets the Authentication field's value.
 func (s *SMBFileShareInfo) SetAuthentication(v string) *SMBFileShareInfo {
 	s.Authentication = &v
+	return s
+}
+
+// SetBucketRegion sets the BucketRegion field's value.
+func (s *SMBFileShareInfo) SetBucketRegion(v string) *SMBFileShareInfo {
+	s.BucketRegion = &v
 	return s
 }
 
@@ -16158,9 +20404,21 @@ func (s *SMBFileShareInfo) SetLocationARN(v string) *SMBFileShareInfo {
 	return s
 }
 
+// SetNotificationPolicy sets the NotificationPolicy field's value.
+func (s *SMBFileShareInfo) SetNotificationPolicy(v string) *SMBFileShareInfo {
+	s.NotificationPolicy = &v
+	return s
+}
+
 // SetObjectACL sets the ObjectACL field's value.
 func (s *SMBFileShareInfo) SetObjectACL(v string) *SMBFileShareInfo {
 	s.ObjectACL = &v
+	return s
+}
+
+// SetOplocksEnabled sets the OplocksEnabled field's value.
+func (s *SMBFileShareInfo) SetOplocksEnabled(v bool) *SMBFileShareInfo {
+	s.OplocksEnabled = &v
 	return s
 }
 
@@ -16200,9 +20458,53 @@ func (s *SMBFileShareInfo) SetTags(v []*Tag) *SMBFileShareInfo {
 	return s
 }
 
+// SetVPCEndpointDNSName sets the VPCEndpointDNSName field's value.
+func (s *SMBFileShareInfo) SetVPCEndpointDNSName(v string) *SMBFileShareInfo {
+	s.VPCEndpointDNSName = &v
+	return s
+}
+
 // SetValidUserList sets the ValidUserList field's value.
 func (s *SMBFileShareInfo) SetValidUserList(v []*string) *SMBFileShareInfo {
 	s.ValidUserList = v
+	return s
+}
+
+// A list of Active Directory users and groups that have special permissions
+// for SMB file shares on the gateway.
+type SMBLocalGroups struct {
+	_ struct{} `type:"structure"`
+
+	// A list of Active Directory users and groups that have local Gateway Admin
+	// permissions. Acceptable formats include: DOMAIN\User1, user1, DOMAIN\group1,
+	// and group1.
+	//
+	// Gateway Admins can use the Shared Folders Microsoft Management Console snap-in
+	// to force-close files that are open and locked.
+	GatewayAdmins []*string `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s SMBLocalGroups) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s SMBLocalGroups) GoString() string {
+	return s.String()
+}
+
+// SetGatewayAdmins sets the GatewayAdmins field's value.
+func (s *SMBLocalGroups) SetGatewayAdmins(v []*string) *SMBLocalGroups {
+	s.GatewayAdmins = v
 	return s
 }
 
@@ -16220,12 +20522,20 @@ type ServiceUnavailableError struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ServiceUnavailableError) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ServiceUnavailableError) GoString() string {
 	return s.String()
 }
@@ -16273,23 +20583,35 @@ type SetLocalConsolePasswordInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 
 	// The password you want to set for your VM local console.
 	//
+	// LocalConsolePassword is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by SetLocalConsolePasswordInput's
+	// String and GoString methods.
+	//
 	// LocalConsolePassword is a required field
 	LocalConsolePassword *string `min:"6" type:"string" required:"true" sensitive:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SetLocalConsolePasswordInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SetLocalConsolePasswordInput) GoString() string {
 	return s.String()
 }
@@ -16332,16 +20654,24 @@ type SetLocalConsolePasswordOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SetLocalConsolePasswordOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SetLocalConsolePasswordOutput) GoString() string {
 	return s.String()
 }
@@ -16356,24 +20686,36 @@ func (s *SetLocalConsolePasswordOutput) SetGatewayARN(v string) *SetLocalConsole
 type SetSMBGuestPasswordInput struct {
 	_ struct{} `type:"structure"`
 
-	// The Amazon Resource Name (ARN) of the file gateway the SMB file share is
-	// associated with.
+	// The Amazon Resource Name (ARN) of the S3 File Gateway the SMB file share
+	// is associated with.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 
 	// The password that you want to set for your SMB server.
 	//
+	// Password is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by SetSMBGuestPasswordInput's
+	// String and GoString methods.
+	//
 	// Password is a required field
 	Password *string `min:"6" type:"string" required:"true" sensitive:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SetSMBGuestPasswordInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SetSMBGuestPasswordInput) GoString() string {
 	return s.String()
 }
@@ -16416,16 +20758,24 @@ type SetSMBGuestPasswordOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SetSMBGuestPasswordOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SetSMBGuestPasswordOutput) GoString() string {
 	return s.String()
 }
@@ -16442,18 +20792,26 @@ type ShutdownGatewayInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ShutdownGatewayInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ShutdownGatewayInput) GoString() string {
 	return s.String()
 }
@@ -16486,16 +20844,24 @@ type ShutdownGatewayOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ShutdownGatewayOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ShutdownGatewayOutput) GoString() string {
 	return s.String()
 }
@@ -16510,18 +20876,26 @@ type StartAvailabilityMonitorTestInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartAvailabilityMonitorTestInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartAvailabilityMonitorTestInput) GoString() string {
 	return s.String()
 }
@@ -16552,16 +20926,24 @@ type StartAvailabilityMonitorTestOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartAvailabilityMonitorTestOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartAvailabilityMonitorTestOutput) GoString() string {
 	return s.String()
 }
@@ -16578,18 +20960,26 @@ type StartGatewayInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartGatewayInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartGatewayInput) GoString() string {
 	return s.String()
 }
@@ -16622,16 +21012,24 @@ type StartGatewayOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartGatewayOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartGatewayOutput) GoString() string {
 	return s.String()
 }
@@ -16647,7 +21045,7 @@ type StorediSCSIVolume struct {
 	_ struct{} `type:"structure"`
 
 	// The date the volume was created. Volumes created prior to March 28, 2017
-	// don’t have this time stamp.
+	// don’t have this timestamp.
 	CreatedDate *time.Time `type:"timestamp"`
 
 	// The Amazon Resource Name (ARN) of a symmetric customer master key (CMK) used
@@ -16686,7 +21084,7 @@ type StorediSCSIVolume struct {
 	// operation.
 	VolumeDiskId *string `min:"1" type:"string"`
 
-	// The unique identifier of the volume, e.g. vol-AE4B946D.
+	// The unique identifier of the volume, e.g., vol-AE4B946D.
 	VolumeId *string `min:"12" type:"string"`
 
 	// Represents the percentage complete if the volume is restoring or bootstrapping
@@ -16719,12 +21117,20 @@ type StorediSCSIVolume struct {
 	VolumeiSCSIAttributes *VolumeiSCSIAttributes `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StorediSCSIVolume) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StorediSCSIVolume) GoString() string {
 	return s.String()
 }
@@ -16836,12 +21242,20 @@ type Tag struct {
 	Value *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) GoString() string {
 	return s.String()
 }
@@ -16886,6 +21300,9 @@ type Tape struct {
 	// CMKs. This value can only be set when KMSEncrypted is true. Optional.
 	KMSKey *string `min:"7" type:"string"`
 
+	// The date that the tape enters a custom tape pool.
+	PoolEntryDate *time.Time `type:"timestamp"`
+
 	// The ID of the pool that contains tapes that will be archived. The tapes in
 	// this pool are archived in the S3 storage class that is associated with the
 	// pool. When you use your backup application to eject the tape, the tape is
@@ -16900,6 +21317,9 @@ type Tape struct {
 	//
 	// Range: 0 (not started) to 100 (complete).
 	Progress *float64 `type:"double"`
+
+	// The date that the tape is first archived with tape retention lock enabled.
+	RetentionStartDate *time.Time `type:"timestamp"`
 
 	// The Amazon Resource Name (ARN) of the virtual tape.
 	TapeARN *string `min:"50" type:"string"`
@@ -16924,14 +21344,25 @@ type Tape struct {
 	// The virtual tape library (VTL) device that the virtual tape is associated
 	// with.
 	VTLDevice *string `min:"50" type:"string"`
+
+	// If the tape is archived as write-once-read-many (WORM), this value is true.
+	Worm *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tape) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tape) GoString() string {
 	return s.String()
 }
@@ -16939,6 +21370,12 @@ func (s Tape) GoString() string {
 // SetKMSKey sets the KMSKey field's value.
 func (s *Tape) SetKMSKey(v string) *Tape {
 	s.KMSKey = &v
+	return s
+}
+
+// SetPoolEntryDate sets the PoolEntryDate field's value.
+func (s *Tape) SetPoolEntryDate(v time.Time) *Tape {
+	s.PoolEntryDate = &v
 	return s
 }
 
@@ -16951,6 +21388,12 @@ func (s *Tape) SetPoolId(v string) *Tape {
 // SetProgress sets the Progress field's value.
 func (s *Tape) SetProgress(v float64) *Tape {
 	s.Progress = &v
+	return s
+}
+
+// SetRetentionStartDate sets the RetentionStartDate field's value.
+func (s *Tape) SetRetentionStartDate(v time.Time) *Tape {
+	s.RetentionStartDate = &v
 	return s
 }
 
@@ -16996,13 +21439,19 @@ func (s *Tape) SetVTLDevice(v string) *Tape {
 	return s
 }
 
+// SetWorm sets the Worm field's value.
+func (s *Tape) SetWorm(v bool) *Tape {
+	s.Worm = &v
+	return s
+}
+
 // Represents a virtual tape that is archived in the virtual tape shelf (VTS).
 type TapeArchive struct {
 	_ struct{} `type:"structure"`
 
 	// The time that the archiving of the virtual tape was completed.
 	//
-	// The default time stamp format is in the ISO8601 extended YYYY-MM-DD'T'HH:MM:SS'Z'
+	// The default timestamp format is in the ISO8601 extended YYYY-MM-DD'T'HH:MM:SS'Z'
 	// format.
 	CompletionTime *time.Time `type:"timestamp"`
 
@@ -17011,11 +21460,21 @@ type TapeArchive struct {
 	// CMKs. This value can only be set when KMSEncrypted is true. Optional.
 	KMSKey *string `min:"7" type:"string"`
 
+	// The time that the tape entered the custom tape pool.
+	//
+	// The default timestamp format is in the ISO8601 extended YYYY-MM-DD'T'HH:MM:SS'Z'
+	// format.
+	PoolEntryDate *time.Time `type:"timestamp"`
+
 	// The ID of the pool that was used to archive the tape. The tapes in this pool
 	// are archived in the S3 storage class that is associated with the pool.
 	//
 	// Valid Values: GLACIER | DEEP_ARCHIVE
 	PoolId *string `min:"1" type:"string"`
+
+	// If the archived tape is subject to tape retention lock, the date that the
+	// archived tape started being retained.
+	RetentionStartDate *time.Time `type:"timestamp"`
 
 	// The Amazon Resource Name (ARN) of the tape gateway that the virtual tape
 	// is being retrieved to.
@@ -17042,14 +21501,25 @@ type TapeArchive struct {
 	//
 	// This value is not available for tapes created prior to May 13, 2015.
 	TapeUsedInBytes *int64 `type:"long"`
+
+	// Set to true if the archived tape is stored as write-once-read-many (WORM).
+	Worm *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TapeArchive) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TapeArchive) GoString() string {
 	return s.String()
 }
@@ -17066,9 +21536,21 @@ func (s *TapeArchive) SetKMSKey(v string) *TapeArchive {
 	return s
 }
 
+// SetPoolEntryDate sets the PoolEntryDate field's value.
+func (s *TapeArchive) SetPoolEntryDate(v time.Time) *TapeArchive {
+	s.PoolEntryDate = &v
+	return s
+}
+
 // SetPoolId sets the PoolId field's value.
 func (s *TapeArchive) SetPoolId(v string) *TapeArchive {
 	s.PoolId = &v
+	return s
+}
+
+// SetRetentionStartDate sets the RetentionStartDate field's value.
+func (s *TapeArchive) SetRetentionStartDate(v time.Time) *TapeArchive {
+	s.RetentionStartDate = &v
 	return s
 }
 
@@ -17114,13 +21596,23 @@ func (s *TapeArchive) SetTapeUsedInBytes(v int64) *TapeArchive {
 	return s
 }
 
+// SetWorm sets the Worm field's value.
+func (s *TapeArchive) SetWorm(v bool) *TapeArchive {
+	s.Worm = &v
+	return s
+}
+
 // Describes a virtual tape.
 type TapeInfo struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
+
+	// The date that the tape entered the custom tape pool with tape retention lock
+	// enabled.
+	PoolEntryDate *time.Time `type:"timestamp"`
 
 	// The ID of the pool that you want to add your tape to for archiving. The tape
 	// in this pool is archived in the S3 storage class that is associated with
@@ -17130,6 +21622,9 @@ type TapeInfo struct {
 	//
 	// Valid Values: GLACIER | DEEP_ARCHIVE
 	PoolId *string `min:"1" type:"string"`
+
+	// The date that the tape became subject to tape retention lock.
+	RetentionStartDate *time.Time `type:"timestamp"`
 
 	// The Amazon Resource Name (ARN) of a virtual tape.
 	TapeARN *string `min:"50" type:"string"`
@@ -17144,12 +21639,20 @@ type TapeInfo struct {
 	TapeStatus *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TapeInfo) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TapeInfo) GoString() string {
 	return s.String()
 }
@@ -17160,9 +21663,21 @@ func (s *TapeInfo) SetGatewayARN(v string) *TapeInfo {
 	return s
 }
 
+// SetPoolEntryDate sets the PoolEntryDate field's value.
+func (s *TapeInfo) SetPoolEntryDate(v time.Time) *TapeInfo {
+	s.PoolEntryDate = &v
+	return s
+}
+
 // SetPoolId sets the PoolId field's value.
 func (s *TapeInfo) SetPoolId(v string) *TapeInfo {
 	s.PoolId = &v
+	return s
+}
+
+// SetRetentionStartDate sets the RetentionStartDate field's value.
+func (s *TapeInfo) SetRetentionStartDate(v time.Time) *TapeInfo {
+	s.RetentionStartDate = &v
 	return s
 }
 
@@ -17200,7 +21715,7 @@ type TapeRecoveryPointInfo struct {
 	// The time when the point-in-time view of the virtual tape was replicated for
 	// later recovery.
 	//
-	// The default time stamp format of the tape recovery point time is in the ISO8601
+	// The default timestamp format of the tape recovery point time is in the ISO8601
 	// extended YYYY-MM-DD'T'HH:MM:SS'Z' format.
 	TapeRecoveryPointTime *time.Time `type:"timestamp"`
 
@@ -17211,12 +21726,20 @@ type TapeRecoveryPointInfo struct {
 	TapeStatus *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TapeRecoveryPointInfo) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TapeRecoveryPointInfo) GoString() string {
 	return s.String()
 }
@@ -17255,18 +21778,26 @@ type UpdateAutomaticTapeCreationPolicyInput struct {
 	AutomaticTapeCreationRules []*AutomaticTapeCreationRule `min:"1" type:"list" required:"true"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateAutomaticTapeCreationPolicyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateAutomaticTapeCreationPolicyInput) GoString() string {
 	return s.String()
 }
@@ -17319,16 +21850,24 @@ type UpdateAutomaticTapeCreationPolicyOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateAutomaticTapeCreationPolicyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateAutomaticTapeCreationPolicyOutput) GoString() string {
 	return s.String()
 }
@@ -17354,18 +21893,26 @@ type UpdateBandwidthRateLimitInput struct {
 	AverageUploadRateLimitInBitsPerSec *int64 `min:"51200" type:"long"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateBandwidthRateLimitInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateBandwidthRateLimitInput) GoString() string {
 	return s.String()
 }
@@ -17416,22 +21963,138 @@ type UpdateBandwidthRateLimitOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateBandwidthRateLimitOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateBandwidthRateLimitOutput) GoString() string {
 	return s.String()
 }
 
 // SetGatewayARN sets the GatewayARN field's value.
 func (s *UpdateBandwidthRateLimitOutput) SetGatewayARN(v string) *UpdateBandwidthRateLimitOutput {
+	s.GatewayARN = &v
+	return s
+}
+
+type UpdateBandwidthRateLimitScheduleInput struct {
+	_ struct{} `type:"structure"`
+
+	// An array containing bandwidth rate limit schedule intervals for a gateway.
+	// When no bandwidth rate limit intervals have been scheduled, the array is
+	// empty.
+	//
+	// BandwidthRateLimitIntervals is a required field
+	BandwidthRateLimitIntervals []*BandwidthRateLimitInterval `type:"list" required:"true"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	//
+	// GatewayARN is a required field
+	GatewayARN *string `min:"50" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateBandwidthRateLimitScheduleInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateBandwidthRateLimitScheduleInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateBandwidthRateLimitScheduleInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateBandwidthRateLimitScheduleInput"}
+	if s.BandwidthRateLimitIntervals == nil {
+		invalidParams.Add(request.NewErrParamRequired("BandwidthRateLimitIntervals"))
+	}
+	if s.GatewayARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("GatewayARN"))
+	}
+	if s.GatewayARN != nil && len(*s.GatewayARN) < 50 {
+		invalidParams.Add(request.NewErrParamMinLen("GatewayARN", 50))
+	}
+	if s.BandwidthRateLimitIntervals != nil {
+		for i, v := range s.BandwidthRateLimitIntervals {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "BandwidthRateLimitIntervals", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetBandwidthRateLimitIntervals sets the BandwidthRateLimitIntervals field's value.
+func (s *UpdateBandwidthRateLimitScheduleInput) SetBandwidthRateLimitIntervals(v []*BandwidthRateLimitInterval) *UpdateBandwidthRateLimitScheduleInput {
+	s.BandwidthRateLimitIntervals = v
+	return s
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *UpdateBandwidthRateLimitScheduleInput) SetGatewayARN(v string) *UpdateBandwidthRateLimitScheduleInput {
+	s.GatewayARN = &v
+	return s
+}
+
+type UpdateBandwidthRateLimitScheduleOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	GatewayARN *string `min:"50" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateBandwidthRateLimitScheduleOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateBandwidthRateLimitScheduleOutput) GoString() string {
+	return s.String()
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *UpdateBandwidthRateLimitScheduleOutput) SetGatewayARN(v string) *UpdateBandwidthRateLimitScheduleOutput {
 	s.GatewayARN = &v
 	return s
 }
@@ -17458,6 +22121,10 @@ type UpdateChapCredentialsInput struct {
 	//
 	// The secret key must be between 12 and 16 bytes when encoded in UTF-8.
 	//
+	// SecretToAuthenticateInitiator is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by UpdateChapCredentialsInput's
+	// String and GoString methods.
+	//
 	// SecretToAuthenticateInitiator is a required field
 	SecretToAuthenticateInitiator *string `min:"1" type:"string" required:"true" sensitive:"true"`
 
@@ -17467,6 +22134,10 @@ type UpdateChapCredentialsInput struct {
 	// Byte constraints: Minimum bytes of 12. Maximum bytes of 16.
 	//
 	// The secret key must be between 12 and 16 bytes when encoded in UTF-8.
+	//
+	// SecretToAuthenticateTarget is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by UpdateChapCredentialsInput's
+	// String and GoString methods.
 	SecretToAuthenticateTarget *string `min:"1" type:"string" sensitive:"true"`
 
 	// The Amazon Resource Name (ARN) of the iSCSI volume target. Use the DescribeStorediSCSIVolumes
@@ -17476,12 +22147,20 @@ type UpdateChapCredentialsInput struct {
 	TargetARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateChapCredentialsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateChapCredentialsInput) GoString() string {
 	return s.String()
 }
@@ -17554,12 +22233,20 @@ type UpdateChapCredentialsOutput struct {
 	TargetARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateChapCredentialsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateChapCredentialsOutput) GoString() string {
 	return s.String()
 }
@@ -17576,20 +22263,152 @@ func (s *UpdateChapCredentialsOutput) SetTargetARN(v string) *UpdateChapCredenti
 	return s
 }
 
+type UpdateFileSystemAssociationInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the storage used for the audit logs.
+	AuditDestinationARN *string `type:"string"`
+
+	// The refresh cache information for the file share or FSx file systems.
+	CacheAttributes *CacheAttributes `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the file system association that you want
+	// to update.
+	//
+	// FileSystemAssociationARN is a required field
+	FileSystemAssociationARN *string `min:"50" type:"string" required:"true"`
+
+	// The password of the user credential.
+	//
+	// Password is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by UpdateFileSystemAssociationInput's
+	// String and GoString methods.
+	Password *string `min:"1" type:"string" sensitive:"true"`
+
+	// The user name of the user credential that has permission to access the root
+	// share D$ of the Amazon FSx file system. The user account must belong to the
+	// Amazon FSx delegated admin user group.
+	UserName *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFileSystemAssociationInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFileSystemAssociationInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateFileSystemAssociationInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateFileSystemAssociationInput"}
+	if s.FileSystemAssociationARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("FileSystemAssociationARN"))
+	}
+	if s.FileSystemAssociationARN != nil && len(*s.FileSystemAssociationARN) < 50 {
+		invalidParams.Add(request.NewErrParamMinLen("FileSystemAssociationARN", 50))
+	}
+	if s.Password != nil && len(*s.Password) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Password", 1))
+	}
+	if s.UserName != nil && len(*s.UserName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("UserName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAuditDestinationARN sets the AuditDestinationARN field's value.
+func (s *UpdateFileSystemAssociationInput) SetAuditDestinationARN(v string) *UpdateFileSystemAssociationInput {
+	s.AuditDestinationARN = &v
+	return s
+}
+
+// SetCacheAttributes sets the CacheAttributes field's value.
+func (s *UpdateFileSystemAssociationInput) SetCacheAttributes(v *CacheAttributes) *UpdateFileSystemAssociationInput {
+	s.CacheAttributes = v
+	return s
+}
+
+// SetFileSystemAssociationARN sets the FileSystemAssociationARN field's value.
+func (s *UpdateFileSystemAssociationInput) SetFileSystemAssociationARN(v string) *UpdateFileSystemAssociationInput {
+	s.FileSystemAssociationARN = &v
+	return s
+}
+
+// SetPassword sets the Password field's value.
+func (s *UpdateFileSystemAssociationInput) SetPassword(v string) *UpdateFileSystemAssociationInput {
+	s.Password = &v
+	return s
+}
+
+// SetUserName sets the UserName field's value.
+func (s *UpdateFileSystemAssociationInput) SetUserName(v string) *UpdateFileSystemAssociationInput {
+	s.UserName = &v
+	return s
+}
+
+type UpdateFileSystemAssociationOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The ARN of the updated file system association.
+	FileSystemAssociationARN *string `min:"50" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFileSystemAssociationOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFileSystemAssociationOutput) GoString() string {
+	return s.String()
+}
+
+// SetFileSystemAssociationARN sets the FileSystemAssociationARN field's value.
+func (s *UpdateFileSystemAssociationOutput) SetFileSystemAssociationARN(v string) *UpdateFileSystemAssociationOutput {
+	s.FileSystemAssociationARN = &v
+	return s
+}
+
 type UpdateGatewayInformationInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the Amazon CloudWatch log group that you
 	// want to use to monitor and log events in the gateway.
 	//
-	// For more information, see What is Amazon CloudWatch logs? (https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html).
+	// For more information, see What is Amazon CloudWatch Logs? (https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/WhatIsCloudWatchLogs.html)
 	CloudWatchLogGroupARN *string `type:"string"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
+
+	// Specifies the size of the gateway's metadata cache.
+	GatewayCapacity *string `type:"string" enum:"GatewayCapacity"`
 
 	// The name you configured for your gateway.
 	GatewayName *string `min:"2" type:"string"`
@@ -17598,12 +22417,20 @@ type UpdateGatewayInformationInput struct {
 	GatewayTimezone *string `min:"3" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGatewayInformationInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGatewayInformationInput) GoString() string {
 	return s.String()
 }
@@ -17642,6 +22469,12 @@ func (s *UpdateGatewayInformationInput) SetGatewayARN(v string) *UpdateGatewayIn
 	return s
 }
 
+// SetGatewayCapacity sets the GatewayCapacity field's value.
+func (s *UpdateGatewayInformationInput) SetGatewayCapacity(v string) *UpdateGatewayInformationInput {
+	s.GatewayCapacity = &v
+	return s
+}
+
 // SetGatewayName sets the GatewayName field's value.
 func (s *UpdateGatewayInformationInput) SetGatewayName(v string) *UpdateGatewayInformationInput {
 	s.GatewayName = &v
@@ -17660,19 +22493,27 @@ type UpdateGatewayInformationOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// The name you configured for your gateway.
 	GatewayName *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGatewayInformationOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGatewayInformationOutput) GoString() string {
 	return s.String()
 }
@@ -17695,18 +22536,26 @@ type UpdateGatewaySoftwareNowInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGatewaySoftwareNowInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGatewaySoftwareNowInput) GoString() string {
 	return s.String()
 }
@@ -17739,16 +22588,24 @@ type UpdateGatewaySoftwareNowOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGatewaySoftwareNowOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateGatewaySoftwareNowOutput) GoString() string {
 	return s.String()
 }
@@ -17781,7 +22638,7 @@ type UpdateMaintenanceStartTimeInput struct {
 	DayOfWeek *int64 `type:"integer"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -17801,12 +22658,20 @@ type UpdateMaintenanceStartTimeInput struct {
 	MinuteOfHour *int64 `type:"integer" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateMaintenanceStartTimeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateMaintenanceStartTimeInput) GoString() string {
 	return s.String()
 }
@@ -17872,16 +22737,24 @@ type UpdateMaintenanceStartTimeOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateMaintenanceStartTimeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateMaintenanceStartTimeOutput) GoString() string {
 	return s.String()
 }
@@ -17896,15 +22769,18 @@ func (s *UpdateMaintenanceStartTimeOutput) SetGatewayARN(v string) *UpdateMainte
 type UpdateNFSFileShareInput struct {
 	_ struct{} `type:"structure"`
 
-	// Refresh cache information.
+	// The Amazon Resource Name (ARN) of the storage used for audit logs.
+	AuditDestinationARN *string `type:"string"`
+
+	// Specifies refresh cache information for the file share.
 	CacheAttributes *CacheAttributes `type:"structure"`
 
-	// The list of clients that are allowed to access the file gateway. The list
+	// The list of clients that are allowed to access the S3 File Gateway. The list
 	// must contain either valid IP addresses or valid CIDR blocks.
 	ClientList []*string `min:"1" type:"list"`
 
 	// The default storage class for objects put into an Amazon S3 bucket by the
-	// file gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
+	// S3 File Gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
 	//
 	// Valid Values: S3_STANDARD | S3_INTELLIGENT_TIERING | S3_STANDARD_IA | S3_ONEZONE_IA
 	DefaultStorageClass *string `min:"5" type:"string"`
@@ -17916,7 +22792,8 @@ type UpdateNFSFileShareInput struct {
 
 	// The name of the file share. Optional.
 	//
-	// FileShareName must be set if an S3 prefix name is set in LocationARN.
+	// FileShareName must be set if an S3 prefix name is set in LocationARN, or
+	// if an access point or access point alias is used.
 	FileShareName *string `min:"1" type:"string"`
 
 	// A value that enables guessing of the MIME type for uploaded objects based
@@ -17926,8 +22803,8 @@ type UpdateNFSFileShareInput struct {
 	// Valid Values: true | false
 	GuessMIMETypeEnabled *bool `type:"boolean"`
 
-	// Set to true to use Amazon S3 server-side encryption with your own AWS KMS
-	// key, or false to use a key managed by Amazon S3. Optional.
+	// Set to true to use Amazon S3 server-side encryption with your own KMS key,
+	// or false to use a key managed by Amazon S3. Optional.
 	//
 	// Valid Values: true | false
 	KMSEncrypted *bool `type:"boolean"`
@@ -17940,9 +22817,29 @@ type UpdateNFSFileShareInput struct {
 	// The default values for the file share. Optional.
 	NFSFileShareDefaults *NFSFileShareDefaults `type:"structure"`
 
+	// The notification policy of the file share. SettlingTimeInSeconds controls
+	// the number of seconds to wait after the last point in time a client wrote
+	// to a file before generating an ObjectUploaded notification. Because clients
+	// can make many small writes to files, it's best to set this parameter for
+	// as long as possible to avoid generating multiple notifications for the same
+	// file in a small time period.
+	//
+	// SettlingTimeInSeconds has no effect on the timing of the object uploading
+	// to Amazon S3, only the timing of the notification.
+	//
+	// The following example sets NotificationPolicy on with SettlingTimeInSeconds
+	// set to 60.
+	//
+	// {\"Upload\": {\"SettlingTimeInSeconds\": 60}}
+	//
+	// The following example sets NotificationPolicy off.
+	//
+	// {}
+	NotificationPolicy *string `min:"2" type:"string"`
+
 	// A value that sets the access control list (ACL) permission for objects in
-	// the S3 bucket that a file gateway puts objects into. The default value is
-	// private.
+	// the S3 bucket that a S3 File Gateway puts objects into. The default value
+	// is private.
 	ObjectACL *string `type:"string" enum:"ObjectACL"`
 
 	// A value that sets the write status of a file share. Set this value to true
@@ -17975,12 +22872,20 @@ type UpdateNFSFileShareInput struct {
 	Squash *string `min:"5" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateNFSFileShareInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateNFSFileShareInput) GoString() string {
 	return s.String()
 }
@@ -18006,6 +22911,9 @@ func (s *UpdateNFSFileShareInput) Validate() error {
 	if s.KMSKey != nil && len(*s.KMSKey) < 7 {
 		invalidParams.Add(request.NewErrParamMinLen("KMSKey", 7))
 	}
+	if s.NotificationPolicy != nil && len(*s.NotificationPolicy) < 2 {
+		invalidParams.Add(request.NewErrParamMinLen("NotificationPolicy", 2))
+	}
 	if s.Squash != nil && len(*s.Squash) < 5 {
 		invalidParams.Add(request.NewErrParamMinLen("Squash", 5))
 	}
@@ -18019,6 +22927,12 @@ func (s *UpdateNFSFileShareInput) Validate() error {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetAuditDestinationARN sets the AuditDestinationARN field's value.
+func (s *UpdateNFSFileShareInput) SetAuditDestinationARN(v string) *UpdateNFSFileShareInput {
+	s.AuditDestinationARN = &v
+	return s
 }
 
 // SetCacheAttributes sets the CacheAttributes field's value.
@@ -18075,6 +22989,12 @@ func (s *UpdateNFSFileShareInput) SetNFSFileShareDefaults(v *NFSFileShareDefault
 	return s
 }
 
+// SetNotificationPolicy sets the NotificationPolicy field's value.
+func (s *UpdateNFSFileShareInput) SetNotificationPolicy(v string) *UpdateNFSFileShareInput {
+	s.NotificationPolicy = &v
+	return s
+}
+
 // SetObjectACL sets the ObjectACL field's value.
 func (s *UpdateNFSFileShareInput) SetObjectACL(v string) *UpdateNFSFileShareInput {
 	s.ObjectACL = &v
@@ -18107,12 +23027,20 @@ type UpdateNFSFileShareOutput struct {
 	FileShareARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateNFSFileShareOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateNFSFileShareOutput) GoString() string {
 	return s.String()
 }
@@ -18127,16 +23055,20 @@ func (s *UpdateNFSFileShareOutput) SetFileShareARN(v string) *UpdateNFSFileShare
 type UpdateSMBFileShareInput struct {
 	_ struct{} `type:"structure"`
 
+	// The files and folders on this share will only be visible to users with read
+	// access.
+	AccessBasedEnumeration *bool `type:"boolean"`
+
 	// A list of users or groups in the Active Directory that have administrator
 	// rights to the file share. A group must be prefixed with the @ character.
 	// Acceptable formats include: DOMAIN\User1, user1, @group1, and @DOMAIN\group1.
 	// Can only be set if Authentication is set to ActiveDirectory.
 	AdminUserList []*string `type:"list"`
 
-	// The Amazon Resource Name (ARN) of the storage used for the audit logs.
+	// The Amazon Resource Name (ARN) of the storage used for audit logs.
 	AuditDestinationARN *string `type:"string"`
 
-	// Refresh cache information.
+	// Specifies refresh cache information for the file share.
 	CacheAttributes *CacheAttributes `type:"structure"`
 
 	// The case of an object name in an Amazon S3 bucket. For ClientSpecified, the
@@ -18145,7 +23077,7 @@ type UpdateSMBFileShareInput struct {
 	CaseSensitivity *string `type:"string" enum:"CaseSensitivity"`
 
 	// The default storage class for objects put into an Amazon S3 bucket by the
-	// file gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
+	// S3 File Gateway. The default value is S3_INTELLIGENT_TIERING. Optional.
 	//
 	// Valid Values: S3_STANDARD | S3_INTELLIGENT_TIERING | S3_STANDARD_IA | S3_ONEZONE_IA
 	DefaultStorageClass *string `min:"5" type:"string"`
@@ -18157,7 +23089,8 @@ type UpdateSMBFileShareInput struct {
 
 	// The name of the file share. Optional.
 	//
-	// FileShareName must be set if an S3 prefix name is set in LocationARN.
+	// FileShareName must be set if an S3 prefix name is set in LocationARN, or
+	// if an access point or access point alias is used.
 	FileShareName *string `min:"1" type:"string"`
 
 	// A value that enables guessing of the MIME type for uploaded objects based
@@ -18173,8 +23106,8 @@ type UpdateSMBFileShareInput struct {
 	// be set if Authentication is set to ActiveDirectory.
 	InvalidUserList []*string `type:"list"`
 
-	// Set to true to use Amazon S3 server-side encryption with your own AWS KMS
-	// key, or false to use a key managed by Amazon S3. Optional.
+	// Set to true to use Amazon S3 server-side encryption with your own KMS key,
+	// or false to use a key managed by Amazon S3. Optional.
 	//
 	// Valid Values: true | false
 	KMSEncrypted *bool `type:"boolean"`
@@ -18184,10 +23117,39 @@ type UpdateSMBFileShareInput struct {
 	// CMKs. This value can only be set when KMSEncrypted is true. Optional.
 	KMSKey *string `min:"7" type:"string"`
 
+	// The notification policy of the file share. SettlingTimeInSeconds controls
+	// the number of seconds to wait after the last point in time a client wrote
+	// to a file before generating an ObjectUploaded notification. Because clients
+	// can make many small writes to files, it's best to set this parameter for
+	// as long as possible to avoid generating multiple notifications for the same
+	// file in a small time period.
+	//
+	// SettlingTimeInSeconds has no effect on the timing of the object uploading
+	// to Amazon S3, only the timing of the notification.
+	//
+	// The following example sets NotificationPolicy on with SettlingTimeInSeconds
+	// set to 60.
+	//
+	// {\"Upload\": {\"SettlingTimeInSeconds\": 60}}
+	//
+	// The following example sets NotificationPolicy off.
+	//
+	// {}
+	NotificationPolicy *string `min:"2" type:"string"`
+
 	// A value that sets the access control list (ACL) permission for objects in
-	// the S3 bucket that a file gateway puts objects into. The default value is
-	// private.
+	// the S3 bucket that a S3 File Gateway puts objects into. The default value
+	// is private.
 	ObjectACL *string `type:"string" enum:"ObjectACL"`
+
+	// Specifies whether opportunistic locking is enabled for the SMB file share.
+	//
+	// Enabling opportunistic locking on case-sensitive shares is not recommended
+	// for workloads that involve access to files with the same name in different
+	// case.
+	//
+	// Valid Values: true | false
+	OplocksEnabled *bool `type:"boolean"`
 
 	// A value that sets the write status of a file share. Set this value to true
 	// to set write status to read-only, otherwise set to false.
@@ -18213,7 +23175,7 @@ type UpdateSMBFileShareInput struct {
 	//
 	// For more information, see Using Microsoft Windows ACLs to control access
 	// to an SMB file share (https://docs.aws.amazon.com/storagegateway/latest/userguide/smb-acl.html)
-	// in the AWS Storage Gateway User Guide.
+	// in the Storage Gateway User Guide.
 	//
 	// Valid Values: true | false
 	SMBACLEnabled *bool `type:"boolean"`
@@ -18225,12 +23187,20 @@ type UpdateSMBFileShareInput struct {
 	ValidUserList []*string `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSMBFileShareInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSMBFileShareInput) GoString() string {
 	return s.String()
 }
@@ -18253,11 +23223,20 @@ func (s *UpdateSMBFileShareInput) Validate() error {
 	if s.KMSKey != nil && len(*s.KMSKey) < 7 {
 		invalidParams.Add(request.NewErrParamMinLen("KMSKey", 7))
 	}
+	if s.NotificationPolicy != nil && len(*s.NotificationPolicy) < 2 {
+		invalidParams.Add(request.NewErrParamMinLen("NotificationPolicy", 2))
+	}
 
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetAccessBasedEnumeration sets the AccessBasedEnumeration field's value.
+func (s *UpdateSMBFileShareInput) SetAccessBasedEnumeration(v bool) *UpdateSMBFileShareInput {
+	s.AccessBasedEnumeration = &v
+	return s
 }
 
 // SetAdminUserList sets the AdminUserList field's value.
@@ -18326,9 +23305,21 @@ func (s *UpdateSMBFileShareInput) SetKMSKey(v string) *UpdateSMBFileShareInput {
 	return s
 }
 
+// SetNotificationPolicy sets the NotificationPolicy field's value.
+func (s *UpdateSMBFileShareInput) SetNotificationPolicy(v string) *UpdateSMBFileShareInput {
+	s.NotificationPolicy = &v
+	return s
+}
+
 // SetObjectACL sets the ObjectACL field's value.
 func (s *UpdateSMBFileShareInput) SetObjectACL(v string) *UpdateSMBFileShareInput {
 	s.ObjectACL = &v
+	return s
+}
+
+// SetOplocksEnabled sets the OplocksEnabled field's value.
+func (s *UpdateSMBFileShareInput) SetOplocksEnabled(v bool) *UpdateSMBFileShareInput {
+	s.OplocksEnabled = &v
 	return s
 }
 
@@ -18364,12 +23355,20 @@ type UpdateSMBFileShareOutput struct {
 	FileShareARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSMBFileShareOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSMBFileShareOutput) GoString() string {
 	return s.String()
 }
@@ -18380,11 +23379,204 @@ func (s *UpdateSMBFileShareOutput) SetFileShareARN(v string) *UpdateSMBFileShare
 	return s
 }
 
+type UpdateSMBFileShareVisibilityInput struct {
+	_ struct{} `type:"structure"`
+
+	// The shares on this gateway appear when listing shares.
+	//
+	// FileSharesVisible is a required field
+	FileSharesVisible *bool `type:"boolean" required:"true"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	//
+	// GatewayARN is a required field
+	GatewayARN *string `min:"50" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateSMBFileShareVisibilityInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateSMBFileShareVisibilityInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateSMBFileShareVisibilityInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateSMBFileShareVisibilityInput"}
+	if s.FileSharesVisible == nil {
+		invalidParams.Add(request.NewErrParamRequired("FileSharesVisible"))
+	}
+	if s.GatewayARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("GatewayARN"))
+	}
+	if s.GatewayARN != nil && len(*s.GatewayARN) < 50 {
+		invalidParams.Add(request.NewErrParamMinLen("GatewayARN", 50))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFileSharesVisible sets the FileSharesVisible field's value.
+func (s *UpdateSMBFileShareVisibilityInput) SetFileSharesVisible(v bool) *UpdateSMBFileShareVisibilityInput {
+	s.FileSharesVisible = &v
+	return s
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *UpdateSMBFileShareVisibilityInput) SetGatewayARN(v string) *UpdateSMBFileShareVisibilityInput {
+	s.GatewayARN = &v
+	return s
+}
+
+type UpdateSMBFileShareVisibilityOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	GatewayARN *string `min:"50" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateSMBFileShareVisibilityOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateSMBFileShareVisibilityOutput) GoString() string {
+	return s.String()
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *UpdateSMBFileShareVisibilityOutput) SetGatewayARN(v string) *UpdateSMBFileShareVisibilityOutput {
+	s.GatewayARN = &v
+	return s
+}
+
+type UpdateSMBLocalGroupsInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	//
+	// GatewayARN is a required field
+	GatewayARN *string `min:"50" type:"string" required:"true"`
+
+	// A list of Active Directory users and groups that you want to grant special
+	// permissions for SMB file shares on the gateway.
+	//
+	// SMBLocalGroups is a required field
+	SMBLocalGroups *SMBLocalGroups `type:"structure" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateSMBLocalGroupsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateSMBLocalGroupsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateSMBLocalGroupsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateSMBLocalGroupsInput"}
+	if s.GatewayARN == nil {
+		invalidParams.Add(request.NewErrParamRequired("GatewayARN"))
+	}
+	if s.GatewayARN != nil && len(*s.GatewayARN) < 50 {
+		invalidParams.Add(request.NewErrParamMinLen("GatewayARN", 50))
+	}
+	if s.SMBLocalGroups == nil {
+		invalidParams.Add(request.NewErrParamRequired("SMBLocalGroups"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *UpdateSMBLocalGroupsInput) SetGatewayARN(v string) *UpdateSMBLocalGroupsInput {
+	s.GatewayARN = &v
+	return s
+}
+
+// SetSMBLocalGroups sets the SMBLocalGroups field's value.
+func (s *UpdateSMBLocalGroupsInput) SetSMBLocalGroups(v *SMBLocalGroups) *UpdateSMBLocalGroupsInput {
+	s.SMBLocalGroups = v
+	return s
+}
+
+type UpdateSMBLocalGroupsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
+	// to return a list of gateways for your account and Amazon Web Services Region.
+	GatewayARN *string `min:"50" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateSMBLocalGroupsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateSMBLocalGroupsOutput) GoString() string {
+	return s.String()
+}
+
+// SetGatewayARN sets the GatewayARN field's value.
+func (s *UpdateSMBLocalGroupsOutput) SetGatewayARN(v string) *UpdateSMBLocalGroupsOutput {
+	s.GatewayARN = &v
+	return s
+}
+
 type UpdateSMBSecurityStrategyInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	//
 	// GatewayARN is a required field
 	GatewayARN *string `min:"50" type:"string" required:"true"`
@@ -18393,7 +23585,8 @@ type UpdateSMBSecurityStrategyInput struct {
 	//
 	// ClientSpecified: if you use this option, requests are established based on
 	// what is negotiated by the client. This option is recommended when you want
-	// to maximize compatibility across different clients in your environment.
+	// to maximize compatibility across different clients in your environment. Supported
+	// only in S3 File Gateway.
 	//
 	// MandatorySigning: if you use this option, file gateway only allows connections
 	// from SMBv2 or SMBv3 clients that have signing enabled. This option works
@@ -18408,12 +23601,20 @@ type UpdateSMBSecurityStrategyInput struct {
 	SMBSecurityStrategy *string `type:"string" required:"true" enum:"SMBSecurityStrategy"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSMBSecurityStrategyInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSMBSecurityStrategyInput) GoString() string {
 	return s.String()
 }
@@ -18453,16 +23654,24 @@ type UpdateSMBSecurityStrategyOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSMBSecurityStrategyOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSMBSecurityStrategyOutput) GoString() string {
 	return s.String()
 }
@@ -18516,12 +23725,20 @@ type UpdateSnapshotScheduleInput struct {
 	VolumeARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSnapshotScheduleInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSnapshotScheduleInput) GoString() string {
 	return s.String()
 }
@@ -18604,12 +23821,20 @@ type UpdateSnapshotScheduleOutput struct {
 	VolumeARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSnapshotScheduleOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateSnapshotScheduleOutput) GoString() string {
 	return s.String()
 }
@@ -18625,7 +23850,7 @@ type UpdateVTLDeviceTypeInput struct {
 
 	// The type of medium changer you want to select.
 	//
-	// Valid Values: STK-L700 | AWS-Gateway-VTL
+	// Valid Values: STK-L700 | AWS-Gateway-VTL | IBM-03584L32-0402
 	//
 	// DeviceType is a required field
 	DeviceType *string `min:"2" type:"string" required:"true"`
@@ -18636,12 +23861,20 @@ type UpdateVTLDeviceTypeInput struct {
 	VTLDeviceARN *string `min:"50" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateVTLDeviceTypeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateVTLDeviceTypeInput) GoString() string {
 	return s.String()
 }
@@ -18688,12 +23921,20 @@ type UpdateVTLDeviceTypeOutput struct {
 	VTLDeviceARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateVTLDeviceTypeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateVTLDeviceTypeOutput) GoString() string {
 	return s.String()
 }
@@ -18725,12 +23966,20 @@ type VTLDevice struct {
 	VTLDeviceVendor *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VTLDevice) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VTLDevice) GoString() string {
 	return s.String()
 }
@@ -18770,7 +24019,7 @@ type VolumeInfo struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the gateway. Use the ListGateways operation
-	// to return a list of gateways for your account and AWS Region.
+	// to return a list of gateways for your account and Amazon Web Services Region.
 	GatewayARN *string `min:"50" type:"string"`
 
 	// The unique identifier assigned to your gateway during activation. This ID
@@ -18810,12 +24059,20 @@ type VolumeInfo struct {
 	VolumeType *string `min:"3" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VolumeInfo) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VolumeInfo) GoString() string {
 	return s.String()
 }
@@ -18882,12 +24139,20 @@ type VolumeRecoveryPointInfo struct {
 	VolumeUsageInBytes *int64 `type:"long"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VolumeRecoveryPointInfo) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VolumeRecoveryPointInfo) GoString() string {
 	return s.String()
 }
@@ -18936,12 +24201,20 @@ type VolumeiSCSIAttributes struct {
 	TargetARN *string `min:"50" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VolumeiSCSIAttributes) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VolumeiSCSIAttributes) GoString() string {
 	return s.String()
 }
@@ -19322,6 +24595,26 @@ func FileShareType_Values() []string {
 }
 
 const (
+	// GatewayCapacitySmall is a GatewayCapacity enum value
+	GatewayCapacitySmall = "Small"
+
+	// GatewayCapacityMedium is a GatewayCapacity enum value
+	GatewayCapacityMedium = "Medium"
+
+	// GatewayCapacityLarge is a GatewayCapacity enum value
+	GatewayCapacityLarge = "Large"
+)
+
+// GatewayCapacity_Values returns all elements of the GatewayCapacity enum
+func GatewayCapacity_Values() []string {
+	return []string{
+		GatewayCapacitySmall,
+		GatewayCapacityMedium,
+		GatewayCapacityLarge,
+	}
+}
+
+const (
 	// HostEnvironmentVmware is a HostEnvironment enum value
 	HostEnvironmentVmware = "VMWARE"
 
@@ -19336,6 +24629,9 @@ const (
 
 	// HostEnvironmentOther is a HostEnvironment enum value
 	HostEnvironmentOther = "OTHER"
+
+	// HostEnvironmentSnowball is a HostEnvironment enum value
+	HostEnvironmentSnowball = "SNOWBALL"
 )
 
 // HostEnvironment_Values returns all elements of the HostEnvironment enum
@@ -19346,12 +24642,13 @@ func HostEnvironment_Values() []string {
 		HostEnvironmentEc2,
 		HostEnvironmentKvm,
 		HostEnvironmentOther,
+		HostEnvironmentSnowball,
 	}
 }
 
 // A value that sets the access control list (ACL) permission for objects in
-// the S3 bucket that a file gateway puts objects into. The default value is
-// private.
+// the S3 bucket that an S3 File Gateway puts objects into. The default value
+// is private.
 const (
 	// ObjectACLPrivate is a ObjectACL enum value
 	ObjectACLPrivate = "private"
@@ -19389,6 +24686,42 @@ func ObjectACL_Values() []string {
 }
 
 const (
+	// PoolStatusActive is a PoolStatus enum value
+	PoolStatusActive = "ACTIVE"
+
+	// PoolStatusDeleted is a PoolStatus enum value
+	PoolStatusDeleted = "DELETED"
+)
+
+// PoolStatus_Values returns all elements of the PoolStatus enum
+func PoolStatus_Values() []string {
+	return []string{
+		PoolStatusActive,
+		PoolStatusDeleted,
+	}
+}
+
+const (
+	// RetentionLockTypeCompliance is a RetentionLockType enum value
+	RetentionLockTypeCompliance = "COMPLIANCE"
+
+	// RetentionLockTypeGovernance is a RetentionLockType enum value
+	RetentionLockTypeGovernance = "GOVERNANCE"
+
+	// RetentionLockTypeNone is a RetentionLockType enum value
+	RetentionLockTypeNone = "NONE"
+)
+
+// RetentionLockType_Values returns all elements of the RetentionLockType enum
+func RetentionLockType_Values() []string {
+	return []string{
+		RetentionLockTypeCompliance,
+		RetentionLockTypeGovernance,
+		RetentionLockTypeNone,
+	}
+}
+
+const (
 	// SMBSecurityStrategyClientSpecified is a SMBSecurityStrategy enum value
 	SMBSecurityStrategyClientSpecified = "ClientSpecified"
 
@@ -19405,5 +24738,21 @@ func SMBSecurityStrategy_Values() []string {
 		SMBSecurityStrategyClientSpecified,
 		SMBSecurityStrategyMandatorySigning,
 		SMBSecurityStrategyMandatoryEncryption,
+	}
+}
+
+const (
+	// TapeStorageClassDeepArchive is a TapeStorageClass enum value
+	TapeStorageClassDeepArchive = "DEEP_ARCHIVE"
+
+	// TapeStorageClassGlacier is a TapeStorageClass enum value
+	TapeStorageClassGlacier = "GLACIER"
+)
+
+// TapeStorageClass_Values returns all elements of the TapeStorageClass enum
+func TapeStorageClass_Values() []string {
+	return []string{
+		TapeStorageClassDeepArchive,
+		TapeStorageClassGlacier,
 	}
 }

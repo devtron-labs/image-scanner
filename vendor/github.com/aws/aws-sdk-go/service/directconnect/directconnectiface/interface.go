@@ -92,6 +92,10 @@ type DirectConnectAPI interface {
 	AssociateHostedConnectionWithContext(aws.Context, *directconnect.AssociateHostedConnectionInput, ...request.Option) (*directconnect.Connection, error)
 	AssociateHostedConnectionRequest(*directconnect.AssociateHostedConnectionInput) (*request.Request, *directconnect.Connection)
 
+	AssociateMacSecKey(*directconnect.AssociateMacSecKeyInput) (*directconnect.AssociateMacSecKeyOutput, error)
+	AssociateMacSecKeyWithContext(aws.Context, *directconnect.AssociateMacSecKeyInput, ...request.Option) (*directconnect.AssociateMacSecKeyOutput, error)
+	AssociateMacSecKeyRequest(*directconnect.AssociateMacSecKeyInput) (*request.Request, *directconnect.AssociateMacSecKeyOutput)
+
 	AssociateVirtualInterface(*directconnect.AssociateVirtualInterfaceInput) (*directconnect.VirtualInterface, error)
 	AssociateVirtualInterfaceWithContext(aws.Context, *directconnect.AssociateVirtualInterfaceInput, ...request.Option) (*directconnect.VirtualInterface, error)
 	AssociateVirtualInterfaceRequest(*directconnect.AssociateVirtualInterfaceInput) (*request.Request, *directconnect.VirtualInterface)
@@ -99,6 +103,10 @@ type DirectConnectAPI interface {
 	ConfirmConnection(*directconnect.ConfirmConnectionInput) (*directconnect.ConfirmConnectionOutput, error)
 	ConfirmConnectionWithContext(aws.Context, *directconnect.ConfirmConnectionInput, ...request.Option) (*directconnect.ConfirmConnectionOutput, error)
 	ConfirmConnectionRequest(*directconnect.ConfirmConnectionInput) (*request.Request, *directconnect.ConfirmConnectionOutput)
+
+	ConfirmCustomerAgreement(*directconnect.ConfirmCustomerAgreementInput) (*directconnect.ConfirmCustomerAgreementOutput, error)
+	ConfirmCustomerAgreementWithContext(aws.Context, *directconnect.ConfirmCustomerAgreementInput, ...request.Option) (*directconnect.ConfirmCustomerAgreementOutput, error)
+	ConfirmCustomerAgreementRequest(*directconnect.ConfirmCustomerAgreementInput) (*request.Request, *directconnect.ConfirmCustomerAgreementOutput)
 
 	ConfirmPrivateVirtualInterface(*directconnect.ConfirmPrivateVirtualInterfaceInput) (*directconnect.ConfirmPrivateVirtualInterfaceOutput, error)
 	ConfirmPrivateVirtualInterfaceWithContext(aws.Context, *directconnect.ConfirmPrivateVirtualInterfaceInput, ...request.Option) (*directconnect.ConfirmPrivateVirtualInterfaceOutput, error)
@@ -196,6 +204,10 @@ type DirectConnectAPI interface {
 	DescribeConnectionsOnInterconnectWithContext(aws.Context, *directconnect.DescribeConnectionsOnInterconnectInput, ...request.Option) (*directconnect.Connections, error)
 	DescribeConnectionsOnInterconnectRequest(*directconnect.DescribeConnectionsOnInterconnectInput) (*request.Request, *directconnect.Connections)
 
+	DescribeCustomerMetadata(*directconnect.DescribeCustomerMetadataInput) (*directconnect.DescribeCustomerMetadataOutput, error)
+	DescribeCustomerMetadataWithContext(aws.Context, *directconnect.DescribeCustomerMetadataInput, ...request.Option) (*directconnect.DescribeCustomerMetadataOutput, error)
+	DescribeCustomerMetadataRequest(*directconnect.DescribeCustomerMetadataInput) (*request.Request, *directconnect.DescribeCustomerMetadataOutput)
+
 	DescribeDirectConnectGatewayAssociationProposals(*directconnect.DescribeDirectConnectGatewayAssociationProposalsInput) (*directconnect.DescribeDirectConnectGatewayAssociationProposalsOutput, error)
 	DescribeDirectConnectGatewayAssociationProposalsWithContext(aws.Context, *directconnect.DescribeDirectConnectGatewayAssociationProposalsInput, ...request.Option) (*directconnect.DescribeDirectConnectGatewayAssociationProposalsOutput, error)
 	DescribeDirectConnectGatewayAssociationProposalsRequest(*directconnect.DescribeDirectConnectGatewayAssociationProposalsInput) (*request.Request, *directconnect.DescribeDirectConnectGatewayAssociationProposalsOutput)
@@ -236,6 +248,10 @@ type DirectConnectAPI interface {
 	DescribeLocationsWithContext(aws.Context, *directconnect.DescribeLocationsInput, ...request.Option) (*directconnect.DescribeLocationsOutput, error)
 	DescribeLocationsRequest(*directconnect.DescribeLocationsInput) (*request.Request, *directconnect.DescribeLocationsOutput)
 
+	DescribeRouterConfiguration(*directconnect.DescribeRouterConfigurationInput) (*directconnect.DescribeRouterConfigurationOutput, error)
+	DescribeRouterConfigurationWithContext(aws.Context, *directconnect.DescribeRouterConfigurationInput, ...request.Option) (*directconnect.DescribeRouterConfigurationOutput, error)
+	DescribeRouterConfigurationRequest(*directconnect.DescribeRouterConfigurationInput) (*request.Request, *directconnect.DescribeRouterConfigurationOutput)
+
 	DescribeTags(*directconnect.DescribeTagsInput) (*directconnect.DescribeTagsOutput, error)
 	DescribeTagsWithContext(aws.Context, *directconnect.DescribeTagsInput, ...request.Option) (*directconnect.DescribeTagsOutput, error)
 	DescribeTagsRequest(*directconnect.DescribeTagsInput) (*request.Request, *directconnect.DescribeTagsOutput)
@@ -251,6 +267,10 @@ type DirectConnectAPI interface {
 	DisassociateConnectionFromLag(*directconnect.DisassociateConnectionFromLagInput) (*directconnect.Connection, error)
 	DisassociateConnectionFromLagWithContext(aws.Context, *directconnect.DisassociateConnectionFromLagInput, ...request.Option) (*directconnect.Connection, error)
 	DisassociateConnectionFromLagRequest(*directconnect.DisassociateConnectionFromLagInput) (*request.Request, *directconnect.Connection)
+
+	DisassociateMacSecKey(*directconnect.DisassociateMacSecKeyInput) (*directconnect.DisassociateMacSecKeyOutput, error)
+	DisassociateMacSecKeyWithContext(aws.Context, *directconnect.DisassociateMacSecKeyInput, ...request.Option) (*directconnect.DisassociateMacSecKeyOutput, error)
+	DisassociateMacSecKeyRequest(*directconnect.DisassociateMacSecKeyInput) (*request.Request, *directconnect.DisassociateMacSecKeyOutput)
 
 	ListVirtualInterfaceTestHistory(*directconnect.ListVirtualInterfaceTestHistoryInput) (*directconnect.ListVirtualInterfaceTestHistoryOutput, error)
 	ListVirtualInterfaceTestHistoryWithContext(aws.Context, *directconnect.ListVirtualInterfaceTestHistoryInput, ...request.Option) (*directconnect.ListVirtualInterfaceTestHistoryOutput, error)
@@ -271,6 +291,14 @@ type DirectConnectAPI interface {
 	UntagResource(*directconnect.UntagResourceInput) (*directconnect.UntagResourceOutput, error)
 	UntagResourceWithContext(aws.Context, *directconnect.UntagResourceInput, ...request.Option) (*directconnect.UntagResourceOutput, error)
 	UntagResourceRequest(*directconnect.UntagResourceInput) (*request.Request, *directconnect.UntagResourceOutput)
+
+	UpdateConnection(*directconnect.UpdateConnectionInput) (*directconnect.UpdateConnectionOutput, error)
+	UpdateConnectionWithContext(aws.Context, *directconnect.UpdateConnectionInput, ...request.Option) (*directconnect.UpdateConnectionOutput, error)
+	UpdateConnectionRequest(*directconnect.UpdateConnectionInput) (*request.Request, *directconnect.UpdateConnectionOutput)
+
+	UpdateDirectConnectGateway(*directconnect.UpdateDirectConnectGatewayInput) (*directconnect.UpdateDirectConnectGatewayOutput, error)
+	UpdateDirectConnectGatewayWithContext(aws.Context, *directconnect.UpdateDirectConnectGatewayInput, ...request.Option) (*directconnect.UpdateDirectConnectGatewayOutput, error)
+	UpdateDirectConnectGatewayRequest(*directconnect.UpdateDirectConnectGatewayInput) (*request.Request, *directconnect.UpdateDirectConnectGatewayOutput)
 
 	UpdateDirectConnectGatewayAssociation(*directconnect.UpdateDirectConnectGatewayAssociationInput) (*directconnect.UpdateDirectConnectGatewayAssociationOutput, error)
 	UpdateDirectConnectGatewayAssociationWithContext(aws.Context, *directconnect.UpdateDirectConnectGatewayAssociationInput, ...request.Option) (*directconnect.UpdateDirectConnectGatewayAssociationOutput, error)

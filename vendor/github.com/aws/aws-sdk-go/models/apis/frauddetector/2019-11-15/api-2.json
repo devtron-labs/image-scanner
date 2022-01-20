@@ -42,6 +42,70 @@
         {"shape":"AccessDeniedException"}
       ]
     },
+    "CancelBatchImportJob":{
+      "name":"CancelBatchImportJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CancelBatchImportJobRequest"},
+      "output":{"shape":"CancelBatchImportJobResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "CancelBatchPredictionJob":{
+      "name":"CancelBatchPredictionJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CancelBatchPredictionJobRequest"},
+      "output":{"shape":"CancelBatchPredictionJobResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "CreateBatchImportJob":{
+      "name":"CreateBatchImportJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateBatchImportJobRequest"},
+      "output":{"shape":"CreateBatchImportJobResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "CreateBatchPredictionJob":{
+      "name":"CreateBatchPredictionJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"CreateBatchPredictionJobRequest"},
+      "output":{"shape":"CreateBatchPredictionJobResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ResourceNotFoundException"}
+      ]
+    },
     "CreateDetectorVersion":{
       "name":"CreateDetectorVersion",
       "http":{
@@ -69,6 +133,7 @@
       "errors":[
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -84,6 +149,7 @@
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"AccessDeniedException"},
+        {"shape":"ThrottlingException"},
         {"shape":"InternalServerException"}
       ]
     },
@@ -110,6 +176,36 @@
       },
       "input":{"shape":"CreateVariableRequest"},
       "output":{"shape":"CreateVariableResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "DeleteBatchImportJob":{
+      "name":"DeleteBatchImportJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteBatchImportJobRequest"},
+      "output":{"shape":"DeleteBatchImportJobResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "DeleteBatchPredictionJob":{
+      "name":"DeleteBatchPredictionJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteBatchPredictionJobRequest"},
+      "output":{"shape":"DeleteBatchPredictionJobResult"},
       "errors":[
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
@@ -150,6 +246,22 @@
         {"shape":"AccessDeniedException"}
       ]
     },
+    "DeleteEntityType":{
+      "name":"DeleteEntityType",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteEntityTypeRequest"},
+      "output":{"shape":"DeleteEntityTypeResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
     "DeleteEvent":{
       "name":"DeleteEvent",
       "http":{
@@ -161,6 +273,119 @@
       "errors":[
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ValidationException"}
+      ]
+    },
+    "DeleteEventType":{
+      "name":"DeleteEventType",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteEventTypeRequest"},
+      "output":{"shape":"DeleteEventTypeResult"},
+      "errors":[
+        {"shape":"ConflictException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "DeleteEventsByEventType":{
+      "name":"DeleteEventsByEventType",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteEventsByEventTypeRequest"},
+      "output":{"shape":"DeleteEventsByEventTypeResult"},
+      "errors":[
+        {"shape":"ConflictException"},
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "DeleteExternalModel":{
+      "name":"DeleteExternalModel",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteExternalModelRequest"},
+      "output":{"shape":"DeleteExternalModelResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "DeleteLabel":{
+      "name":"DeleteLabel",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteLabelRequest"},
+      "output":{"shape":"DeleteLabelResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
+    "DeleteModel":{
+      "name":"DeleteModel",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteModelRequest"},
+      "output":{"shape":"DeleteModelResult"},
+      "errors":[
+        {"shape":"ConflictException"},
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "DeleteModelVersion":{
+      "name":"DeleteModelVersion",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteModelVersionRequest"},
+      "output":{"shape":"DeleteModelVersionResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ConflictException"}
+      ]
+    },
+    "DeleteOutcome":{
+      "name":"DeleteOutcome",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteOutcomeRequest"},
+      "output":{"shape":"DeleteOutcomeResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ConflictException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -175,6 +400,22 @@
       "errors":[
         {"shape":"ConflictException"},
         {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "DeleteVariable":{
+      "name":"DeleteVariable",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DeleteVariableRequest"},
+      "output":{"shape":"DeleteVariableResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
@@ -208,6 +449,55 @@
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "GetBatchImportJobs":{
+      "name":"GetBatchImportJobs",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetBatchImportJobsRequest"},
+      "output":{"shape":"GetBatchImportJobsResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "GetBatchPredictionJobs":{
+      "name":"GetBatchPredictionJobs",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetBatchPredictionJobsRequest"},
+      "output":{"shape":"GetBatchPredictionJobsResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "GetDeleteEventsByEventTypeStatus":{
+      "name":"GetDeleteEventsByEventTypeStatus",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetDeleteEventsByEventTypeStatusRequest"},
+      "output":{"shape":"GetDeleteEventsByEventTypeStatusResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -255,6 +545,23 @@
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"}
+      ]
+    },
+    "GetEvent":{
+      "name":"GetEvent",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"GetEventRequest"},
+      "output":{"shape":"GetEventResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -271,7 +578,9 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"},
+        {"shape":"ResourceUnavailableException"}
       ]
     },
     "GetEventTypes":{
@@ -286,6 +595,7 @@
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -315,6 +625,7 @@
       "errors":[
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -330,6 +641,7 @@
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -345,6 +657,7 @@
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -360,6 +673,7 @@
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -422,6 +736,7 @@
       "errors":[
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -437,7 +752,8 @@
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "PutEntityType":{
@@ -451,7 +767,9 @@
       "errors":[
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "PutEventType":{
@@ -465,7 +783,9 @@
       "errors":[
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "PutExternalModel":{
@@ -480,7 +800,8 @@
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "PutKMSEncryptionKey":{
@@ -495,7 +816,9 @@
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "PutLabel":{
@@ -509,7 +832,9 @@
       "errors":[
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "PutOutcome":{
@@ -522,6 +847,24 @@
       "output":{"shape":"PutOutcomeResult"},
       "errors":[
         {"shape":"ValidationException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
+      ]
+    },
+    "SendEvent":{
+      "name":"SendEvent",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"SendEventRequest"},
+      "output":{"shape":"SendEventResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ConflictException"},
+        {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
@@ -538,6 +881,7 @@
       "errors":[
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -552,6 +896,7 @@
       "errors":[
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"},
         {"shape":"AccessDeniedException"}
       ]
     },
@@ -568,7 +913,8 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateDetectorVersionMetadata":{
@@ -583,7 +929,8 @@
         {"shape":"ValidationException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateDetectorVersionStatus":{
@@ -599,7 +946,25 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
+      ]
+    },
+    "UpdateEventLabel":{
+      "name":"UpdateEventLabel",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"UpdateEventLabelRequest"},
+      "output":{"shape":"UpdateEventLabelResult"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateModel":{
@@ -614,7 +979,9 @@
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateModelVersion":{
@@ -629,7 +996,9 @@
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"AccessDeniedException"},
-        {"shape":"InternalServerException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateModelVersionStatus":{
@@ -644,7 +1013,9 @@
         {"shape":"ValidationException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"ThrottlingException"},
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateRuleMetadata":{
@@ -660,7 +1031,8 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateRuleVersion":{
@@ -676,7 +1048,8 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     },
     "UpdateVariable":{
@@ -692,7 +1065,8 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"InternalServerException"},
         {"shape":"ThrottlingException"},
-        {"shape":"AccessDeniedException"}
+        {"shape":"AccessDeniedException"},
+        {"shape":"ConflictException"}
       ]
     }
   },
@@ -704,6 +1078,17 @@
         "message":{"shape":"string"}
       },
       "exception":true
+    },
+    "AsyncJobStatus":{
+      "type":"string",
+      "enum":[
+        "IN_PROGRESS_INITIALIZING",
+        "IN_PROGRESS",
+        "CANCEL_IN_PROGRESS",
+        "CANCELED",
+        "COMPLETE",
+        "FAILED"
+      ]
     },
     "BatchCreateVariableError":{
       "type":"structure",
@@ -757,6 +1142,76 @@
         "errors":{"shape":"BatchGetVariableErrorList"}
       }
     },
+    "BatchImport":{
+      "type":"structure",
+      "members":{
+        "jobId":{"shape":"identifier"},
+        "status":{"shape":"AsyncJobStatus"},
+        "failureReason":{"shape":"string"},
+        "startTime":{"shape":"time"},
+        "completionTime":{"shape":"time"},
+        "inputPath":{"shape":"s3BucketLocation"},
+        "outputPath":{"shape":"s3BucketLocation"},
+        "eventTypeName":{"shape":"identifier"},
+        "iamRoleArn":{"shape":"iamRoleArn"},
+        "arn":{"shape":"fraudDetectorArn"},
+        "processedRecordsCount":{"shape":"Integer"},
+        "failedRecordsCount":{"shape":"Integer"},
+        "totalRecordsCount":{"shape":"Integer"}
+      }
+    },
+    "BatchImportList":{
+      "type":"list",
+      "member":{"shape":"BatchImport"}
+    },
+    "BatchPrediction":{
+      "type":"structure",
+      "members":{
+        "jobId":{"shape":"identifier"},
+        "status":{"shape":"AsyncJobStatus"},
+        "failureReason":{"shape":"string"},
+        "startTime":{"shape":"time"},
+        "completionTime":{"shape":"time"},
+        "lastHeartbeatTime":{"shape":"time"},
+        "inputPath":{"shape":"s3BucketLocation"},
+        "outputPath":{"shape":"s3BucketLocation"},
+        "eventTypeName":{"shape":"identifier"},
+        "detectorName":{"shape":"identifier"},
+        "detectorVersion":{"shape":"floatVersionString"},
+        "iamRoleArn":{"shape":"iamRoleArn"},
+        "arn":{"shape":"fraudDetectorArn"},
+        "processedRecordsCount":{"shape":"Integer"},
+        "totalRecordsCount":{"shape":"Integer"}
+      }
+    },
+    "BatchPredictionList":{
+      "type":"list",
+      "member":{"shape":"BatchPrediction"}
+    },
+    "CancelBatchImportJobRequest":{
+      "type":"structure",
+      "required":["jobId"],
+      "members":{
+        "jobId":{"shape":"identifier"}
+      }
+    },
+    "CancelBatchImportJobResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "CancelBatchPredictionJobRequest":{
+      "type":"structure",
+      "required":["jobId"],
+      "members":{
+        "jobId":{"shape":"identifier"}
+      }
+    },
+    "CancelBatchPredictionJobResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "ConflictException":{
       "type":"structure",
       "required":["message"],
@@ -764,6 +1219,55 @@
         "message":{"shape":"string"}
       },
       "exception":true
+    },
+    "CreateBatchImportJobRequest":{
+      "type":"structure",
+      "required":[
+        "jobId",
+        "inputPath",
+        "outputPath",
+        "eventTypeName",
+        "iamRoleArn"
+      ],
+      "members":{
+        "jobId":{"shape":"identifier"},
+        "inputPath":{"shape":"s3BucketLocation"},
+        "outputPath":{"shape":"s3BucketLocation"},
+        "eventTypeName":{"shape":"identifier"},
+        "iamRoleArn":{"shape":"iamRoleArn"},
+        "tags":{"shape":"tagList"}
+      }
+    },
+    "CreateBatchImportJobResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "CreateBatchPredictionJobRequest":{
+      "type":"structure",
+      "required":[
+        "jobId",
+        "inputPath",
+        "outputPath",
+        "eventTypeName",
+        "detectorName",
+        "iamRoleArn"
+      ],
+      "members":{
+        "jobId":{"shape":"identifier"},
+        "inputPath":{"shape":"s3BucketLocation"},
+        "outputPath":{"shape":"s3BucketLocation"},
+        "eventTypeName":{"shape":"identifier"},
+        "detectorName":{"shape":"identifier"},
+        "detectorVersion":{"shape":"wholeNumberVersionString"},
+        "iamRoleArn":{"shape":"iamRoleArn"},
+        "tags":{"shape":"tagList"}
+      }
+    },
+    "CreateBatchPredictionJobResult":{
+      "type":"structure",
+      "members":{
+      }
     },
     "CreateDetectorVersionRequest":{
       "type":"structure",
@@ -785,7 +1289,7 @@
       "type":"structure",
       "members":{
         "detectorId":{"shape":"identifier"},
-        "detectorVersionId":{"shape":"nonEmptyString"},
+        "detectorVersionId":{"shape":"wholeNumberVersionString"},
         "status":{"shape":"DetectorVersionStatus"}
       }
     },
@@ -823,6 +1327,7 @@
         "trainingDataSource":{"shape":"TrainingDataSourceEnum"},
         "trainingDataSchema":{"shape":"TrainingDataSchema"},
         "externalEventsDetail":{"shape":"ExternalEventsDetail"},
+        "ingestedEventsDetail":{"shape":"IngestedEventsDetail"},
         "tags":{"shape":"tagList"}
       }
     },
@@ -831,7 +1336,7 @@
       "members":{
         "modelId":{"shape":"modelIdentifier"},
         "modelType":{"shape":"ModelTypeEnum"},
-        "modelVersionNumber":{"shape":"nonEmptyString"},
+        "modelVersionNumber":{"shape":"floatVersionString"},
         "status":{"shape":"string"}
       }
     },
@@ -912,6 +1417,31 @@
         "fieldLevelMessages":{"shape":"fieldValidationMessageList"}
       }
     },
+    "DeleteAuditHistory":{"type":"boolean"},
+    "DeleteBatchImportJobRequest":{
+      "type":"structure",
+      "required":["jobId"],
+      "members":{
+        "jobId":{"shape":"identifier"}
+      }
+    },
+    "DeleteBatchImportJobResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DeleteBatchPredictionJobRequest":{
+      "type":"structure",
+      "required":["jobId"],
+      "members":{
+        "jobId":{"shape":"identifier"}
+      }
+    },
+    "DeleteBatchPredictionJobResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "DeleteDetectorRequest":{
       "type":"structure",
       "required":["detectorId"],
@@ -940,6 +1470,18 @@
       "members":{
       }
     },
+    "DeleteEntityTypeRequest":{
+      "type":"structure",
+      "required":["name"],
+      "members":{
+        "name":{"shape":"identifier"}
+      }
+    },
+    "DeleteEntityTypeResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "DeleteEventRequest":{
       "type":"structure",
       "required":[
@@ -947,11 +1489,108 @@
         "eventTypeName"
       ],
       "members":{
-        "eventId":{"shape":"string"},
-        "eventTypeName":{"shape":"string"}
+        "eventId":{"shape":"identifier"},
+        "eventTypeName":{"shape":"identifier"},
+        "deleteAuditHistory":{"shape":"DeleteAuditHistory"}
       }
     },
     "DeleteEventResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DeleteEventTypeRequest":{
+      "type":"structure",
+      "required":["name"],
+      "members":{
+        "name":{"shape":"identifier"}
+      }
+    },
+    "DeleteEventTypeResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DeleteEventsByEventTypeRequest":{
+      "type":"structure",
+      "required":["eventTypeName"],
+      "members":{
+        "eventTypeName":{"shape":"identifier"}
+      }
+    },
+    "DeleteEventsByEventTypeResult":{
+      "type":"structure",
+      "members":{
+        "eventTypeName":{"shape":"identifier"},
+        "eventsDeletionStatus":{"shape":"string"}
+      }
+    },
+    "DeleteExternalModelRequest":{
+      "type":"structure",
+      "required":["modelEndpoint"],
+      "members":{
+        "modelEndpoint":{"shape":"sageMakerEndpointIdentifier"}
+      }
+    },
+    "DeleteExternalModelResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DeleteLabelRequest":{
+      "type":"structure",
+      "required":["name"],
+      "members":{
+        "name":{"shape":"identifier"}
+      }
+    },
+    "DeleteLabelResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DeleteModelRequest":{
+      "type":"structure",
+      "required":[
+        "modelId",
+        "modelType"
+      ],
+      "members":{
+        "modelId":{"shape":"modelIdentifier"},
+        "modelType":{"shape":"ModelTypeEnum"}
+      }
+    },
+    "DeleteModelResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DeleteModelVersionRequest":{
+      "type":"structure",
+      "required":[
+        "modelId",
+        "modelType",
+        "modelVersionNumber"
+      ],
+      "members":{
+        "modelId":{"shape":"modelIdentifier"},
+        "modelType":{"shape":"ModelTypeEnum"},
+        "modelVersionNumber":{"shape":"floatVersionString"}
+      }
+    },
+    "DeleteModelVersionResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DeleteOutcomeRequest":{
+      "type":"structure",
+      "required":["name"],
+      "members":{
+        "name":{"shape":"identifier"}
+      }
+    },
+    "DeleteOutcomeResult":{
       "type":"structure",
       "members":{
       }
@@ -964,6 +1603,18 @@
       }
     },
     "DeleteRuleResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DeleteVariableRequest":{
+      "type":"structure",
+      "required":["name"],
+      "members":{
+        "name":{"shape":"string"}
+      }
+    },
+    "DeleteVariableResult":{
       "type":"structure",
       "members":{
       }
@@ -1035,7 +1686,7 @@
     "DetectorVersionSummary":{
       "type":"structure",
       "members":{
-        "detectorVersionId":{"shape":"nonEmptyString"},
+        "detectorVersionId":{"shape":"wholeNumberVersionString"},
         "status":{"shape":"DetectorVersionStatus"},
         "description":{"shape":"description"},
         "lastUpdatedTime":{"shape":"time"}
@@ -1059,8 +1710,9 @@
       ],
       "members":{
         "entityType":{"shape":"string"},
-        "entityId":{"shape":"identifier"}
-      }
+        "entityId":{"shape":"entityRestrictedString"}
+      },
+      "sensitive":true
     },
     "EntityType":{
       "type":"structure",
@@ -1072,6 +1724,30 @@
         "arn":{"shape":"fraudDetectorArn"}
       }
     },
+    "Event":{
+      "type":"structure",
+      "members":{
+        "eventId":{"shape":"string"},
+        "eventTypeName":{"shape":"string"},
+        "eventTimestamp":{"shape":"string"},
+        "eventVariables":{"shape":"EventAttributeMap"},
+        "currentLabel":{"shape":"string"},
+        "labelTimestamp":{"shape":"string"},
+        "entities":{"shape":"listOfEntities"}
+      }
+    },
+    "EventAttributeMap":{
+      "type":"map",
+      "key":{"shape":"attributeKey"},
+      "value":{"shape":"attributeValue"}
+    },
+    "EventIngestion":{
+      "type":"string",
+      "enum":[
+        "ENABLED",
+        "DISABLED"
+      ]
+    },
     "EventType":{
       "type":"structure",
       "members":{
@@ -1080,10 +1756,13 @@
         "eventVariables":{"shape":"ListOfStrings"},
         "labels":{"shape":"ListOfStrings"},
         "entityTypes":{"shape":"NonEmptyListOfStrings"},
+        "eventIngestion":{"shape":"EventIngestion"},
+        "ingestedEventStatistics":{"shape":"IngestedEventStatistics"},
         "lastUpdatedTime":{"shape":"time"},
         "createdTime":{"shape":"time"},
         "arn":{"shape":"fraudDetectorArn"}
-      }
+      },
+      "sensitive":true
     },
     "EventVariableMap":{
       "type":"map",
@@ -1118,13 +1797,32 @@
     },
     "ExternalModelEndpointDataBlobMap":{
       "type":"map",
-      "key":{"shape":"string"},
+      "key":{"shape":"sageMakerEndpointIdentifier"},
       "value":{"shape":"ModelEndpointDataBlob"},
       "sensitive":true
     },
     "ExternalModelList":{
       "type":"list",
       "member":{"shape":"ExternalModel"}
+    },
+    "ExternalModelOutputs":{
+      "type":"structure",
+      "members":{
+        "externalModel":{"shape":"ExternalModelSummary"},
+        "outputs":{"shape":"ExternalModelPredictionMap"}
+      }
+    },
+    "ExternalModelPredictionMap":{
+      "type":"map",
+      "key":{"shape":"string"},
+      "value":{"shape":"string"}
+    },
+    "ExternalModelSummary":{
+      "type":"structure",
+      "members":{
+        "modelEndpoint":{"shape":"string"},
+        "modelSource":{"shape":"ModelSource"}
+      }
     },
     "ExternalModelsMaxResults":{
       "type":"integer",
@@ -1148,6 +1846,50 @@
         "title":{"shape":"string"},
         "content":{"shape":"string"},
         "type":{"shape":"string"}
+      }
+    },
+    "GetBatchImportJobsRequest":{
+      "type":"structure",
+      "members":{
+        "jobId":{"shape":"identifier"},
+        "maxResults":{"shape":"batchImportsMaxPageSize"},
+        "nextToken":{"shape":"string"}
+      }
+    },
+    "GetBatchImportJobsResult":{
+      "type":"structure",
+      "members":{
+        "batchImports":{"shape":"BatchImportList"},
+        "nextToken":{"shape":"string"}
+      }
+    },
+    "GetBatchPredictionJobsRequest":{
+      "type":"structure",
+      "members":{
+        "jobId":{"shape":"identifier"},
+        "maxResults":{"shape":"batchPredictionsMaxPageSize"},
+        "nextToken":{"shape":"string"}
+      }
+    },
+    "GetBatchPredictionJobsResult":{
+      "type":"structure",
+      "members":{
+        "batchPredictions":{"shape":"BatchPredictionList"},
+        "nextToken":{"shape":"string"}
+      }
+    },
+    "GetDeleteEventsByEventTypeStatusRequest":{
+      "type":"structure",
+      "required":["eventTypeName"],
+      "members":{
+        "eventTypeName":{"shape":"identifier"}
+      }
+    },
+    "GetDeleteEventsByEventTypeStatusResult":{
+      "type":"structure",
+      "members":{
+        "eventTypeName":{"shape":"identifier"},
+        "eventsDeletionStatus":{"shape":"AsyncJobStatus"}
       }
     },
     "GetDetectorVersionRequest":{
@@ -1223,7 +1965,7 @@
         "eventId":{"shape":"string"},
         "eventTypeName":{"shape":"string"},
         "entities":{"shape":"listOfEntities"},
-        "eventTimestamp":{"shape":"string"},
+        "eventTimestamp":{"shape":"utcTimestampISO8601"},
         "eventVariables":{"shape":"EventVariableMap"},
         "externalModelEndpointDataBlobs":{"shape":"ExternalModelEndpointDataBlobMap"}
       }
@@ -1232,7 +1974,25 @@
       "type":"structure",
       "members":{
         "modelScores":{"shape":"ListOfModelScores"},
-        "ruleResults":{"shape":"ListOfRuleResults"}
+        "ruleResults":{"shape":"ListOfRuleResults"},
+        "externalModelOutputs":{"shape":"ListOfExternalModelOutputs"}
+      }
+    },
+    "GetEventRequest":{
+      "type":"structure",
+      "required":[
+        "eventId",
+        "eventTypeName"
+      ],
+      "members":{
+        "eventId":{"shape":"string"},
+        "eventTypeName":{"shape":"string"}
+      }
+    },
+    "GetEventResult":{
+      "type":"structure",
+      "members":{
+        "event":{"shape":"Event"}
       }
     },
     "GetEventTypesRequest":{
@@ -1308,6 +2068,7 @@
         "trainingDataSource":{"shape":"TrainingDataSourceEnum"},
         "trainingDataSchema":{"shape":"TrainingDataSchema"},
         "externalEventsDetail":{"shape":"ExternalEventsDetail"},
+        "ingestedEventsDetail":{"shape":"IngestedEventsDetail"},
         "status":{"shape":"string"},
         "arn":{"shape":"fraudDetectorArn"}
       }
@@ -1376,6 +2137,35 @@
         "nextToken":{"shape":"string"}
       }
     },
+    "IngestedEventStatistics":{
+      "type":"structure",
+      "members":{
+        "numberOfEvents":{"shape":"Long"},
+        "eventDataSizeInBytes":{"shape":"Long"},
+        "leastRecentEvent":{"shape":"time"},
+        "mostRecentEvent":{"shape":"time"},
+        "lastUpdatedTime":{"shape":"time"}
+      }
+    },
+    "IngestedEventsDetail":{
+      "type":"structure",
+      "required":["ingestedEventsTimeWindow"],
+      "members":{
+        "ingestedEventsTimeWindow":{"shape":"IngestedEventsTimeWindow"}
+      }
+    },
+    "IngestedEventsTimeWindow":{
+      "type":"structure",
+      "required":[
+        "startTime",
+        "endTime"
+      ],
+      "members":{
+        "startTime":{"shape":"time"},
+        "endTime":{"shape":"time"}
+      }
+    },
+    "Integer":{"type":"integer"},
     "InternalServerException":{
       "type":"structure",
       "required":["message"],
@@ -1398,9 +2188,9 @@
     },
     "KmsEncryptionKeyArn":{
       "type":"string",
-      "max":80,
+      "max":90,
       "min":7,
-      "pattern":"^\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}$|DEFAULT|arn:[a-zA-Z0-9-]+:kms:[a-zA-Z0-9-]+:\\d{12}:key:[a-zA-Z0-9-_]+|[a-zA-Z0-9-_]\\S+"
+      "pattern":"^DEFAULT|arn:[a-zA-Z0-9-]+:kms:[a-zA-Z0-9-]+:\\d{12}:key\\/\\w{8}-\\w{4}-\\w{4}-\\w{4}-\\w{12}$"
     },
     "Label":{
       "type":"structure",
@@ -1416,12 +2206,21 @@
       "type":"structure",
       "required":["labelMapper"],
       "members":{
-        "labelMapper":{"shape":"labelMapper"}
+        "labelMapper":{"shape":"labelMapper"},
+        "unlabeledEventsTreatment":{"shape":"UnlabeledEventsTreatment"}
       }
     },
     "Language":{
       "type":"string",
       "enum":["DETECTORPL"]
+    },
+    "ListOfExternalModelOutputs":{
+      "type":"list",
+      "member":{"shape":"ExternalModelOutputs"}
+    },
+    "ListOfLogOddsMetrics":{
+      "type":"list",
+      "member":{"shape":"LogOddsMetric"}
     },
     "ListOfModelScores":{
       "type":"list",
@@ -1455,6 +2254,20 @@
         "nextToken":{"shape":"string"}
       }
     },
+    "LogOddsMetric":{
+      "type":"structure",
+      "required":[
+        "variableName",
+        "variableType",
+        "variableImportance"
+      ],
+      "members":{
+        "variableName":{"shape":"string"},
+        "variableType":{"shape":"string"},
+        "variableImportance":{"shape":"float"}
+      }
+    },
+    "Long":{"type":"long"},
     "MetricDataPoint":{
       "type":"structure",
       "members":{
@@ -1497,8 +2310,8 @@
         "eventTypeName":{"shape":"identifier"},
         "format":{"shape":"ModelInputDataFormat"},
         "useEventVariables":{"shape":"UseEventVariables"},
-        "jsonInputTemplate":{"shape":"string"},
-        "csvInputTemplate":{"shape":"string"}
+        "jsonInputTemplate":{"shape":"modelInputTemplate"},
+        "csvInputTemplate":{"shape":"modelInputTemplate"}
       }
     },
     "ModelInputDataFormat":{
@@ -1542,7 +2355,10 @@
     },
     "ModelTypeEnum":{
       "type":"string",
-      "enum":["ONLINE_FRAUD_INSIGHTS"]
+      "enum":[
+        "ONLINE_FRAUD_INSIGHTS",
+        "TRANSACTION_FRAUD_INSIGHTS"
+      ]
     },
     "ModelVersion":{
       "type":"structure",
@@ -1554,7 +2370,7 @@
       "members":{
         "modelId":{"shape":"modelIdentifier"},
         "modelType":{"shape":"ModelTypeEnum"},
-        "modelVersionNumber":{"shape":"nonEmptyString"},
+        "modelVersionNumber":{"shape":"floatVersionString"},
         "arn":{"shape":"fraudDetectorArn"}
       }
     },
@@ -1568,6 +2384,7 @@
         "trainingDataSource":{"shape":"TrainingDataSourceEnum"},
         "trainingDataSchema":{"shape":"TrainingDataSchema"},
         "externalEventsDetail":{"shape":"ExternalEventsDetail"},
+        "ingestedEventsDetail":{"shape":"IngestedEventsDetail"},
         "trainingResult":{"shape":"TrainingResult"},
         "lastUpdatedTime":{"shape":"time"},
         "createdTime":{"shape":"time"},
@@ -1578,7 +2395,8 @@
       "type":"string",
       "enum":[
         "ACTIVE",
-        "INACTIVE"
+        "INACTIVE",
+        "TRAINING_CANCELLED"
       ]
     },
     "NameList":{
@@ -1657,6 +2475,7 @@
         "eventVariables":{"shape":"NonEmptyListOfStrings"},
         "labels":{"shape":"ListOfStrings"},
         "entityTypes":{"shape":"NonEmptyListOfStrings"},
+        "eventIngestion":{"shape":"EventIngestion"},
         "tags":{"shape":"tagList"}
       }
     },
@@ -1738,6 +2557,13 @@
       },
       "exception":true
     },
+    "ResourceUnavailableException":{
+      "type":"structure",
+      "members":{
+        "message":{"shape":"string"}
+      },
+      "exception":true
+    },
     "Rule":{
       "type":"structure",
       "required":[
@@ -1794,6 +2620,30 @@
       "max":100,
       "min":50
     },
+    "SendEventRequest":{
+      "type":"structure",
+      "required":[
+        "eventId",
+        "eventTypeName",
+        "eventTimestamp",
+        "eventVariables",
+        "entities"
+      ],
+      "members":{
+        "eventId":{"shape":"identifier"},
+        "eventTypeName":{"shape":"identifier"},
+        "eventTimestamp":{"shape":"utcTimestampISO8601"},
+        "eventVariables":{"shape":"EventVariableMap"},
+        "assignedLabel":{"shape":"identifier"},
+        "labelTimestamp":{"shape":"utcTimestampISO8601"},
+        "entities":{"shape":"listOfEntities"}
+      }
+    },
+    "SendEventResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "Tag":{
       "type":"structure",
       "required":[
@@ -1848,7 +2698,10 @@
     },
     "TrainingDataSourceEnum":{
       "type":"string",
-      "enum":["EXTERNAL_EVENTS"]
+      "enum":[
+        "EXTERNAL_EVENTS",
+        "INGESTED_EVENTS"
+      ]
     },
     "TrainingMetrics":{
       "type":"structure",
@@ -1861,8 +2714,17 @@
       "type":"structure",
       "members":{
         "dataValidationMetrics":{"shape":"DataValidationMetrics"},
-        "trainingMetrics":{"shape":"TrainingMetrics"}
+        "trainingMetrics":{"shape":"TrainingMetrics"},
+        "variableImportanceMetrics":{"shape":"VariableImportanceMetrics"}
       }
+    },
+    "UnlabeledEventsTreatment":{
+      "type":"string",
+      "enum":[
+        "IGNORE",
+        "FRAUD",
+        "LEGIT"
+      ]
     },
     "UntagResourceRequest":{
       "type":"structure",
@@ -1939,6 +2801,26 @@
       "members":{
       }
     },
+    "UpdateEventLabelRequest":{
+      "type":"structure",
+      "required":[
+        "eventId",
+        "eventTypeName",
+        "assignedLabel",
+        "labelTimestamp"
+      ],
+      "members":{
+        "eventId":{"shape":"identifier"},
+        "eventTypeName":{"shape":"identifier"},
+        "assignedLabel":{"shape":"identifier"},
+        "labelTimestamp":{"shape":"utcTimestampISO8601"}
+      }
+    },
+    "UpdateEventLabelResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
     "UpdateModelRequest":{
       "type":"structure",
       "required":[
@@ -1968,6 +2850,7 @@
         "modelType":{"shape":"ModelTypeEnum"},
         "majorVersionNumber":{"shape":"wholeNumberVersionString"},
         "externalEventsDetail":{"shape":"ExternalEventsDetail"},
+        "ingestedEventsDetail":{"shape":"IngestedEventsDetail"},
         "tags":{"shape":"tagList"}
       }
     },
@@ -2094,6 +2977,12 @@
       "max":25,
       "min":1
     },
+    "VariableImportanceMetrics":{
+      "type":"structure",
+      "members":{
+        "logOddsMetrics":{"shape":"ListOfLogOddsMetrics"}
+      }
+    },
     "VariableList":{
       "type":"list",
       "member":{"shape":"Variable"}
@@ -2103,6 +2992,29 @@
       "box":true,
       "max":100,
       "min":50
+    },
+    "attributeKey":{
+      "type":"string",
+      "max":64,
+      "min":1
+    },
+    "attributeValue":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "sensitive":true
+    },
+    "batchImportsMaxPageSize":{
+      "type":"integer",
+      "box":true,
+      "max":50,
+      "min":1
+    },
+    "batchPredictionsMaxPageSize":{
+      "type":"integer",
+      "box":true,
+      "max":50,
+      "min":1
     },
     "blob":{"type":"blob"},
     "contentType":{
@@ -2114,6 +3026,12 @@
       "type":"string",
       "max":128,
       "min":1
+    },
+    "entityRestrictedString":{
+      "type":"string",
+      "max":256,
+      "min":1,
+      "pattern":"^[0-9A-Za-z_.@+-]+$"
     },
     "entityTypeList":{
       "type":"list",
@@ -2176,7 +3094,7 @@
     "labelMapper":{
       "type":"map",
       "key":{"shape":"string"},
-      "value":{"shape":"ListOfStrings"}
+      "value":{"shape":"NonEmptyListOfStrings"}
     },
     "labelsMaxResults":{
       "type":"integer",
@@ -2198,6 +3116,11 @@
       "min":1,
       "pattern":"^[0-9a-z_]+$"
     },
+    "modelInputTemplate":{
+      "type":"string",
+      "max":2000,
+      "min":1
+    },
     "modelList":{
       "type":"list",
       "member":{"shape":"Model"}
@@ -2210,10 +3133,6 @@
       "type":"integer",
       "box":true,
       "max":10,
-      "min":1
-    },
-    "nonEmptyString":{
-      "type":"string",
       "min":1
     },
     "ruleExpression":{
@@ -2258,7 +3177,16 @@
       "max":256,
       "min":0
     },
-    "time":{"type":"string"},
+    "time":{
+      "type":"string",
+      "max":30,
+      "min":11
+    },
+    "utcTimestampISO8601":{
+      "type":"string",
+      "max":30,
+      "min":10
+    },
     "variableName":{
       "type":"string",
       "max":64,
@@ -2266,7 +3194,7 @@
     },
     "variableValue":{
       "type":"string",
-      "max":256,
+      "max":1024,
       "min":1,
       "sensitive":true
     },

@@ -72,6 +72,10 @@ type BatchAPI interface {
 	CreateJobQueueWithContext(aws.Context, *batch.CreateJobQueueInput, ...request.Option) (*batch.CreateJobQueueOutput, error)
 	CreateJobQueueRequest(*batch.CreateJobQueueInput) (*request.Request, *batch.CreateJobQueueOutput)
 
+	CreateSchedulingPolicy(*batch.CreateSchedulingPolicyInput) (*batch.CreateSchedulingPolicyOutput, error)
+	CreateSchedulingPolicyWithContext(aws.Context, *batch.CreateSchedulingPolicyInput, ...request.Option) (*batch.CreateSchedulingPolicyOutput, error)
+	CreateSchedulingPolicyRequest(*batch.CreateSchedulingPolicyInput) (*request.Request, *batch.CreateSchedulingPolicyOutput)
+
 	DeleteComputeEnvironment(*batch.DeleteComputeEnvironmentInput) (*batch.DeleteComputeEnvironmentOutput, error)
 	DeleteComputeEnvironmentWithContext(aws.Context, *batch.DeleteComputeEnvironmentInput, ...request.Option) (*batch.DeleteComputeEnvironmentOutput, error)
 	DeleteComputeEnvironmentRequest(*batch.DeleteComputeEnvironmentInput) (*request.Request, *batch.DeleteComputeEnvironmentOutput)
@@ -79,6 +83,10 @@ type BatchAPI interface {
 	DeleteJobQueue(*batch.DeleteJobQueueInput) (*batch.DeleteJobQueueOutput, error)
 	DeleteJobQueueWithContext(aws.Context, *batch.DeleteJobQueueInput, ...request.Option) (*batch.DeleteJobQueueOutput, error)
 	DeleteJobQueueRequest(*batch.DeleteJobQueueInput) (*request.Request, *batch.DeleteJobQueueOutput)
+
+	DeleteSchedulingPolicy(*batch.DeleteSchedulingPolicyInput) (*batch.DeleteSchedulingPolicyOutput, error)
+	DeleteSchedulingPolicyWithContext(aws.Context, *batch.DeleteSchedulingPolicyInput, ...request.Option) (*batch.DeleteSchedulingPolicyOutput, error)
+	DeleteSchedulingPolicyRequest(*batch.DeleteSchedulingPolicyInput) (*request.Request, *batch.DeleteSchedulingPolicyOutput)
 
 	DeregisterJobDefinition(*batch.DeregisterJobDefinitionInput) (*batch.DeregisterJobDefinitionOutput, error)
 	DeregisterJobDefinitionWithContext(aws.Context, *batch.DeregisterJobDefinitionInput, ...request.Option) (*batch.DeregisterJobDefinitionOutput, error)
@@ -109,12 +117,27 @@ type BatchAPI interface {
 	DescribeJobsWithContext(aws.Context, *batch.DescribeJobsInput, ...request.Option) (*batch.DescribeJobsOutput, error)
 	DescribeJobsRequest(*batch.DescribeJobsInput) (*request.Request, *batch.DescribeJobsOutput)
 
+	DescribeSchedulingPolicies(*batch.DescribeSchedulingPoliciesInput) (*batch.DescribeSchedulingPoliciesOutput, error)
+	DescribeSchedulingPoliciesWithContext(aws.Context, *batch.DescribeSchedulingPoliciesInput, ...request.Option) (*batch.DescribeSchedulingPoliciesOutput, error)
+	DescribeSchedulingPoliciesRequest(*batch.DescribeSchedulingPoliciesInput) (*request.Request, *batch.DescribeSchedulingPoliciesOutput)
+
 	ListJobs(*batch.ListJobsInput) (*batch.ListJobsOutput, error)
 	ListJobsWithContext(aws.Context, *batch.ListJobsInput, ...request.Option) (*batch.ListJobsOutput, error)
 	ListJobsRequest(*batch.ListJobsInput) (*request.Request, *batch.ListJobsOutput)
 
 	ListJobsPages(*batch.ListJobsInput, func(*batch.ListJobsOutput, bool) bool) error
 	ListJobsPagesWithContext(aws.Context, *batch.ListJobsInput, func(*batch.ListJobsOutput, bool) bool, ...request.Option) error
+
+	ListSchedulingPolicies(*batch.ListSchedulingPoliciesInput) (*batch.ListSchedulingPoliciesOutput, error)
+	ListSchedulingPoliciesWithContext(aws.Context, *batch.ListSchedulingPoliciesInput, ...request.Option) (*batch.ListSchedulingPoliciesOutput, error)
+	ListSchedulingPoliciesRequest(*batch.ListSchedulingPoliciesInput) (*request.Request, *batch.ListSchedulingPoliciesOutput)
+
+	ListSchedulingPoliciesPages(*batch.ListSchedulingPoliciesInput, func(*batch.ListSchedulingPoliciesOutput, bool) bool) error
+	ListSchedulingPoliciesPagesWithContext(aws.Context, *batch.ListSchedulingPoliciesInput, func(*batch.ListSchedulingPoliciesOutput, bool) bool, ...request.Option) error
+
+	ListTagsForResource(*batch.ListTagsForResourceInput) (*batch.ListTagsForResourceOutput, error)
+	ListTagsForResourceWithContext(aws.Context, *batch.ListTagsForResourceInput, ...request.Option) (*batch.ListTagsForResourceOutput, error)
+	ListTagsForResourceRequest(*batch.ListTagsForResourceInput) (*request.Request, *batch.ListTagsForResourceOutput)
 
 	RegisterJobDefinition(*batch.RegisterJobDefinitionInput) (*batch.RegisterJobDefinitionOutput, error)
 	RegisterJobDefinitionWithContext(aws.Context, *batch.RegisterJobDefinitionInput, ...request.Option) (*batch.RegisterJobDefinitionOutput, error)
@@ -124,9 +147,17 @@ type BatchAPI interface {
 	SubmitJobWithContext(aws.Context, *batch.SubmitJobInput, ...request.Option) (*batch.SubmitJobOutput, error)
 	SubmitJobRequest(*batch.SubmitJobInput) (*request.Request, *batch.SubmitJobOutput)
 
+	TagResource(*batch.TagResourceInput) (*batch.TagResourceOutput, error)
+	TagResourceWithContext(aws.Context, *batch.TagResourceInput, ...request.Option) (*batch.TagResourceOutput, error)
+	TagResourceRequest(*batch.TagResourceInput) (*request.Request, *batch.TagResourceOutput)
+
 	TerminateJob(*batch.TerminateJobInput) (*batch.TerminateJobOutput, error)
 	TerminateJobWithContext(aws.Context, *batch.TerminateJobInput, ...request.Option) (*batch.TerminateJobOutput, error)
 	TerminateJobRequest(*batch.TerminateJobInput) (*request.Request, *batch.TerminateJobOutput)
+
+	UntagResource(*batch.UntagResourceInput) (*batch.UntagResourceOutput, error)
+	UntagResourceWithContext(aws.Context, *batch.UntagResourceInput, ...request.Option) (*batch.UntagResourceOutput, error)
+	UntagResourceRequest(*batch.UntagResourceInput) (*request.Request, *batch.UntagResourceOutput)
 
 	UpdateComputeEnvironment(*batch.UpdateComputeEnvironmentInput) (*batch.UpdateComputeEnvironmentOutput, error)
 	UpdateComputeEnvironmentWithContext(aws.Context, *batch.UpdateComputeEnvironmentInput, ...request.Option) (*batch.UpdateComputeEnvironmentOutput, error)
@@ -135,6 +166,10 @@ type BatchAPI interface {
 	UpdateJobQueue(*batch.UpdateJobQueueInput) (*batch.UpdateJobQueueOutput, error)
 	UpdateJobQueueWithContext(aws.Context, *batch.UpdateJobQueueInput, ...request.Option) (*batch.UpdateJobQueueOutput, error)
 	UpdateJobQueueRequest(*batch.UpdateJobQueueInput) (*request.Request, *batch.UpdateJobQueueOutput)
+
+	UpdateSchedulingPolicy(*batch.UpdateSchedulingPolicyInput) (*batch.UpdateSchedulingPolicyOutput, error)
+	UpdateSchedulingPolicyWithContext(aws.Context, *batch.UpdateSchedulingPolicyInput, ...request.Option) (*batch.UpdateSchedulingPolicyOutput, error)
+	UpdateSchedulingPolicyRequest(*batch.UpdateSchedulingPolicyInput) (*request.Request, *batch.UpdateSchedulingPolicyOutput)
 }
 
 var _ BatchAPI = (*batch.Batch)(nil)

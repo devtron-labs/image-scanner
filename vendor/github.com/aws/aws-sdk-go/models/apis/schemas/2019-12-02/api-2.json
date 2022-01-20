@@ -973,6 +973,43 @@
           "shape": "ServiceUnavailableException"
         }
       ]
+    },
+    "ExportSchema": {
+      "name": "ExportSchema",
+      "http": {
+        "method": "GET",
+        "requestUri": "/v1/registries/name/{registryName}/schemas/name/{schemaName}/export",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "ExportSchemaRequest"
+      },
+      "output": {
+        "shape": "ExportSchemaResponse"
+      },
+      "errors": [
+        {
+          "shape": "BadRequestException"
+        },
+        {
+          "shape": "UnauthorizedException"
+        },
+        {
+          "shape": "InternalServerErrorException"
+        },
+        {
+          "shape": "ForbiddenException"
+        },
+        {
+          "shape": "NotFoundException"
+        },
+        {
+          "shape": "ServiceUnavailableException"
+        },
+        {
+          "shape": "TooManyRequestsException"
+        }
+      ]
     }
   },
   "shapes": {
@@ -1048,6 +1085,9 @@
         "SourceArn": {
           "shape": "__stringMin20Max1600"
         },
+        "CrossAccount": {
+          "shape": "__boolean"
+        },
         "Tags": {
           "shape": "Tags",
           "locationName": "tags"
@@ -1065,6 +1105,9 @@
         },
         "SourceArn": {
           "shape": "__stringMin20Max1600"
+        },
+        "CrossAccount": {
+          "shape": "__boolean"
         },
         "Tags": {
           "shape": "Tags",
@@ -1092,6 +1135,9 @@
         },
         "State": {
           "shape": "DiscovererState"
+        },
+        "CrossAccount": {
+          "shape": "__boolean"
         },
         "Tags": {
           "shape": "Tags",
@@ -1393,6 +1439,9 @@
         "State": {
           "shape": "DiscovererState"
         },
+        "CrossAccount": {
+          "shape": "__boolean"
+        },
         "Tags": {
           "shape": "Tags",
           "locationName": "tags"
@@ -1538,6 +1587,9 @@
         "State": {
           "shape": "DiscovererState"
         },
+        "CrossAccount": {
+          "shape": "__boolean"
+        },
         "Tags": {
           "shape": "Tags",
           "locationName": "tags"
@@ -1576,6 +1628,9 @@
         },
         "State": {
           "shape": "DiscovererState"
+        },
+        "CrossAccount": {
+          "shape": "__boolean"
         },
         "Tags": {
           "shape": "Tags",
@@ -2013,64 +2068,6 @@
         }
       }
     },
-    "LockServiceLinkedRoleInput": {
-      "type": "structure",
-      "members": {
-        "RoleArn": {
-          "shape": "__stringMin1Max1600"
-        },
-        "Timeout": {
-          "shape": "__integerMin1Max29000"
-        }
-      },
-      "required": [
-        "Timeout",
-        "RoleArn"
-      ]
-    },
-    "LockServiceLinkedRoleOutput": {
-      "type": "structure",
-      "members": {
-        "CanBeDeleted": {
-          "shape": "__boolean"
-        },
-        "ReasonOfFailure": {
-          "shape": "__stringMin1Max1600"
-        },
-        "RelatedResources": {
-          "shape": "__listOfDiscovererSummary"
-        }
-      }
-    },
-    "LockServiceLinkedRoleRequest": {
-      "type": "structure",
-      "members": {
-        "RoleArn": {
-          "shape": "__stringMin1Max1600"
-        },
-        "Timeout": {
-          "shape": "__integerMin1Max29000"
-        }
-      },
-      "required": [
-        "Timeout",
-        "RoleArn"
-      ]
-    },
-    "LockServiceLinkedRoleResponse": {
-      "type": "structure",
-      "members": {
-        "CanBeDeleted": {
-          "shape": "__boolean"
-        },
-        "ReasonOfFailure": {
-          "shape": "__stringMin1Max1600"
-        },
-        "RelatedResources": {
-          "shape": "__listOfDiscovererSummary"
-        }
-      }
-    },
     "NotFoundException": {
       "type": "structure",
       "members": {
@@ -2310,6 +2307,9 @@
         },
         "SchemaVersion": {
           "shape": "__string"
+        },
+        "Type": {
+          "shape": "__string"
         }
       }
     },
@@ -2337,6 +2337,9 @@
           "shape": "__timestampIso8601"
         },
         "SchemaVersion": {
+          "shape": "__string"
+        },
+        "Type": {
           "shape": "__string"
         }
       }
@@ -2542,32 +2545,6 @@
         "httpStatusCode": 401
       }
     },
-    "UnlockServiceLinkedRoleInput": {
-      "type": "structure",
-      "members": {
-        "RoleArn": {
-          "shape": "__stringMin1Max1600"
-        }
-      },
-      "required": [
-        "RoleArn"
-      ]
-    },
-    "UnlockServiceLinkedRoleRequest": {
-      "type": "structure",
-      "members": {
-        "RoleArn": {
-          "shape": "__stringMin1Max1600"
-        }
-      },
-      "required": [
-        "RoleArn"
-      ]
-    },
-    "UnlockServiceLinkedRoleResponse": {
-      "type": "structure",
-      "members": {}
-    },
     "UntagResourceRequest": {
       "type": "structure",
       "members": {
@@ -2592,6 +2569,9 @@
       "members": {
         "Description": {
           "shape": "__stringMin0Max256"
+        },
+        "CrossAccount": {
+          "shape": "__boolean"
         }
       }
     },
@@ -2605,6 +2585,9 @@
           "shape": "__string",
           "location": "uri",
           "locationName": "discovererId"
+        },
+        "CrossAccount": {
+          "shape": "__boolean"
         }
       },
       "required": [
@@ -2628,6 +2611,9 @@
         },
         "State": {
           "shape": "DiscovererState"
+        },
+        "CrossAccount": {
+          "shape": "__boolean"
         },
         "Tags": {
           "shape": "Tags",
@@ -2754,6 +2740,76 @@
         },
         "VersionCreatedDate": {
           "shape": "__timestampIso8601"
+        }
+      }
+    },
+    "ExportSchemaOutput": {
+      "type": "structure",
+      "members": {
+        "Content": {
+          "shape": "__string"
+        },
+        "SchemaArn": {
+          "shape": "__string"
+        },
+        "SchemaName": {
+          "shape": "__string"
+        },
+        "SchemaVersion": {
+          "shape": "__string"
+        },
+        "Type": {
+          "shape": "__string"
+        }
+      }
+    },
+    "ExportSchemaRequest": {
+      "type": "structure",
+      "members": {
+        "RegistryName": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "registryName"
+        },
+        "SchemaName": {
+          "shape": "__string",
+          "location": "uri",
+          "locationName": "schemaName"
+        },
+        "SchemaVersion": {
+          "shape": "__string",
+          "location": "querystring",
+          "locationName": "schemaVersion"
+        },
+        "Type": {
+          "shape": "__string",
+          "location": "querystring",
+          "locationName": "type"
+        }
+      },
+      "required": [
+        "RegistryName",
+        "SchemaName",
+        "Type"
+      ]
+    },
+    "ExportSchemaResponse": {
+      "type": "structure",
+      "members": {
+        "Content": {
+          "shape": "__string"
+        },
+        "SchemaArn": {
+          "shape": "__string"
+        },
+        "SchemaName": {
+          "shape": "__string"
+        },
+        "SchemaVersion": {
+          "shape": "__string"
+        },
+        "Type": {
+          "shape": "__string"
         }
       }
     },

@@ -1200,8 +1200,8 @@ func (c *Synthetics) TagResourceRequest(input *TagResourceInput) (req *request.R
 // them to scope user permissions, by granting a user permission to access or
 // change only resources with certain tag values.
 //
-// Tags don't have any semantic meaning to AWS and are interpreted strictly
-// as strings of characters.
+// Tags don't have any semantic meaning to Amazon Web Services and are interpreted
+// strictly as strings of characters.
 //
 // You can use the TagResource action with a canary that already has tags. If
 // you specify a new tag key for the alarm, this tag is appended to the list
@@ -1429,9 +1429,165 @@ func (c *Synthetics) UpdateCanaryWithContext(ctx aws.Context, input *UpdateCanar
 	return out, req.Send()
 }
 
+// A structure that contains the configuration for canary artifacts, including
+// the encryption-at-rest settings for artifacts that the canary uploads to
+// Amazon S3.
+type ArtifactConfigInput_ struct {
+	_ struct{} `type:"structure"`
+
+	// A structure that contains the configuration of the encryption-at-rest settings
+	// for artifacts that the canary uploads to Amazon S3. Artifact encryption functionality
+	// is available only for canaries that use Synthetics runtime version syn-nodejs-puppeteer-3.3
+	// or later. For more information, see Encrypting canary artifacts (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_artifact_encryption.html)
+	S3Encryption *S3EncryptionConfig `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ArtifactConfigInput_) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ArtifactConfigInput_) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ArtifactConfigInput_) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ArtifactConfigInput_"}
+	if s.S3Encryption != nil {
+		if err := s.S3Encryption.Validate(); err != nil {
+			invalidParams.AddNested("S3Encryption", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetS3Encryption sets the S3Encryption field's value.
+func (s *ArtifactConfigInput_) SetS3Encryption(v *S3EncryptionConfig) *ArtifactConfigInput_ {
+	s.S3Encryption = v
+	return s
+}
+
+// A structure that contains the configuration for canary artifacts, including
+// the encryption-at-rest settings for artifacts that the canary uploads to
+// Amazon S3.
+type ArtifactConfigOutput_ struct {
+	_ struct{} `type:"structure"`
+
+	// A structure that contains the configuration of encryption settings for canary
+	// artifacts that are stored in Amazon S3.
+	S3Encryption *S3EncryptionConfig `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ArtifactConfigOutput_) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ArtifactConfigOutput_) GoString() string {
+	return s.String()
+}
+
+// SetS3Encryption sets the S3Encryption field's value.
+func (s *ArtifactConfigOutput_) SetS3Encryption(v *S3EncryptionConfig) *ArtifactConfigOutput_ {
+	s.S3Encryption = v
+	return s
+}
+
+// A structure representing a screenshot that is used as a baseline during visual
+// monitoring comparisons made by the canary.
+type BaseScreenshot struct {
+	_ struct{} `type:"structure"`
+
+	// Coordinates that define the part of a screen to ignore during screenshot
+	// comparisons. To obtain the coordinates to use here, use the CloudWatch Logs
+	// console to draw the boundaries on the screen. For more information, see {LINK}
+	IgnoreCoordinates []*string `type:"list"`
+
+	// The name of the screenshot. This is generated the first time the canary is
+	// run after the UpdateCanary operation that specified for this canary to perform
+	// visual monitoring.
+	//
+	// ScreenshotName is a required field
+	ScreenshotName *string `min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s BaseScreenshot) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s BaseScreenshot) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *BaseScreenshot) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "BaseScreenshot"}
+	if s.ScreenshotName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ScreenshotName"))
+	}
+	if s.ScreenshotName != nil && len(*s.ScreenshotName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ScreenshotName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetIgnoreCoordinates sets the IgnoreCoordinates field's value.
+func (s *BaseScreenshot) SetIgnoreCoordinates(v []*string) *BaseScreenshot {
+	s.IgnoreCoordinates = v
+	return s
+}
+
+// SetScreenshotName sets the ScreenshotName field's value.
+func (s *BaseScreenshot) SetScreenshotName(v string) *BaseScreenshot {
+	s.ScreenshotName = &v
+	return s
+}
+
 // This structure contains all information about one canary in your account.
 type Canary struct {
 	_ struct{} `type:"structure"`
+
+	// A structure that contains the configuration for canary artifacts, including
+	// the encryption-at-rest settings for artifacts that the canary uploads to
+	// Amazon S3.
+	ArtifactConfig *ArtifactConfigOutput_ `type:"structure"`
 
 	// The location in Amazon S3 where Synthetics stores artifacts from the runs
 	// of this canary. Artifacts include the log file, screenshots, and HAR files.
@@ -1444,11 +1600,11 @@ type Canary struct {
 	// The ARN of the Lambda function that is used as your canary's engine. For
 	// more information about Lambda ARN format, see Resources and Conditions for
 	// Lambda Actions (https://docs.aws.amazon.com/lambda/latest/dg/lambda-api-permissions-ref.html).
-	EngineArn *string `type:"string"`
+	EngineArn *string `min:"1" type:"string"`
 
 	// The ARN of the IAM role used to run the canary. This role must include lambda.amazonaws.com
 	// as a principal in the trust policy.
-	ExecutionRoleArn *string `type:"string"`
+	ExecutionRoleArn *string `min:"1" type:"string"`
 
 	// The number of days to retain data about failed runs of this canary.
 	FailureRetentionPeriodInDays *int64 `min:"1" type:"integer"`
@@ -1459,12 +1615,11 @@ type Canary struct {
 	// The name of the canary.
 	Name *string `min:"1" type:"string"`
 
-	// A structure that contains information for a canary run.
+	// A structure that contains information about a canary run.
 	RunConfig *CanaryRunConfigOutput `type:"structure"`
 
-	// Specifies the runtime version to use for the canary. Currently, the only
-	// valid value is syn-1.0. For more information about runtime versions, see
-	// Canary Runtime Versions (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Library.html).
+	// Specifies the runtime version to use for the canary. For more information
+	// about runtime versions, see Canary Runtime Versions (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Library.html).
 	RuntimeVersion *string `min:"1" type:"string"`
 
 	// A structure that contains information about how often the canary is to run,
@@ -1484,20 +1639,40 @@ type Canary struct {
 	// modified, and most recently run.
 	Timeline *CanaryTimeline `type:"structure"`
 
+	// If this canary performs visual monitoring by comparing screenshots, this
+	// structure contains the ID of the canary run to use as the baseline for screenshots,
+	// and the coordinates of any parts of the screen to ignore during the visual
+	// monitoring comparison.
+	VisualReference *VisualReferenceOutput_ `type:"structure"`
+
 	// If this canary is to test an endpoint in a VPC, this structure contains information
 	// about the subnets and security groups of the VPC endpoint. For more information,
 	// see Running a Canary in a VPC (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_VPC.html).
 	VpcConfig *VpcConfigOutput `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Canary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Canary) GoString() string {
 	return s.String()
+}
+
+// SetArtifactConfig sets the ArtifactConfig field's value.
+func (s *Canary) SetArtifactConfig(v *ArtifactConfigOutput_) *Canary {
+	s.ArtifactConfig = v
+	return s
 }
 
 // SetArtifactS3Location sets the ArtifactS3Location field's value.
@@ -1584,6 +1759,12 @@ func (s *Canary) SetTimeline(v *CanaryTimeline) *Canary {
 	return s
 }
 
+// SetVisualReference sets the VisualReference field's value.
+func (s *Canary) SetVisualReference(v *VisualReferenceOutput_) *Canary {
+	s.VisualReference = v
+	return s
+}
+
 // SetVpcConfig sets the VpcConfig field's value.
 func (s *Canary) SetVpcConfig(v *VpcConfigOutput) *Canary {
 	s.VpcConfig = v
@@ -1599,14 +1780,14 @@ type CanaryCodeInput struct {
 	_ struct{} `type:"structure"`
 
 	// The entry point to use for the source code when running the canary. This
-	// value must end with the string .handler.
+	// value must end with the string .handler. The string is limited to 29 characters
+	// or fewer.
 	//
 	// Handler is a required field
 	Handler *string `min:"1" type:"string" required:"true"`
 
-	// If your canary script is located in S3, specify the full bucket name here.
-	// The bucket must already exist. Specify the full bucket name, including s3://
-	// as the start of the bucket name.
+	// If your canary script is located in S3, specify the bucket name here. Do
+	// not include s3:// as the start of the bucket name.
 	S3Bucket *string `min:"1" type:"string"`
 
 	// The S3 key of your script. For more information, see Working with Amazon
@@ -1617,19 +1798,26 @@ type CanaryCodeInput struct {
 	S3Version *string `min:"1" type:"string"`
 
 	// If you input your canary script directly into the canary instead of referring
-	// to an S3 location, the value of this parameter is the .zip file that contains
-	// the script. It can be up to 5 MB.
-	//
+	// to an S3 location, the value of this parameter is the base64-encoded contents
+	// of the .zip file that contains the script. It must be smaller than 256 Kb.
 	// ZipFile is automatically base64 encoded/decoded by the SDK.
 	ZipFile []byte `min:"1" type:"blob"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryCodeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryCodeInput) GoString() string {
 	return s.String()
 }
@@ -1704,12 +1892,20 @@ type CanaryCodeOutput struct {
 	SourceLocationArn *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryCodeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryCodeOutput) GoString() string {
 	return s.String()
 }
@@ -1738,12 +1934,20 @@ type CanaryLastRun struct {
 	LastRun *CanaryRun `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryLastRun) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryLastRun) GoString() string {
 	return s.String()
 }
@@ -1768,6 +1972,9 @@ type CanaryRun struct {
 	// the log file, screenshots, and HAR files.
 	ArtifactS3Location *string `min:"1" type:"string"`
 
+	// A unique ID that identifies this canary run.
+	Id *string `type:"string"`
+
 	// The name of the canary.
 	Name *string `min:"1" type:"string"`
 
@@ -1778,12 +1985,20 @@ type CanaryRun struct {
 	Timeline *CanaryRunTimeline `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryRun) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryRun) GoString() string {
 	return s.String()
 }
@@ -1791,6 +2006,12 @@ func (s CanaryRun) GoString() string {
 // SetArtifactS3Location sets the ArtifactS3Location field's value.
 func (s *CanaryRun) SetArtifactS3Location(v string) *CanaryRun {
 	s.ArtifactS3Location = &v
+	return s
+}
+
+// SetId sets the Id field's value.
+func (s *CanaryRun) SetId(v string) *CanaryRun {
+	s.Id = &v
 	return s
 }
 
@@ -1816,24 +2037,54 @@ func (s *CanaryRun) SetTimeline(v *CanaryRunTimeline) *CanaryRun {
 type CanaryRunConfigInput struct {
 	_ struct{} `type:"structure"`
 
+	// Specifies whether this canary is to use active X-Ray tracing when it runs.
+	// Active tracing enables this canary run to be displayed in the ServiceLens
+	// and X-Ray service maps even if the canary does not hit an endpoint that has
+	// X-Ray tracing enabled. Using X-Ray tracing incurs charges. For more information,
+	// see Canaries and X-Ray tracing (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_tracing.html).
+	//
+	// You can enable active tracing only for canaries that use version syn-nodejs-2.0
+	// or later for their canary runtime.
+	ActiveTracing *bool `type:"boolean"`
+
+	// Specifies the keys and values to use for any environment variables used in
+	// the canary script. Use the following format:
+	//
+	// { "key1" : "value1", "key2" : "value2", ...}
+	//
+	// Keys must start with a letter and be at least two characters. The total size
+	// of your environment variables cannot exceed 4 KB. You can't specify any Lambda
+	// reserved environment variables as the keys for your environment variables.
+	// For more information about reserved keys, see Runtime environment variables
+	// (https://docs.aws.amazon.com/lambda/latest/dg/configuration-envvars.html#configuration-envvars-runtime).
+	EnvironmentVariables map[string]*string `type:"map"`
+
 	// The maximum amount of memory available to the canary while it is running,
-	// in MB. The value you specify must be a multiple of 64.
+	// in MB. This value must be a multiple of 64.
 	MemoryInMB *int64 `min:"960" type:"integer"`
 
-	// How long the canary is allowed to run before it must stop. If you omit this
-	// field, the frequency of the canary is used as this value, up to a maximum
-	// of 14 minutes.
+	// How long the canary is allowed to run before it must stop. You can't set
+	// this time to be longer than the frequency of the runs of this canary.
 	//
-	// TimeoutInSeconds is a required field
-	TimeoutInSeconds *int64 `min:"60" type:"integer" required:"true"`
+	// If you omit this field, the frequency of the canary is used as this value,
+	// up to a maximum of 14 minutes.
+	TimeoutInSeconds *int64 `min:"3" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryRunConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryRunConfigInput) GoString() string {
 	return s.String()
 }
@@ -1844,17 +2095,26 @@ func (s *CanaryRunConfigInput) Validate() error {
 	if s.MemoryInMB != nil && *s.MemoryInMB < 960 {
 		invalidParams.Add(request.NewErrParamMinValue("MemoryInMB", 960))
 	}
-	if s.TimeoutInSeconds == nil {
-		invalidParams.Add(request.NewErrParamRequired("TimeoutInSeconds"))
-	}
-	if s.TimeoutInSeconds != nil && *s.TimeoutInSeconds < 60 {
-		invalidParams.Add(request.NewErrParamMinValue("TimeoutInSeconds", 60))
+	if s.TimeoutInSeconds != nil && *s.TimeoutInSeconds < 3 {
+		invalidParams.Add(request.NewErrParamMinValue("TimeoutInSeconds", 3))
 	}
 
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetActiveTracing sets the ActiveTracing field's value.
+func (s *CanaryRunConfigInput) SetActiveTracing(v bool) *CanaryRunConfigInput {
+	s.ActiveTracing = &v
+	return s
+}
+
+// SetEnvironmentVariables sets the EnvironmentVariables field's value.
+func (s *CanaryRunConfigInput) SetEnvironmentVariables(v map[string]*string) *CanaryRunConfigInput {
+	s.EnvironmentVariables = v
+	return s
 }
 
 // SetMemoryInMB sets the MemoryInMB field's value.
@@ -1869,26 +2129,43 @@ func (s *CanaryRunConfigInput) SetTimeoutInSeconds(v int64) *CanaryRunConfigInpu
 	return s
 }
 
-// A structure that contains information for a canary run.
+// A structure that contains information about a canary run.
 type CanaryRunConfigOutput struct {
 	_ struct{} `type:"structure"`
 
+	// Displays whether this canary run used active X-Ray tracing.
+	ActiveTracing *bool `type:"boolean"`
+
 	// The maximum amount of memory available to the canary while it is running,
-	// in MB. The value you must be a multiple of 64.
+	// in MB. This value must be a multiple of 64.
 	MemoryInMB *int64 `min:"960" type:"integer"`
 
 	// How long the canary is allowed to run before it must stop.
-	TimeoutInSeconds *int64 `min:"60" type:"integer"`
+	TimeoutInSeconds *int64 `min:"3" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryRunConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryRunConfigOutput) GoString() string {
 	return s.String()
+}
+
+// SetActiveTracing sets the ActiveTracing field's value.
+func (s *CanaryRunConfigOutput) SetActiveTracing(v bool) *CanaryRunConfigOutput {
+	s.ActiveTracing = &v
+	return s
 }
 
 // SetMemoryInMB sets the MemoryInMB field's value.
@@ -1918,12 +2195,20 @@ type CanaryRunStatus struct {
 	StateReasonCode *string `type:"string" enum:"CanaryRunStateReasonCode"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryRunStatus) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryRunStatus) GoString() string {
 	return s.String()
 }
@@ -1957,12 +2242,20 @@ type CanaryRunTimeline struct {
 	Started *time.Time `type:"timestamp"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryRunTimeline) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryRunTimeline) GoString() string {
 	return s.String()
 }
@@ -1990,8 +2283,11 @@ type CanaryScheduleInput struct {
 	// used.
 	DurationInSeconds *int64 `type:"long"`
 
-	// A rate expression that defines how often the canary is to run. The syntax
-	// is rate(number unit). unit can be minute, minutes, or hour.
+	// A rate expression or a cron expression that defines how often the canary
+	// is to run.
+	//
+	// For a rate expression, The syntax is rate(number unit). unit can be minute,
+	// minutes, or hour.
 	//
 	// For example, rate(1 minute) runs the canary once a minute, rate(10 minutes)
 	// runs it once every 10 minutes, and rate(1 hour) runs it once every hour.
@@ -2000,16 +2296,28 @@ type CanaryScheduleInput struct {
 	// Specifying rate(0 minute) or rate(0 hour) is a special value that causes
 	// the canary to run only once when it is started.
 	//
+	// Use cron(expression) to specify a cron expression. You can't schedule a canary
+	// to wait for more than a year before running. For information about the syntax
+	// for cron expressions, see Scheduling canary runs using cron (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_cron.html).
+	//
 	// Expression is a required field
 	Expression *string `min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryScheduleInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryScheduleInput) GoString() string {
 	return s.String()
 }
@@ -2052,23 +2360,38 @@ type CanaryScheduleOutput struct {
 	// value.
 	DurationInSeconds *int64 `type:"long"`
 
-	// A rate expression that defines how often the canary is to run. The syntax
-	// is rate(number unit). unit can be minute, minutes, or hour.
+	// A rate expression or a cron expression that defines how often the canary
+	// is to run.
+	//
+	// For a rate expression, The syntax is rate(number unit). unit can be minute,
+	// minutes, or hour.
 	//
 	// For example, rate(1 minute) runs the canary once a minute, rate(10 minutes)
 	// runs it once every 10 minutes, and rate(1 hour) runs it once every hour.
+	// You can specify a frequency between rate(1 minute) and rate(1 hour).
 	//
 	// Specifying rate(0 minute) or rate(0 hour) is a special value that causes
 	// the canary to run only once when it is started.
+	//
+	// Use cron(expression) to specify a cron expression. For information about
+	// the syntax for cron expressions, see Scheduling canary runs using cron (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_cron.html).
 	Expression *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryScheduleOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryScheduleOutput) GoString() string {
 	return s.String()
 }
@@ -2100,12 +2423,20 @@ type CanaryStatus struct {
 	StateReasonCode *string `type:"string" enum:"CanaryStateReasonCode"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryStatus) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryStatus) GoString() string {
 	return s.String()
 }
@@ -2146,12 +2477,20 @@ type CanaryTimeline struct {
 	LastStopped *time.Time `type:"timestamp"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryTimeline) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CanaryTimeline) GoString() string {
 	return s.String()
 }
@@ -2188,12 +2527,20 @@ type ConflictException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ConflictException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ConflictException) GoString() string {
 	return s.String()
 }
@@ -2239,9 +2586,14 @@ func (s *ConflictException) RequestID() string {
 type CreateCanaryInput struct {
 	_ struct{} `type:"structure"`
 
+	// A structure that contains the configuration for canary artifacts, including
+	// the encryption-at-rest settings for artifacts that the canary uploads to
+	// Amazon S3.
+	ArtifactConfig *ArtifactConfigInput_ `type:"structure"`
+
 	// The location in Amazon S3 where Synthetics stores artifacts from the test
 	// runs of this canary. Artifacts include the log file, screenshots, and HAR
-	// files.
+	// files. The name of the S3 bucket can't include a period (.).
 	//
 	// ArtifactS3Location is a required field
 	ArtifactS3Location *string `min:"1" type:"string" required:"true"`
@@ -2269,10 +2621,10 @@ type CreateCanaryInput struct {
 	//
 	//    * logs:CreateLogStream
 	//
-	//    * logs:CreateLogStream
+	//    * logs:PutLogEvents
 	//
 	// ExecutionRoleArn is a required field
-	ExecutionRoleArn *string `type:"string" required:"true"`
+	ExecutionRoleArn *string `min:"1" type:"string" required:"true"`
 
 	// The number of days to retain data about failed runs of this canary. If you
 	// omit this field, the default of 31 days is used. The valid range is 1 to
@@ -2294,9 +2646,9 @@ type CreateCanaryInput struct {
 	// as timeout value.
 	RunConfig *CanaryRunConfigInput `type:"structure"`
 
-	// Specifies the runtime version to use for the canary. Currently, the only
-	// valid value is syn-1.0. For more information about runtime versions, see
-	// Canary Runtime Versions (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Library.html).
+	// Specifies the runtime version to use for the canary. For a list of valid
+	// runtime versions and more information about runtime versions, see Canary
+	// Runtime Versions (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Library.html).
 	//
 	// RuntimeVersion is a required field
 	RuntimeVersion *string `min:"1" type:"string" required:"true"`
@@ -2326,12 +2678,20 @@ type CreateCanaryInput struct {
 	VpcConfig *VpcConfigInput `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCanaryInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCanaryInput) GoString() string {
 	return s.String()
 }
@@ -2350,6 +2710,9 @@ func (s *CreateCanaryInput) Validate() error {
 	}
 	if s.ExecutionRoleArn == nil {
 		invalidParams.Add(request.NewErrParamRequired("ExecutionRoleArn"))
+	}
+	if s.ExecutionRoleArn != nil && len(*s.ExecutionRoleArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ExecutionRoleArn", 1))
 	}
 	if s.FailureRetentionPeriodInDays != nil && *s.FailureRetentionPeriodInDays < 1 {
 		invalidParams.Add(request.NewErrParamMinValue("FailureRetentionPeriodInDays", 1))
@@ -2375,6 +2738,11 @@ func (s *CreateCanaryInput) Validate() error {
 	if s.Tags != nil && len(s.Tags) < 1 {
 		invalidParams.Add(request.NewErrParamMinLen("Tags", 1))
 	}
+	if s.ArtifactConfig != nil {
+		if err := s.ArtifactConfig.Validate(); err != nil {
+			invalidParams.AddNested("ArtifactConfig", err.(request.ErrInvalidParams))
+		}
+	}
 	if s.Code != nil {
 		if err := s.Code.Validate(); err != nil {
 			invalidParams.AddNested("Code", err.(request.ErrInvalidParams))
@@ -2395,6 +2763,12 @@ func (s *CreateCanaryInput) Validate() error {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetArtifactConfig sets the ArtifactConfig field's value.
+func (s *CreateCanaryInput) SetArtifactConfig(v *ArtifactConfigInput_) *CreateCanaryInput {
+	s.ArtifactConfig = v
+	return s
 }
 
 // SetArtifactS3Location sets the ArtifactS3Location field's value.
@@ -2470,12 +2844,20 @@ type CreateCanaryOutput struct {
 	Canary *Canary `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCanaryOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateCanaryOutput) GoString() string {
 	return s.String()
 }
@@ -2487,7 +2869,7 @@ func (s *CreateCanaryOutput) SetCanary(v *Canary) *CreateCanaryOutput {
 }
 
 type DeleteCanaryInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The name of the canary that you want to delete. To find the names of your
 	// canaries, use DescribeCanaries (https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_DescribeCanaries.html).
@@ -2496,12 +2878,20 @@ type DeleteCanaryInput struct {
 	Name *string `location:"uri" locationName:"name" min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCanaryInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCanaryInput) GoString() string {
 	return s.String()
 }
@@ -2532,12 +2922,20 @@ type DeleteCanaryOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCanaryOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCanaryOutput) GoString() string {
 	return s.String()
 }
@@ -2552,15 +2950,23 @@ type DescribeCanariesInput struct {
 
 	// A token that indicates that there is more data available. You can use this
 	// token in a subsequent operation to retrieve the next set of results.
-	NextToken *string `type:"string"`
+	NextToken *string `min:"4" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCanariesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCanariesInput) GoString() string {
 	return s.String()
 }
@@ -2570,6 +2976,9 @@ func (s *DescribeCanariesInput) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "DescribeCanariesInput"}
 	if s.MaxResults != nil && *s.MaxResults < 1 {
 		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+	if s.NextToken != nil && len(*s.NextToken) < 4 {
+		invalidParams.Add(request.NewErrParamMinLen("NextToken", 4))
 	}
 
 	if invalidParams.Len() > 0 {
@@ -2601,15 +3010,23 @@ type DescribeCanariesLastRunInput struct {
 	// A token that indicates that there is more data available. You can use this
 	// token in a subsequent DescribeCanaries operation to retrieve the next set
 	// of results.
-	NextToken *string `type:"string"`
+	NextToken *string `min:"4" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCanariesLastRunInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCanariesLastRunInput) GoString() string {
 	return s.String()
 }
@@ -2619,6 +3036,9 @@ func (s *DescribeCanariesLastRunInput) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "DescribeCanariesLastRunInput"}
 	if s.MaxResults != nil && *s.MaxResults < 1 {
 		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+	if s.NextToken != nil && len(*s.NextToken) < 4 {
+		invalidParams.Add(request.NewErrParamMinLen("NextToken", 4))
 	}
 
 	if invalidParams.Len() > 0 {
@@ -2648,15 +3068,23 @@ type DescribeCanariesLastRunOutput struct {
 	// A token that indicates that there is more data available. You can use this
 	// token in a subsequent DescribeCanariesLastRun operation to retrieve the next
 	// set of results.
-	NextToken *string `type:"string"`
+	NextToken *string `min:"4" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCanariesLastRunOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCanariesLastRunOutput) GoString() string {
 	return s.String()
 }
@@ -2683,15 +3111,23 @@ type DescribeCanariesOutput struct {
 	// A token that indicates that there is more data available. You can use this
 	// token in a subsequent DescribeCanaries operation to retrieve the next set
 	// of results.
-	NextToken *string `type:"string"`
+	NextToken *string `min:"4" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCanariesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCanariesOutput) GoString() string {
 	return s.String()
 }
@@ -2719,15 +3155,23 @@ type DescribeRuntimeVersionsInput struct {
 	// A token that indicates that there is more data available. You can use this
 	// token in a subsequent DescribeRuntimeVersions operation to retrieve the next
 	// set of results.
-	NextToken *string `type:"string"`
+	NextToken *string `min:"4" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRuntimeVersionsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRuntimeVersionsInput) GoString() string {
 	return s.String()
 }
@@ -2737,6 +3181,9 @@ func (s *DescribeRuntimeVersionsInput) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "DescribeRuntimeVersionsInput"}
 	if s.MaxResults != nil && *s.MaxResults < 1 {
 		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+	if s.NextToken != nil && len(*s.NextToken) < 4 {
+		invalidParams.Add(request.NewErrParamMinLen("NextToken", 4))
 	}
 
 	if invalidParams.Len() > 0 {
@@ -2763,19 +3210,27 @@ type DescribeRuntimeVersionsOutput struct {
 	// A token that indicates that there is more data available. You can use this
 	// token in a subsequent DescribeRuntimeVersions operation to retrieve the next
 	// set of results.
-	NextToken *string `type:"string"`
+	NextToken *string `min:"4" type:"string"`
 
 	// An array of objects that display the details about each Synthetics canary
 	// runtime version.
 	RuntimeVersions []*RuntimeVersion `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRuntimeVersionsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRuntimeVersionsOutput) GoString() string {
 	return s.String()
 }
@@ -2793,7 +3248,7 @@ func (s *DescribeRuntimeVersionsOutput) SetRuntimeVersions(v []*RuntimeVersion) 
 }
 
 type GetCanaryInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The name of the canary that you want details for.
 	//
@@ -2801,12 +3256,20 @@ type GetCanaryInput struct {
 	Name *string `location:"uri" locationName:"name" min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCanaryInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCanaryInput) GoString() string {
 	return s.String()
 }
@@ -2840,12 +3303,20 @@ type GetCanaryOutput struct {
 	Canary *Canary `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCanaryOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCanaryOutput) GoString() string {
 	return s.String()
 }
@@ -2872,15 +3343,23 @@ type GetCanaryRunsInput struct {
 	// A token that indicates that there is more data available. You can use this
 	// token in a subsequent GetCanaryRuns operation to retrieve the next set of
 	// results.
-	NextToken *string `type:"string"`
+	NextToken *string `min:"4" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCanaryRunsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCanaryRunsInput) GoString() string {
 	return s.String()
 }
@@ -2896,6 +3375,9 @@ func (s *GetCanaryRunsInput) Validate() error {
 	}
 	if s.Name != nil && len(*s.Name) < 1 {
 		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.NextToken != nil && len(*s.NextToken) < 4 {
+		invalidParams.Add(request.NewErrParamMinLen("NextToken", 4))
 	}
 
 	if invalidParams.Len() > 0 {
@@ -2932,15 +3414,23 @@ type GetCanaryRunsOutput struct {
 	// A token that indicates that there is more data available. You can use this
 	// token in a subsequent GetCanaryRuns operation to retrieve the next set of
 	// results.
-	NextToken *string `type:"string"`
+	NextToken *string `min:"4" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCanaryRunsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetCanaryRunsOutput) GoString() string {
 	return s.String()
 }
@@ -2965,12 +3455,20 @@ type InternalServerException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalServerException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalServerException) GoString() string {
 	return s.String()
 }
@@ -3014,22 +3512,30 @@ func (s *InternalServerException) RequestID() string {
 }
 
 type ListTagsForResourceInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ARN of the canary that you want to view tags for.
 	//
 	// The ARN format of a canary is arn:aws:synthetics:Region:account-id:canary:canary-name .
 	//
 	// ResourceArn is a required field
-	ResourceArn *string `location:"uri" locationName:"resourceArn" type:"string" required:"true"`
+	ResourceArn *string `location:"uri" locationName:"resourceArn" min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) GoString() string {
 	return s.String()
 }
@@ -3063,12 +3569,20 @@ type ListTagsForResourceOutput struct {
 	Tags map[string]*string `min:"1" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) GoString() string {
 	return s.String()
 }
@@ -3087,12 +3601,20 @@ type ResourceNotFoundException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) GoString() string {
 	return s.String()
 }
@@ -3149,19 +3671,25 @@ type RuntimeVersion struct {
 	// The date that the runtime version was released.
 	ReleaseDate *time.Time `type:"timestamp"`
 
-	// The name of the runtime version. Currently, the only valid value is syn-1.0.
-	//
-	// Specifies the runtime version to use for the canary. Currently, the only
-	// valid value is syn-1.0.
+	// The name of the runtime version. For a list of valid runtime versions, see
+	// Canary Runtime Versions (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Library.html).
 	VersionName *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RuntimeVersion) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RuntimeVersion) GoString() string {
 	return s.String()
 }
@@ -3190,8 +3718,71 @@ func (s *RuntimeVersion) SetVersionName(v string) *RuntimeVersion {
 	return s
 }
 
-type StartCanaryInput struct {
+// A structure that contains the configuration of encryption-at-rest settings
+// for canary artifacts that the canary uploads to Amazon S3.
+//
+// For more information, see Encrypting canary artifacts (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_artifact_encryption.html)
+type S3EncryptionConfig struct {
 	_ struct{} `type:"structure"`
+
+	// The encryption method to use for artifacts created by this canary. Specify
+	// SSE_S3 to use server-side encryption (SSE) with an Amazon S3-managed key.
+	// Specify SSE-KMS to use server-side encryption with a customer-managed KMS
+	// key.
+	//
+	// If you omit this parameter, an Amazon Web Services-managed KMS key is used.
+	EncryptionMode *string `type:"string" enum:"EncryptionMode"`
+
+	// The ARN of the customer-managed KMS key to use, if you specify SSE-KMS for
+	// EncryptionMode
+	KmsKeyArn *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s S3EncryptionConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s S3EncryptionConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *S3EncryptionConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "S3EncryptionConfig"}
+	if s.KmsKeyArn != nil && len(*s.KmsKeyArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("KmsKeyArn", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetEncryptionMode sets the EncryptionMode field's value.
+func (s *S3EncryptionConfig) SetEncryptionMode(v string) *S3EncryptionConfig {
+	s.EncryptionMode = &v
+	return s
+}
+
+// SetKmsKeyArn sets the KmsKeyArn field's value.
+func (s *S3EncryptionConfig) SetKmsKeyArn(v string) *S3EncryptionConfig {
+	s.KmsKeyArn = &v
+	return s
+}
+
+type StartCanaryInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The name of the canary that you want to run. To find canary names, use DescribeCanaries
 	// (https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_DescribeCanaries.html).
@@ -3200,12 +3791,20 @@ type StartCanaryInput struct {
 	Name *string `location:"uri" locationName:"name" min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartCanaryInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartCanaryInput) GoString() string {
 	return s.String()
 }
@@ -3236,18 +3835,26 @@ type StartCanaryOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartCanaryOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartCanaryOutput) GoString() string {
 	return s.String()
 }
 
 type StopCanaryInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The name of the canary that you want to stop. To find the names of your canaries,
 	// use DescribeCanaries (https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_DescribeCanaries.html).
@@ -3256,12 +3863,20 @@ type StopCanaryInput struct {
 	Name *string `location:"uri" locationName:"name" min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StopCanaryInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StopCanaryInput) GoString() string {
 	return s.String()
 }
@@ -3292,12 +3907,20 @@ type StopCanaryOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StopCanaryOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StopCanaryOutput) GoString() string {
 	return s.String()
 }
@@ -3310,7 +3933,7 @@ type TagResourceInput struct {
 	// The ARN format of a canary is arn:aws:synthetics:Region:account-id:canary:canary-name .
 	//
 	// ResourceArn is a required field
-	ResourceArn *string `location:"uri" locationName:"resourceArn" type:"string" required:"true"`
+	ResourceArn *string `location:"uri" locationName:"resourceArn" min:"1" type:"string" required:"true"`
 
 	// The list of key-value pairs to associate with the canary.
 	//
@@ -3318,12 +3941,20 @@ type TagResourceInput struct {
 	Tags map[string]*string `min:"1" type:"map" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) GoString() string {
 	return s.String()
 }
@@ -3366,25 +3997,33 @@ type TagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) GoString() string {
 	return s.String()
 }
 
 type UntagResourceInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The ARN of the canary that you're removing tags from.
 	//
 	// The ARN format of a canary is arn:aws:synthetics:Region:account-id:canary:canary-name .
 	//
 	// ResourceArn is a required field
-	ResourceArn *string `location:"uri" locationName:"resourceArn" type:"string" required:"true"`
+	ResourceArn *string `location:"uri" locationName:"resourceArn" min:"1" type:"string" required:"true"`
 
 	// The list of tag keys to remove from the resource.
 	//
@@ -3392,12 +4031,20 @@ type UntagResourceInput struct {
 	TagKeys []*string `location:"querystring" locationName:"tagKeys" min:"1" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) GoString() string {
 	return s.String()
 }
@@ -3440,18 +4087,36 @@ type UntagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) GoString() string {
 	return s.String()
 }
 
 type UpdateCanaryInput struct {
 	_ struct{} `type:"structure"`
+
+	// A structure that contains the configuration for canary artifacts, including
+	// the encryption-at-rest settings for artifacts that the canary uploads to
+	// Amazon S3.
+	ArtifactConfig *ArtifactConfigInput_ `type:"structure"`
+
+	// The location in Amazon S3 where Synthetics stores artifacts from the test
+	// runs of this canary. Artifacts include the log file, screenshots, and HAR
+	// files. The name of the S3 bucket can't include a period (.).
+	ArtifactS3Location *string `min:"1" type:"string"`
 
 	// A structure that includes the entry point from which the canary should start
 	// running your script. If the script is stored in an S3 bucket, the bucket
@@ -3475,7 +4140,7 @@ type UpdateCanaryInput struct {
 	//    * logs:CreateLogStream
 	//
 	//    * logs:CreateLogStream
-	ExecutionRoleArn *string `type:"string"`
+	ExecutionRoleArn *string `min:"1" type:"string"`
 
 	// The number of days to retain data about failed runs of this canary.
 	FailureRetentionPeriodInDays *int64 `min:"1" type:"integer"`
@@ -3492,9 +4157,9 @@ type UpdateCanaryInput struct {
 	// run of the canary.
 	RunConfig *CanaryRunConfigInput `type:"structure"`
 
-	// Specifies the runtime version to use for the canary. Currently, the only
-	// valid value is syn-1.0. For more information about runtime versions, see
-	// Canary Runtime Versions (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Library.html).
+	// Specifies the runtime version to use for the canary. For a list of valid
+	// runtime versions and for more information about runtime versions, see Canary
+	// Runtime Versions (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Library.html).
 	RuntimeVersion *string `min:"1" type:"string"`
 
 	// A structure that contains information about how often the canary is to run,
@@ -3504,18 +4169,36 @@ type UpdateCanaryInput struct {
 	// The number of days to retain data about successful runs of this canary.
 	SuccessRetentionPeriodInDays *int64 `min:"1" type:"integer"`
 
+	// Defines the screenshots to use as the baseline for comparisons during visual
+	// monitoring comparisons during future runs of this canary. If you omit this
+	// parameter, no changes are made to any baseline screenshots that the canary
+	// might be using already.
+	//
+	// Visual monitoring is supported only on canaries running the syn-puppeteer-node-3.2
+	// runtime or later. For more information, see Visual monitoring (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Library_SyntheticsLogger_VisualTesting.html)
+	// and Visual monitoring blueprint (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Blueprints_VisualTesting.html)
+	VisualReference *VisualReferenceInput_ `type:"structure"`
+
 	// If this canary is to test an endpoint in a VPC, this structure contains information
 	// about the subnet and security groups of the VPC endpoint. For more information,
 	// see Running a Canary in a VPC (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_VPC.html).
 	VpcConfig *VpcConfigInput `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCanaryInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCanaryInput) GoString() string {
 	return s.String()
 }
@@ -3523,6 +4206,12 @@ func (s UpdateCanaryInput) GoString() string {
 // Validate inspects the fields of the type to determine if they are valid.
 func (s *UpdateCanaryInput) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "UpdateCanaryInput"}
+	if s.ArtifactS3Location != nil && len(*s.ArtifactS3Location) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ArtifactS3Location", 1))
+	}
+	if s.ExecutionRoleArn != nil && len(*s.ExecutionRoleArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ExecutionRoleArn", 1))
+	}
 	if s.FailureRetentionPeriodInDays != nil && *s.FailureRetentionPeriodInDays < 1 {
 		invalidParams.Add(request.NewErrParamMinValue("FailureRetentionPeriodInDays", 1))
 	}
@@ -3537,6 +4226,11 @@ func (s *UpdateCanaryInput) Validate() error {
 	}
 	if s.SuccessRetentionPeriodInDays != nil && *s.SuccessRetentionPeriodInDays < 1 {
 		invalidParams.Add(request.NewErrParamMinValue("SuccessRetentionPeriodInDays", 1))
+	}
+	if s.ArtifactConfig != nil {
+		if err := s.ArtifactConfig.Validate(); err != nil {
+			invalidParams.AddNested("ArtifactConfig", err.(request.ErrInvalidParams))
+		}
 	}
 	if s.Code != nil {
 		if err := s.Code.Validate(); err != nil {
@@ -3553,11 +4247,28 @@ func (s *UpdateCanaryInput) Validate() error {
 			invalidParams.AddNested("Schedule", err.(request.ErrInvalidParams))
 		}
 	}
+	if s.VisualReference != nil {
+		if err := s.VisualReference.Validate(); err != nil {
+			invalidParams.AddNested("VisualReference", err.(request.ErrInvalidParams))
+		}
+	}
 
 	if invalidParams.Len() > 0 {
 		return invalidParams
 	}
 	return nil
+}
+
+// SetArtifactConfig sets the ArtifactConfig field's value.
+func (s *UpdateCanaryInput) SetArtifactConfig(v *ArtifactConfigInput_) *UpdateCanaryInput {
+	s.ArtifactConfig = v
+	return s
+}
+
+// SetArtifactS3Location sets the ArtifactS3Location field's value.
+func (s *UpdateCanaryInput) SetArtifactS3Location(v string) *UpdateCanaryInput {
+	s.ArtifactS3Location = &v
+	return s
 }
 
 // SetCode sets the Code field's value.
@@ -3608,6 +4319,12 @@ func (s *UpdateCanaryInput) SetSuccessRetentionPeriodInDays(v int64) *UpdateCana
 	return s
 }
 
+// SetVisualReference sets the VisualReference field's value.
+func (s *UpdateCanaryInput) SetVisualReference(v *VisualReferenceInput_) *UpdateCanaryInput {
+	s.VisualReference = v
+	return s
+}
+
 // SetVpcConfig sets the VpcConfig field's value.
 func (s *UpdateCanaryInput) SetVpcConfig(v *VpcConfigInput) *UpdateCanaryInput {
 	s.VpcConfig = v
@@ -3618,12 +4335,20 @@ type UpdateCanaryOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCanaryOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateCanaryOutput) GoString() string {
 	return s.String()
 }
@@ -3636,12 +4361,20 @@ type ValidationException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ValidationException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ValidationException) GoString() string {
 	return s.String()
 }
@@ -3684,6 +4417,137 @@ func (s *ValidationException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
+// An object that specifies what screenshots to use as a baseline for visual
+// monitoring by this canary, and optionally the parts of the screenshots to
+// ignore during the visual monitoring comparison.
+//
+// Visual monitoring is supported only on canaries running the syn-puppeteer-node-3.2
+// runtime or later. For more information, see Visual monitoring (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Library_SyntheticsLogger_VisualTesting.html)
+// and Visual monitoring blueprint (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_Blueprints_VisualTesting.html)
+type VisualReferenceInput_ struct {
+	_ struct{} `type:"structure"`
+
+	// Specifies which canary run to use the screenshots from as the baseline for
+	// future visual monitoring with this canary. Valid values are nextrun to use
+	// the screenshots from the next run after this update is made, lastrun to use
+	// the screenshots from the most recent run before this update was made, or
+	// the value of Id in the CanaryRun (https://docs.aws.amazon.com/AmazonSynthetics/latest/APIReference/API_CanaryRun.html)
+	// from any past run of this canary.
+	//
+	// BaseCanaryRunId is a required field
+	BaseCanaryRunId *string `min:"1" type:"string" required:"true"`
+
+	// An array of screenshots that will be used as the baseline for visual monitoring
+	// in future runs of this canary. If there is a screenshot that you don't want
+	// to be used for visual monitoring, remove it from this array.
+	BaseScreenshots []*BaseScreenshot `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s VisualReferenceInput_) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s VisualReferenceInput_) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *VisualReferenceInput_) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "VisualReferenceInput_"}
+	if s.BaseCanaryRunId == nil {
+		invalidParams.Add(request.NewErrParamRequired("BaseCanaryRunId"))
+	}
+	if s.BaseCanaryRunId != nil && len(*s.BaseCanaryRunId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("BaseCanaryRunId", 1))
+	}
+	if s.BaseScreenshots != nil {
+		for i, v := range s.BaseScreenshots {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "BaseScreenshots", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetBaseCanaryRunId sets the BaseCanaryRunId field's value.
+func (s *VisualReferenceInput_) SetBaseCanaryRunId(v string) *VisualReferenceInput_ {
+	s.BaseCanaryRunId = &v
+	return s
+}
+
+// SetBaseScreenshots sets the BaseScreenshots field's value.
+func (s *VisualReferenceInput_) SetBaseScreenshots(v []*BaseScreenshot) *VisualReferenceInput_ {
+	s.BaseScreenshots = v
+	return s
+}
+
+// If this canary performs visual monitoring by comparing screenshots, this
+// structure contains the ID of the canary run that is used as the baseline
+// for screenshots, and the coordinates of any parts of those screenshots that
+// are ignored during visual monitoring comparison.
+//
+// Visual monitoring is supported only on canaries running the syn-puppeteer-node-3.2
+// runtime or later.
+type VisualReferenceOutput_ struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the canary run that produced the screenshots that are used as the
+	// baseline for visual monitoring comparisons during future runs of this canary.
+	BaseCanaryRunId *string `min:"1" type:"string"`
+
+	// An array of screenshots that are used as the baseline for comparisons during
+	// visual monitoring.
+	BaseScreenshots []*BaseScreenshot `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s VisualReferenceOutput_) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s VisualReferenceOutput_) GoString() string {
+	return s.String()
+}
+
+// SetBaseCanaryRunId sets the BaseCanaryRunId field's value.
+func (s *VisualReferenceOutput_) SetBaseCanaryRunId(v string) *VisualReferenceOutput_ {
+	s.BaseCanaryRunId = &v
+	return s
+}
+
+// SetBaseScreenshots sets the BaseScreenshots field's value.
+func (s *VisualReferenceOutput_) SetBaseScreenshots(v []*BaseScreenshot) *VisualReferenceOutput_ {
+	s.BaseScreenshots = v
+	return s
+}
+
 // If this canary is to test an endpoint in a VPC, this structure contains information
 // about the subnets and security groups of the VPC endpoint. For more information,
 // see Running a Canary in a VPC (https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/CloudWatch_Synthetics_Canaries_VPC.html).
@@ -3697,12 +4561,20 @@ type VpcConfigInput struct {
 	SubnetIds []*string `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcConfigInput) GoString() string {
 	return s.String()
 }
@@ -3735,12 +4607,20 @@ type VpcConfigOutput struct {
 	VpcId *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcConfigOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcConfigOutput) GoString() string {
 	return s.String()
 }
@@ -3852,5 +4732,21 @@ const (
 func CanaryStateReasonCode_Values() []string {
 	return []string{
 		CanaryStateReasonCodeInvalidPermissions,
+	}
+}
+
+const (
+	// EncryptionModeSseS3 is a EncryptionMode enum value
+	EncryptionModeSseS3 = "SSE_S3"
+
+	// EncryptionModeSseKms is a EncryptionMode enum value
+	EncryptionModeSseKms = "SSE_KMS"
+)
+
+// EncryptionMode_Values returns all elements of the EncryptionMode enum
+func EncryptionMode_Values() []string {
+	return []string{
+		EncryptionModeSseS3,
+		EncryptionModeSseKms,
 	}
 }

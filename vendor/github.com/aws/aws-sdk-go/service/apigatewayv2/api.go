@@ -4945,6 +4945,91 @@ func (c *ApiGatewayV2) ReimportApiWithContext(ctx aws.Context, input *ReimportAp
 	return out, req.Send()
 }
 
+const opResetAuthorizersCache = "ResetAuthorizersCache"
+
+// ResetAuthorizersCacheRequest generates a "aws/request.Request" representing the
+// client's request for the ResetAuthorizersCache operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ResetAuthorizersCache for more information on using the ResetAuthorizersCache
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ResetAuthorizersCacheRequest method.
+//    req, resp := client.ResetAuthorizersCacheRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/apigatewayv2-2018-11-29/ResetAuthorizersCache
+func (c *ApiGatewayV2) ResetAuthorizersCacheRequest(input *ResetAuthorizersCacheInput) (req *request.Request, output *ResetAuthorizersCacheOutput) {
+	op := &request.Operation{
+		Name:       opResetAuthorizersCache,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/v2/apis/{apiId}/stages/{stageName}/cache/authorizers",
+	}
+
+	if input == nil {
+		input = &ResetAuthorizersCacheInput{}
+	}
+
+	output = &ResetAuthorizersCacheOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restjson.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// ResetAuthorizersCache API operation for AmazonApiGatewayV2.
+//
+// Resets all authorizer cache entries for the specified stage. Supported only
+// for HTTP API Lambda authorizers.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AmazonApiGatewayV2's
+// API operation ResetAuthorizersCache for usage and error information.
+//
+// Returned Error Types:
+//   * NotFoundException
+//   The resource specified in the request was not found. See the message field
+//   for more information.
+//
+//   * TooManyRequestsException
+//   A limit has been exceeded. See the accompanying error message for details.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/apigatewayv2-2018-11-29/ResetAuthorizersCache
+func (c *ApiGatewayV2) ResetAuthorizersCache(input *ResetAuthorizersCacheInput) (*ResetAuthorizersCacheOutput, error) {
+	req, out := c.ResetAuthorizersCacheRequest(input)
+	return out, req.Send()
+}
+
+// ResetAuthorizersCacheWithContext is the same as ResetAuthorizersCache with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ResetAuthorizersCache for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ApiGatewayV2) ResetAuthorizersCacheWithContext(ctx aws.Context, input *ResetAuthorizersCacheInput, opts ...request.Option) (*ResetAuthorizersCacheOutput, error) {
+	req, out := c.ResetAuthorizersCacheRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opTagResource = "TagResource"
 
 // TagResourceRequest generates a "aws/request.Request" representing the
@@ -6237,12 +6322,20 @@ type AccessDeniedException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AccessDeniedException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AccessDeniedException) GoString() string {
 	return s.String()
 }
@@ -6297,12 +6390,20 @@ type AccessLogSettings struct {
 	Format *string `locationName:"format" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AccessLogSettings) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AccessLogSettings) GoString() string {
 	return s.String()
 }
@@ -6328,6 +6429,11 @@ type Api struct {
 	// to a deployed API stage.
 	ApiEndpoint *string `locationName:"apiEndpoint" type:"string"`
 
+	// Specifies whether an API is managed by API Gateway. You can't update or delete
+	// a managed API by using API Gateway. A managed API can be deleted only through
+	// the tooling or service that created it.
+	ApiGatewayManaged *bool `locationName:"apiGatewayManaged" type:"boolean"`
+
 	// The API ID.
 	ApiId *string `locationName:"apiId" type:"string"`
 
@@ -6343,6 +6449,12 @@ type Api struct {
 
 	// The description of the API.
 	Description *string `locationName:"description" type:"string"`
+
+	// Specifies whether clients can invoke your API by using the default execute-api
+	// endpoint. By default, clients can invoke your API with the default https://{api_id}.execute-api.{region}.amazonaws.com
+	// endpoint. To require that clients use a custom domain name to invoke your
+	// API, disable the default endpoint.
+	DisableExecuteApiEndpoint *bool `locationName:"disableExecuteApiEndpoint" type:"boolean"`
 
 	// Avoid validating models when creating a deployment. Supported only for WebSocket
 	// APIs.
@@ -6381,12 +6493,20 @@ type Api struct {
 	Warnings []*string `locationName:"warnings" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Api) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Api) GoString() string {
 	return s.String()
 }
@@ -6394,6 +6514,12 @@ func (s Api) GoString() string {
 // SetApiEndpoint sets the ApiEndpoint field's value.
 func (s *Api) SetApiEndpoint(v string) *Api {
 	s.ApiEndpoint = &v
+	return s
+}
+
+// SetApiGatewayManaged sets the ApiGatewayManaged field's value.
+func (s *Api) SetApiGatewayManaged(v bool) *Api {
+	s.ApiGatewayManaged = &v
 	return s
 }
 
@@ -6424,6 +6550,12 @@ func (s *Api) SetCreatedDate(v time.Time) *Api {
 // SetDescription sets the Description field's value.
 func (s *Api) SetDescription(v string) *Api {
 	s.Description = &v
+	return s
+}
+
+// SetDisableExecuteApiEndpoint sets the DisableExecuteApiEndpoint field's value.
+func (s *Api) SetDisableExecuteApiEndpoint(v bool) *Api {
+	s.DisableExecuteApiEndpoint = &v
 	return s
 }
 
@@ -6496,12 +6628,20 @@ type ApiMapping struct {
 	Stage *string `locationName:"stage" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ApiMapping) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ApiMapping) GoString() string {
 	return s.String()
 }
@@ -6537,22 +6677,30 @@ type Authorizer struct {
 	// Specifies the required credentials as an IAM role for API Gateway to invoke
 	// the authorizer. To specify an IAM role for API Gateway to assume, use the
 	// role's Amazon Resource Name (ARN). To use resource-based permissions on the
-	// Lambda function, specify null. Supported only for REQUEST authorizers.
+	// Lambda function, don't specify this parameter. Supported only for REQUEST
+	// authorizers.
 	AuthorizerCredentialsArn *string `locationName:"authorizerCredentialsArn" type:"string"`
 
 	// The authorizer identifier.
 	AuthorizerId *string `locationName:"authorizerId" type:"string"`
 
-	// Authorizer caching is not currently supported. Don't specify this value for
-	// authorizers.
+	// Specifies the format of the payload sent to an HTTP API Lambda authorizer.
+	// Required for HTTP API Lambda authorizers. Supported values are 1.0 and 2.0.
+	// To learn more, see Working with AWS Lambda authorizers for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-lambda-authorizer.html).
+	AuthorizerPayloadFormatVersion *string `locationName:"authorizerPayloadFormatVersion" type:"string"`
+
+	// The time to live (TTL) for cached authorizer results, in seconds. If it equals
+	// 0, authorization caching is disabled. If it is greater than 0, API Gateway
+	// caches authorizer responses. The maximum value is 3600, or 1 hour. Supported
+	// only for HTTP API Lambda authorizers.
 	AuthorizerResultTtlInSeconds *int64 `locationName:"authorizerResultTtlInSeconds" type:"integer"`
 
-	// The authorizer type. For WebSocket APIs, specify REQUEST for a Lambda function
-	// using incoming request parameters. For HTTP APIs, specify JWT to use JSON
-	// Web Tokens.
+	// The authorizer type. Specify REQUEST for a Lambda function using incoming
+	// request parameters. Specify JWT to use JSON Web Tokens (supported only for
+	// HTTP APIs).
 	AuthorizerType *string `locationName:"authorizerType" type:"string" enum:"AuthorizerType"`
 
-	// The authorizer's Uniform Resource Identifier (URI). ForREQUEST authorizers,
+	// The authorizer's Uniform Resource Identifier (URI). For REQUEST authorizers,
 	// this must be a well-formed Lambda function URI, for example, arn:aws:apigateway:us-west-2:lambda:path/2015-03-31/functions/arn:aws:lambda:us-west-2:{account_id}:function:{lambda_function_name}/invocations.
 	// In general, the URI has this form: arn:aws:apigateway:{region}:lambda:path/{service_api}
 	// , where {region} is the same as the region hosting the Lambda function, path
@@ -6562,23 +6710,32 @@ type Authorizer struct {
 	// only for REQUEST authorizers.
 	AuthorizerUri *string `locationName:"authorizerUri" type:"string"`
 
+	// Specifies whether a Lambda authorizer returns a response in a simple format.
+	// If enabled, the Lambda authorizer can return a boolean value instead of an
+	// IAM policy. Supported only for HTTP APIs. To learn more, see Working with
+	// AWS Lambda authorizers for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-lambda-authorizer.html)
+	EnableSimpleResponses *bool `locationName:"enableSimpleResponses" type:"boolean"`
+
 	// The identity source for which authorization is requested.
 	//
 	// For a REQUEST authorizer, this is optional. The value is a set of one or
-	// more mapping expressions of the specified request parameters. Currently,
-	// the identity source can be headers, query string parameters, stage variables,
-	// and context parameters. For example, if an Auth header and a Name query string
-	// parameter are defined as identity sources, this value is route.request.header.Auth,
-	// route.request.querystring.Name. These parameters will be used to perform
-	// runtime validation for Lambda-based authorizers by verifying all of the identity-related
-	// request parameters are present in the request, not null, and non-empty. Only
-	// when this is true does the authorizer invoke the authorizer Lambda function.
-	// Otherwise, it returns a 401 Unauthorized response without calling the Lambda
-	// function.
+	// more mapping expressions of the specified request parameters. The identity
+	// source can be headers, query string parameters, stage variables, and context
+	// parameters. For example, if an Auth header and a Name query string parameter
+	// are defined as identity sources, this value is route.request.header.Auth,
+	// route.request.querystring.Name for WebSocket APIs. For HTTP APIs, use selection
+	// expressions prefixed with $, for example, $request.header.Auth, $request.querystring.Name.
+	// These parameters are used to perform runtime validation for Lambda-based
+	// authorizers by verifying all of the identity-related request parameters are
+	// present in the request, not null, and non-empty. Only when this is true does
+	// the authorizer invoke the authorizer Lambda function. Otherwise, it returns
+	// a 401 Unauthorized response without calling the Lambda function. For HTTP
+	// APIs, identity sources are also used as the cache key when caching is enabled.
+	// To learn more, see Working with AWS Lambda authorizers for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-lambda-authorizer.html).
 	//
 	// For JWT, a single entry that specifies where to extract the JSON Web Token
 	// (JWT) from inbound requests. Currently only header-based and query parameter-based
-	// selections are supported, for example "$request.header.Authorization".
+	// selections are supported, for example $request.header.Authorization.
 	IdentitySource []*string `locationName:"identitySource" type:"list"`
 
 	// The validation expression does not apply to the REQUEST authorizer.
@@ -6594,12 +6751,20 @@ type Authorizer struct {
 	Name *string `locationName:"name" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Authorizer) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Authorizer) GoString() string {
 	return s.String()
 }
@@ -6613,6 +6778,12 @@ func (s *Authorizer) SetAuthorizerCredentialsArn(v string) *Authorizer {
 // SetAuthorizerId sets the AuthorizerId field's value.
 func (s *Authorizer) SetAuthorizerId(v string) *Authorizer {
 	s.AuthorizerId = &v
+	return s
+}
+
+// SetAuthorizerPayloadFormatVersion sets the AuthorizerPayloadFormatVersion field's value.
+func (s *Authorizer) SetAuthorizerPayloadFormatVersion(v string) *Authorizer {
+	s.AuthorizerPayloadFormatVersion = &v
 	return s
 }
 
@@ -6631,6 +6802,12 @@ func (s *Authorizer) SetAuthorizerType(v string) *Authorizer {
 // SetAuthorizerUri sets the AuthorizerUri field's value.
 func (s *Authorizer) SetAuthorizerUri(v string) *Authorizer {
 	s.AuthorizerUri = &v
+	return s
+}
+
+// SetEnableSimpleResponses sets the EnableSimpleResponses field's value.
+func (s *Authorizer) SetEnableSimpleResponses(v bool) *Authorizer {
+	s.EnableSimpleResponses = &v
 	return s
 }
 
@@ -6668,12 +6845,20 @@ type BadRequestException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s BadRequestException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s BadRequestException) GoString() string {
 	return s.String()
 }
@@ -6727,12 +6912,20 @@ type ConflictException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ConflictException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ConflictException) GoString() string {
 	return s.String()
 }
@@ -6803,12 +6996,20 @@ type Cors struct {
 	MaxAge *int64 `locationName:"maxAge" type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Cors) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Cors) GoString() string {
 	return s.String()
 }
@@ -6881,6 +7082,8 @@ type CreateApiInput struct {
 	// A string with a length between [0-1024].
 	Description *string `locationName:"description" type:"string"`
 
+	DisableExecuteApiEndpoint *bool `locationName:"disableExecuteApiEndpoint" type:"boolean"`
+
 	DisableSchemaValidation *bool `locationName:"disableSchemaValidation" type:"boolean"`
 
 	// A string with a length between [1-128].
@@ -6915,12 +7118,20 @@ type CreateApiInput struct {
 	Version *string `locationName:"version" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateApiInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateApiInput) GoString() string {
 	return s.String()
 }
@@ -6967,6 +7178,12 @@ func (s *CreateApiInput) SetCredentialsArn(v string) *CreateApiInput {
 // SetDescription sets the Description field's value.
 func (s *CreateApiInput) SetDescription(v string) *CreateApiInput {
 	s.Description = &v
+	return s
+}
+
+// SetDisableExecuteApiEndpoint sets the DisableExecuteApiEndpoint field's value.
+func (s *CreateApiInput) SetDisableExecuteApiEndpoint(v bool) *CreateApiInput {
+	s.DisableExecuteApiEndpoint = &v
 	return s
 }
 
@@ -7042,12 +7259,20 @@ type CreateApiMappingInput struct {
 	Stage *string `locationName:"stage" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateApiMappingInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateApiMappingInput) GoString() string {
 	return s.String()
 }
@@ -7118,12 +7343,20 @@ type CreateApiMappingOutput struct {
 	Stage *string `locationName:"stage" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateApiMappingOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateApiMappingOutput) GoString() string {
 	return s.String()
 }
@@ -7157,6 +7390,8 @@ type CreateApiOutput struct {
 
 	ApiEndpoint *string `locationName:"apiEndpoint" type:"string"`
 
+	ApiGatewayManaged *bool `locationName:"apiGatewayManaged" type:"boolean"`
+
 	// The identifier.
 	ApiId *string `locationName:"apiId" type:"string"`
 
@@ -7174,6 +7409,8 @@ type CreateApiOutput struct {
 
 	// A string with a length between [0-1024].
 	Description *string `locationName:"description" type:"string"`
+
+	DisableExecuteApiEndpoint *bool `locationName:"disableExecuteApiEndpoint" type:"boolean"`
 
 	DisableSchemaValidation *bool `locationName:"disableSchemaValidation" type:"boolean"`
 
@@ -7199,12 +7436,20 @@ type CreateApiOutput struct {
 	Warnings []*string `locationName:"warnings" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateApiOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateApiOutput) GoString() string {
 	return s.String()
 }
@@ -7212,6 +7457,12 @@ func (s CreateApiOutput) GoString() string {
 // SetApiEndpoint sets the ApiEndpoint field's value.
 func (s *CreateApiOutput) SetApiEndpoint(v string) *CreateApiOutput {
 	s.ApiEndpoint = &v
+	return s
+}
+
+// SetApiGatewayManaged sets the ApiGatewayManaged field's value.
+func (s *CreateApiOutput) SetApiGatewayManaged(v bool) *CreateApiOutput {
+	s.ApiGatewayManaged = &v
 	return s
 }
 
@@ -7242,6 +7493,12 @@ func (s *CreateApiOutput) SetCreatedDate(v time.Time) *CreateApiOutput {
 // SetDescription sets the Description field's value.
 func (s *CreateApiOutput) SetDescription(v string) *CreateApiOutput {
 	s.Description = &v
+	return s
+}
+
+// SetDisableExecuteApiEndpoint sets the DisableExecuteApiEndpoint field's value.
+func (s *CreateApiOutput) SetDisableExecuteApiEndpoint(v bool) *CreateApiOutput {
+	s.DisableExecuteApiEndpoint = &v
 	return s
 }
 
@@ -7302,18 +7559,23 @@ type CreateAuthorizerInput struct {
 	// Represents an Amazon Resource Name (ARN).
 	AuthorizerCredentialsArn *string `locationName:"authorizerCredentialsArn" type:"string"`
 
+	// A string with a length between [1-64].
+	AuthorizerPayloadFormatVersion *string `locationName:"authorizerPayloadFormatVersion" type:"string"`
+
 	// An integer with a value between [0-3600].
 	AuthorizerResultTtlInSeconds *int64 `locationName:"authorizerResultTtlInSeconds" type:"integer"`
 
-	// The authorizer type. For WebSocket APIs, specify REQUEST for a Lambda function
-	// using incoming request parameters. For HTTP APIs, specify JWT to use JSON
-	// Web Tokens.
+	// The authorizer type. Specify REQUEST for a Lambda function using incoming
+	// request parameters. Specify JWT to use JSON Web Tokens (supported only for
+	// HTTP APIs).
 	//
 	// AuthorizerType is a required field
 	AuthorizerType *string `locationName:"authorizerType" type:"string" required:"true" enum:"AuthorizerType"`
 
 	// A string representation of a URI with a length between [1-2048].
 	AuthorizerUri *string `locationName:"authorizerUri" type:"string"`
+
+	EnableSimpleResponses *bool `locationName:"enableSimpleResponses" type:"boolean"`
 
 	// The identity source for which authorization is requested. For the REQUEST
 	// authorizer, this is required when authorization caching is enabled. The value
@@ -7345,12 +7607,20 @@ type CreateAuthorizerInput struct {
 	Name *string `locationName:"name" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateAuthorizerInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateAuthorizerInput) GoString() string {
 	return s.String()
 }
@@ -7392,6 +7662,12 @@ func (s *CreateAuthorizerInput) SetAuthorizerCredentialsArn(v string) *CreateAut
 	return s
 }
 
+// SetAuthorizerPayloadFormatVersion sets the AuthorizerPayloadFormatVersion field's value.
+func (s *CreateAuthorizerInput) SetAuthorizerPayloadFormatVersion(v string) *CreateAuthorizerInput {
+	s.AuthorizerPayloadFormatVersion = &v
+	return s
+}
+
 // SetAuthorizerResultTtlInSeconds sets the AuthorizerResultTtlInSeconds field's value.
 func (s *CreateAuthorizerInput) SetAuthorizerResultTtlInSeconds(v int64) *CreateAuthorizerInput {
 	s.AuthorizerResultTtlInSeconds = &v
@@ -7407,6 +7683,12 @@ func (s *CreateAuthorizerInput) SetAuthorizerType(v string) *CreateAuthorizerInp
 // SetAuthorizerUri sets the AuthorizerUri field's value.
 func (s *CreateAuthorizerInput) SetAuthorizerUri(v string) *CreateAuthorizerInput {
 	s.AuthorizerUri = &v
+	return s
+}
+
+// SetEnableSimpleResponses sets the EnableSimpleResponses field's value.
+func (s *CreateAuthorizerInput) SetEnableSimpleResponses(v bool) *CreateAuthorizerInput {
+	s.EnableSimpleResponses = &v
 	return s
 }
 
@@ -7443,16 +7725,21 @@ type CreateAuthorizerOutput struct {
 	// The identifier.
 	AuthorizerId *string `locationName:"authorizerId" type:"string"`
 
+	// A string with a length between [1-64].
+	AuthorizerPayloadFormatVersion *string `locationName:"authorizerPayloadFormatVersion" type:"string"`
+
 	// An integer with a value between [0-3600].
 	AuthorizerResultTtlInSeconds *int64 `locationName:"authorizerResultTtlInSeconds" type:"integer"`
 
-	// The authorizer type. For WebSocket APIs, specify REQUEST for a Lambda function
-	// using incoming request parameters. For HTTP APIs, specify JWT to use JSON
-	// Web Tokens.
+	// The authorizer type. Specify REQUEST for a Lambda function using incoming
+	// request parameters. Specify JWT to use JSON Web Tokens (supported only for
+	// HTTP APIs).
 	AuthorizerType *string `locationName:"authorizerType" type:"string" enum:"AuthorizerType"`
 
 	// A string representation of a URI with a length between [1-2048].
 	AuthorizerUri *string `locationName:"authorizerUri" type:"string"`
+
+	EnableSimpleResponses *bool `locationName:"enableSimpleResponses" type:"boolean"`
 
 	// The identity source for which authorization is requested. For the REQUEST
 	// authorizer, this is required when authorization caching is enabled. The value
@@ -7480,12 +7767,20 @@ type CreateAuthorizerOutput struct {
 	Name *string `locationName:"name" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateAuthorizerOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateAuthorizerOutput) GoString() string {
 	return s.String()
 }
@@ -7499,6 +7794,12 @@ func (s *CreateAuthorizerOutput) SetAuthorizerCredentialsArn(v string) *CreateAu
 // SetAuthorizerId sets the AuthorizerId field's value.
 func (s *CreateAuthorizerOutput) SetAuthorizerId(v string) *CreateAuthorizerOutput {
 	s.AuthorizerId = &v
+	return s
+}
+
+// SetAuthorizerPayloadFormatVersion sets the AuthorizerPayloadFormatVersion field's value.
+func (s *CreateAuthorizerOutput) SetAuthorizerPayloadFormatVersion(v string) *CreateAuthorizerOutput {
+	s.AuthorizerPayloadFormatVersion = &v
 	return s
 }
 
@@ -7517,6 +7818,12 @@ func (s *CreateAuthorizerOutput) SetAuthorizerType(v string) *CreateAuthorizerOu
 // SetAuthorizerUri sets the AuthorizerUri field's value.
 func (s *CreateAuthorizerOutput) SetAuthorizerUri(v string) *CreateAuthorizerOutput {
 	s.AuthorizerUri = &v
+	return s
+}
+
+// SetEnableSimpleResponses sets the EnableSimpleResponses field's value.
+func (s *CreateAuthorizerOutput) SetEnableSimpleResponses(v bool) *CreateAuthorizerOutput {
+	s.EnableSimpleResponses = &v
 	return s
 }
 
@@ -7557,12 +7864,20 @@ type CreateDeploymentInput struct {
 	StageName *string `locationName:"stageName" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDeploymentInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDeploymentInput) GoString() string {
 	return s.String()
 }
@@ -7620,12 +7935,20 @@ type CreateDeploymentOutput struct {
 	Description *string `locationName:"description" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDeploymentOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDeploymentOutput) GoString() string {
 	return s.String()
 }
@@ -7677,16 +8000,29 @@ type CreateDomainNameInput struct {
 	// The domain name configurations.
 	DomainNameConfigurations []*DomainNameConfiguration `locationName:"domainNameConfigurations" type:"list"`
 
+	// If specified, API Gateway performs two-way authentication between the client
+	// and the server. Clients must present a trusted certificate to access your
+	// API.
+	MutualTlsAuthentication *MutualTlsAuthenticationInput `locationName:"mutualTlsAuthentication" type:"structure"`
+
 	// Represents a collection of tags associated with the resource.
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDomainNameInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDomainNameInput) GoString() string {
 	return s.String()
 }
@@ -7716,6 +8052,12 @@ func (s *CreateDomainNameInput) SetDomainNameConfigurations(v []*DomainNameConfi
 	return s
 }
 
+// SetMutualTlsAuthentication sets the MutualTlsAuthentication field's value.
+func (s *CreateDomainNameInput) SetMutualTlsAuthentication(v *MutualTlsAuthenticationInput) *CreateDomainNameInput {
+	s.MutualTlsAuthentication = v
+	return s
+}
+
 // SetTags sets the Tags field's value.
 func (s *CreateDomainNameInput) SetTags(v map[string]*string) *CreateDomainNameInput {
 	s.Tags = v
@@ -7736,16 +8078,29 @@ type CreateDomainNameOutput struct {
 	// The domain name configurations.
 	DomainNameConfigurations []*DomainNameConfiguration `locationName:"domainNameConfigurations" type:"list"`
 
+	// If specified, API Gateway performs two-way authentication between the client
+	// and the server. Clients must present a trusted certificate to access your
+	// API.
+	MutualTlsAuthentication *MutualTlsAuthentication `locationName:"mutualTlsAuthentication" type:"structure"`
+
 	// Represents a collection of tags associated with the resource.
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDomainNameOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDomainNameOutput) GoString() string {
 	return s.String()
 }
@@ -7765,6 +8120,12 @@ func (s *CreateDomainNameOutput) SetDomainName(v string) *CreateDomainNameOutput
 // SetDomainNameConfigurations sets the DomainNameConfigurations field's value.
 func (s *CreateDomainNameOutput) SetDomainNameConfigurations(v []*DomainNameConfiguration) *CreateDomainNameOutput {
 	s.DomainNameConfigurations = v
+	return s
+}
+
+// SetMutualTlsAuthentication sets the MutualTlsAuthentication field's value.
+func (s *CreateDomainNameOutput) SetMutualTlsAuthentication(v *MutualTlsAuthentication) *CreateDomainNameOutput {
+	s.MutualTlsAuthentication = v
 	return s
 }
 
@@ -7799,6 +8160,9 @@ type CreateIntegrationInput struct {
 	// A string with a length between [1-64].
 	IntegrationMethod *string `locationName:"integrationMethod" type:"string"`
 
+	// A string with a length between [1-128].
+	IntegrationSubtype *string `locationName:"integrationSubtype" type:"string"`
+
 	// Represents an API method integration type.
 	//
 	// IntegrationType is a required field
@@ -7814,22 +8178,39 @@ type CreateIntegrationInput struct {
 	// A string with a length between [1-64].
 	PayloadFormatVersion *string `locationName:"payloadFormatVersion" type:"string"`
 
-	// A key-value map specifying response parameters that are passed to the method
-	// response from the backend. The key is a method response header parameter
-	// name and the mapped value is an integration response header value, a static
-	// value enclosed within a pair of single quotes, or a JSON expression from
-	// the integration response body. The mapping key must match the pattern of
-	// method.response.header.{name}, where name is a valid and unique header name.
-	// The mapped non-static value must match the pattern of integration.response.header.{name}
-	// or integration.response.body.{JSON-expression}, where name is a valid and
-	// unique response header name and JSON-expression is a valid JSON expression
-	// without the $ prefix.
+	// For WebSocket APIs, a key-value map specifying request parameters that are
+	// passed from the method request to the backend. The key is an integration
+	// request parameter name and the associated value is a method request parameter
+	// value or static value that must be enclosed within single quotes and pre-encoded
+	// as required by the backend. The method request parameter value must match
+	// the pattern of method.request.{location}.{name} , where {location} is querystring,
+	// path, or header; and {name} must be a valid and unique method request parameter
+	// name.
+	//
+	// For HTTP API integrations with a specified integrationSubtype, request parameters
+	// are a key-value map specifying parameters that are passed to AWS_PROXY integrations.
+	// You can provide static values, or map request data, stage variables, or context
+	// variables that are evaluated at runtime. To learn more, see Working with
+	// AWS service integrations for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services.html).
+	//
+	// For HTTP API integrations without a specified integrationSubtype request
+	// parameters are a key-value map specifying how to transform HTTP requests
+	// before sending them to the backend. The key should follow the pattern <action>:<header|querystring|path>.<location>
+	// where action can be append, overwrite or remove. For values, you can provide
+	// static values, or map request data, stage variables, or context variables
+	// that are evaluated at runtime. To learn more, see Transforming API requests
+	// and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
 	RequestParameters map[string]*string `locationName:"requestParameters" type:"map"`
 
 	// A mapping of identifier keys to templates. The value is an actual template
 	// script. The key is typically a SelectionKey which is chosen based on evaluating
 	// a selection expression.
 	RequestTemplates map[string]*string `locationName:"requestTemplates" type:"map"`
+
+	// Supported only for HTTP APIs. You use response parameters to transform the
+	// HTTP response from a backend integration before returning the response to
+	// clients.
+	ResponseParameters map[string]map[string]*string `locationName:"responseParameters" type:"map"`
 
 	// An expression used to extract information at runtime. See Selection Expressions
 	// (https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-selection-expressions.html#apigateway-websocket-api-apikey-selection-expressions)
@@ -7845,12 +8226,20 @@ type CreateIntegrationInput struct {
 	TlsConfig *TlsConfigInput `locationName:"tlsConfig" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateIntegrationInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateIntegrationInput) GoString() string {
 	return s.String()
 }
@@ -7919,6 +8308,12 @@ func (s *CreateIntegrationInput) SetIntegrationMethod(v string) *CreateIntegrati
 	return s
 }
 
+// SetIntegrationSubtype sets the IntegrationSubtype field's value.
+func (s *CreateIntegrationInput) SetIntegrationSubtype(v string) *CreateIntegrationInput {
+	s.IntegrationSubtype = &v
+	return s
+}
+
 // SetIntegrationType sets the IntegrationType field's value.
 func (s *CreateIntegrationInput) SetIntegrationType(v string) *CreateIntegrationInput {
 	s.IntegrationType = &v
@@ -7952,6 +8347,12 @@ func (s *CreateIntegrationInput) SetRequestParameters(v map[string]*string) *Cre
 // SetRequestTemplates sets the RequestTemplates field's value.
 func (s *CreateIntegrationInput) SetRequestTemplates(v map[string]*string) *CreateIntegrationInput {
 	s.RequestTemplates = v
+	return s
+}
+
+// SetResponseParameters sets the ResponseParameters field's value.
+func (s *CreateIntegrationInput) SetResponseParameters(v map[string]map[string]*string) *CreateIntegrationInput {
+	s.ResponseParameters = v
 	return s
 }
 
@@ -8005,6 +8406,9 @@ type CreateIntegrationOutput struct {
 	// for more information.
 	IntegrationResponseSelectionExpression *string `locationName:"integrationResponseSelectionExpression" type:"string"`
 
+	// A string with a length between [1-128].
+	IntegrationSubtype *string `locationName:"integrationSubtype" type:"string"`
+
 	// Represents an API method integration type.
 	IntegrationType *string `locationName:"integrationType" type:"string" enum:"IntegrationType"`
 
@@ -8018,22 +8422,39 @@ type CreateIntegrationOutput struct {
 	// A string with a length between [1-64].
 	PayloadFormatVersion *string `locationName:"payloadFormatVersion" type:"string"`
 
-	// A key-value map specifying response parameters that are passed to the method
-	// response from the backend. The key is a method response header parameter
-	// name and the mapped value is an integration response header value, a static
-	// value enclosed within a pair of single quotes, or a JSON expression from
-	// the integration response body. The mapping key must match the pattern of
-	// method.response.header.{name}, where name is a valid and unique header name.
-	// The mapped non-static value must match the pattern of integration.response.header.{name}
-	// or integration.response.body.{JSON-expression}, where name is a valid and
-	// unique response header name and JSON-expression is a valid JSON expression
-	// without the $ prefix.
+	// For WebSocket APIs, a key-value map specifying request parameters that are
+	// passed from the method request to the backend. The key is an integration
+	// request parameter name and the associated value is a method request parameter
+	// value or static value that must be enclosed within single quotes and pre-encoded
+	// as required by the backend. The method request parameter value must match
+	// the pattern of method.request.{location}.{name} , where {location} is querystring,
+	// path, or header; and {name} must be a valid and unique method request parameter
+	// name.
+	//
+	// For HTTP API integrations with a specified integrationSubtype, request parameters
+	// are a key-value map specifying parameters that are passed to AWS_PROXY integrations.
+	// You can provide static values, or map request data, stage variables, or context
+	// variables that are evaluated at runtime. To learn more, see Working with
+	// AWS service integrations for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services.html).
+	//
+	// For HTTP API integrations without a specified integrationSubtype request
+	// parameters are a key-value map specifying how to transform HTTP requests
+	// before sending them to the backend. The key should follow the pattern <action>:<header|querystring|path>.<location>
+	// where action can be append, overwrite or remove. For values, you can provide
+	// static values, or map request data, stage variables, or context variables
+	// that are evaluated at runtime. To learn more, see Transforming API requests
+	// and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
 	RequestParameters map[string]*string `locationName:"requestParameters" type:"map"`
 
 	// A mapping of identifier keys to templates. The value is an actual template
 	// script. The key is typically a SelectionKey which is chosen based on evaluating
 	// a selection expression.
 	RequestTemplates map[string]*string `locationName:"requestTemplates" type:"map"`
+
+	// Supported only for HTTP APIs. You use response parameters to transform the
+	// HTTP response from a backend integration before returning the response to
+	// clients.
+	ResponseParameters map[string]map[string]*string `locationName:"responseParameters" type:"map"`
 
 	// An expression used to extract information at runtime. See Selection Expressions
 	// (https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-selection-expressions.html#apigateway-websocket-api-apikey-selection-expressions)
@@ -8049,12 +8470,20 @@ type CreateIntegrationOutput struct {
 	TlsConfig *TlsConfig `locationName:"tlsConfig" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateIntegrationOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateIntegrationOutput) GoString() string {
 	return s.String()
 }
@@ -8113,6 +8542,12 @@ func (s *CreateIntegrationOutput) SetIntegrationResponseSelectionExpression(v st
 	return s
 }
 
+// SetIntegrationSubtype sets the IntegrationSubtype field's value.
+func (s *CreateIntegrationOutput) SetIntegrationSubtype(v string) *CreateIntegrationOutput {
+	s.IntegrationSubtype = &v
+	return s
+}
+
 // SetIntegrationType sets the IntegrationType field's value.
 func (s *CreateIntegrationOutput) SetIntegrationType(v string) *CreateIntegrationOutput {
 	s.IntegrationType = &v
@@ -8146,6 +8581,12 @@ func (s *CreateIntegrationOutput) SetRequestParameters(v map[string]*string) *Cr
 // SetRequestTemplates sets the RequestTemplates field's value.
 func (s *CreateIntegrationOutput) SetRequestTemplates(v map[string]*string) *CreateIntegrationOutput {
 	s.RequestTemplates = v
+	return s
+}
+
+// SetResponseParameters sets the ResponseParameters field's value.
+func (s *CreateIntegrationOutput) SetResponseParameters(v map[string]map[string]*string) *CreateIntegrationOutput {
+	s.ResponseParameters = v
 	return s
 }
 
@@ -8189,16 +8630,28 @@ type CreateIntegrationResponseInput struct {
 	// IntegrationResponseKey is a required field
 	IntegrationResponseKey *string `locationName:"integrationResponseKey" type:"string" required:"true"`
 
-	// A key-value map specifying response parameters that are passed to the method
-	// response from the backend. The key is a method response header parameter
-	// name and the mapped value is an integration response header value, a static
-	// value enclosed within a pair of single quotes, or a JSON expression from
-	// the integration response body. The mapping key must match the pattern of
-	// method.response.header.{name}, where name is a valid and unique header name.
-	// The mapped non-static value must match the pattern of integration.response.header.{name}
-	// or integration.response.body.{JSON-expression}, where name is a valid and
-	// unique response header name and JSON-expression is a valid JSON expression
-	// without the $ prefix.
+	// For WebSocket APIs, a key-value map specifying request parameters that are
+	// passed from the method request to the backend. The key is an integration
+	// request parameter name and the associated value is a method request parameter
+	// value or static value that must be enclosed within single quotes and pre-encoded
+	// as required by the backend. The method request parameter value must match
+	// the pattern of method.request.{location}.{name} , where {location} is querystring,
+	// path, or header; and {name} must be a valid and unique method request parameter
+	// name.
+	//
+	// For HTTP API integrations with a specified integrationSubtype, request parameters
+	// are a key-value map specifying parameters that are passed to AWS_PROXY integrations.
+	// You can provide static values, or map request data, stage variables, or context
+	// variables that are evaluated at runtime. To learn more, see Working with
+	// AWS service integrations for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services.html).
+	//
+	// For HTTP API integrations without a specified integrationSubtype request
+	// parameters are a key-value map specifying how to transform HTTP requests
+	// before sending them to the backend. The key should follow the pattern <action>:<header|querystring|path>.<location>
+	// where action can be append, overwrite or remove. For values, you can provide
+	// static values, or map request data, stage variables, or context variables
+	// that are evaluated at runtime. To learn more, see Transforming API requests
+	// and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
 	ResponseParameters map[string]*string `locationName:"responseParameters" type:"map"`
 
 	// A mapping of identifier keys to templates. The value is an actual template
@@ -8212,12 +8665,20 @@ type CreateIntegrationResponseInput struct {
 	TemplateSelectionExpression *string `locationName:"templateSelectionExpression" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateIntegrationResponseInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateIntegrationResponseInput) GoString() string {
 	return s.String()
 }
@@ -8306,16 +8767,28 @@ type CreateIntegrationResponseOutput struct {
 	// type.
 	IntegrationResponseKey *string `locationName:"integrationResponseKey" type:"string"`
 
-	// A key-value map specifying response parameters that are passed to the method
-	// response from the backend. The key is a method response header parameter
-	// name and the mapped value is an integration response header value, a static
-	// value enclosed within a pair of single quotes, or a JSON expression from
-	// the integration response body. The mapping key must match the pattern of
-	// method.response.header.{name}, where name is a valid and unique header name.
-	// The mapped non-static value must match the pattern of integration.response.header.{name}
-	// or integration.response.body.{JSON-expression}, where name is a valid and
-	// unique response header name and JSON-expression is a valid JSON expression
-	// without the $ prefix.
+	// For WebSocket APIs, a key-value map specifying request parameters that are
+	// passed from the method request to the backend. The key is an integration
+	// request parameter name and the associated value is a method request parameter
+	// value or static value that must be enclosed within single quotes and pre-encoded
+	// as required by the backend. The method request parameter value must match
+	// the pattern of method.request.{location}.{name} , where {location} is querystring,
+	// path, or header; and {name} must be a valid and unique method request parameter
+	// name.
+	//
+	// For HTTP API integrations with a specified integrationSubtype, request parameters
+	// are a key-value map specifying parameters that are passed to AWS_PROXY integrations.
+	// You can provide static values, or map request data, stage variables, or context
+	// variables that are evaluated at runtime. To learn more, see Working with
+	// AWS service integrations for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services.html).
+	//
+	// For HTTP API integrations without a specified integrationSubtype request
+	// parameters are a key-value map specifying how to transform HTTP requests
+	// before sending them to the backend. The key should follow the pattern <action>:<header|querystring|path>.<location>
+	// where action can be append, overwrite or remove. For values, you can provide
+	// static values, or map request data, stage variables, or context variables
+	// that are evaluated at runtime. To learn more, see Transforming API requests
+	// and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
 	ResponseParameters map[string]*string `locationName:"responseParameters" type:"map"`
 
 	// A mapping of identifier keys to templates. The value is an actual template
@@ -8329,12 +8802,20 @@ type CreateIntegrationResponseOutput struct {
 	TemplateSelectionExpression *string `locationName:"templateSelectionExpression" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateIntegrationResponseOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateIntegrationResponseOutput) GoString() string {
 	return s.String()
 }
@@ -8398,12 +8879,20 @@ type CreateModelInput struct {
 	Schema *string `locationName:"schema" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateModelInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateModelInput) GoString() string {
 	return s.String()
 }
@@ -8479,12 +8968,20 @@ type CreateModelOutput struct {
 	Schema *string `locationName:"schema" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateModelOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateModelOutput) GoString() string {
 	return s.String()
 }
@@ -8538,8 +9035,9 @@ type CreateRouteInput struct {
 
 	// The authorization type. For WebSocket APIs, valid values are NONE for open
 	// access, AWS_IAM for using AWS IAM permissions, and CUSTOM for using a Lambda
-	// authorizer. For HTTP APIs, valid values are NONE for open access, or JWT
-	// for using JSON Web Tokens.
+	// authorizer. For HTTP APIs, valid values are NONE for open access, JWT for
+	// using JSON Web Tokens, AWS_IAM for using AWS IAM permissions, and CUSTOM
+	// for using a Lambda authorizer.
 	AuthorizationType *string `locationName:"authorizationType" type:"string" enum:"AuthorizationType"`
 
 	// The identifier.
@@ -8577,12 +9075,20 @@ type CreateRouteInput struct {
 	Target *string `locationName:"target" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateRouteInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateRouteInput) GoString() string {
 	return s.String()
 }
@@ -8696,8 +9202,9 @@ type CreateRouteOutput struct {
 
 	// The authorization type. For WebSocket APIs, valid values are NONE for open
 	// access, AWS_IAM for using AWS IAM permissions, and CUSTOM for using a Lambda
-	// authorizer. For HTTP APIs, valid values are NONE for open access, or JWT
-	// for using JSON Web Tokens.
+	// authorizer. For HTTP APIs, valid values are NONE for open access, JWT for
+	// using JSON Web Tokens, AWS_IAM for using AWS IAM permissions, and CUSTOM
+	// for using a Lambda authorizer.
 	AuthorizationType *string `locationName:"authorizationType" type:"string" enum:"AuthorizationType"`
 
 	// The identifier.
@@ -8736,12 +9243,20 @@ type CreateRouteOutput struct {
 	Target *string `locationName:"target" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateRouteOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateRouteOutput) GoString() string {
 	return s.String()
 }
@@ -8854,12 +9369,20 @@ type CreateRouteResponseInput struct {
 	RouteResponseKey *string `locationName:"routeResponseKey" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateRouteResponseInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateRouteResponseInput) GoString() string {
 	return s.String()
 }
@@ -8950,12 +9473,20 @@ type CreateRouteResponseOutput struct {
 	RouteResponseKey *string `locationName:"routeResponseKey" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateRouteResponseOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateRouteResponseOutput) GoString() string {
 	return s.String()
 }
@@ -9028,12 +9559,20 @@ type CreateStageInput struct {
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStageInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStageInput) GoString() string {
 	return s.String()
 }
@@ -9164,12 +9703,20 @@ type CreateStageOutput struct {
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStageOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateStageOutput) GoString() string {
 	return s.String()
 }
@@ -9278,12 +9825,20 @@ type CreateVpcLinkInput struct {
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateVpcLinkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateVpcLinkInput) GoString() string {
 	return s.String()
 }
@@ -9358,12 +9913,20 @@ type CreateVpcLinkOutput struct {
 	VpcLinkVersion *string `locationName:"vpcLinkVersion" type:"string" enum:"VpcLinkVersion"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateVpcLinkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateVpcLinkOutput) GoString() string {
 	return s.String()
 }
@@ -9423,7 +9986,7 @@ func (s *CreateVpcLinkOutput) SetVpcLinkVersion(v string) *CreateVpcLinkOutput {
 }
 
 type DeleteAccessLogSettingsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -9432,12 +9995,20 @@ type DeleteAccessLogSettingsInput struct {
 	StageName *string `location:"uri" locationName:"stageName" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAccessLogSettingsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAccessLogSettingsInput) GoString() string {
 	return s.String()
 }
@@ -9480,29 +10051,45 @@ type DeleteAccessLogSettingsOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAccessLogSettingsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAccessLogSettingsOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteApiInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteApiInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteApiInput) GoString() string {
 	return s.String()
 }
@@ -9530,7 +10117,7 @@ func (s *DeleteApiInput) SetApiId(v string) *DeleteApiInput {
 }
 
 type DeleteApiMappingInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiMappingId is a required field
 	ApiMappingId *string `location:"uri" locationName:"apiMappingId" type:"string" required:"true"`
@@ -9539,12 +10126,20 @@ type DeleteApiMappingInput struct {
 	DomainName *string `location:"uri" locationName:"domainName" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteApiMappingInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteApiMappingInput) GoString() string {
 	return s.String()
 }
@@ -9587,12 +10182,20 @@ type DeleteApiMappingOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteApiMappingOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteApiMappingOutput) GoString() string {
 	return s.String()
 }
@@ -9601,18 +10204,26 @@ type DeleteApiOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteApiOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteApiOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteAuthorizerInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -9621,12 +10232,20 @@ type DeleteAuthorizerInput struct {
 	AuthorizerId *string `location:"uri" locationName:"authorizerId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAuthorizerInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAuthorizerInput) GoString() string {
 	return s.String()
 }
@@ -9669,29 +10288,45 @@ type DeleteAuthorizerOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAuthorizerOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteAuthorizerOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteCorsConfigurationInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCorsConfigurationInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCorsConfigurationInput) GoString() string {
 	return s.String()
 }
@@ -9722,18 +10357,26 @@ type DeleteCorsConfigurationOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCorsConfigurationOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteCorsConfigurationOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteDeploymentInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -9742,12 +10385,20 @@ type DeleteDeploymentInput struct {
 	DeploymentId *string `location:"uri" locationName:"deploymentId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDeploymentInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDeploymentInput) GoString() string {
 	return s.String()
 }
@@ -9790,29 +10441,45 @@ type DeleteDeploymentOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDeploymentOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDeploymentOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteDomainNameInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// DomainName is a required field
 	DomainName *string `location:"uri" locationName:"domainName" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDomainNameInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDomainNameInput) GoString() string {
 	return s.String()
 }
@@ -9843,18 +10510,26 @@ type DeleteDomainNameOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDomainNameOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDomainNameOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteIntegrationInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -9863,12 +10538,20 @@ type DeleteIntegrationInput struct {
 	IntegrationId *string `location:"uri" locationName:"integrationId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteIntegrationInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteIntegrationInput) GoString() string {
 	return s.String()
 }
@@ -9911,18 +10594,26 @@ type DeleteIntegrationOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteIntegrationOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteIntegrationOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteIntegrationResponseInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -9934,12 +10625,20 @@ type DeleteIntegrationResponseInput struct {
 	IntegrationResponseId *string `location:"uri" locationName:"integrationResponseId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteIntegrationResponseInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteIntegrationResponseInput) GoString() string {
 	return s.String()
 }
@@ -9994,18 +10693,26 @@ type DeleteIntegrationResponseOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteIntegrationResponseOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteIntegrationResponseOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteModelInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -10014,12 +10721,20 @@ type DeleteModelInput struct {
 	ModelId *string `location:"uri" locationName:"modelId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteModelInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteModelInput) GoString() string {
 	return s.String()
 }
@@ -10062,18 +10777,26 @@ type DeleteModelOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteModelOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteModelOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteRouteInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -10082,12 +10805,20 @@ type DeleteRouteInput struct {
 	RouteId *string `location:"uri" locationName:"routeId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteInput) GoString() string {
 	return s.String()
 }
@@ -10130,18 +10861,26 @@ type DeleteRouteOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteRouteRequestParameterInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -10153,12 +10892,20 @@ type DeleteRouteRequestParameterInput struct {
 	RouteId *string `location:"uri" locationName:"routeId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteRequestParameterInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteRequestParameterInput) GoString() string {
 	return s.String()
 }
@@ -10213,18 +10960,26 @@ type DeleteRouteRequestParameterOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteRequestParameterOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteRequestParameterOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteRouteResponseInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -10236,12 +10991,20 @@ type DeleteRouteResponseInput struct {
 	RouteResponseId *string `location:"uri" locationName:"routeResponseId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteResponseInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteResponseInput) GoString() string {
 	return s.String()
 }
@@ -10296,18 +11059,26 @@ type DeleteRouteResponseOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteResponseOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteResponseOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteRouteSettingsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -10319,12 +11090,20 @@ type DeleteRouteSettingsInput struct {
 	StageName *string `location:"uri" locationName:"stageName" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteSettingsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteSettingsInput) GoString() string {
 	return s.String()
 }
@@ -10379,18 +11158,26 @@ type DeleteRouteSettingsOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteSettingsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteRouteSettingsOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteStageInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -10399,12 +11186,20 @@ type DeleteStageInput struct {
 	StageName *string `location:"uri" locationName:"stageName" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteStageInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteStageInput) GoString() string {
 	return s.String()
 }
@@ -10447,29 +11242,45 @@ type DeleteStageOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteStageOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteStageOutput) GoString() string {
 	return s.String()
 }
 
 type DeleteVpcLinkInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// VpcLinkId is a required field
 	VpcLinkId *string `location:"uri" locationName:"vpcLinkId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteVpcLinkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteVpcLinkInput) GoString() string {
 	return s.String()
 }
@@ -10500,12 +11311,20 @@ type DeleteVpcLinkOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteVpcLinkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteVpcLinkOutput) GoString() string {
 	return s.String()
 }
@@ -10534,12 +11353,20 @@ type Deployment struct {
 	Description *string `locationName:"description" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Deployment) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Deployment) GoString() string {
 	return s.String()
 }
@@ -10595,16 +11422,27 @@ type DomainName struct {
 	// The domain name configurations.
 	DomainNameConfigurations []*DomainNameConfiguration `locationName:"domainNameConfigurations" type:"list"`
 
+	// The mutual TLS authentication configuration for a custom domain name.
+	MutualTlsAuthentication *MutualTlsAuthentication `locationName:"mutualTlsAuthentication" type:"structure"`
+
 	// The collection of tags associated with a domain name.
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainName) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainName) GoString() string {
 	return s.String()
 }
@@ -10624,6 +11462,12 @@ func (s *DomainName) SetDomainName(v string) *DomainName {
 // SetDomainNameConfigurations sets the DomainNameConfigurations field's value.
 func (s *DomainName) SetDomainNameConfigurations(v []*DomainNameConfiguration) *DomainName {
 	s.DomainNameConfigurations = v
+	return s
+}
+
+// SetMutualTlsAuthentication sets the MutualTlsAuthentication field's value.
+func (s *DomainName) SetMutualTlsAuthentication(v *MutualTlsAuthentication) *DomainName {
+	s.MutualTlsAuthentication = v
 	return s
 }
 
@@ -10652,10 +11496,10 @@ type DomainNameConfiguration struct {
 	// for this domain name was uploaded.
 	CertificateUploadDate *time.Time `locationName:"certificateUploadDate" type:"timestamp" timestampFormat:"iso8601"`
 
-	// The status of the domain name migration. The valid values are AVAILABLE and
-	// UPDATING. If the status is UPDATING, the domain cannot be modified further
-	// until the existing operation is complete. If it is AVAILABLE, the domain
-	// can be updated.
+	// The status of the domain name migration. The valid values are AVAILABLE,
+	// UPDATING, PENDING_CERTIFICATE_REIMPORT, and PENDING_OWNERSHIP_VERIFICATION.
+	// If the status is UPDATING, the domain cannot be modified further until the
+	// existing operation is complete. If it is AVAILABLE, the domain can be updated.
 	DomainNameStatus *string `locationName:"domainNameStatus" type:"string" enum:"DomainNameStatus"`
 
 	// An optional text message containing detailed information about status of
@@ -10668,17 +11512,30 @@ type DomainNameConfiguration struct {
 	// The Amazon Route 53 Hosted Zone ID of the endpoint.
 	HostedZoneId *string `locationName:"hostedZoneId" type:"string"`
 
+	// The ARN of the public certificate issued by ACM to validate ownership of
+	// your custom domain. Only required when configuring mutual TLS and using an
+	// ACM imported or private CA certificate ARN as the regionalCertificateArn
+	OwnershipVerificationCertificateArn *string `locationName:"ownershipVerificationCertificateArn" type:"string"`
+
 	// The Transport Layer Security (TLS) version of the security policy for this
 	// domain name. The valid values are TLS_1_0 and TLS_1_2.
 	SecurityPolicy *string `locationName:"securityPolicy" type:"string" enum:"SecurityPolicy"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainNameConfiguration) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DomainNameConfiguration) GoString() string {
 	return s.String()
 }
@@ -10731,6 +11588,12 @@ func (s *DomainNameConfiguration) SetHostedZoneId(v string) *DomainNameConfigura
 	return s
 }
 
+// SetOwnershipVerificationCertificateArn sets the OwnershipVerificationCertificateArn field's value.
+func (s *DomainNameConfiguration) SetOwnershipVerificationCertificateArn(v string) *DomainNameConfiguration {
+	s.OwnershipVerificationCertificateArn = &v
+	return s
+}
+
 // SetSecurityPolicy sets the SecurityPolicy field's value.
 func (s *DomainNameConfiguration) SetSecurityPolicy(v string) *DomainNameConfiguration {
 	s.SecurityPolicy = &v
@@ -10738,7 +11601,7 @@ func (s *DomainNameConfiguration) SetSecurityPolicy(v string) *DomainNameConfigu
 }
 
 type ExportApiInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -10756,12 +11619,20 @@ type ExportApiInput struct {
 	StageName *string `location:"querystring" locationName:"stageName" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ExportApiInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ExportApiInput) GoString() string {
 	return s.String()
 }
@@ -10836,12 +11707,20 @@ type ExportApiOutput struct {
 	Body []byte `locationName:"body" type:"blob"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ExportApiOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ExportApiOutput) GoString() string {
 	return s.String()
 }
@@ -10853,18 +11732,26 @@ func (s *ExportApiOutput) SetBody(v []byte) *ExportApiOutput {
 }
 
 type GetApiInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiInput) GoString() string {
 	return s.String()
 }
@@ -10892,7 +11779,7 @@ func (s *GetApiInput) SetApiId(v string) *GetApiInput {
 }
 
 type GetApiMappingInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiMappingId is a required field
 	ApiMappingId *string `location:"uri" locationName:"apiMappingId" type:"string" required:"true"`
@@ -10901,12 +11788,20 @@ type GetApiMappingInput struct {
 	DomainName *string `location:"uri" locationName:"domainName" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiMappingInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiMappingInput) GoString() string {
 	return s.String()
 }
@@ -10965,12 +11860,20 @@ type GetApiMappingOutput struct {
 	Stage *string `locationName:"stage" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiMappingOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiMappingOutput) GoString() string {
 	return s.String()
 }
@@ -11000,7 +11903,7 @@ func (s *GetApiMappingOutput) SetStage(v string) *GetApiMappingOutput {
 }
 
 type GetApiMappingsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// DomainName is a required field
 	DomainName *string `location:"uri" locationName:"domainName" type:"string" required:"true"`
@@ -11010,12 +11913,20 @@ type GetApiMappingsInput struct {
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiMappingsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiMappingsInput) GoString() string {
 	return s.String()
 }
@@ -11064,12 +11975,20 @@ type GetApiMappingsOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiMappingsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiMappingsOutput) GoString() string {
 	return s.String()
 }
@@ -11091,6 +12010,8 @@ type GetApiOutput struct {
 
 	ApiEndpoint *string `locationName:"apiEndpoint" type:"string"`
 
+	ApiGatewayManaged *bool `locationName:"apiGatewayManaged" type:"boolean"`
+
 	// The identifier.
 	ApiId *string `locationName:"apiId" type:"string"`
 
@@ -11108,6 +12029,8 @@ type GetApiOutput struct {
 
 	// A string with a length between [0-1024].
 	Description *string `locationName:"description" type:"string"`
+
+	DisableExecuteApiEndpoint *bool `locationName:"disableExecuteApiEndpoint" type:"boolean"`
 
 	DisableSchemaValidation *bool `locationName:"disableSchemaValidation" type:"boolean"`
 
@@ -11133,12 +12056,20 @@ type GetApiOutput struct {
 	Warnings []*string `locationName:"warnings" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApiOutput) GoString() string {
 	return s.String()
 }
@@ -11146,6 +12077,12 @@ func (s GetApiOutput) GoString() string {
 // SetApiEndpoint sets the ApiEndpoint field's value.
 func (s *GetApiOutput) SetApiEndpoint(v string) *GetApiOutput {
 	s.ApiEndpoint = &v
+	return s
+}
+
+// SetApiGatewayManaged sets the ApiGatewayManaged field's value.
+func (s *GetApiOutput) SetApiGatewayManaged(v bool) *GetApiOutput {
+	s.ApiGatewayManaged = &v
 	return s
 }
 
@@ -11176,6 +12113,12 @@ func (s *GetApiOutput) SetCreatedDate(v time.Time) *GetApiOutput {
 // SetDescription sets the Description field's value.
 func (s *GetApiOutput) SetDescription(v string) *GetApiOutput {
 	s.Description = &v
+	return s
+}
+
+// SetDisableExecuteApiEndpoint sets the DisableExecuteApiEndpoint field's value.
+func (s *GetApiOutput) SetDisableExecuteApiEndpoint(v bool) *GetApiOutput {
+	s.DisableExecuteApiEndpoint = &v
 	return s
 }
 
@@ -11228,19 +12171,27 @@ func (s *GetApiOutput) SetWarnings(v []*string) *GetApiOutput {
 }
 
 type GetApisInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	MaxResults *string `location:"querystring" locationName:"maxResults" type:"string"`
 
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApisInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApisInput) GoString() string {
 	return s.String()
 }
@@ -11267,12 +12218,20 @@ type GetApisOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApisOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetApisOutput) GoString() string {
 	return s.String()
 }
@@ -11290,7 +12249,7 @@ func (s *GetApisOutput) SetNextToken(v string) *GetApisOutput {
 }
 
 type GetAuthorizerInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -11299,12 +12258,20 @@ type GetAuthorizerInput struct {
 	AuthorizerId *string `location:"uri" locationName:"authorizerId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAuthorizerInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAuthorizerInput) GoString() string {
 	return s.String()
 }
@@ -11352,16 +12319,21 @@ type GetAuthorizerOutput struct {
 	// The identifier.
 	AuthorizerId *string `locationName:"authorizerId" type:"string"`
 
+	// A string with a length between [1-64].
+	AuthorizerPayloadFormatVersion *string `locationName:"authorizerPayloadFormatVersion" type:"string"`
+
 	// An integer with a value between [0-3600].
 	AuthorizerResultTtlInSeconds *int64 `locationName:"authorizerResultTtlInSeconds" type:"integer"`
 
-	// The authorizer type. For WebSocket APIs, specify REQUEST for a Lambda function
-	// using incoming request parameters. For HTTP APIs, specify JWT to use JSON
-	// Web Tokens.
+	// The authorizer type. Specify REQUEST for a Lambda function using incoming
+	// request parameters. Specify JWT to use JSON Web Tokens (supported only for
+	// HTTP APIs).
 	AuthorizerType *string `locationName:"authorizerType" type:"string" enum:"AuthorizerType"`
 
 	// A string representation of a URI with a length between [1-2048].
 	AuthorizerUri *string `locationName:"authorizerUri" type:"string"`
+
+	EnableSimpleResponses *bool `locationName:"enableSimpleResponses" type:"boolean"`
 
 	// The identity source for which authorization is requested. For the REQUEST
 	// authorizer, this is required when authorization caching is enabled. The value
@@ -11389,12 +12361,20 @@ type GetAuthorizerOutput struct {
 	Name *string `locationName:"name" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAuthorizerOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAuthorizerOutput) GoString() string {
 	return s.String()
 }
@@ -11408,6 +12388,12 @@ func (s *GetAuthorizerOutput) SetAuthorizerCredentialsArn(v string) *GetAuthoriz
 // SetAuthorizerId sets the AuthorizerId field's value.
 func (s *GetAuthorizerOutput) SetAuthorizerId(v string) *GetAuthorizerOutput {
 	s.AuthorizerId = &v
+	return s
+}
+
+// SetAuthorizerPayloadFormatVersion sets the AuthorizerPayloadFormatVersion field's value.
+func (s *GetAuthorizerOutput) SetAuthorizerPayloadFormatVersion(v string) *GetAuthorizerOutput {
+	s.AuthorizerPayloadFormatVersion = &v
 	return s
 }
 
@@ -11426,6 +12412,12 @@ func (s *GetAuthorizerOutput) SetAuthorizerType(v string) *GetAuthorizerOutput {
 // SetAuthorizerUri sets the AuthorizerUri field's value.
 func (s *GetAuthorizerOutput) SetAuthorizerUri(v string) *GetAuthorizerOutput {
 	s.AuthorizerUri = &v
+	return s
+}
+
+// SetEnableSimpleResponses sets the EnableSimpleResponses field's value.
+func (s *GetAuthorizerOutput) SetEnableSimpleResponses(v bool) *GetAuthorizerOutput {
+	s.EnableSimpleResponses = &v
 	return s
 }
 
@@ -11454,7 +12446,7 @@ func (s *GetAuthorizerOutput) SetName(v string) *GetAuthorizerOutput {
 }
 
 type GetAuthorizersInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -11464,12 +12456,20 @@ type GetAuthorizersInput struct {
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAuthorizersInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAuthorizersInput) GoString() string {
 	return s.String()
 }
@@ -11518,12 +12518,20 @@ type GetAuthorizersOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAuthorizersOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAuthorizersOutput) GoString() string {
 	return s.String()
 }
@@ -11541,7 +12549,7 @@ func (s *GetAuthorizersOutput) SetNextToken(v string) *GetAuthorizersOutput {
 }
 
 type GetDeploymentInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -11550,12 +12558,20 @@ type GetDeploymentInput struct {
 	DeploymentId *string `location:"uri" locationName:"deploymentId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDeploymentInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDeploymentInput) GoString() string {
 	return s.String()
 }
@@ -11613,12 +12629,20 @@ type GetDeploymentOutput struct {
 	Description *string `locationName:"description" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDeploymentOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDeploymentOutput) GoString() string {
 	return s.String()
 }
@@ -11660,7 +12684,7 @@ func (s *GetDeploymentOutput) SetDescription(v string) *GetDeploymentOutput {
 }
 
 type GetDeploymentsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -11670,12 +12694,20 @@ type GetDeploymentsInput struct {
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDeploymentsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDeploymentsInput) GoString() string {
 	return s.String()
 }
@@ -11724,12 +12756,20 @@ type GetDeploymentsOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDeploymentsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDeploymentsOutput) GoString() string {
 	return s.String()
 }
@@ -11747,18 +12787,26 @@ func (s *GetDeploymentsOutput) SetNextToken(v string) *GetDeploymentsOutput {
 }
 
 type GetDomainNameInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// DomainName is a required field
 	DomainName *string `location:"uri" locationName:"domainName" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainNameInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainNameInput) GoString() string {
 	return s.String()
 }
@@ -11799,16 +12847,29 @@ type GetDomainNameOutput struct {
 	// The domain name configurations.
 	DomainNameConfigurations []*DomainNameConfiguration `locationName:"domainNameConfigurations" type:"list"`
 
+	// If specified, API Gateway performs two-way authentication between the client
+	// and the server. Clients must present a trusted certificate to access your
+	// API.
+	MutualTlsAuthentication *MutualTlsAuthentication `locationName:"mutualTlsAuthentication" type:"structure"`
+
 	// Represents a collection of tags associated with the resource.
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainNameOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainNameOutput) GoString() string {
 	return s.String()
 }
@@ -11831,6 +12892,12 @@ func (s *GetDomainNameOutput) SetDomainNameConfigurations(v []*DomainNameConfigu
 	return s
 }
 
+// SetMutualTlsAuthentication sets the MutualTlsAuthentication field's value.
+func (s *GetDomainNameOutput) SetMutualTlsAuthentication(v *MutualTlsAuthentication) *GetDomainNameOutput {
+	s.MutualTlsAuthentication = v
+	return s
+}
+
 // SetTags sets the Tags field's value.
 func (s *GetDomainNameOutput) SetTags(v map[string]*string) *GetDomainNameOutput {
 	s.Tags = v
@@ -11838,19 +12905,27 @@ func (s *GetDomainNameOutput) SetTags(v map[string]*string) *GetDomainNameOutput
 }
 
 type GetDomainNamesInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	MaxResults *string `location:"querystring" locationName:"maxResults" type:"string"`
 
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainNamesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainNamesInput) GoString() string {
 	return s.String()
 }
@@ -11877,12 +12952,20 @@ type GetDomainNamesOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainNamesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetDomainNamesOutput) GoString() string {
 	return s.String()
 }
@@ -11900,7 +12983,7 @@ func (s *GetDomainNamesOutput) SetNextToken(v string) *GetDomainNamesOutput {
 }
 
 type GetIntegrationInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -11909,12 +12992,20 @@ type GetIntegrationInput struct {
 	IntegrationId *string `location:"uri" locationName:"integrationId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationInput) GoString() string {
 	return s.String()
 }
@@ -11985,6 +13076,9 @@ type GetIntegrationOutput struct {
 	// for more information.
 	IntegrationResponseSelectionExpression *string `locationName:"integrationResponseSelectionExpression" type:"string"`
 
+	// A string with a length between [1-128].
+	IntegrationSubtype *string `locationName:"integrationSubtype" type:"string"`
+
 	// Represents an API method integration type.
 	IntegrationType *string `locationName:"integrationType" type:"string" enum:"IntegrationType"`
 
@@ -11998,22 +13092,39 @@ type GetIntegrationOutput struct {
 	// A string with a length between [1-64].
 	PayloadFormatVersion *string `locationName:"payloadFormatVersion" type:"string"`
 
-	// A key-value map specifying response parameters that are passed to the method
-	// response from the backend. The key is a method response header parameter
-	// name and the mapped value is an integration response header value, a static
-	// value enclosed within a pair of single quotes, or a JSON expression from
-	// the integration response body. The mapping key must match the pattern of
-	// method.response.header.{name}, where name is a valid and unique header name.
-	// The mapped non-static value must match the pattern of integration.response.header.{name}
-	// or integration.response.body.{JSON-expression}, where name is a valid and
-	// unique response header name and JSON-expression is a valid JSON expression
-	// without the $ prefix.
+	// For WebSocket APIs, a key-value map specifying request parameters that are
+	// passed from the method request to the backend. The key is an integration
+	// request parameter name and the associated value is a method request parameter
+	// value or static value that must be enclosed within single quotes and pre-encoded
+	// as required by the backend. The method request parameter value must match
+	// the pattern of method.request.{location}.{name} , where {location} is querystring,
+	// path, or header; and {name} must be a valid and unique method request parameter
+	// name.
+	//
+	// For HTTP API integrations with a specified integrationSubtype, request parameters
+	// are a key-value map specifying parameters that are passed to AWS_PROXY integrations.
+	// You can provide static values, or map request data, stage variables, or context
+	// variables that are evaluated at runtime. To learn more, see Working with
+	// AWS service integrations for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services.html).
+	//
+	// For HTTP API integrations without a specified integrationSubtype request
+	// parameters are a key-value map specifying how to transform HTTP requests
+	// before sending them to the backend. The key should follow the pattern <action>:<header|querystring|path>.<location>
+	// where action can be append, overwrite or remove. For values, you can provide
+	// static values, or map request data, stage variables, or context variables
+	// that are evaluated at runtime. To learn more, see Transforming API requests
+	// and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
 	RequestParameters map[string]*string `locationName:"requestParameters" type:"map"`
 
 	// A mapping of identifier keys to templates. The value is an actual template
 	// script. The key is typically a SelectionKey which is chosen based on evaluating
 	// a selection expression.
 	RequestTemplates map[string]*string `locationName:"requestTemplates" type:"map"`
+
+	// Supported only for HTTP APIs. You use response parameters to transform the
+	// HTTP response from a backend integration before returning the response to
+	// clients.
+	ResponseParameters map[string]map[string]*string `locationName:"responseParameters" type:"map"`
 
 	// An expression used to extract information at runtime. See Selection Expressions
 	// (https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-selection-expressions.html#apigateway-websocket-api-apikey-selection-expressions)
@@ -12029,12 +13140,20 @@ type GetIntegrationOutput struct {
 	TlsConfig *TlsConfig `locationName:"tlsConfig" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationOutput) GoString() string {
 	return s.String()
 }
@@ -12093,6 +13212,12 @@ func (s *GetIntegrationOutput) SetIntegrationResponseSelectionExpression(v strin
 	return s
 }
 
+// SetIntegrationSubtype sets the IntegrationSubtype field's value.
+func (s *GetIntegrationOutput) SetIntegrationSubtype(v string) *GetIntegrationOutput {
+	s.IntegrationSubtype = &v
+	return s
+}
+
 // SetIntegrationType sets the IntegrationType field's value.
 func (s *GetIntegrationOutput) SetIntegrationType(v string) *GetIntegrationOutput {
 	s.IntegrationType = &v
@@ -12129,6 +13254,12 @@ func (s *GetIntegrationOutput) SetRequestTemplates(v map[string]*string) *GetInt
 	return s
 }
 
+// SetResponseParameters sets the ResponseParameters field's value.
+func (s *GetIntegrationOutput) SetResponseParameters(v map[string]map[string]*string) *GetIntegrationOutput {
+	s.ResponseParameters = v
+	return s
+}
+
 // SetTemplateSelectionExpression sets the TemplateSelectionExpression field's value.
 func (s *GetIntegrationOutput) SetTemplateSelectionExpression(v string) *GetIntegrationOutput {
 	s.TemplateSelectionExpression = &v
@@ -12148,7 +13279,7 @@ func (s *GetIntegrationOutput) SetTlsConfig(v *TlsConfig) *GetIntegrationOutput 
 }
 
 type GetIntegrationResponseInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -12160,12 +13291,20 @@ type GetIntegrationResponseInput struct {
 	IntegrationResponseId *string `location:"uri" locationName:"integrationResponseId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationResponseInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationResponseInput) GoString() string {
 	return s.String()
 }
@@ -12233,16 +13372,28 @@ type GetIntegrationResponseOutput struct {
 	// type.
 	IntegrationResponseKey *string `locationName:"integrationResponseKey" type:"string"`
 
-	// A key-value map specifying response parameters that are passed to the method
-	// response from the backend. The key is a method response header parameter
-	// name and the mapped value is an integration response header value, a static
-	// value enclosed within a pair of single quotes, or a JSON expression from
-	// the integration response body. The mapping key must match the pattern of
-	// method.response.header.{name}, where name is a valid and unique header name.
-	// The mapped non-static value must match the pattern of integration.response.header.{name}
-	// or integration.response.body.{JSON-expression}, where name is a valid and
-	// unique response header name and JSON-expression is a valid JSON expression
-	// without the $ prefix.
+	// For WebSocket APIs, a key-value map specifying request parameters that are
+	// passed from the method request to the backend. The key is an integration
+	// request parameter name and the associated value is a method request parameter
+	// value or static value that must be enclosed within single quotes and pre-encoded
+	// as required by the backend. The method request parameter value must match
+	// the pattern of method.request.{location}.{name} , where {location} is querystring,
+	// path, or header; and {name} must be a valid and unique method request parameter
+	// name.
+	//
+	// For HTTP API integrations with a specified integrationSubtype, request parameters
+	// are a key-value map specifying parameters that are passed to AWS_PROXY integrations.
+	// You can provide static values, or map request data, stage variables, or context
+	// variables that are evaluated at runtime. To learn more, see Working with
+	// AWS service integrations for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services.html).
+	//
+	// For HTTP API integrations without a specified integrationSubtype request
+	// parameters are a key-value map specifying how to transform HTTP requests
+	// before sending them to the backend. The key should follow the pattern <action>:<header|querystring|path>.<location>
+	// where action can be append, overwrite or remove. For values, you can provide
+	// static values, or map request data, stage variables, or context variables
+	// that are evaluated at runtime. To learn more, see Transforming API requests
+	// and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
 	ResponseParameters map[string]*string `locationName:"responseParameters" type:"map"`
 
 	// A mapping of identifier keys to templates. The value is an actual template
@@ -12256,12 +13407,20 @@ type GetIntegrationResponseOutput struct {
 	TemplateSelectionExpression *string `locationName:"templateSelectionExpression" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationResponseOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationResponseOutput) GoString() string {
 	return s.String()
 }
@@ -12303,7 +13462,7 @@ func (s *GetIntegrationResponseOutput) SetTemplateSelectionExpression(v string) 
 }
 
 type GetIntegrationResponsesInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -12316,12 +13475,20 @@ type GetIntegrationResponsesInput struct {
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationResponsesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationResponsesInput) GoString() string {
 	return s.String()
 }
@@ -12382,12 +13549,20 @@ type GetIntegrationResponsesOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationResponsesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationResponsesOutput) GoString() string {
 	return s.String()
 }
@@ -12405,7 +13580,7 @@ func (s *GetIntegrationResponsesOutput) SetNextToken(v string) *GetIntegrationRe
 }
 
 type GetIntegrationsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -12415,12 +13590,20 @@ type GetIntegrationsInput struct {
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationsInput) GoString() string {
 	return s.String()
 }
@@ -12469,12 +13652,20 @@ type GetIntegrationsOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetIntegrationsOutput) GoString() string {
 	return s.String()
 }
@@ -12492,7 +13683,7 @@ func (s *GetIntegrationsOutput) SetNextToken(v string) *GetIntegrationsOutput {
 }
 
 type GetModelInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -12501,12 +13692,20 @@ type GetModelInput struct {
 	ModelId *string `location:"uri" locationName:"modelId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelInput) GoString() string {
 	return s.String()
 }
@@ -12564,12 +13763,20 @@ type GetModelOutput struct {
 	Schema *string `locationName:"schema" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelOutput) GoString() string {
 	return s.String()
 }
@@ -12605,7 +13812,7 @@ func (s *GetModelOutput) SetSchema(v string) *GetModelOutput {
 }
 
 type GetModelTemplateInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -12614,12 +13821,20 @@ type GetModelTemplateInput struct {
 	ModelId *string `location:"uri" locationName:"modelId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelTemplateInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelTemplateInput) GoString() string {
 	return s.String()
 }
@@ -12664,12 +13879,20 @@ type GetModelTemplateOutput struct {
 	Value *string `locationName:"value" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelTemplateOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelTemplateOutput) GoString() string {
 	return s.String()
 }
@@ -12681,7 +13904,7 @@ func (s *GetModelTemplateOutput) SetValue(v string) *GetModelTemplateOutput {
 }
 
 type GetModelsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -12691,12 +13914,20 @@ type GetModelsInput struct {
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelsInput) GoString() string {
 	return s.String()
 }
@@ -12745,12 +13976,20 @@ type GetModelsOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetModelsOutput) GoString() string {
 	return s.String()
 }
@@ -12768,7 +14007,7 @@ func (s *GetModelsOutput) SetNextToken(v string) *GetModelsOutput {
 }
 
 type GetRouteInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -12777,12 +14016,20 @@ type GetRouteInput struct {
 	RouteId *string `location:"uri" locationName:"routeId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteInput) GoString() string {
 	return s.String()
 }
@@ -12839,8 +14086,9 @@ type GetRouteOutput struct {
 
 	// The authorization type. For WebSocket APIs, valid values are NONE for open
 	// access, AWS_IAM for using AWS IAM permissions, and CUSTOM for using a Lambda
-	// authorizer. For HTTP APIs, valid values are NONE for open access, or JWT
-	// for using JSON Web Tokens.
+	// authorizer. For HTTP APIs, valid values are NONE for open access, JWT for
+	// using JSON Web Tokens, AWS_IAM for using AWS IAM permissions, and CUSTOM
+	// for using a Lambda authorizer.
 	AuthorizationType *string `locationName:"authorizationType" type:"string" enum:"AuthorizationType"`
 
 	// The identifier.
@@ -12879,12 +14127,20 @@ type GetRouteOutput struct {
 	Target *string `locationName:"target" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteOutput) GoString() string {
 	return s.String()
 }
@@ -12968,7 +14224,7 @@ func (s *GetRouteOutput) SetTarget(v string) *GetRouteOutput {
 }
 
 type GetRouteResponseInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -12980,12 +14236,20 @@ type GetRouteResponseInput struct {
 	RouteResponseId *string `location:"uri" locationName:"routeResponseId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteResponseInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteResponseInput) GoString() string {
 	return s.String()
 }
@@ -13061,12 +14325,20 @@ type GetRouteResponseOutput struct {
 	RouteResponseKey *string `locationName:"routeResponseKey" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteResponseOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteResponseOutput) GoString() string {
 	return s.String()
 }
@@ -13102,7 +14374,7 @@ func (s *GetRouteResponseOutput) SetRouteResponseKey(v string) *GetRouteResponse
 }
 
 type GetRouteResponsesInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -13115,12 +14387,20 @@ type GetRouteResponsesInput struct {
 	RouteId *string `location:"uri" locationName:"routeId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteResponsesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteResponsesInput) GoString() string {
 	return s.String()
 }
@@ -13181,12 +14461,20 @@ type GetRouteResponsesOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteResponsesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRouteResponsesOutput) GoString() string {
 	return s.String()
 }
@@ -13204,7 +14492,7 @@ func (s *GetRouteResponsesOutput) SetNextToken(v string) *GetRouteResponsesOutpu
 }
 
 type GetRoutesInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -13214,12 +14502,20 @@ type GetRoutesInput struct {
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRoutesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRoutesInput) GoString() string {
 	return s.String()
 }
@@ -13268,12 +14564,20 @@ type GetRoutesOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRoutesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRoutesOutput) GoString() string {
 	return s.String()
 }
@@ -13291,7 +14595,7 @@ func (s *GetRoutesOutput) SetNextToken(v string) *GetRoutesOutput {
 }
 
 type GetStageInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -13300,12 +14604,20 @@ type GetStageInput struct {
 	StageName *string `location:"uri" locationName:"stageName" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStageInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStageInput) GoString() string {
 	return s.String()
 }
@@ -13385,12 +14697,20 @@ type GetStageOutput struct {
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStageOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStageOutput) GoString() string {
 	return s.String()
 }
@@ -13480,7 +14800,7 @@ func (s *GetStageOutput) SetTags(v map[string]*string) *GetStageOutput {
 }
 
 type GetStagesInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ApiId is a required field
 	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
@@ -13490,12 +14810,20 @@ type GetStagesInput struct {
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStagesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStagesInput) GoString() string {
 	return s.String()
 }
@@ -13544,12 +14872,20 @@ type GetStagesOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStagesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetStagesOutput) GoString() string {
 	return s.String()
 }
@@ -13567,18 +14903,26 @@ func (s *GetStagesOutput) SetNextToken(v string) *GetStagesOutput {
 }
 
 type GetTagsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ResourceArn is a required field
 	ResourceArn *string `location:"uri" locationName:"resource-arn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetTagsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetTagsInput) GoString() string {
 	return s.String()
 }
@@ -13612,12 +14956,20 @@ type GetTagsOutput struct {
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetTagsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetTagsOutput) GoString() string {
 	return s.String()
 }
@@ -13629,18 +14981,26 @@ func (s *GetTagsOutput) SetTags(v map[string]*string) *GetTagsOutput {
 }
 
 type GetVpcLinkInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// VpcLinkId is a required field
 	VpcLinkId *string `location:"uri" locationName:"vpcLinkId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetVpcLinkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetVpcLinkInput) GoString() string {
 	return s.String()
 }
@@ -13697,12 +15057,20 @@ type GetVpcLinkOutput struct {
 	VpcLinkVersion *string `locationName:"vpcLinkVersion" type:"string" enum:"VpcLinkVersion"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetVpcLinkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetVpcLinkOutput) GoString() string {
 	return s.String()
 }
@@ -13762,19 +15130,27 @@ func (s *GetVpcLinkOutput) SetVpcLinkVersion(v string) *GetVpcLinkOutput {
 }
 
 type GetVpcLinksInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	MaxResults *string `location:"querystring" locationName:"maxResults" type:"string"`
 
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetVpcLinksInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetVpcLinksInput) GoString() string {
 	return s.String()
 }
@@ -13801,12 +15177,20 @@ type GetVpcLinksOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetVpcLinksOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetVpcLinksOutput) GoString() string {
 	return s.String()
 }
@@ -13834,12 +15218,20 @@ type ImportApiInput struct {
 	FailOnWarnings *bool `location:"querystring" locationName:"failOnWarnings" type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ImportApiInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ImportApiInput) GoString() string {
 	return s.String()
 }
@@ -13880,6 +15272,8 @@ type ImportApiOutput struct {
 
 	ApiEndpoint *string `locationName:"apiEndpoint" type:"string"`
 
+	ApiGatewayManaged *bool `locationName:"apiGatewayManaged" type:"boolean"`
+
 	// The identifier.
 	ApiId *string `locationName:"apiId" type:"string"`
 
@@ -13897,6 +15291,8 @@ type ImportApiOutput struct {
 
 	// A string with a length between [0-1024].
 	Description *string `locationName:"description" type:"string"`
+
+	DisableExecuteApiEndpoint *bool `locationName:"disableExecuteApiEndpoint" type:"boolean"`
 
 	DisableSchemaValidation *bool `locationName:"disableSchemaValidation" type:"boolean"`
 
@@ -13922,12 +15318,20 @@ type ImportApiOutput struct {
 	Warnings []*string `locationName:"warnings" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ImportApiOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ImportApiOutput) GoString() string {
 	return s.String()
 }
@@ -13935,6 +15339,12 @@ func (s ImportApiOutput) GoString() string {
 // SetApiEndpoint sets the ApiEndpoint field's value.
 func (s *ImportApiOutput) SetApiEndpoint(v string) *ImportApiOutput {
 	s.ApiEndpoint = &v
+	return s
+}
+
+// SetApiGatewayManaged sets the ApiGatewayManaged field's value.
+func (s *ImportApiOutput) SetApiGatewayManaged(v bool) *ImportApiOutput {
+	s.ApiGatewayManaged = &v
 	return s
 }
 
@@ -13965,6 +15375,12 @@ func (s *ImportApiOutput) SetCreatedDate(v time.Time) *ImportApiOutput {
 // SetDescription sets the Description field's value.
 func (s *ImportApiOutput) SetDescription(v string) *ImportApiOutput {
 	s.Description = &v
+	return s
+}
+
+// SetDisableExecuteApiEndpoint sets the DisableExecuteApiEndpoint field's value.
+func (s *ImportApiOutput) SetDisableExecuteApiEndpoint(v bool) *ImportApiOutput {
+	s.DisableExecuteApiEndpoint = &v
 	return s
 }
 
@@ -14070,6 +15486,10 @@ type Integration struct {
 	// only for WebSocket APIs. See Integration Response Selection Expressions (https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-selection-expressions.html#apigateway-websocket-api-integration-response-selection-expressions).
 	IntegrationResponseSelectionExpression *string `locationName:"integrationResponseSelectionExpression" type:"string"`
 
+	// Supported only for HTTP API AWS_PROXY integrations. Specifies the AWS service
+	// action to invoke. To learn more, see Integration subtype reference (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services-reference.html).
+	IntegrationSubtype *string `locationName:"integrationSubtype" type:"string"`
+
 	// The integration type of an integration. One of the following:
 	//
 	// AWS: for integrating the route or method request with an AWS service action,
@@ -14078,9 +15498,9 @@ type Integration struct {
 	// AWS service action, this is known as AWS integration. Supported only for
 	// WebSocket APIs.
 	//
-	// AWS_PROXY: for integrating the route or method request with the Lambda function-invoking
-	// action with the client request passed through as-is. This integration is
-	// also referred to as Lambda proxy integration.
+	// AWS_PROXY: for integrating the route or method request with a Lambda function
+	// or other AWS service action. This integration is also referred to as a Lambda
+	// proxy integration.
 	//
 	// HTTP: for integrating the route or method request with an HTTP endpoint.
 	// This integration is also referred to as the HTTP custom integration. Supported
@@ -14128,14 +15548,28 @@ type Integration struct {
 	// HTTP APIs.
 	PayloadFormatVersion *string `locationName:"payloadFormatVersion" type:"string"`
 
-	// A key-value map specifying request parameters that are passed from the method
-	// request to the backend. The key is an integration request parameter name
-	// and the associated value is a method request parameter value or static value
-	// that must be enclosed within single quotes and pre-encoded as required by
-	// the backend. The method request parameter value must match the pattern of
-	// method.request.{location}.{name} , where {location} is querystring, path,
-	// or header; and {name} must be a valid and unique method request parameter
-	// name. Supported only for WebSocket APIs.
+	// For WebSocket APIs, a key-value map specifying request parameters that are
+	// passed from the method request to the backend. The key is an integration
+	// request parameter name and the associated value is a method request parameter
+	// value or static value that must be enclosed within single quotes and pre-encoded
+	// as required by the backend. The method request parameter value must match
+	// the pattern of method.request.{location}.{name} , where {location} is querystring,
+	// path, or header; and {name} must be a valid and unique method request parameter
+	// name.
+	//
+	// For HTTP API integrations with a specified integrationSubtype, request parameters
+	// are a key-value map specifying parameters that are passed to AWS_PROXY integrations.
+	// You can provide static values, or map request data, stage variables, or context
+	// variables that are evaluated at runtime. To learn more, see Working with
+	// AWS service integrations for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services.html).
+	//
+	// For HTTP API itegrations, without a specified integrationSubtype request
+	// parameters are a key-value map specifying how to transform HTTP requests
+	// before sending them to backend integrations. The key should follow the pattern
+	// <action>:<header|querystring|path>.<location>. The action can be append,
+	// overwrite or remove. For values, you can provide static values, or map request
+	// data, stage variables, or context variables that are evaluated at runtime.
+	// To learn more, see Transforming API requests and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
 	RequestParameters map[string]*string `locationName:"requestParameters" type:"map"`
 
 	// Represents a map of Velocity templates that are applied on the request payload
@@ -14143,6 +15577,17 @@ type Integration struct {
 	// type value is the key in this map, and the template (as a String) is the
 	// value. Supported only for WebSocket APIs.
 	RequestTemplates map[string]*string `locationName:"requestTemplates" type:"map"`
+
+	// Supported only for HTTP APIs. You use response parameters to transform the
+	// HTTP response from a backend integration before returning the response to
+	// clients. Specify a key-value map from a selection key to response parameters.
+	// The selection key must be a valid HTTP status code within the range of 200-599.
+	// Response parameters are a key-value map. The key must match pattern <action>:<header>.<location>
+	// or overwrite.statuscode. The action can be append, overwrite or remove. The
+	// value can be a static value, or map to response data, stage variables, or
+	// context variables that are evaluated at runtime. To learn more, see Transforming
+	// API requests and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
+	ResponseParameters map[string]map[string]*string `locationName:"responseParameters" type:"map"`
 
 	// The template selection expression for the integration. Supported only for
 	// WebSocket APIs.
@@ -14159,12 +15604,20 @@ type Integration struct {
 	TlsConfig *TlsConfig `locationName:"tlsConfig" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Integration) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Integration) GoString() string {
 	return s.String()
 }
@@ -14223,6 +15676,12 @@ func (s *Integration) SetIntegrationResponseSelectionExpression(v string) *Integ
 	return s
 }
 
+// SetIntegrationSubtype sets the IntegrationSubtype field's value.
+func (s *Integration) SetIntegrationSubtype(v string) *Integration {
+	s.IntegrationSubtype = &v
+	return s
+}
+
 // SetIntegrationType sets the IntegrationType field's value.
 func (s *Integration) SetIntegrationType(v string) *Integration {
 	s.IntegrationType = &v
@@ -14256,6 +15715,12 @@ func (s *Integration) SetRequestParameters(v map[string]*string) *Integration {
 // SetRequestTemplates sets the RequestTemplates field's value.
 func (s *Integration) SetRequestTemplates(v map[string]*string) *Integration {
 	s.RequestTemplates = v
+	return s
+}
+
+// SetResponseParameters sets the ResponseParameters field's value.
+func (s *Integration) SetResponseParameters(v map[string]map[string]*string) *Integration {
+	s.ResponseParameters = v
 	return s
 }
 
@@ -14325,12 +15790,20 @@ type IntegrationResponse struct {
 	TemplateSelectionExpression *string `locationName:"templateSelectionExpression" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s IntegrationResponse) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s IntegrationResponse) GoString() string {
 	return s.String()
 }
@@ -14387,12 +15860,20 @@ type JWTConfiguration struct {
 	Issuer *string `locationName:"issuer" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JWTConfiguration) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JWTConfiguration) GoString() string {
 	return s.String()
 }
@@ -14433,12 +15914,20 @@ type Model struct {
 	Schema *string `locationName:"schema" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Model) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Model) GoString() string {
 	return s.String()
 }
@@ -14473,6 +15962,116 @@ func (s *Model) SetSchema(v string) *Model {
 	return s
 }
 
+// If specified, API Gateway performs two-way authentication between the client
+// and the server. Clients must present a trusted certificate to access your
+// API.
+type MutualTlsAuthentication struct {
+	_ struct{} `type:"structure"`
+
+	// An Amazon S3 URL that specifies the truststore for mutual TLS authentication,
+	// for example, s3://bucket-name/key-name . The truststore can contain certificates
+	// from public or private certificate authorities. To update the truststore,
+	// upload a new version to S3, and then update your custom domain name to use
+	// the new version. To update the truststore, you must have permissions to access
+	// the S3 object.
+	TruststoreUri *string `locationName:"truststoreUri" type:"string"`
+
+	// The version of the S3 object that contains your truststore. To specify a
+	// version, you must have versioning enabled for the S3 bucket.
+	TruststoreVersion *string `locationName:"truststoreVersion" type:"string"`
+
+	// A list of warnings that API Gateway returns while processing your truststore.
+	// Invalid certificates produce warnings. Mutual TLS is still enabled, but some
+	// clients might not be able to access your API. To resolve warnings, upload
+	// a new truststore to S3, and then update you domain name to use the new version.
+	TruststoreWarnings []*string `locationName:"truststoreWarnings" type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MutualTlsAuthentication) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MutualTlsAuthentication) GoString() string {
+	return s.String()
+}
+
+// SetTruststoreUri sets the TruststoreUri field's value.
+func (s *MutualTlsAuthentication) SetTruststoreUri(v string) *MutualTlsAuthentication {
+	s.TruststoreUri = &v
+	return s
+}
+
+// SetTruststoreVersion sets the TruststoreVersion field's value.
+func (s *MutualTlsAuthentication) SetTruststoreVersion(v string) *MutualTlsAuthentication {
+	s.TruststoreVersion = &v
+	return s
+}
+
+// SetTruststoreWarnings sets the TruststoreWarnings field's value.
+func (s *MutualTlsAuthentication) SetTruststoreWarnings(v []*string) *MutualTlsAuthentication {
+	s.TruststoreWarnings = v
+	return s
+}
+
+// If specified, API Gateway performs two-way authentication between the client
+// and the server. Clients must present a trusted certificate to access your
+// API.
+type MutualTlsAuthenticationInput struct {
+	_ struct{} `type:"structure"`
+
+	// An Amazon S3 URL that specifies the truststore for mutual TLS authentication,
+	// for example, s3://bucket-name/key-name . The truststore can contain certificates
+	// from public or private certificate authorities. To update the truststore,
+	// upload a new version to S3, and then update your custom domain name to use
+	// the new version. To update the truststore, you must have permissions to access
+	// the S3 object.
+	TruststoreUri *string `locationName:"truststoreUri" type:"string"`
+
+	// The version of the S3 object that contains your truststore. To specify a
+	// version, you must have versioning enabled for the S3 bucket.
+	TruststoreVersion *string `locationName:"truststoreVersion" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MutualTlsAuthenticationInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MutualTlsAuthenticationInput) GoString() string {
+	return s.String()
+}
+
+// SetTruststoreUri sets the TruststoreUri field's value.
+func (s *MutualTlsAuthenticationInput) SetTruststoreUri(v string) *MutualTlsAuthenticationInput {
+	s.TruststoreUri = &v
+	return s
+}
+
+// SetTruststoreVersion sets the TruststoreVersion field's value.
+func (s *MutualTlsAuthenticationInput) SetTruststoreVersion(v string) *MutualTlsAuthenticationInput {
+	s.TruststoreVersion = &v
+	return s
+}
+
 // The resource specified in the request was not found. See the message field
 // for more information.
 type NotFoundException struct {
@@ -14486,12 +16085,20 @@ type NotFoundException struct {
 	ResourceType *string `locationName:"resourceType" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NotFoundException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NotFoundException) GoString() string {
 	return s.String()
 }
@@ -14543,12 +16150,20 @@ type ParameterConstraints struct {
 	Required *bool `locationName:"required" type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ParameterConstraints) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ParameterConstraints) GoString() string {
 	return s.String()
 }
@@ -14573,12 +16188,20 @@ type ReimportApiInput struct {
 	FailOnWarnings *bool `location:"querystring" locationName:"failOnWarnings" type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ReimportApiInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ReimportApiInput) GoString() string {
 	return s.String()
 }
@@ -14631,6 +16254,8 @@ type ReimportApiOutput struct {
 
 	ApiEndpoint *string `locationName:"apiEndpoint" type:"string"`
 
+	ApiGatewayManaged *bool `locationName:"apiGatewayManaged" type:"boolean"`
+
 	// The identifier.
 	ApiId *string `locationName:"apiId" type:"string"`
 
@@ -14648,6 +16273,8 @@ type ReimportApiOutput struct {
 
 	// A string with a length between [0-1024].
 	Description *string `locationName:"description" type:"string"`
+
+	DisableExecuteApiEndpoint *bool `locationName:"disableExecuteApiEndpoint" type:"boolean"`
 
 	DisableSchemaValidation *bool `locationName:"disableSchemaValidation" type:"boolean"`
 
@@ -14673,12 +16300,20 @@ type ReimportApiOutput struct {
 	Warnings []*string `locationName:"warnings" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ReimportApiOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ReimportApiOutput) GoString() string {
 	return s.String()
 }
@@ -14686,6 +16321,12 @@ func (s ReimportApiOutput) GoString() string {
 // SetApiEndpoint sets the ApiEndpoint field's value.
 func (s *ReimportApiOutput) SetApiEndpoint(v string) *ReimportApiOutput {
 	s.ApiEndpoint = &v
+	return s
+}
+
+// SetApiGatewayManaged sets the ApiGatewayManaged field's value.
+func (s *ReimportApiOutput) SetApiGatewayManaged(v bool) *ReimportApiOutput {
+	s.ApiGatewayManaged = &v
 	return s
 }
 
@@ -14716,6 +16357,12 @@ func (s *ReimportApiOutput) SetCreatedDate(v time.Time) *ReimportApiOutput {
 // SetDescription sets the Description field's value.
 func (s *ReimportApiOutput) SetDescription(v string) *ReimportApiOutput {
 	s.Description = &v
+	return s
+}
+
+// SetDisableExecuteApiEndpoint sets the DisableExecuteApiEndpoint field's value.
+func (s *ReimportApiOutput) SetDisableExecuteApiEndpoint(v bool) *ReimportApiOutput {
+	s.DisableExecuteApiEndpoint = &v
 	return s
 }
 
@@ -14767,6 +16414,90 @@ func (s *ReimportApiOutput) SetWarnings(v []*string) *ReimportApiOutput {
 	return s
 }
 
+type ResetAuthorizersCacheInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// ApiId is a required field
+	ApiId *string `location:"uri" locationName:"apiId" type:"string" required:"true"`
+
+	// StageName is a required field
+	StageName *string `location:"uri" locationName:"stageName" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResetAuthorizersCacheInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResetAuthorizersCacheInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ResetAuthorizersCacheInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ResetAuthorizersCacheInput"}
+	if s.ApiId == nil {
+		invalidParams.Add(request.NewErrParamRequired("ApiId"))
+	}
+	if s.ApiId != nil && len(*s.ApiId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ApiId", 1))
+	}
+	if s.StageName == nil {
+		invalidParams.Add(request.NewErrParamRequired("StageName"))
+	}
+	if s.StageName != nil && len(*s.StageName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("StageName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetApiId sets the ApiId field's value.
+func (s *ResetAuthorizersCacheInput) SetApiId(v string) *ResetAuthorizersCacheInput {
+	s.ApiId = &v
+	return s
+}
+
+// SetStageName sets the StageName field's value.
+func (s *ResetAuthorizersCacheInput) SetStageName(v string) *ResetAuthorizersCacheInput {
+	s.StageName = &v
+	return s
+}
+
+type ResetAuthorizersCacheOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResetAuthorizersCacheOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResetAuthorizersCacheOutput) GoString() string {
+	return s.String()
+}
+
 // Represents a route.
 type Route struct {
 	_ struct{} `type:"structure"`
@@ -14792,7 +16523,8 @@ type Route struct {
 	// The authorization type for the route. For WebSocket APIs, valid values are
 	// NONE for open access, AWS_IAM for using AWS IAM permissions, and CUSTOM for
 	// using a Lambda authorizer For HTTP APIs, valid values are NONE for open access,
-	// or JWT for using JSON Web Tokens.
+	// JWT for using JSON Web Tokens, AWS_IAM for using AWS IAM permissions, and
+	// CUSTOM for using a Lambda authorizer.
 	AuthorizationType *string `locationName:"authorizationType" type:"string" enum:"AuthorizationType"`
 
 	// The identifier of the Authorizer resource to be associated with this route.
@@ -14829,12 +16561,20 @@ type Route struct {
 	Target *string `locationName:"target" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Route) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Route) GoString() string {
 	return s.String()
 }
@@ -14940,12 +16680,20 @@ type RouteResponse struct {
 	RouteResponseKey *string `locationName:"routeResponseKey" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RouteResponse) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RouteResponse) GoString() string {
 	return s.String()
 }
@@ -15004,12 +16752,20 @@ type RouteSettings struct {
 	ThrottlingRateLimit *float64 `locationName:"throttlingRateLimit" type:"double"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RouteSettings) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RouteSettings) GoString() string {
 	return s.String()
 }
@@ -15101,12 +16857,20 @@ type Stage struct {
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Stage) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Stage) GoString() string {
 	return s.String()
 }
@@ -15205,12 +16969,20 @@ type TagResourceInput struct {
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) GoString() string {
 	return s.String()
 }
@@ -15247,12 +17019,20 @@ type TagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) GoString() string {
 	return s.String()
 }
@@ -15269,12 +17049,20 @@ type TlsConfig struct {
 	ServerNameToVerify *string `locationName:"serverNameToVerify" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TlsConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TlsConfig) GoString() string {
 	return s.String()
 }
@@ -15297,12 +17085,20 @@ type TlsConfigInput struct {
 	ServerNameToVerify *string `locationName:"serverNameToVerify" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TlsConfigInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TlsConfigInput) GoString() string {
 	return s.String()
 }
@@ -15323,12 +17119,20 @@ type TooManyRequestsException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TooManyRequestsException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TooManyRequestsException) GoString() string {
 	return s.String()
 }
@@ -15372,7 +17176,7 @@ func (s *TooManyRequestsException) RequestID() string {
 }
 
 type UntagResourceInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ResourceArn is a required field
 	ResourceArn *string `location:"uri" locationName:"resource-arn" type:"string" required:"true"`
@@ -15381,12 +17185,20 @@ type UntagResourceInput struct {
 	TagKeys []*string `location:"querystring" locationName:"tagKeys" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) GoString() string {
 	return s.String()
 }
@@ -15426,12 +17238,20 @@ type UntagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) GoString() string {
 	return s.String()
 }
@@ -15458,6 +17278,8 @@ type UpdateApiInput struct {
 	// A string with a length between [0-1024].
 	Description *string `locationName:"description" type:"string"`
 
+	DisableExecuteApiEndpoint *bool `locationName:"disableExecuteApiEndpoint" type:"boolean"`
+
 	DisableSchemaValidation *bool `locationName:"disableSchemaValidation" type:"boolean"`
 
 	// A string with a length between [1-128].
@@ -15482,12 +17304,20 @@ type UpdateApiInput struct {
 	Version *string `locationName:"version" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateApiInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateApiInput) GoString() string {
 	return s.String()
 }
@@ -15540,6 +17370,12 @@ func (s *UpdateApiInput) SetCredentialsArn(v string) *UpdateApiInput {
 // SetDescription sets the Description field's value.
 func (s *UpdateApiInput) SetDescription(v string) *UpdateApiInput {
 	s.Description = &v
+	return s
+}
+
+// SetDisableExecuteApiEndpoint sets the DisableExecuteApiEndpoint field's value.
+func (s *UpdateApiInput) SetDisableExecuteApiEndpoint(v bool) *UpdateApiInput {
+	s.DisableExecuteApiEndpoint = &v
 	return s
 }
 
@@ -15604,12 +17440,20 @@ type UpdateApiMappingInput struct {
 	Stage *string `locationName:"stage" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateApiMappingInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateApiMappingInput) GoString() string {
 	return s.String()
 }
@@ -15689,12 +17533,20 @@ type UpdateApiMappingOutput struct {
 	Stage *string `locationName:"stage" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateApiMappingOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateApiMappingOutput) GoString() string {
 	return s.String()
 }
@@ -15728,6 +17580,8 @@ type UpdateApiOutput struct {
 
 	ApiEndpoint *string `locationName:"apiEndpoint" type:"string"`
 
+	ApiGatewayManaged *bool `locationName:"apiGatewayManaged" type:"boolean"`
+
 	// The identifier.
 	ApiId *string `locationName:"apiId" type:"string"`
 
@@ -15745,6 +17599,8 @@ type UpdateApiOutput struct {
 
 	// A string with a length between [0-1024].
 	Description *string `locationName:"description" type:"string"`
+
+	DisableExecuteApiEndpoint *bool `locationName:"disableExecuteApiEndpoint" type:"boolean"`
 
 	DisableSchemaValidation *bool `locationName:"disableSchemaValidation" type:"boolean"`
 
@@ -15770,12 +17626,20 @@ type UpdateApiOutput struct {
 	Warnings []*string `locationName:"warnings" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateApiOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateApiOutput) GoString() string {
 	return s.String()
 }
@@ -15783,6 +17647,12 @@ func (s UpdateApiOutput) GoString() string {
 // SetApiEndpoint sets the ApiEndpoint field's value.
 func (s *UpdateApiOutput) SetApiEndpoint(v string) *UpdateApiOutput {
 	s.ApiEndpoint = &v
+	return s
+}
+
+// SetApiGatewayManaged sets the ApiGatewayManaged field's value.
+func (s *UpdateApiOutput) SetApiGatewayManaged(v bool) *UpdateApiOutput {
+	s.ApiGatewayManaged = &v
 	return s
 }
 
@@ -15813,6 +17683,12 @@ func (s *UpdateApiOutput) SetCreatedDate(v time.Time) *UpdateApiOutput {
 // SetDescription sets the Description field's value.
 func (s *UpdateApiOutput) SetDescription(v string) *UpdateApiOutput {
 	s.Description = &v
+	return s
+}
+
+// SetDisableExecuteApiEndpoint sets the DisableExecuteApiEndpoint field's value.
+func (s *UpdateApiOutput) SetDisableExecuteApiEndpoint(v bool) *UpdateApiOutput {
+	s.DisableExecuteApiEndpoint = &v
 	return s
 }
 
@@ -15876,16 +17752,21 @@ type UpdateAuthorizerInput struct {
 	// AuthorizerId is a required field
 	AuthorizerId *string `location:"uri" locationName:"authorizerId" type:"string" required:"true"`
 
+	// A string with a length between [1-64].
+	AuthorizerPayloadFormatVersion *string `locationName:"authorizerPayloadFormatVersion" type:"string"`
+
 	// An integer with a value between [0-3600].
 	AuthorizerResultTtlInSeconds *int64 `locationName:"authorizerResultTtlInSeconds" type:"integer"`
 
-	// The authorizer type. For WebSocket APIs, specify REQUEST for a Lambda function
-	// using incoming request parameters. For HTTP APIs, specify JWT to use JSON
-	// Web Tokens.
+	// The authorizer type. Specify REQUEST for a Lambda function using incoming
+	// request parameters. Specify JWT to use JSON Web Tokens (supported only for
+	// HTTP APIs).
 	AuthorizerType *string `locationName:"authorizerType" type:"string" enum:"AuthorizerType"`
 
 	// A string representation of a URI with a length between [1-2048].
 	AuthorizerUri *string `locationName:"authorizerUri" type:"string"`
+
+	EnableSimpleResponses *bool `locationName:"enableSimpleResponses" type:"boolean"`
 
 	// The identity source for which authorization is requested. For the REQUEST
 	// authorizer, this is required when authorization caching is enabled. The value
@@ -15913,12 +17794,20 @@ type UpdateAuthorizerInput struct {
 	Name *string `locationName:"name" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateAuthorizerInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateAuthorizerInput) GoString() string {
 	return s.String()
 }
@@ -15963,6 +17852,12 @@ func (s *UpdateAuthorizerInput) SetAuthorizerId(v string) *UpdateAuthorizerInput
 	return s
 }
 
+// SetAuthorizerPayloadFormatVersion sets the AuthorizerPayloadFormatVersion field's value.
+func (s *UpdateAuthorizerInput) SetAuthorizerPayloadFormatVersion(v string) *UpdateAuthorizerInput {
+	s.AuthorizerPayloadFormatVersion = &v
+	return s
+}
+
 // SetAuthorizerResultTtlInSeconds sets the AuthorizerResultTtlInSeconds field's value.
 func (s *UpdateAuthorizerInput) SetAuthorizerResultTtlInSeconds(v int64) *UpdateAuthorizerInput {
 	s.AuthorizerResultTtlInSeconds = &v
@@ -15978,6 +17873,12 @@ func (s *UpdateAuthorizerInput) SetAuthorizerType(v string) *UpdateAuthorizerInp
 // SetAuthorizerUri sets the AuthorizerUri field's value.
 func (s *UpdateAuthorizerInput) SetAuthorizerUri(v string) *UpdateAuthorizerInput {
 	s.AuthorizerUri = &v
+	return s
+}
+
+// SetEnableSimpleResponses sets the EnableSimpleResponses field's value.
+func (s *UpdateAuthorizerInput) SetEnableSimpleResponses(v bool) *UpdateAuthorizerInput {
+	s.EnableSimpleResponses = &v
 	return s
 }
 
@@ -16014,16 +17915,21 @@ type UpdateAuthorizerOutput struct {
 	// The identifier.
 	AuthorizerId *string `locationName:"authorizerId" type:"string"`
 
+	// A string with a length between [1-64].
+	AuthorizerPayloadFormatVersion *string `locationName:"authorizerPayloadFormatVersion" type:"string"`
+
 	// An integer with a value between [0-3600].
 	AuthorizerResultTtlInSeconds *int64 `locationName:"authorizerResultTtlInSeconds" type:"integer"`
 
-	// The authorizer type. For WebSocket APIs, specify REQUEST for a Lambda function
-	// using incoming request parameters. For HTTP APIs, specify JWT to use JSON
-	// Web Tokens.
+	// The authorizer type. Specify REQUEST for a Lambda function using incoming
+	// request parameters. Specify JWT to use JSON Web Tokens (supported only for
+	// HTTP APIs).
 	AuthorizerType *string `locationName:"authorizerType" type:"string" enum:"AuthorizerType"`
 
 	// A string representation of a URI with a length between [1-2048].
 	AuthorizerUri *string `locationName:"authorizerUri" type:"string"`
+
+	EnableSimpleResponses *bool `locationName:"enableSimpleResponses" type:"boolean"`
 
 	// The identity source for which authorization is requested. For the REQUEST
 	// authorizer, this is required when authorization caching is enabled. The value
@@ -16051,12 +17957,20 @@ type UpdateAuthorizerOutput struct {
 	Name *string `locationName:"name" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateAuthorizerOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateAuthorizerOutput) GoString() string {
 	return s.String()
 }
@@ -16070,6 +17984,12 @@ func (s *UpdateAuthorizerOutput) SetAuthorizerCredentialsArn(v string) *UpdateAu
 // SetAuthorizerId sets the AuthorizerId field's value.
 func (s *UpdateAuthorizerOutput) SetAuthorizerId(v string) *UpdateAuthorizerOutput {
 	s.AuthorizerId = &v
+	return s
+}
+
+// SetAuthorizerPayloadFormatVersion sets the AuthorizerPayloadFormatVersion field's value.
+func (s *UpdateAuthorizerOutput) SetAuthorizerPayloadFormatVersion(v string) *UpdateAuthorizerOutput {
+	s.AuthorizerPayloadFormatVersion = &v
 	return s
 }
 
@@ -16088,6 +18008,12 @@ func (s *UpdateAuthorizerOutput) SetAuthorizerType(v string) *UpdateAuthorizerOu
 // SetAuthorizerUri sets the AuthorizerUri field's value.
 func (s *UpdateAuthorizerOutput) SetAuthorizerUri(v string) *UpdateAuthorizerOutput {
 	s.AuthorizerUri = &v
+	return s
+}
+
+// SetEnableSimpleResponses sets the EnableSimpleResponses field's value.
+func (s *UpdateAuthorizerOutput) SetEnableSimpleResponses(v bool) *UpdateAuthorizerOutput {
+	s.EnableSimpleResponses = &v
 	return s
 }
 
@@ -16128,12 +18054,20 @@ type UpdateDeploymentInput struct {
 	Description *string `locationName:"description" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDeploymentInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDeploymentInput) GoString() string {
 	return s.String()
 }
@@ -16197,12 +18131,20 @@ type UpdateDeploymentOutput struct {
 	Description *string `locationName:"description" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDeploymentOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDeploymentOutput) GoString() string {
 	return s.String()
 }
@@ -16251,14 +18193,27 @@ type UpdateDomainNameInput struct {
 
 	// The domain name configurations.
 	DomainNameConfigurations []*DomainNameConfiguration `locationName:"domainNameConfigurations" type:"list"`
+
+	// If specified, API Gateway performs two-way authentication between the client
+	// and the server. Clients must present a trusted certificate to access your
+	// API.
+	MutualTlsAuthentication *MutualTlsAuthenticationInput `locationName:"mutualTlsAuthentication" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainNameInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainNameInput) GoString() string {
 	return s.String()
 }
@@ -16291,6 +18246,12 @@ func (s *UpdateDomainNameInput) SetDomainNameConfigurations(v []*DomainNameConfi
 	return s
 }
 
+// SetMutualTlsAuthentication sets the MutualTlsAuthentication field's value.
+func (s *UpdateDomainNameInput) SetMutualTlsAuthentication(v *MutualTlsAuthenticationInput) *UpdateDomainNameInput {
+	s.MutualTlsAuthentication = v
+	return s
+}
+
 type UpdateDomainNameOutput struct {
 	_ struct{} `type:"structure"`
 
@@ -16305,16 +18266,29 @@ type UpdateDomainNameOutput struct {
 	// The domain name configurations.
 	DomainNameConfigurations []*DomainNameConfiguration `locationName:"domainNameConfigurations" type:"list"`
 
+	// If specified, API Gateway performs two-way authentication between the client
+	// and the server. Clients must present a trusted certificate to access your
+	// API.
+	MutualTlsAuthentication *MutualTlsAuthentication `locationName:"mutualTlsAuthentication" type:"structure"`
+
 	// Represents a collection of tags associated with the resource.
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainNameOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDomainNameOutput) GoString() string {
 	return s.String()
 }
@@ -16334,6 +18308,12 @@ func (s *UpdateDomainNameOutput) SetDomainName(v string) *UpdateDomainNameOutput
 // SetDomainNameConfigurations sets the DomainNameConfigurations field's value.
 func (s *UpdateDomainNameOutput) SetDomainNameConfigurations(v []*DomainNameConfiguration) *UpdateDomainNameOutput {
 	s.DomainNameConfigurations = v
+	return s
+}
+
+// SetMutualTlsAuthentication sets the MutualTlsAuthentication field's value.
+func (s *UpdateDomainNameOutput) SetMutualTlsAuthentication(v *MutualTlsAuthentication) *UpdateDomainNameOutput {
+	s.MutualTlsAuthentication = v
 	return s
 }
 
@@ -16371,6 +18351,9 @@ type UpdateIntegrationInput struct {
 	// A string with a length between [1-64].
 	IntegrationMethod *string `locationName:"integrationMethod" type:"string"`
 
+	// A string with a length between [1-128].
+	IntegrationSubtype *string `locationName:"integrationSubtype" type:"string"`
+
 	// Represents an API method integration type.
 	IntegrationType *string `locationName:"integrationType" type:"string" enum:"IntegrationType"`
 
@@ -16384,22 +18367,39 @@ type UpdateIntegrationInput struct {
 	// A string with a length between [1-64].
 	PayloadFormatVersion *string `locationName:"payloadFormatVersion" type:"string"`
 
-	// A key-value map specifying response parameters that are passed to the method
-	// response from the backend. The key is a method response header parameter
-	// name and the mapped value is an integration response header value, a static
-	// value enclosed within a pair of single quotes, or a JSON expression from
-	// the integration response body. The mapping key must match the pattern of
-	// method.response.header.{name}, where name is a valid and unique header name.
-	// The mapped non-static value must match the pattern of integration.response.header.{name}
-	// or integration.response.body.{JSON-expression}, where name is a valid and
-	// unique response header name and JSON-expression is a valid JSON expression
-	// without the $ prefix.
+	// For WebSocket APIs, a key-value map specifying request parameters that are
+	// passed from the method request to the backend. The key is an integration
+	// request parameter name and the associated value is a method request parameter
+	// value or static value that must be enclosed within single quotes and pre-encoded
+	// as required by the backend. The method request parameter value must match
+	// the pattern of method.request.{location}.{name} , where {location} is querystring,
+	// path, or header; and {name} must be a valid and unique method request parameter
+	// name.
+	//
+	// For HTTP API integrations with a specified integrationSubtype, request parameters
+	// are a key-value map specifying parameters that are passed to AWS_PROXY integrations.
+	// You can provide static values, or map request data, stage variables, or context
+	// variables that are evaluated at runtime. To learn more, see Working with
+	// AWS service integrations for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services.html).
+	//
+	// For HTTP API integrations without a specified integrationSubtype request
+	// parameters are a key-value map specifying how to transform HTTP requests
+	// before sending them to the backend. The key should follow the pattern <action>:<header|querystring|path>.<location>
+	// where action can be append, overwrite or remove. For values, you can provide
+	// static values, or map request data, stage variables, or context variables
+	// that are evaluated at runtime. To learn more, see Transforming API requests
+	// and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
 	RequestParameters map[string]*string `locationName:"requestParameters" type:"map"`
 
 	// A mapping of identifier keys to templates. The value is an actual template
 	// script. The key is typically a SelectionKey which is chosen based on evaluating
 	// a selection expression.
 	RequestTemplates map[string]*string `locationName:"requestTemplates" type:"map"`
+
+	// Supported only for HTTP APIs. You use response parameters to transform the
+	// HTTP response from a backend integration before returning the response to
+	// clients.
+	ResponseParameters map[string]map[string]*string `locationName:"responseParameters" type:"map"`
 
 	// An expression used to extract information at runtime. See Selection Expressions
 	// (https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-selection-expressions.html#apigateway-websocket-api-apikey-selection-expressions)
@@ -16415,12 +18415,20 @@ type UpdateIntegrationInput struct {
 	TlsConfig *TlsConfigInput `locationName:"tlsConfig" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateIntegrationInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateIntegrationInput) GoString() string {
 	return s.String()
 }
@@ -16498,6 +18506,12 @@ func (s *UpdateIntegrationInput) SetIntegrationMethod(v string) *UpdateIntegrati
 	return s
 }
 
+// SetIntegrationSubtype sets the IntegrationSubtype field's value.
+func (s *UpdateIntegrationInput) SetIntegrationSubtype(v string) *UpdateIntegrationInput {
+	s.IntegrationSubtype = &v
+	return s
+}
+
 // SetIntegrationType sets the IntegrationType field's value.
 func (s *UpdateIntegrationInput) SetIntegrationType(v string) *UpdateIntegrationInput {
 	s.IntegrationType = &v
@@ -16531,6 +18545,12 @@ func (s *UpdateIntegrationInput) SetRequestParameters(v map[string]*string) *Upd
 // SetRequestTemplates sets the RequestTemplates field's value.
 func (s *UpdateIntegrationInput) SetRequestTemplates(v map[string]*string) *UpdateIntegrationInput {
 	s.RequestTemplates = v
+	return s
+}
+
+// SetResponseParameters sets the ResponseParameters field's value.
+func (s *UpdateIntegrationInput) SetResponseParameters(v map[string]map[string]*string) *UpdateIntegrationInput {
+	s.ResponseParameters = v
 	return s
 }
 
@@ -16584,6 +18604,9 @@ type UpdateIntegrationOutput struct {
 	// for more information.
 	IntegrationResponseSelectionExpression *string `locationName:"integrationResponseSelectionExpression" type:"string"`
 
+	// A string with a length between [1-128].
+	IntegrationSubtype *string `locationName:"integrationSubtype" type:"string"`
+
 	// Represents an API method integration type.
 	IntegrationType *string `locationName:"integrationType" type:"string" enum:"IntegrationType"`
 
@@ -16597,22 +18620,39 @@ type UpdateIntegrationOutput struct {
 	// A string with a length between [1-64].
 	PayloadFormatVersion *string `locationName:"payloadFormatVersion" type:"string"`
 
-	// A key-value map specifying response parameters that are passed to the method
-	// response from the backend. The key is a method response header parameter
-	// name and the mapped value is an integration response header value, a static
-	// value enclosed within a pair of single quotes, or a JSON expression from
-	// the integration response body. The mapping key must match the pattern of
-	// method.response.header.{name}, where name is a valid and unique header name.
-	// The mapped non-static value must match the pattern of integration.response.header.{name}
-	// or integration.response.body.{JSON-expression}, where name is a valid and
-	// unique response header name and JSON-expression is a valid JSON expression
-	// without the $ prefix.
+	// For WebSocket APIs, a key-value map specifying request parameters that are
+	// passed from the method request to the backend. The key is an integration
+	// request parameter name and the associated value is a method request parameter
+	// value or static value that must be enclosed within single quotes and pre-encoded
+	// as required by the backend. The method request parameter value must match
+	// the pattern of method.request.{location}.{name} , where {location} is querystring,
+	// path, or header; and {name} must be a valid and unique method request parameter
+	// name.
+	//
+	// For HTTP API integrations with a specified integrationSubtype, request parameters
+	// are a key-value map specifying parameters that are passed to AWS_PROXY integrations.
+	// You can provide static values, or map request data, stage variables, or context
+	// variables that are evaluated at runtime. To learn more, see Working with
+	// AWS service integrations for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services.html).
+	//
+	// For HTTP API integrations without a specified integrationSubtype request
+	// parameters are a key-value map specifying how to transform HTTP requests
+	// before sending them to the backend. The key should follow the pattern <action>:<header|querystring|path>.<location>
+	// where action can be append, overwrite or remove. For values, you can provide
+	// static values, or map request data, stage variables, or context variables
+	// that are evaluated at runtime. To learn more, see Transforming API requests
+	// and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
 	RequestParameters map[string]*string `locationName:"requestParameters" type:"map"`
 
 	// A mapping of identifier keys to templates. The value is an actual template
 	// script. The key is typically a SelectionKey which is chosen based on evaluating
 	// a selection expression.
 	RequestTemplates map[string]*string `locationName:"requestTemplates" type:"map"`
+
+	// Supported only for HTTP APIs. You use response parameters to transform the
+	// HTTP response from a backend integration before returning the response to
+	// clients.
+	ResponseParameters map[string]map[string]*string `locationName:"responseParameters" type:"map"`
 
 	// An expression used to extract information at runtime. See Selection Expressions
 	// (https://docs.aws.amazon.com/apigateway/latest/developerguide/apigateway-websocket-api-selection-expressions.html#apigateway-websocket-api-apikey-selection-expressions)
@@ -16628,12 +18668,20 @@ type UpdateIntegrationOutput struct {
 	TlsConfig *TlsConfig `locationName:"tlsConfig" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateIntegrationOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateIntegrationOutput) GoString() string {
 	return s.String()
 }
@@ -16692,6 +18740,12 @@ func (s *UpdateIntegrationOutput) SetIntegrationResponseSelectionExpression(v st
 	return s
 }
 
+// SetIntegrationSubtype sets the IntegrationSubtype field's value.
+func (s *UpdateIntegrationOutput) SetIntegrationSubtype(v string) *UpdateIntegrationOutput {
+	s.IntegrationSubtype = &v
+	return s
+}
+
 // SetIntegrationType sets the IntegrationType field's value.
 func (s *UpdateIntegrationOutput) SetIntegrationType(v string) *UpdateIntegrationOutput {
 	s.IntegrationType = &v
@@ -16725,6 +18779,12 @@ func (s *UpdateIntegrationOutput) SetRequestParameters(v map[string]*string) *Up
 // SetRequestTemplates sets the RequestTemplates field's value.
 func (s *UpdateIntegrationOutput) SetRequestTemplates(v map[string]*string) *UpdateIntegrationOutput {
 	s.RequestTemplates = v
+	return s
+}
+
+// SetResponseParameters sets the ResponseParameters field's value.
+func (s *UpdateIntegrationOutput) SetResponseParameters(v map[string]map[string]*string) *UpdateIntegrationOutput {
+	s.ResponseParameters = v
 	return s
 }
 
@@ -16769,16 +18829,28 @@ type UpdateIntegrationResponseInput struct {
 	// type.
 	IntegrationResponseKey *string `locationName:"integrationResponseKey" type:"string"`
 
-	// A key-value map specifying response parameters that are passed to the method
-	// response from the backend. The key is a method response header parameter
-	// name and the mapped value is an integration response header value, a static
-	// value enclosed within a pair of single quotes, or a JSON expression from
-	// the integration response body. The mapping key must match the pattern of
-	// method.response.header.{name}, where name is a valid and unique header name.
-	// The mapped non-static value must match the pattern of integration.response.header.{name}
-	// or integration.response.body.{JSON-expression}, where name is a valid and
-	// unique response header name and JSON-expression is a valid JSON expression
-	// without the $ prefix.
+	// For WebSocket APIs, a key-value map specifying request parameters that are
+	// passed from the method request to the backend. The key is an integration
+	// request parameter name and the associated value is a method request parameter
+	// value or static value that must be enclosed within single quotes and pre-encoded
+	// as required by the backend. The method request parameter value must match
+	// the pattern of method.request.{location}.{name} , where {location} is querystring,
+	// path, or header; and {name} must be a valid and unique method request parameter
+	// name.
+	//
+	// For HTTP API integrations with a specified integrationSubtype, request parameters
+	// are a key-value map specifying parameters that are passed to AWS_PROXY integrations.
+	// You can provide static values, or map request data, stage variables, or context
+	// variables that are evaluated at runtime. To learn more, see Working with
+	// AWS service integrations for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services.html).
+	//
+	// For HTTP API integrations without a specified integrationSubtype request
+	// parameters are a key-value map specifying how to transform HTTP requests
+	// before sending them to the backend. The key should follow the pattern <action>:<header|querystring|path>.<location>
+	// where action can be append, overwrite or remove. For values, you can provide
+	// static values, or map request data, stage variables, or context variables
+	// that are evaluated at runtime. To learn more, see Transforming API requests
+	// and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
 	ResponseParameters map[string]*string `locationName:"responseParameters" type:"map"`
 
 	// A mapping of identifier keys to templates. The value is an actual template
@@ -16792,12 +18864,20 @@ type UpdateIntegrationResponseInput struct {
 	TemplateSelectionExpression *string `locationName:"templateSelectionExpression" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateIntegrationResponseInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateIntegrationResponseInput) GoString() string {
 	return s.String()
 }
@@ -16895,16 +18975,28 @@ type UpdateIntegrationResponseOutput struct {
 	// type.
 	IntegrationResponseKey *string `locationName:"integrationResponseKey" type:"string"`
 
-	// A key-value map specifying response parameters that are passed to the method
-	// response from the backend. The key is a method response header parameter
-	// name and the mapped value is an integration response header value, a static
-	// value enclosed within a pair of single quotes, or a JSON expression from
-	// the integration response body. The mapping key must match the pattern of
-	// method.response.header.{name}, where name is a valid and unique header name.
-	// The mapped non-static value must match the pattern of integration.response.header.{name}
-	// or integration.response.body.{JSON-expression}, where name is a valid and
-	// unique response header name and JSON-expression is a valid JSON expression
-	// without the $ prefix.
+	// For WebSocket APIs, a key-value map specifying request parameters that are
+	// passed from the method request to the backend. The key is an integration
+	// request parameter name and the associated value is a method request parameter
+	// value or static value that must be enclosed within single quotes and pre-encoded
+	// as required by the backend. The method request parameter value must match
+	// the pattern of method.request.{location}.{name} , where {location} is querystring,
+	// path, or header; and {name} must be a valid and unique method request parameter
+	// name.
+	//
+	// For HTTP API integrations with a specified integrationSubtype, request parameters
+	// are a key-value map specifying parameters that are passed to AWS_PROXY integrations.
+	// You can provide static values, or map request data, stage variables, or context
+	// variables that are evaluated at runtime. To learn more, see Working with
+	// AWS service integrations for HTTP APIs (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-develop-integrations-aws-services.html).
+	//
+	// For HTTP API integrations without a specified integrationSubtype request
+	// parameters are a key-value map specifying how to transform HTTP requests
+	// before sending them to the backend. The key should follow the pattern <action>:<header|querystring|path>.<location>
+	// where action can be append, overwrite or remove. For values, you can provide
+	// static values, or map request data, stage variables, or context variables
+	// that are evaluated at runtime. To learn more, see Transforming API requests
+	// and responses (https://docs.aws.amazon.com/apigateway/latest/developerguide/http-api-parameter-mapping.html).
 	ResponseParameters map[string]*string `locationName:"responseParameters" type:"map"`
 
 	// A mapping of identifier keys to templates. The value is an actual template
@@ -16918,12 +19010,20 @@ type UpdateIntegrationResponseOutput struct {
 	TemplateSelectionExpression *string `locationName:"templateSelectionExpression" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateIntegrationResponseOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateIntegrationResponseOutput) GoString() string {
 	return s.String()
 }
@@ -16986,12 +19086,20 @@ type UpdateModelInput struct {
 	Schema *string `locationName:"schema" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateModelInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateModelInput) GoString() string {
 	return s.String()
 }
@@ -17073,12 +19181,20 @@ type UpdateModelOutput struct {
 	Schema *string `locationName:"schema" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateModelOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateModelOutput) GoString() string {
 	return s.String()
 }
@@ -17132,8 +19248,9 @@ type UpdateRouteInput struct {
 
 	// The authorization type. For WebSocket APIs, valid values are NONE for open
 	// access, AWS_IAM for using AWS IAM permissions, and CUSTOM for using a Lambda
-	// authorizer. For HTTP APIs, valid values are NONE for open access, or JWT
-	// for using JSON Web Tokens.
+	// authorizer. For HTTP APIs, valid values are NONE for open access, JWT for
+	// using JSON Web Tokens, AWS_IAM for using AWS IAM permissions, and CUSTOM
+	// for using a Lambda authorizer.
 	AuthorizationType *string `locationName:"authorizationType" type:"string" enum:"AuthorizationType"`
 
 	// The identifier.
@@ -17172,12 +19289,20 @@ type UpdateRouteInput struct {
 	Target *string `locationName:"target" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateRouteInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateRouteInput) GoString() string {
 	return s.String()
 }
@@ -17300,8 +19425,9 @@ type UpdateRouteOutput struct {
 
 	// The authorization type. For WebSocket APIs, valid values are NONE for open
 	// access, AWS_IAM for using AWS IAM permissions, and CUSTOM for using a Lambda
-	// authorizer. For HTTP APIs, valid values are NONE for open access, or JWT
-	// for using JSON Web Tokens.
+	// authorizer. For HTTP APIs, valid values are NONE for open access, JWT for
+	// using JSON Web Tokens, AWS_IAM for using AWS IAM permissions, and CUSTOM
+	// for using a Lambda authorizer.
 	AuthorizationType *string `locationName:"authorizationType" type:"string" enum:"AuthorizationType"`
 
 	// The identifier.
@@ -17340,12 +19466,20 @@ type UpdateRouteOutput struct {
 	Target *string `locationName:"target" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateRouteOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateRouteOutput) GoString() string {
 	return s.String()
 }
@@ -17459,12 +19593,20 @@ type UpdateRouteResponseInput struct {
 	RouteResponseKey *string `locationName:"routeResponseKey" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateRouteResponseInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateRouteResponseInput) GoString() string {
 	return s.String()
 }
@@ -17564,12 +19706,20 @@ type UpdateRouteResponseOutput struct {
 	RouteResponseKey *string `locationName:"routeResponseKey" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateRouteResponseOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateRouteResponseOutput) GoString() string {
 	return s.String()
 }
@@ -17637,12 +19787,20 @@ type UpdateStageInput struct {
 	StageVariables map[string]*string `locationName:"stageVariables" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateStageInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateStageInput) GoString() string {
 	return s.String()
 }
@@ -17770,12 +19928,20 @@ type UpdateStageOutput struct {
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateStageOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateStageOutput) GoString() string {
 	return s.String()
 }
@@ -17874,12 +20040,20 @@ type UpdateVpcLinkInput struct {
 	VpcLinkId *string `location:"uri" locationName:"vpcLinkId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateVpcLinkInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateVpcLinkInput) GoString() string {
 	return s.String()
 }
@@ -17942,12 +20116,20 @@ type UpdateVpcLinkOutput struct {
 	VpcLinkVersion *string `locationName:"vpcLinkVersion" type:"string" enum:"VpcLinkVersion"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateVpcLinkOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateVpcLinkOutput) GoString() string {
 	return s.String()
 }
@@ -18046,12 +20228,20 @@ type VpcLink struct {
 	VpcLinkVersion *string `locationName:"vpcLinkVersion" type:"string" enum:"VpcLinkVersion"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcLink) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcLink) GoString() string {
 	return s.String()
 }
@@ -18112,8 +20302,9 @@ func (s *VpcLink) SetVpcLinkVersion(v string) *VpcLink {
 
 // The authorization type. For WebSocket APIs, valid values are NONE for open
 // access, AWS_IAM for using AWS IAM permissions, and CUSTOM for using a Lambda
-// authorizer. For HTTP APIs, valid values are NONE for open access, or JWT
-// for using JSON Web Tokens.
+// authorizer. For HTTP APIs, valid values are NONE for open access, JWT for
+// using JSON Web Tokens, AWS_IAM for using AWS IAM permissions, and CUSTOM
+// for using a Lambda authorizer.
 const (
 	// AuthorizationTypeNone is a AuthorizationType enum value
 	AuthorizationTypeNone = "NONE"
@@ -18138,9 +20329,9 @@ func AuthorizationType_Values() []string {
 	}
 }
 
-// The authorizer type. For WebSocket APIs, specify REQUEST for a Lambda function
-// using incoming request parameters. For HTTP APIs, specify JWT to use JSON
-// Web Tokens.
+// The authorizer type. Specify REQUEST for a Lambda function using incoming
+// request parameters. Specify JWT to use JSON Web Tokens (supported only for
+// HTTP APIs).
 const (
 	// AuthorizerTypeRequest is a AuthorizerType enum value
 	AuthorizerTypeRequest = "REQUEST"
@@ -18213,16 +20404,22 @@ func DeploymentStatus_Values() []string {
 	}
 }
 
-// The status of the domain name migration. The valid values are AVAILABLE and
-// UPDATING. If the status is UPDATING, the domain cannot be modified further
-// until the existing operation is complete. If it is AVAILABLE, the domain
-// can be updated.
+// The status of the domain name migration. The valid values are AVAILABLE,
+// UPDATING, PENDING_CERTIFICATE_REIMPORT, and PENDING_OWNERSHIP_VERIFICATION.
+// If the status is UPDATING, the domain cannot be modified further until the
+// existing operation is complete. If it is AVAILABLE, the domain can be updated.
 const (
 	// DomainNameStatusAvailable is a DomainNameStatus enum value
 	DomainNameStatusAvailable = "AVAILABLE"
 
 	// DomainNameStatusUpdating is a DomainNameStatus enum value
 	DomainNameStatusUpdating = "UPDATING"
+
+	// DomainNameStatusPendingCertificateReimport is a DomainNameStatus enum value
+	DomainNameStatusPendingCertificateReimport = "PENDING_CERTIFICATE_REIMPORT"
+
+	// DomainNameStatusPendingOwnershipVerification is a DomainNameStatus enum value
+	DomainNameStatusPendingOwnershipVerification = "PENDING_OWNERSHIP_VERIFICATION"
 )
 
 // DomainNameStatus_Values returns all elements of the DomainNameStatus enum
@@ -18230,6 +20427,8 @@ func DomainNameStatus_Values() []string {
 	return []string{
 		DomainNameStatusAvailable,
 		DomainNameStatusUpdating,
+		DomainNameStatusPendingCertificateReimport,
+		DomainNameStatusPendingOwnershipVerification,
 	}
 }
 

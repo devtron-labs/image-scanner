@@ -677,6 +677,43 @@
         }
       ]
     },
+    "DisassociateFromAdministratorAccount": {
+      "name": "DisassociateFromAdministratorAccount",
+      "http": {
+        "method": "POST",
+        "requestUri": "/administrator/disassociate",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "DisassociateFromAdministratorAccountRequest"
+      },
+      "output": {
+        "shape": "DisassociateFromAdministratorAccountResponse"
+      },
+      "errors": [
+        {
+          "shape": "ValidationException"
+        },
+        {
+          "shape": "InternalServerException"
+        },
+        {
+          "shape": "ServiceQuotaExceededException"
+        },
+        {
+          "shape": "AccessDeniedException"
+        },
+        {
+          "shape": "ResourceNotFoundException"
+        },
+        {
+          "shape": "ThrottlingException"
+        },
+        {
+          "shape": "ConflictException"
+        }
+      ]
+    },
     "DisassociateFromMasterAccount": {
       "name": "DisassociateFromMasterAccount",
       "http": {
@@ -800,6 +837,43 @@
       },
       "output": {
         "shape": "EnableOrganizationAdminAccountResponse"
+      },
+      "errors": [
+        {
+          "shape": "ValidationException"
+        },
+        {
+          "shape": "InternalServerException"
+        },
+        {
+          "shape": "ServiceQuotaExceededException"
+        },
+        {
+          "shape": "AccessDeniedException"
+        },
+        {
+          "shape": "ResourceNotFoundException"
+        },
+        {
+          "shape": "ThrottlingException"
+        },
+        {
+          "shape": "ConflictException"
+        }
+      ]
+    },
+    "GetAdministratorAccount": {
+      "name": "GetAdministratorAccount",
+      "http": {
+        "method": "GET",
+        "requestUri": "/administrator",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "GetAdministratorAccountRequest"
+      },
+      "output": {
+        "shape": "GetAdministratorAccountResponse"
       },
       "errors": [
         {
@@ -1022,6 +1096,43 @@
       },
       "output": {
         "shape": "GetFindingsFilterResponse"
+      },
+      "errors": [
+        {
+          "shape": "ValidationException"
+        },
+        {
+          "shape": "InternalServerException"
+        },
+        {
+          "shape": "ServiceQuotaExceededException"
+        },
+        {
+          "shape": "AccessDeniedException"
+        },
+        {
+          "shape": "ResourceNotFoundException"
+        },
+        {
+          "shape": "ThrottlingException"
+        },
+        {
+          "shape": "ConflictException"
+        }
+      ]
+    },
+    "GetFindingsPublicationConfiguration": {
+      "name": "GetFindingsPublicationConfiguration",
+      "http": {
+        "method": "GET",
+        "requestUri": "/findings-publication-configuration",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "GetFindingsPublicationConfigurationRequest"
+      },
+      "output": {
+        "shape": "GetFindingsPublicationConfigurationResponse"
       },
       "errors": [
         {
@@ -1454,6 +1565,21 @@
         }
       ]
     },
+    "ListManagedDataIdentifiers": {
+      "name": "ListManagedDataIdentifiers",
+      "http": {
+        "method": "POST",
+        "requestUri": "/managed-data-identifiers/list",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "ListManagedDataIdentifiersRequest"
+      },
+      "output": {
+        "shape": "ListManagedDataIdentifiersResponse"
+      },
+      "errors": []
+    },
     "ListMembers": {
       "name": "ListMembers",
       "http": {
@@ -1555,6 +1681,80 @@
       },
       "output": {
         "shape": "PutClassificationExportConfigurationResponse"
+      },
+      "errors": [
+        {
+          "shape": "ValidationException"
+        },
+        {
+          "shape": "InternalServerException"
+        },
+        {
+          "shape": "ServiceQuotaExceededException"
+        },
+        {
+          "shape": "AccessDeniedException"
+        },
+        {
+          "shape": "ResourceNotFoundException"
+        },
+        {
+          "shape": "ThrottlingException"
+        },
+        {
+          "shape": "ConflictException"
+        }
+      ]
+    },
+    "PutFindingsPublicationConfiguration": {
+      "name": "PutFindingsPublicationConfiguration",
+      "http": {
+        "method": "PUT",
+        "requestUri": "/findings-publication-configuration",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "PutFindingsPublicationConfigurationRequest"
+      },
+      "output": {
+        "shape": "PutFindingsPublicationConfigurationResponse"
+      },
+      "errors": [
+        {
+          "shape": "ValidationException"
+        },
+        {
+          "shape": "InternalServerException"
+        },
+        {
+          "shape": "ServiceQuotaExceededException"
+        },
+        {
+          "shape": "AccessDeniedException"
+        },
+        {
+          "shape": "ResourceNotFoundException"
+        },
+        {
+          "shape": "ThrottlingException"
+        },
+        {
+          "shape": "ConflictException"
+        }
+      ]
+    },
+    "SearchResources": {
+      "name": "SearchResources",
+      "http": {
+        "method": "POST",
+        "requestUri": "/datasources/search-resources",
+        "responseCode": 200
+      },
+      "input": {
+        "shape": "SearchResourcesRequest"
+      },
+      "output": {
+        "shape": "SearchResourcesResponse"
       },
       "errors": [
         {
@@ -1837,6 +2037,10 @@
     "AcceptInvitationRequest": {
       "type": "structure",
       "members": {
+        "administratorAccountId": {
+          "shape": "__string",
+          "locationName": "administratorAccountId"
+        },
         "invitationId": {
           "shape": "__string",
           "locationName": "invitationId"
@@ -1847,7 +2051,6 @@
         }
       },
       "required": [
-        "masterAccount",
         "invitationId"
       ]
     },
@@ -1925,6 +2128,14 @@
       "enum": [
         "ENABLED",
         "DISABLING_IN_PROGRESS"
+      ]
+    },
+    "AllowsUnencryptedObjectUploads": {
+      "type": "string",
+      "enum": [
+        "TRUE",
+        "FALSE",
+        "UNKNOWN"
       ]
     },
     "ApiCallDetails": {
@@ -2081,6 +2292,10 @@
         "publiclyWritable": {
           "shape": "__long",
           "locationName": "publiclyWritable"
+        },
+        "unknown": {
+          "shape": "__long",
+          "locationName": "unknown"
         }
       }
     },
@@ -2098,6 +2313,10 @@
         "unencrypted": {
           "shape": "__long",
           "locationName": "unencrypted"
+        },
+        "unknown": {
+          "shape": "__long",
+          "locationName": "unknown"
         }
       }
     },
@@ -2115,6 +2334,27 @@
         "notShared": {
           "shape": "__long",
           "locationName": "notShared"
+        },
+        "unknown": {
+          "shape": "__long",
+          "locationName": "unknown"
+        }
+      }
+    },
+    "BucketCountPolicyAllowsUnencryptedObjectUploads": {
+      "type": "structure",
+      "members": {
+        "allowsUnencryptedObjectUploads": {
+          "shape": "__long",
+          "locationName": "allowsUnencryptedObjectUploads"
+        },
+        "deniesUnencryptedObjectUploads": {
+          "shape": "__long",
+          "locationName": "deniesUnencryptedObjectUploads"
+        },
+        "unknown": {
+          "shape": "__long",
+          "locationName": "unknown"
         }
       }
     },
@@ -2184,6 +2424,10 @@
           "shape": "__string",
           "locationName": "accountId"
         },
+        "allowsUnencryptedObjectUploads": {
+          "shape": "AllowsUnencryptedObjectUploads",
+          "locationName": "allowsUnencryptedObjectUploads"
+        },
         "bucketArn": {
           "shape": "__string",
           "locationName": "bucketArn"
@@ -2199,6 +2443,22 @@
         "classifiableObjectCount": {
           "shape": "__long",
           "locationName": "classifiableObjectCount"
+        },
+        "classifiableSizeInBytes": {
+          "shape": "__long",
+          "locationName": "classifiableSizeInBytes"
+        },
+        "errorCode": {
+          "shape": "BucketMetadataErrorCode",
+          "locationName": "errorCode"
+        },
+        "errorMessage": {
+          "shape": "__string",
+          "locationName": "errorMessage"
+        },
+        "jobDetails": {
+          "shape": "JobDetails",
+          "locationName": "jobDetails"
         },
         "lastUpdated": {
           "shape": "__timestampIso8601",
@@ -2224,6 +2484,10 @@
           "shape": "ReplicationDetails",
           "locationName": "replicationDetails"
         },
+        "serverSideEncryption": {
+          "shape": "BucketServerSideEncryption",
+          "locationName": "serverSideEncryption"
+        },
         "sharedAccess": {
           "shape": "SharedAccess",
           "locationName": "sharedAccess"
@@ -2240,11 +2504,25 @@
           "shape": "__listOfKeyValuePair",
           "locationName": "tags"
         },
+        "unclassifiableObjectCount": {
+          "shape": "ObjectLevelStatistics",
+          "locationName": "unclassifiableObjectCount"
+        },
+        "unclassifiableObjectSizeInBytes": {
+          "shape": "ObjectLevelStatistics",
+          "locationName": "unclassifiableObjectSizeInBytes"
+        },
         "versioning": {
           "shape": "__boolean",
           "locationName": "versioning"
         }
       }
+    },
+    "BucketMetadataErrorCode": {
+      "type": "string",
+      "enum": [
+        "ACCESS_DENIED"
+      ]
     },
     "BucketPermissionConfiguration": {
       "type": "structure",
@@ -2285,6 +2563,19 @@
         }
       }
     },
+    "BucketServerSideEncryption": {
+      "type": "structure",
+      "members": {
+        "kmsMasterKeyId": {
+          "shape": "__string",
+          "locationName": "kmsMasterKeyId"
+        },
+        "type": {
+          "shape": "Type",
+          "locationName": "type"
+        }
+      }
+    },
     "BucketSortCriteria": {
       "type": "structure",
       "members": {
@@ -2296,6 +2587,33 @@
           "shape": "OrderBy",
           "locationName": "orderBy"
         }
+      }
+    },
+    "Cell": {
+      "type": "structure",
+      "members": {
+        "cellReference": {
+          "shape": "__string",
+          "locationName": "cellReference"
+        },
+        "column": {
+          "shape": "__long",
+          "locationName": "column"
+        },
+        "columnName": {
+          "shape": "__string",
+          "locationName": "columnName"
+        },
+        "row": {
+          "shape": "__long",
+          "locationName": "row"
+        }
+      }
+    },
+    "Cells": {
+      "type": "list",
+      "member": {
+        "shape": "Cell"
       }
     },
     "ClassificationDetails": {
@@ -2331,6 +2649,10 @@
     "ClassificationResult": {
       "type": "structure",
       "members": {
+        "additionalOccurrences": {
+          "shape": "__boolean",
+          "locationName": "additionalOccurrences"
+        },
         "customDataIdentifiers": {
           "shape": "CustomDataIdentifiers",
           "locationName": "customDataIdentifiers"
@@ -2402,6 +2724,14 @@
         "jobType": {
           "shape": "JobType",
           "locationName": "jobType"
+        },
+        "managedDataIdentifierIds": {
+          "shape": "__listOf__string",
+          "locationName": "managedDataIdentifierIds"
+        },
+        "managedDataIdentifierSelector": {
+          "shape": "ManagedDataIdentifierSelector",
+          "locationName": "managedDataIdentifierSelector"
         },
         "name": {
           "shape": "__string",
@@ -2476,11 +2806,19 @@
           "shape": "__string",
           "locationName": "regex"
         },
+        "severityLevels": {
+          "shape": "SeverityLevelList",
+          "locationName": "severityLevels"
+        },
         "tags": {
           "shape": "TagMap",
           "locationName": "tags"
         }
-      }
+      },
+      "required": [
+        "regex",
+        "name"
+      ]
     },
     "CreateCustomDataIdentifierResponse": {
       "type": "structure",
@@ -2610,6 +2948,28 @@
       "type": "structure",
       "members": {}
     },
+    "CriteriaBlockForJob": {
+      "type": "structure",
+      "members": {
+        "and": {
+          "shape": "__listOfCriteriaForJob",
+          "locationName": "and"
+        }
+      }
+    },
+    "CriteriaForJob": {
+      "type": "structure",
+      "members": {
+        "simpleCriterion": {
+          "shape": "SimpleCriterionForJob",
+          "locationName": "simpleCriterion"
+        },
+        "tagCriterion": {
+          "shape": "TagCriterionForJob",
+          "locationName": "tagCriterion"
+        }
+      }
+    },
     "Criterion": {
       "type": "map",
       "key": {
@@ -2625,6 +2985,10 @@
         "eq": {
           "shape": "__listOf__string",
           "locationName": "eq"
+        },
+        "eqExactMatch": {
+          "shape": "__listOf__string",
+          "locationName": "eqExactMatch"
         },
         "gt": {
           "shape": "__long",
@@ -2706,6 +3070,10 @@
         "name": {
           "shape": "__string",
           "locationName": "name"
+        },
+        "occurrences": {
+          "shape": "Occurrences",
+          "locationName": "occurrences"
         }
       }
     },
@@ -2718,6 +3086,14 @@
     "DailySchedule": {
       "type": "structure",
       "members": {}
+    },
+    "DataIdentifierSeverity": {
+      "type": "string",
+      "enum": [
+        "LOW",
+        "MEDIUM",
+        "HIGH"
+      ]
     },
     "DayOfWeek": {
       "type": "string",
@@ -2758,6 +3134,10 @@
         "count": {
           "shape": "__long",
           "locationName": "count"
+        },
+        "occurrences": {
+          "shape": "Occurrences",
+          "locationName": "occurrences"
         },
         "type": {
           "shape": "__string",
@@ -2930,9 +3310,21 @@
           "shape": "JobType",
           "locationName": "jobType"
         },
+        "lastRunErrorStatus": {
+          "shape": "LastRunErrorStatus",
+          "locationName": "lastRunErrorStatus"
+        },
         "lastRunTime": {
           "shape": "__timestampIso8601",
           "locationName": "lastRunTime"
+        },
+        "managedDataIdentifierIds": {
+          "shape": "__listOf__string",
+          "locationName": "managedDataIdentifierIds"
+        },
+        "managedDataIdentifierSelector": {
+          "shape": "ManagedDataIdentifierSelector",
+          "locationName": "managedDataIdentifierSelector"
         },
         "name": {
           "shape": "__string",
@@ -2957,6 +3349,10 @@
         "tags": {
           "shape": "TagMap",
           "locationName": "tags"
+        },
+        "userPausedDetails": {
+          "shape": "UserPausedDetails",
+          "locationName": "userPausedDetails"
         }
       }
     },
@@ -3002,6 +3398,14 @@
       "type": "structure",
       "members": {}
     },
+    "DisassociateFromAdministratorAccountRequest": {
+      "type": "structure",
+      "members": {}
+    },
+    "DisassociateFromAdministratorAccountResponse": {
+      "type": "structure",
+      "members": {}
+    },
     "DisassociateFromMasterAccountRequest": {
       "type": "structure",
       "members": {}
@@ -3040,7 +3444,8 @@
       "type": "string",
       "enum": [
         "PUBLIC",
-        "NOT_PUBLIC"
+        "NOT_PUBLIC",
+        "UNKNOWN"
       ]
     },
     "Empty": {
@@ -3335,6 +3740,19 @@
         }
       }
     },
+    "GetAdministratorAccountRequest": {
+      "type": "structure",
+      "members": {}
+    },
+    "GetAdministratorAccountResponse": {
+      "type": "structure",
+      "members": {
+        "administrator": {
+          "shape": "Invitation",
+          "locationName": "administrator"
+        }
+      }
+    },
     "GetBucketStatisticsRequest": {
       "type": "structure",
       "members": {
@@ -3359,6 +3777,10 @@
           "shape": "BucketCountByEncryptionType",
           "locationName": "bucketCountByEncryptionType"
         },
+        "bucketCountByObjectEncryptionRequirement": {
+          "shape": "BucketCountPolicyAllowsUnencryptedObjectUploads",
+          "locationName": "bucketCountByObjectEncryptionRequirement"
+        },
         "bucketCountBySharedAccessType": {
           "shape": "BucketCountBySharedAccessType",
           "locationName": "bucketCountBySharedAccessType"
@@ -3366,6 +3788,10 @@
         "classifiableObjectCount": {
           "shape": "__long",
           "locationName": "classifiableObjectCount"
+        },
+        "classifiableSizeInBytes": {
+          "shape": "__long",
+          "locationName": "classifiableSizeInBytes"
         },
         "lastUpdated": {
           "shape": "__timestampIso8601",
@@ -3382,6 +3808,14 @@
         "sizeInBytesCompressed": {
           "shape": "__long",
           "locationName": "sizeInBytesCompressed"
+        },
+        "unclassifiableObjectCount": {
+          "shape": "ObjectLevelStatistics",
+          "locationName": "unclassifiableObjectCount"
+        },
+        "unclassifiableObjectSizeInBytes": {
+          "shape": "ObjectLevelStatistics",
+          "locationName": "unclassifiableObjectSizeInBytes"
         }
       }
     },
@@ -3453,6 +3887,10 @@
         "regex": {
           "shape": "__string",
           "locationName": "regex"
+        },
+        "severityLevels": {
+          "shape": "SeverityLevelList",
+          "locationName": "severityLevels"
         },
         "tags": {
           "shape": "TagMap",
@@ -3540,6 +3978,19 @@
         "tags": {
           "shape": "TagMap",
           "locationName": "tags"
+        }
+      }
+    },
+    "GetFindingsPublicationConfigurationRequest": {
+      "type": "structure",
+      "members": {}
+    },
+    "GetFindingsPublicationConfigurationResponse": {
+      "type": "structure",
+      "members": {
+        "securityHubConfiguration": {
+          "shape": "SecurityHubConfiguration",
+          "locationName": "securityHubConfiguration"
         }
       }
     },
@@ -3643,6 +4094,10 @@
           "shape": "__string",
           "locationName": "accountId"
         },
+        "administratorAccountId": {
+          "shape": "__string",
+          "locationName": "administratorAccountId"
+        },
         "arn": {
           "shape": "__string",
           "locationName": "arn"
@@ -3691,6 +4146,10 @@
         "sortBy": {
           "shape": "UsageStatisticsSortBy",
           "locationName": "sortBy"
+        },
+        "timeRange": {
+          "shape": "TimeRange",
+          "locationName": "timeRange"
         }
       }
     },
@@ -3704,16 +4163,30 @@
         "records": {
           "shape": "__listOfUsageRecord",
           "locationName": "records"
+        },
+        "timeRange": {
+          "shape": "TimeRange",
+          "locationName": "timeRange"
         }
       }
     },
     "GetUsageTotalsRequest": {
       "type": "structure",
-      "members": {}
+      "members": {
+        "timeRange": {
+          "shape": "__string",
+          "location": "querystring",
+          "locationName": "timeRange"
+        }
+      }
     },
     "GetUsageTotalsResponse": {
       "type": "structure",
       "members": {
+        "timeRange": {
+          "shape": "TimeRange",
+          "locationName": "timeRange"
+        },
         "usageTotals": {
           "shape": "__listOfUsageTotal",
           "locationName": "usageTotals"
@@ -3878,6 +4351,22 @@
         }
       }
     },
+    "IsDefinedInJob": {
+      "type": "string",
+      "enum": [
+        "TRUE",
+        "FALSE",
+        "UNKNOWN"
+      ]
+    },
+    "IsMonitoredByJob": {
+      "type": "string",
+      "enum": [
+        "TRUE",
+        "FALSE",
+        "UNKNOWN"
+      ]
+    },
     "JobComparator": {
       "type": "string",
       "enum": [
@@ -3887,8 +4376,30 @@
         "LT",
         "LTE",
         "NE",
-        "CONTAINS"
+        "CONTAINS",
+        "STARTS_WITH"
       ]
+    },
+    "JobDetails": {
+      "type": "structure",
+      "members": {
+        "isDefinedInJob": {
+          "shape": "IsDefinedInJob",
+          "locationName": "isDefinedInJob"
+        },
+        "isMonitoredByJob": {
+          "shape": "IsMonitoredByJob",
+          "locationName": "isMonitoredByJob"
+        },
+        "lastJobId": {
+          "shape": "__string",
+          "locationName": "lastJobId"
+        },
+        "lastJobRunTime": {
+          "shape": "__timestampIso8601",
+          "locationName": "lastJobRunTime"
+        }
+      }
     },
     "JobScheduleFrequency": {
       "type": "structure",
@@ -3936,7 +4447,8 @@
         "PAUSED",
         "CANCELLED",
         "COMPLETE",
-        "IDLE"
+        "IDLE",
+        "USER_PAUSED"
       ]
     },
     "JobSummary": {
@@ -3962,9 +4474,21 @@
           "shape": "JobType",
           "locationName": "jobType"
         },
+        "lastRunErrorStatus": {
+          "shape": "LastRunErrorStatus",
+          "locationName": "lastRunErrorStatus"
+        },
         "name": {
           "shape": "__string",
           "locationName": "name"
+        },
+        "userPausedDetails": {
+          "shape": "UserPausedDetails",
+          "locationName": "userPausedDetails"
+        },
+        "bucketCriteria": {
+          "shape": "S3BucketCriteriaForJob",
+          "locationName": "bucketCriteria"
         }
       }
     },
@@ -3993,6 +4517,22 @@
       "member": {
         "shape": "KeyValuePair"
       }
+    },
+    "LastRunErrorStatus": {
+      "type": "structure",
+      "members": {
+        "code": {
+          "shape": "LastRunErrorStatusCode",
+          "locationName": "code"
+        }
+      }
+    },
+    "LastRunErrorStatusCode": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "ERROR"
+      ]
     },
     "ListClassificationJobsRequest": {
       "type": "structure",
@@ -4205,6 +4745,28 @@
         }
       }
     },
+    "ListManagedDataIdentifiersRequest": {
+      "type": "structure",
+      "members": {
+        "nextToken": {
+          "shape": "__string",
+          "locationName": "nextToken"
+        }
+      }
+    },
+    "ListManagedDataIdentifiersResponse": {
+      "type": "structure",
+      "members": {
+        "items": {
+          "shape": "__listOfManagedDataIdentifierSummary",
+          "locationName": "items"
+        },
+        "nextToken": {
+          "shape": "__string",
+          "locationName": "nextToken"
+        }
+      }
+    },
     "ListMembersRequest": {
       "type": "structure",
       "members": {
@@ -4295,6 +4857,94 @@
         "ENABLED"
       ]
     },
+    "ManagedDataIdentifierSelector": {
+      "type": "string",
+      "enum": [
+        "ALL",
+        "EXCLUDE",
+        "INCLUDE",
+        "NONE"
+      ]
+    },
+    "ManagedDataIdentifierSummary": {
+      "type": "structure",
+      "members": {
+        "category": {
+          "shape": "SensitiveDataItemCategory",
+          "locationName": "category"
+        },
+        "id": {
+          "shape": "__string",
+          "locationName": "id"
+        }
+      }
+    },
+    "MatchingBucket": {
+      "type": "structure",
+      "members": {
+        "accountId": {
+          "shape": "__string",
+          "locationName": "accountId"
+        },
+        "bucketName": {
+          "shape": "__string",
+          "locationName": "bucketName"
+        },
+        "classifiableObjectCount": {
+          "shape": "__long",
+          "locationName": "classifiableObjectCount"
+        },
+        "classifiableSizeInBytes": {
+          "shape": "__long",
+          "locationName": "classifiableSizeInBytes"
+        },
+        "errorCode": {
+          "shape": "BucketMetadataErrorCode",
+          "locationName": "errorCode"
+        },
+        "errorMessage": {
+          "shape": "__string",
+          "locationName": "errorMessage"
+        },
+        "jobDetails": {
+          "shape": "JobDetails",
+          "locationName": "jobDetails"
+        },
+        "objectCount": {
+          "shape": "__long",
+          "locationName": "objectCount"
+        },
+        "objectCountByEncryptionType": {
+          "shape": "ObjectCountByEncryptionType",
+          "locationName": "objectCountByEncryptionType"
+        },
+        "sizeInBytes": {
+          "shape": "__long",
+          "locationName": "sizeInBytes"
+        },
+        "sizeInBytesCompressed": {
+          "shape": "__long",
+          "locationName": "sizeInBytesCompressed"
+        },
+        "unclassifiableObjectCount": {
+          "shape": "ObjectLevelStatistics",
+          "locationName": "unclassifiableObjectCount"
+        },
+        "unclassifiableObjectSizeInBytes": {
+          "shape": "ObjectLevelStatistics",
+          "locationName": "unclassifiableObjectSizeInBytes"
+        }
+      }
+    },
+    "MatchingResource": {
+      "type": "structure",
+      "members": {
+        "matchingBucket": {
+          "shape": "MatchingBucket",
+          "locationName": "matchingBucket"
+        }
+      }
+    },
     "MaxResults": {
       "type": "integer",
       "min": 1,
@@ -4306,6 +4956,10 @@
         "accountId": {
           "shape": "__string",
           "locationName": "accountId"
+        },
+        "administratorAccountId": {
+          "shape": "__string",
+          "locationName": "administratorAccountId"
         },
         "arn": {
           "shape": "__string",
@@ -4364,6 +5018,52 @@
         "unencrypted": {
           "shape": "__long",
           "locationName": "unencrypted"
+        },
+        "unknown": {
+          "shape": "__long",
+          "locationName": "unknown"
+        }
+      }
+    },
+    "ObjectLevelStatistics": {
+      "type": "structure",
+      "members": {
+        "fileType": {
+          "shape": "__long",
+          "locationName": "fileType"
+        },
+        "storageClass": {
+          "shape": "__long",
+          "locationName": "storageClass"
+        },
+        "total": {
+          "shape": "__long",
+          "locationName": "total"
+        }
+      }
+    },
+    "Occurrences": {
+      "type": "structure",
+      "members": {
+        "cells": {
+          "shape": "Cells",
+          "locationName": "cells"
+        },
+        "lineRanges": {
+          "shape": "Ranges",
+          "locationName": "lineRanges"
+        },
+        "offsetRanges": {
+          "shape": "Ranges",
+          "locationName": "offsetRanges"
+        },
+        "pages": {
+          "shape": "Pages",
+          "locationName": "pages"
+        },
+        "records": {
+          "shape": "Records",
+          "locationName": "records"
         }
       }
     },
@@ -4373,6 +5073,29 @@
         "ASC",
         "DESC"
       ]
+    },
+    "Page": {
+      "type": "structure",
+      "members": {
+        "lineRange": {
+          "shape": "Range",
+          "locationName": "lineRange"
+        },
+        "offsetRange": {
+          "shape": "Range",
+          "locationName": "offsetRange"
+        },
+        "pageNumber": {
+          "shape": "__long",
+          "locationName": "pageNumber"
+        }
+      }
+    },
+    "Pages": {
+      "type": "list",
+      "member": {
+        "shape": "Page"
+      }
     },
     "PolicyDetails": {
       "type": "structure",
@@ -4406,6 +5129,66 @@
           "shape": "ClassificationExportConfiguration",
           "locationName": "configuration"
         }
+      }
+    },
+    "PutFindingsPublicationConfigurationRequest": {
+      "type": "structure",
+      "members": {
+        "clientToken": {
+          "shape": "__string",
+          "locationName": "clientToken",
+          "idempotencyToken": true
+        },
+        "securityHubConfiguration": {
+          "shape": "SecurityHubConfiguration",
+          "locationName": "securityHubConfiguration"
+        }
+      }
+    },
+    "PutFindingsPublicationConfigurationResponse": {
+      "type": "structure",
+      "members": {}
+    },
+    "Range": {
+      "type": "structure",
+      "members": {
+        "end": {
+          "shape": "__long",
+          "locationName": "end"
+        },
+        "start": {
+          "shape": "__long",
+          "locationName": "start"
+        },
+        "startColumn": {
+          "shape": "__long",
+          "locationName": "startColumn"
+        }
+      }
+    },
+    "Ranges": {
+      "type": "list",
+      "member": {
+        "shape": "Range"
+      }
+    },
+    "Record": {
+      "type": "structure",
+      "members": {
+        "jsonPath": {
+          "shape": "__string",
+          "locationName": "jsonPath"
+        },
+        "recordIndex": {
+          "shape": "__long",
+          "locationName": "recordIndex"
+        }
+      }
+    },
+    "Records": {
+      "type": "list",
+      "member": {
+        "shape": "Record"
       }
     },
     "RelationshipStatus": {
@@ -4469,6 +5252,10 @@
     "S3Bucket": {
       "type": "structure",
       "members": {
+        "allowsUnencryptedObjectUploads": {
+          "shape": "AllowsUnencryptedObjectUploads",
+          "locationName": "allowsUnencryptedObjectUploads"
+        },
         "arn": {
           "shape": "__string",
           "locationName": "arn"
@@ -4499,6 +5286,19 @@
         }
       }
     },
+    "S3BucketCriteriaForJob": {
+      "type": "structure",
+      "members": {
+        "excludes": {
+          "shape": "CriteriaBlockForJob",
+          "locationName": "excludes"
+        },
+        "includes": {
+          "shape": "CriteriaBlockForJob",
+          "locationName": "includes"
+        }
+      }
+    },
     "S3BucketDefinitionForJob": {
       "type": "structure",
       "members": {
@@ -4510,7 +5310,11 @@
           "shape": "__listOf__string",
           "locationName": "buckets"
         }
-      }
+      },
+      "required": [
+        "accountId",
+        "buckets"
+      ]
     },
     "S3BucketOwner": {
       "type": "structure",
@@ -4556,6 +5360,10 @@
         "scoping": {
           "shape": "Scoping",
           "locationName": "scoping"
+        },
+        "bucketCriteria": {
+          "shape": "S3BucketCriteriaForJob",
+          "locationName": "bucketCriteria"
         }
       }
     },
@@ -4615,11 +5423,10 @@
     "ScopeFilterKey": {
       "type": "string",
       "enum": [
-        "BUCKET_CREATION_DATE",
         "OBJECT_EXTENSION",
         "OBJECT_LAST_MODIFIED_DATE",
         "OBJECT_SIZE",
-        "TAG"
+        "OBJECT_KEY"
       ]
     },
     "Scoping": {
@@ -4634,6 +5441,173 @@
           "locationName": "includes"
         }
       }
+    },
+    "SearchResourcesBucketCriteria": {
+      "type": "structure",
+      "members": {
+        "excludes": {
+          "shape": "SearchResourcesCriteriaBlock",
+          "locationName": "excludes"
+        },
+        "includes": {
+          "shape": "SearchResourcesCriteriaBlock",
+          "locationName": "includes"
+        }
+      }
+    },
+    "SearchResourcesComparator": {
+      "type": "string",
+      "enum": [
+        "EQ",
+        "NE"
+      ]
+    },
+    "SearchResourcesCriteria": {
+      "type": "structure",
+      "members": {
+        "simpleCriterion": {
+          "shape": "SearchResourcesSimpleCriterion",
+          "locationName": "simpleCriterion"
+        },
+        "tagCriterion": {
+          "shape": "SearchResourcesTagCriterion",
+          "locationName": "tagCriterion"
+        }
+      }
+    },
+    "SearchResourcesCriteriaBlock": {
+      "type": "structure",
+      "members": {
+        "and": {
+          "shape": "__listOfSearchResourcesCriteria",
+          "locationName": "and"
+        }
+      }
+    },
+    "SearchResourcesRequest": {
+      "type": "structure",
+      "members": {
+        "bucketCriteria": {
+          "shape": "SearchResourcesBucketCriteria",
+          "locationName": "bucketCriteria"
+        },
+        "maxResults": {
+          "shape": "__integer",
+          "locationName": "maxResults"
+        },
+        "nextToken": {
+          "shape": "__string",
+          "locationName": "nextToken"
+        },
+        "sortCriteria": {
+          "shape": "SearchResourcesSortCriteria",
+          "locationName": "sortCriteria"
+        }
+      }
+    },
+    "SearchResourcesResponse": {
+      "type": "structure",
+      "members": {
+        "matchingResources": {
+          "shape": "__listOfMatchingResource",
+          "locationName": "matchingResources"
+        },
+        "nextToken": {
+          "shape": "__string",
+          "locationName": "nextToken"
+        }
+      }
+    },
+    "SearchResourcesSimpleCriterion": {
+      "type": "structure",
+      "members": {
+        "comparator": {
+          "shape": "SearchResourcesComparator",
+          "locationName": "comparator"
+        },
+        "key": {
+          "shape": "SearchResourcesSimpleCriterionKey",
+          "locationName": "key"
+        },
+        "values": {
+          "shape": "__listOf__string",
+          "locationName": "values"
+        }
+      }
+    },
+    "SearchResourcesSimpleCriterionKey": {
+      "type": "string",
+      "enum": [
+        "ACCOUNT_ID",
+        "S3_BUCKET_NAME",
+        "S3_BUCKET_EFFECTIVE_PERMISSION",
+        "S3_BUCKET_SHARED_ACCESS"
+      ]
+    },
+    "SearchResourcesSortAttributeName": {
+      "type": "string",
+      "enum": [
+        "ACCOUNT_ID",
+        "RESOURCE_NAME",
+        "S3_CLASSIFIABLE_OBJECT_COUNT",
+        "S3_CLASSIFIABLE_SIZE_IN_BYTES"
+      ]
+    },
+    "SearchResourcesSortCriteria": {
+      "type": "structure",
+      "members": {
+        "attributeName": {
+          "shape": "SearchResourcesSortAttributeName",
+          "locationName": "attributeName"
+        },
+        "orderBy": {
+          "shape": "OrderBy",
+          "locationName": "orderBy"
+        }
+      }
+    },
+    "SearchResourcesTagCriterion": {
+      "type": "structure",
+      "members": {
+        "comparator": {
+          "shape": "SearchResourcesComparator",
+          "locationName": "comparator"
+        },
+        "tagValues": {
+          "shape": "__listOfSearchResourcesTagCriterionPair",
+          "locationName": "tagValues"
+        }
+      }
+    },
+    "SearchResourcesTagCriterionPair": {
+      "type": "structure",
+      "members": {
+        "key": {
+          "shape": "__string",
+          "locationName": "key"
+        },
+        "value": {
+          "shape": "__string",
+          "locationName": "value"
+        }
+      }
+    },
+    "SecurityHubConfiguration": {
+      "type": "structure",
+      "members": {
+        "publishClassificationFindings": {
+          "shape": "__boolean",
+          "locationName": "publishClassificationFindings"
+        },
+        "publishPolicyFindings": {
+          "shape": "__boolean",
+          "locationName": "publishPolicyFindings"
+        }
+      },
+      "required": [
+        "publishPolicyFindings",
+        "publishClassificationFindings"
+      ]
     },
     "SensitiveData": {
       "type": "list",
@@ -4782,12 +5756,62 @@
         "High"
       ]
     },
+    "SeverityLevel": {
+      "type": "structure",
+      "members": {
+        "occurrencesThreshold": {
+          "shape": "__long",
+          "locationName": "occurrencesThreshold"
+        },
+        "severity": {
+          "shape": "DataIdentifierSeverity",
+          "locationName": "severity"
+        }
+      },
+      "required": [
+        "occurrencesThreshold",
+        "severity"
+      ]
+    },
+    "SeverityLevelList": {
+      "type": "list",
+      "member": {
+        "shape": "SeverityLevel"
+      }
+    },
     "SharedAccess": {
       "type": "string",
       "enum": [
         "EXTERNAL",
         "INTERNAL",
-        "NOT_SHARED"
+        "NOT_SHARED",
+        "UNKNOWN"
+      ]
+    },
+    "SimpleCriterionForJob": {
+      "type": "structure",
+      "members": {
+        "comparator": {
+          "shape": "JobComparator",
+          "locationName": "comparator"
+        },
+        "key": {
+          "shape": "SimpleCriterionKeyForJob",
+          "locationName": "key"
+        },
+        "values": {
+          "shape": "__listOf__string",
+          "locationName": "values"
+        }
+      }
+    },
+    "SimpleCriterionKeyForJob": {
+      "type": "string",
+      "enum": [
+        "ACCOUNT_ID",
+        "S3_BUCKET_NAME",
+        "S3_BUCKET_EFFECTIVE_PERMISSION",
+        "S3_BUCKET_SHARED_ACCESS"
       ]
     },
     "SimpleScopeTerm": {
@@ -4844,6 +5868,32 @@
         "ONEZONE_IA",
         "GLACIER"
       ]
+    },
+    "TagCriterionForJob": {
+      "type": "structure",
+      "members": {
+        "comparator": {
+          "shape": "JobComparator",
+          "locationName": "comparator"
+        },
+        "tagValues": {
+          "shape": "__listOfTagCriterionPairForJob",
+          "locationName": "tagValues"
+        }
+      }
+    },
+    "TagCriterionPairForJob": {
+      "type": "structure",
+      "members": {
+        "key": {
+          "shape": "__string",
+          "locationName": "key"
+        },
+        "value": {
+          "shape": "__string",
+          "locationName": "value"
+        }
+      }
     },
     "TagMap": {
       "type": "map",
@@ -4967,6 +6017,21 @@
         "httpStatusCode": 429
       }
     },
+    "TimeRange": {
+      "type": "string",
+      "enum": [
+        "MONTH_TO_DATE",
+        "PAST_30_DAYS"
+      ]
+    },
+    "Type": {
+      "type": "string",
+      "enum": [
+        "NONE",
+        "AES256",
+        "aws:kms"
+      ]
+    },
     "Unit": {
       "type": "string",
       "enum": [
@@ -5062,6 +6127,11 @@
         "position": {
           "shape": "__integer",
           "locationName": "position"
+        },
+        "clientToken": {
+          "shape": "__string",
+          "locationName": "clientToken",
+          "idempotencyToken": true
         }
       },
       "required": [
@@ -5319,6 +6389,23 @@
         "AWSService"
       ]
     },
+    "UserPausedDetails": {
+      "type": "structure",
+      "members": {
+        "jobExpiresAt": {
+          "shape": "__timestampIso8601",
+          "locationName": "jobExpiresAt"
+        },
+        "jobImminentExpirationHealthEventArn": {
+          "shape": "__string",
+          "locationName": "jobImminentExpirationHealthEventArn"
+        },
+        "jobPausedAt": {
+          "shape": "__timestampIso8601",
+          "locationName": "jobPausedAt"
+        }
+      }
+    },
     "ValidationException": {
       "type": "structure",
       "members": {
@@ -5366,6 +6453,12 @@
       "type": "list",
       "member": {
         "shape": "BucketMetadata"
+      }
+    },
+    "__listOfCriteriaForJob": {
+      "type": "list",
+      "member": {
+        "shape": "CriteriaForJob"
       }
     },
     "__listOfCustomDataIdentifierSummary": {
@@ -5428,6 +6521,18 @@
         "shape": "ListJobsFilterTerm"
       }
     },
+    "__listOfManagedDataIdentifierSummary": {
+      "type": "list",
+      "member": {
+        "shape": "ManagedDataIdentifierSummary"
+      }
+    },
+    "__listOfMatchingResource": {
+      "type": "list",
+      "member": {
+        "shape": "MatchingResource"
+      }
+    },
     "__listOfMember": {
       "type": "list",
       "member": {
@@ -5438,6 +6543,24 @@
       "type": "list",
       "member": {
         "shape": "S3BucketDefinitionForJob"
+      }
+    },
+    "__listOfSearchResourcesCriteria": {
+      "type": "list",
+      "member": {
+        "shape": "SearchResourcesCriteria"
+      }
+    },
+    "__listOfSearchResourcesTagCriterionPair": {
+      "type": "list",
+      "member": {
+        "shape": "SearchResourcesTagCriterionPair"
+      }
+    },
+    "__listOfTagCriterionPairForJob": {
+      "type": "list",
+      "member": {
+        "shape": "TagCriterionPairForJob"
       }
     },
     "__listOfTagValuePair": {

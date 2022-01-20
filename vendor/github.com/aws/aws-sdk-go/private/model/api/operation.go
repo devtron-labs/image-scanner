@@ -1,3 +1,4 @@
+//go:build codegen
 // +build codegen
 
 package api
@@ -16,7 +17,7 @@ type Operation struct {
 	API                 *API `json:"-"`
 	ExportedName        string
 	Name                string
-	Documentation       string
+	Documentation       string `json:"-"`
 	HTTP                HTTPInfo
 	Host                string     `json:"host"`
 	InputRef            ShapeRef   `json:"input"`
@@ -143,6 +144,11 @@ func (o *Operation) GetSigner() string {
 	return buf.String()
 }
 
+// HasAccountIDMemberWithARN returns true if an account id member exists for an input shape that may take in an ARN.
+func (o *Operation) HasAccountIDMemberWithARN() bool {
+	return o.InputRef.Shape.HasAccountIdMemberWithARN
+}
+
 // operationTmpl defines a template for rendering an API Operation
 var operationTmpl = template.Must(template.New("operation").Funcs(template.FuncMap{
 	"EnableStopOnSameToken": enableStopOnSameToken,
@@ -208,6 +214,12 @@ func (c *{{ .API.StructName }}) {{ .ExportedName }}Request(` +
 		{{ .GetSigner }}
 	{{- end }}
 
+	{{- if .HasAccountIDMemberWithARN }}
+		// update account id or check if provided input for account id member matches 
+		// the account id present in ARN
+		req.Handlers.Validate.PushFrontNamed(updateAccountIDWithARNHandler)
+	{{- end }}
+
 	{{- if .ShouldDiscardResponse -}}
 		{{- $_ := .API.AddSDKImport "private/protocol" }}
 		{{- $_ := .API.AddSDKImport "private/protocol" .API.ProtocolPackage }}
@@ -237,6 +249,15 @@ func (c *{{ .API.StructName }}) {{ .ExportedName }}Request(` +
 			{{- if $inputStream }}
 
 				req.Handlers.Sign.PushFront(es.setupInputPipe)
+				req.Handlers.UnmarshalError.PushBackNamed(request.NamedHandler{
+					Name: "InputPipeCloser",
+					Fn: func (r *request.Request) {
+							err := es.closeInputPipe()
+							if err != nil {
+								r.Error = awserr.New(eventstreamapi.InputWriterCloseErrorCode, err.Error(), r.Error)
+							}
+						},
+				})
 				req.Handlers.Build.PushBack(request.WithSetRequestHeaders(map[string]string{
 					"Content-Type": "application/vnd.amazon.eventstream",
 					"X-Amz-Content-Sha256": "STREAMING-AWS4-HMAC-SHA256-EVENTS",

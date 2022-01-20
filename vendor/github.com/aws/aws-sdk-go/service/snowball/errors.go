@@ -12,10 +12,17 @@ const (
 	// "ClusterLimitExceededException".
 	//
 	// Job creation failed. Currently, clusters support five nodes. If you have
-	// less than five nodes for your cluster and you have more nodes to create for
-	// this cluster, try again and create jobs until your cluster has exactly five
-	// notes.
+	// fewer than five nodes for your cluster and you have more nodes to create
+	// for this cluster, try again and create jobs until your cluster has exactly
+	// five nodes.
 	ErrCodeClusterLimitExceededException = "ClusterLimitExceededException"
+
+	// ErrCodeConflictException for service response error code
+	// "ConflictException".
+	//
+	// You get this exception when you call CreateReturnShippingLabel more than
+	// once when other requests are not completed.
+	ErrCodeConflictException = "ConflictException"
 
 	// ErrCodeEc2RequestFailedException for service response error code
 	// "Ec2RequestFailedException".
@@ -63,27 +70,37 @@ const (
 	// ErrCodeKMSRequestFailedException for service response error code
 	// "KMSRequestFailedException".
 	//
-	// The provided AWS Key Management Service key lacks the permissions to perform
+	// The provided Key Management Service key lacks the permissions to perform
 	// the specified CreateJob or UpdateJob action.
 	ErrCodeKMSRequestFailedException = "KMSRequestFailedException"
+
+	// ErrCodeReturnShippingLabelAlreadyExistsException for service response error code
+	// "ReturnShippingLabelAlreadyExistsException".
+	//
+	// You get this exception if you call CreateReturnShippingLabel and a valid
+	// return shipping label already exists. In this case, use DescribeReturnShippingLabel
+	// to get the URL.
+	ErrCodeReturnShippingLabelAlreadyExistsException = "ReturnShippingLabelAlreadyExistsException"
 
 	// ErrCodeUnsupportedAddressException for service response error code
 	// "UnsupportedAddressException".
 	//
 	// The address is either outside the serviceable area for your region, or an
 	// error occurred. Check the address with your region's carrier and try again.
-	// If the issue persists, contact AWS Support.
+	// If the issue persists, contact Amazon Web Services Support.
 	ErrCodeUnsupportedAddressException = "UnsupportedAddressException"
 )
 
 var exceptionFromCode = map[string]func(protocol.ResponseMetadata) error{
-	"ClusterLimitExceededException":    newErrorClusterLimitExceededException,
-	"Ec2RequestFailedException":        newErrorEc2RequestFailedException,
-	"InvalidAddressException":          newErrorInvalidAddressException,
-	"InvalidInputCombinationException": newErrorInvalidInputCombinationException,
-	"InvalidJobStateException":         newErrorInvalidJobStateException,
-	"InvalidNextTokenException":        newErrorInvalidNextTokenException,
-	"InvalidResourceException":         newErrorInvalidResourceException,
-	"KMSRequestFailedException":        newErrorKMSRequestFailedException,
-	"UnsupportedAddressException":      newErrorUnsupportedAddressException,
+	"ClusterLimitExceededException":             newErrorClusterLimitExceededException,
+	"ConflictException":                         newErrorConflictException,
+	"Ec2RequestFailedException":                 newErrorEc2RequestFailedException,
+	"InvalidAddressException":                   newErrorInvalidAddressException,
+	"InvalidInputCombinationException":          newErrorInvalidInputCombinationException,
+	"InvalidJobStateException":                  newErrorInvalidJobStateException,
+	"InvalidNextTokenException":                 newErrorInvalidNextTokenException,
+	"InvalidResourceException":                  newErrorInvalidResourceException,
+	"KMSRequestFailedException":                 newErrorKMSRequestFailedException,
+	"ReturnShippingLabelAlreadyExistsException": newErrorReturnShippingLabelAlreadyExistsException,
+	"UnsupportedAddressException":               newErrorUnsupportedAddressException,
 }
