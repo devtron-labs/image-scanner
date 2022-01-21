@@ -8,7 +8,7 @@ import (
 	/*"github.com/devtron-labs/image-scanner/pkg"*/
 	/*"github.com/devtron-labs/image-scanner/pkg"*/
 	"encoding/json"
-	"github.com/nats-io/stan"
+	"github.com/nats-io/stan.go"
 	"go.uber.org/zap"
 	"time"
 )
