@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/internal/sql/connection.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/sql/connection.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/util/BasicProviders.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/util/BasicProviders.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/internal/sql/repository/DockerArtifactStoreRepository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wire.go" beforeDir="false" afterPath="$PROJECT_DIR$/Wire.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/bean.go" beforeDir="false" afterPath="$PROJECT_DIR$/common/bean.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/klarService/KlarService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/klarService/KlarService.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,11 +36,5 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="WindowStateProjectService">
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup" timestamp="1603776124643">
-      <screen x="0" y="0" width="1440" height="900" />
-    </state>
-    <state x="385" y="196" width="670" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1603776124643" />
   </component>
 </project>
