@@ -184,9 +184,10 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 			impl.logger.Errorw("Failed to analyze using API", "ver", ver, "err", err)
 		} else {
 			if !impl.klarConfig.JSONOutput {
-				impl.logger.Infow("breaking from image analysing", "vs", vs, "err", err, "ver", ver,"klarConfig",impl.klarConfig)
+				impl.logger.Infow("got results from clair api", "vs", vs, "err", err, "ver", ver,"klarConfig",impl.klarConfig)
 				impl.logger.Debugw("Got results from Clair API ", "ver", ver)
 			}
+			impl.logger.Infow("breaking from image analysing", "vs", vs, "err", err, "ver", ver,"klarConfig",impl.klarConfig)
 			break
 		}
 	}

@@ -28,10 +28,8 @@ type apiV3 struct {
 
 func newAPI(url string, version int, timeout time.Duration) (API, error) {
 	if version < 3 {
-		fmt.Sprintf("going with newAPIV1 url, version : %s, %d",url, version)
 		return newAPIV1(url, timeout), nil
 	}
-	fmt.Sprintf("going with newAPIV3 url, version : %s, %d",url, version)
 	return newAPIV3(url)
 }
 
@@ -42,7 +40,6 @@ func newAPIV1(url string, timeout time.Duration) *apiV1 {
 	if strings.LastIndex(url, ":") < 6 {
 		url = fmt.Sprintf("%s:6060", url)
 	}
-	fmt.Sprintf("newApiV1, url: %s, timeout : %v", url, timeout)
 	return &apiV1{
 		url: url,
 		client: http.Client{
@@ -59,9 +56,7 @@ func newAPIV3(url string) (*apiV3, error) {
 	if strings.Index(url, ":") == -1 {
 		url = fmt.Sprintf("%s:6060", url)
 	}
-	fmt.Sprintf("newAPIV3, url : %s", url)
 	conn, err := grpc.Dial(url, grpc.WithInsecure())
-	fmt.Sprintf("newAPIV3, grpc.Dial result, conn : %v, err: %v", conn, err)
 	if err != nil {
 		return nil, fmt.Errorf("did not connect to %s: %v", url, err)
 	}
