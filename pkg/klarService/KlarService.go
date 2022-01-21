@@ -173,7 +173,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 			impl.logger.Debugw("Analysing layers ", "layers", len(image.FsLayers))
 		}
 	}
-	impl.logger.Infow("output = jsonOutput", "output", output)
+	impl.logger.Infow("output = jsonOutput", "output", output,"klarConfig",impl.klarConfig)
 	var vs []*clair.Vulnerability
 	for _, ver := range []int{1, 3} {
 		c := clair.NewClair(impl.klarConfig.ClairAddr, ver, time.Duration(5*time.Minute))
@@ -184,6 +184,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 			impl.logger.Errorw("Failed to analyze using API", "ver", ver, "err", err)
 		} else {
 			if !impl.klarConfig.JSONOutput {
+				impl.logger.Infow("breaking from image analysing", "vs", vs, "err", err, "ver", ver,"klarConfig",impl.klarConfig)
 				impl.logger.Debugw("Got results from Clair API ", "ver", ver)
 			}
 			break

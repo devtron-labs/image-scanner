@@ -74,6 +74,8 @@ type layerEnvelope struct {
 // If protocol is missing HTTP will be used. If port is missing 6060 will be used
 func NewClair(url string, version int, timeout time.Duration) Clair {
 	api, err := newAPI(url, version, timeout)
+	fmt.Sprintf("newClair newAPI results, api : %v err : %v",api, err)
+	fmt.Sprintf("API client version payload %d %s: %v", version, url, timeout)
 	if err != nil {
 		panic(fmt.Sprintf("cant't create API client version %d %s: %s", version, url, err))
 	}
