@@ -3,14 +3,21 @@
 // Package ram provides the client and types for making API
 // requests to AWS Resource Access Manager.
 //
-// Use AWS Resource Access Manager to share AWS resources between AWS accounts.
-// To share a resource, you create a resource share, associate the resource
-// with the resource share, and specify the principals that can access the resources
-// associated with the resource share. The following principals are supported:
-// AWS accounts, organizational units (OU) from AWS Organizations, and organizations
-// from AWS Organizations.
+// This is the Resource Access Manager API Reference. This documentation provides
+// descriptions and syntax for each of the actions and data types in RAM. RAM
+// is a service that helps you securely share your Amazon Web Services resources
+// across Amazon Web Services accounts. If you have multiple Amazon Web Services
+// accounts, you can use RAM to share those resources with other accounts. If
+// you use Organizations to manage your accounts, then you share your resources
+// with your organization or organizational units (OUs). For supported resource
+// types, you can also share resources with individual Identity and Access Management
+// (IAM) roles an users.
 //
-// For more information, see the AWS Resource Access Manager User Guide (https://docs.aws.amazon.com/ram/latest/userguide/).
+// To learn more about RAM, see the following resources:
+//
+//    * Resource Access Manager product page (http://aws.amazon.com/ram)
+//
+//    * Resource Access Manager User Guide (https://docs.aws.amazon.com/ram/latest/userguide/)
 //
 // See https://docs.aws.amazon.com/goto/WebAPI/ram-2018-01-04 for more information on this service.
 //

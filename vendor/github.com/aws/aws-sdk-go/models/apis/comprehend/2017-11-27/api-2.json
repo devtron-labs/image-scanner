@@ -107,6 +107,21 @@
         {"shape":"InternalServerException"}
       ]
     },
+    "ContainsPiiEntities":{
+      "name":"ContainsPiiEntities",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ContainsPiiEntitiesRequest"},
+      "output":{"shape":"ContainsPiiEntitiesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"TextSizeLimitExceededException"},
+        {"shape":"UnsupportedLanguageException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
     "CreateDocumentClassifier":{
       "name":"CreateDocumentClassifier",
       "http":{
@@ -304,6 +319,21 @@
         {"shape":"InternalServerException"}
       ]
     },
+    "DescribeEventsDetectionJob":{
+      "name":"DescribeEventsDetectionJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeEventsDetectionJobRequest"},
+      "output":{"shape":"DescribeEventsDetectionJobResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"JobNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
     "DescribeKeyPhrasesDetectionJob":{
       "name":"DescribeKeyPhrasesDetectionJob",
       "http":{
@@ -312,6 +342,21 @@
       },
       "input":{"shape":"DescribeKeyPhrasesDetectionJobRequest"},
       "output":{"shape":"DescribeKeyPhrasesDetectionJobResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"JobNotFoundException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
+    "DescribePiiEntitiesDetectionJob":{
+      "name":"DescribePiiEntitiesDetectionJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribePiiEntitiesDetectionJobRequest"},
+      "output":{"shape":"DescribePiiEntitiesDetectionJobResponse"},
       "errors":[
         {"shape":"InvalidRequestException"},
         {"shape":"JobNotFoundException"},
@@ -394,6 +439,21 @@
         {"shape":"InternalServerException"}
       ]
     },
+    "DetectPiiEntities":{
+      "name":"DetectPiiEntities",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DetectPiiEntitiesRequest"},
+      "output":{"shape":"DetectPiiEntitiesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"TextSizeLimitExceededException"},
+        {"shape":"UnsupportedLanguageException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
     "DetectSentiment":{
       "name":"DetectSentiment",
       "http":{
@@ -436,6 +496,20 @@
         {"shape":"InvalidRequestException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"InvalidFilterException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
+    "ListDocumentClassifierSummaries":{
+      "name":"ListDocumentClassifierSummaries",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListDocumentClassifierSummariesRequest"},
+      "output":{"shape":"ListDocumentClassifierSummariesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"TooManyRequestsException"},
         {"shape":"InternalServerException"}
       ]
     },
@@ -498,6 +572,20 @@
         {"shape":"InternalServerException"}
       ]
     },
+    "ListEntityRecognizerSummaries":{
+      "name":"ListEntityRecognizerSummaries",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListEntityRecognizerSummariesRequest"},
+      "output":{"shape":"ListEntityRecognizerSummariesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
     "ListEntityRecognizers":{
       "name":"ListEntityRecognizers",
       "http":{
@@ -513,6 +601,21 @@
         {"shape":"InternalServerException"}
       ]
     },
+    "ListEventsDetectionJobs":{
+      "name":"ListEventsDetectionJobs",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListEventsDetectionJobsRequest"},
+      "output":{"shape":"ListEventsDetectionJobsResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InvalidFilterException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
     "ListKeyPhrasesDetectionJobs":{
       "name":"ListKeyPhrasesDetectionJobs",
       "http":{
@@ -521,6 +624,21 @@
       },
       "input":{"shape":"ListKeyPhrasesDetectionJobsRequest"},
       "output":{"shape":"ListKeyPhrasesDetectionJobsResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"InvalidFilterException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
+    "ListPiiEntitiesDetectionJobs":{
+      "name":"ListPiiEntitiesDetectionJobs",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"ListPiiEntitiesDetectionJobsRequest"},
+      "output":{"shape":"ListPiiEntitiesDetectionJobsResponse"},
       "errors":[
         {"shape":"InvalidRequestException"},
         {"shape":"TooManyRequestsException"},
@@ -586,6 +704,7 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"ResourceUnavailableException"},
         {"shape":"KmsKeyValidationException"},
+        {"shape":"TooManyTagsException"},
         {"shape":"InternalServerException"}
       ]
     },
@@ -601,6 +720,7 @@
         {"shape":"InvalidRequestException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"KmsKeyValidationException"},
+        {"shape":"TooManyTagsException"},
         {"shape":"InternalServerException"}
       ]
     },
@@ -618,6 +738,23 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"ResourceUnavailableException"},
         {"shape":"KmsKeyValidationException"},
+        {"shape":"TooManyTagsException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
+    "StartEventsDetectionJob":{
+      "name":"StartEventsDetectionJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StartEventsDetectionJobRequest"},
+      "output":{"shape":"StartEventsDetectionJobResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"KmsKeyValidationException"},
+        {"shape":"TooManyTagsException"},
         {"shape":"InternalServerException"}
       ]
     },
@@ -633,6 +770,23 @@
         {"shape":"InvalidRequestException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"KmsKeyValidationException"},
+        {"shape":"TooManyTagsException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
+    "StartPiiEntitiesDetectionJob":{
+      "name":"StartPiiEntitiesDetectionJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StartPiiEntitiesDetectionJobRequest"},
+      "output":{"shape":"StartPiiEntitiesDetectionJobResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"TooManyRequestsException"},
+        {"shape":"KmsKeyValidationException"},
+        {"shape":"TooManyTagsException"},
         {"shape":"InternalServerException"}
       ]
     },
@@ -648,6 +802,7 @@
         {"shape":"InvalidRequestException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"KmsKeyValidationException"},
+        {"shape":"TooManyTagsException"},
         {"shape":"InternalServerException"}
       ]
     },
@@ -663,6 +818,7 @@
         {"shape":"InvalidRequestException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"KmsKeyValidationException"},
+        {"shape":"TooManyTagsException"},
         {"shape":"InternalServerException"}
       ]
     },
@@ -694,6 +850,20 @@
         {"shape":"InternalServerException"}
       ]
     },
+    "StopEventsDetectionJob":{
+      "name":"StopEventsDetectionJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StopEventsDetectionJobRequest"},
+      "output":{"shape":"StopEventsDetectionJobResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"JobNotFoundException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
     "StopKeyPhrasesDetectionJob":{
       "name":"StopKeyPhrasesDetectionJob",
       "http":{
@@ -702,6 +872,20 @@
       },
       "input":{"shape":"StopKeyPhrasesDetectionJobRequest"},
       "output":{"shape":"StopKeyPhrasesDetectionJobResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"JobNotFoundException"},
+        {"shape":"InternalServerException"}
+      ]
+    },
+    "StopPiiEntitiesDetectionJob":{
+      "name":"StopPiiEntitiesDetectionJob",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"StopPiiEntitiesDetectionJobRequest"},
+      "output":{"shape":"StopPiiEntitiesDetectionJobResponse"},
       "errors":[
         {"shape":"InvalidRequestException"},
         {"shape":"JobNotFoundException"},
@@ -805,6 +989,38 @@
   },
   "shapes":{
     "AnyLengthString":{"type":"string"},
+    "AttributeNamesList":{
+      "type":"list",
+      "member":{"shape":"AttributeNamesListItem"}
+    },
+    "AttributeNamesListItem":{
+      "type":"string",
+      "max":63,
+      "min":1,
+      "pattern":"^[a-zA-Z0-9](-*[a-zA-Z0-9])*"
+    },
+    "AugmentedManifestsDocumentTypeFormat":{
+      "type":"string",
+      "enum":[
+        "PLAIN_TEXT_DOCUMENT",
+        "SEMI_STRUCTURED_DOCUMENT"
+      ]
+    },
+    "AugmentedManifestsListItem":{
+      "type":"structure",
+      "required":[
+        "S3Uri",
+        "AttributeNames"
+      ],
+      "members":{
+        "S3Uri":{"shape":"S3Uri"},
+        "Split":{"shape":"Split"},
+        "AttributeNames":{"shape":"AttributeNamesList"},
+        "AnnotationDataS3Uri":{"shape":"S3Uri"},
+        "SourceDocumentsS3Uri":{"shape":"S3Uri"},
+        "DocumentType":{"shape":"AugmentedManifestsDocumentTypeFormat"}
+      }
+    },
     "BatchDetectDominantLanguageItemResult":{
       "type":"structure",
       "members":{
@@ -1022,7 +1238,7 @@
     "ComprehendArn":{
       "type":"string",
       "max":256,
-      "pattern":"arn:aws(-[^:]+)?:comprehend:[a-zA-Z0-9-]*:[0-9]{12}:[a-zA-Z0-9-]{1,64}/[a-zA-Z0-9](-*[a-zA-Z0-9])*"
+      "pattern":"arn:aws(-[^:]+)?:comprehend:[a-zA-Z0-9-]*:[0-9]{12}:[a-zA-Z0-9-]{1,64}/[a-zA-Z0-9](-*[a-zA-Z0-9])*(/version/[a-zA-Z0-9](-*[a-zA-Z0-9])*)?"
     },
     "ComprehendArnName":{
       "type":"string",
@@ -1042,7 +1258,7 @@
     "ComprehendModelArn":{
       "type":"string",
       "max":256,
-      "pattern":"arn:aws(-[^:]+)?:comprehend:[a-zA-Z0-9-]*:[0-9]{12}:(document-classifier|entity-recognizer)/[a-zA-Z0-9](-*[a-zA-Z0-9])*"
+      "pattern":"arn:aws(-[^:]+)?:comprehend:[a-zA-Z0-9-]*:[0-9]{12}:(document-classifier|entity-recognizer)/[a-zA-Z0-9](-*[a-zA-Z0-9])*(/version/[a-zA-Z0-9](-*[a-zA-Z0-9])*)?"
     },
     "ConcurrentModificationException":{
       "type":"structure",
@@ -1050,6 +1266,23 @@
         "Message":{"shape":"String"}
       },
       "exception":true
+    },
+    "ContainsPiiEntitiesRequest":{
+      "type":"structure",
+      "required":[
+        "Text",
+        "LanguageCode"
+      ],
+      "members":{
+        "Text":{"shape":"String"},
+        "LanguageCode":{"shape":"LanguageCode"}
+      }
+    },
+    "ContainsPiiEntitiesResponse":{
+      "type":"structure",
+      "members":{
+        "Labels":{"shape":"ListOfEntityLabels"}
+      }
     },
     "CreateDocumentClassifierRequest":{
       "type":"structure",
@@ -1061,6 +1294,7 @@
       ],
       "members":{
         "DocumentClassifierName":{"shape":"ComprehendArnName"},
+        "VersionName":{"shape":"VersionName"},
         "DataAccessRoleArn":{"shape":"IamRoleArn"},
         "Tags":{"shape":"TagList"},
         "InputDataConfig":{"shape":"DocumentClassifierInputDataConfig"},
@@ -1072,7 +1306,8 @@
         "LanguageCode":{"shape":"LanguageCode"},
         "VolumeKmsKeyId":{"shape":"KmsKeyId"},
         "VpcConfig":{"shape":"VpcConfig"},
-        "Mode":{"shape":"DocumentClassifierMode"}
+        "Mode":{"shape":"DocumentClassifierMode"},
+        "ModelKmsKeyId":{"shape":"KmsKeyId"}
       }
     },
     "CreateDocumentClassifierResponse":{
@@ -1096,7 +1331,8 @@
           "shape":"ClientRequestTokenString",
           "idempotencyToken":true
         },
-        "Tags":{"shape":"TagList"}
+        "Tags":{"shape":"TagList"},
+        "DataAccessRoleArn":{"shape":"IamRoleArn"}
       }
     },
     "CreateEndpointResponse":{
@@ -1115,6 +1351,7 @@
       ],
       "members":{
         "RecognizerName":{"shape":"ComprehendArnName"},
+        "VersionName":{"shape":"VersionName"},
         "DataAccessRoleArn":{"shape":"IamRoleArn"},
         "Tags":{"shape":"TagList"},
         "InputDataConfig":{"shape":"EntityRecognizerInputDataConfig"},
@@ -1124,7 +1361,8 @@
         },
         "LanguageCode":{"shape":"LanguageCode"},
         "VolumeKmsKeyId":{"shape":"KmsKeyId"},
-        "VpcConfig":{"shape":"VpcConfig"}
+        "VpcConfig":{"shape":"VpcConfig"},
+        "ModelKmsKeyId":{"shape":"KmsKeyId"}
       }
     },
     "CreateEntityRecognizerResponse":{
@@ -1257,6 +1495,19 @@
         "EntityRecognizerProperties":{"shape":"EntityRecognizerProperties"}
       }
     },
+    "DescribeEventsDetectionJobRequest":{
+      "type":"structure",
+      "required":["JobId"],
+      "members":{
+        "JobId":{"shape":"JobId"}
+      }
+    },
+    "DescribeEventsDetectionJobResponse":{
+      "type":"structure",
+      "members":{
+        "EventsDetectionJobProperties":{"shape":"EventsDetectionJobProperties"}
+      }
+    },
     "DescribeKeyPhrasesDetectionJobRequest":{
       "type":"structure",
       "required":["JobId"],
@@ -1268,6 +1519,19 @@
       "type":"structure",
       "members":{
         "KeyPhrasesDetectionJobProperties":{"shape":"KeyPhrasesDetectionJobProperties"}
+      }
+    },
+    "DescribePiiEntitiesDetectionJobRequest":{
+      "type":"structure",
+      "required":["JobId"],
+      "members":{
+        "JobId":{"shape":"JobId"}
+      }
+    },
+    "DescribePiiEntitiesDetectionJobResponse":{
+      "type":"structure",
+      "members":{
+        "PiiEntitiesDetectionJobProperties":{"shape":"PiiEntitiesDetectionJobProperties"}
       }
     },
     "DescribeSentimentDetectionJobRequest":{
@@ -1344,6 +1608,23 @@
       },
       "sensitive":true
     },
+    "DetectPiiEntitiesRequest":{
+      "type":"structure",
+      "required":[
+        "Text",
+        "LanguageCode"
+      ],
+      "members":{
+        "Text":{"shape":"String"},
+        "LanguageCode":{"shape":"LanguageCode"}
+      }
+    },
+    "DetectPiiEntitiesResponse":{
+      "type":"structure",
+      "members":{
+        "Entities":{"shape":"ListOfPiiEntities"}
+      }
+    },
     "DetectSentimentRequest":{
       "type":"structure",
       "required":[
@@ -1401,6 +1682,7 @@
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobName":{"shape":"JobName"},
         "JobStatus":{"shape":"JobStatus"},
         "Message":{"shape":"AnyLengthString"},
@@ -1421,7 +1703,18 @@
     "DocumentClassifierArn":{
       "type":"string",
       "max":256,
-      "pattern":"arn:aws(-[^:]+)?:comprehend:[a-zA-Z0-9-]*:[0-9]{12}:document-classifier/[a-zA-Z0-9](-*[a-zA-Z0-9])*"
+      "pattern":"arn:aws(-[^:]+)?:comprehend:[a-zA-Z0-9-]*:[0-9]{12}:document-classifier/[a-zA-Z0-9](-*[a-zA-Z0-9])*(/version/[a-zA-Z0-9](-*[a-zA-Z0-9])*)?"
+    },
+    "DocumentClassifierAugmentedManifestsList":{
+      "type":"list",
+      "member":{"shape":"AugmentedManifestsListItem"}
+    },
+    "DocumentClassifierDataFormat":{
+      "type":"string",
+      "enum":[
+        "COMPREHEND_CSV",
+        "AUGMENTED_MANIFEST"
+      ]
     },
     "DocumentClassifierEndpointArn":{
       "type":"string",
@@ -1432,16 +1725,19 @@
       "type":"structure",
       "members":{
         "Status":{"shape":"ModelStatus"},
+        "DocumentClassifierName":{"shape":"ComprehendArnName"},
         "SubmitTimeBefore":{"shape":"Timestamp"},
         "SubmitTimeAfter":{"shape":"Timestamp"}
       }
     },
     "DocumentClassifierInputDataConfig":{
       "type":"structure",
-      "required":["S3Uri"],
       "members":{
+        "DataFormat":{"shape":"DocumentClassifierDataFormat"},
         "S3Uri":{"shape":"S3Uri"},
-        "LabelDelimiter":{"shape":"LabelDelimiter"}
+        "TestS3Uri":{"shape":"S3Uri"},
+        "LabelDelimiter":{"shape":"LabelDelimiter"},
+        "AugmentedManifests":{"shape":"DocumentClassifierAugmentedManifestsList"}
       }
     },
     "DocumentClassifierMode":{
@@ -1475,18 +1771,64 @@
         "DataAccessRoleArn":{"shape":"IamRoleArn"},
         "VolumeKmsKeyId":{"shape":"KmsKeyId"},
         "VpcConfig":{"shape":"VpcConfig"},
-        "Mode":{"shape":"DocumentClassifierMode"}
+        "Mode":{"shape":"DocumentClassifierMode"},
+        "ModelKmsKeyId":{"shape":"KmsKeyId"},
+        "VersionName":{"shape":"VersionName"}
       }
     },
     "DocumentClassifierPropertiesList":{
       "type":"list",
       "member":{"shape":"DocumentClassifierProperties"}
     },
+    "DocumentClassifierSummariesList":{
+      "type":"list",
+      "member":{"shape":"DocumentClassifierSummary"}
+    },
+    "DocumentClassifierSummary":{
+      "type":"structure",
+      "members":{
+        "DocumentClassifierName":{"shape":"ComprehendArnName"},
+        "NumberOfVersions":{"shape":"Integer"},
+        "LatestVersionCreatedAt":{"shape":"Timestamp"},
+        "LatestVersionName":{"shape":"VersionName"},
+        "LatestVersionStatus":{"shape":"ModelStatus"}
+      }
+    },
     "DocumentLabel":{
       "type":"structure",
       "members":{
         "Name":{"shape":"String"},
         "Score":{"shape":"Float"}
+      }
+    },
+    "DocumentReadAction":{
+      "type":"string",
+      "enum":[
+        "TEXTRACT_DETECT_DOCUMENT_TEXT",
+        "TEXTRACT_ANALYZE_DOCUMENT"
+      ]
+    },
+    "DocumentReadFeatureTypes":{
+      "type":"string",
+      "enum":[
+        "TABLES",
+        "FORMS"
+      ]
+    },
+    "DocumentReadMode":{
+      "type":"string",
+      "enum":[
+        "SERVICE_DEFAULT",
+        "FORCE_DOCUMENT_READ_ACTION"
+      ]
+    },
+    "DocumentReaderConfig":{
+      "type":"structure",
+      "required":["DocumentReadAction"],
+      "members":{
+        "DocumentReadAction":{"shape":"DocumentReadAction"},
+        "DocumentReadMode":{"shape":"DocumentReadMode"},
+        "FeatureTypes":{"shape":"ListOfDocumentReadFeatureTypes"}
       }
     },
     "DominantLanguage":{
@@ -1509,6 +1851,7 @@
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobName":{"shape":"JobName"},
         "JobStatus":{"shape":"JobStatus"},
         "Message":{"shape":"AnyLengthString"},
@@ -1542,10 +1885,13 @@
         "Status":{"shape":"EndpointStatus"},
         "Message":{"shape":"AnyLengthString"},
         "ModelArn":{"shape":"ComprehendModelArn"},
+        "DesiredModelArn":{"shape":"ComprehendModelArn"},
         "DesiredInferenceUnits":{"shape":"InferenceUnitsInteger"},
         "CurrentInferenceUnits":{"shape":"InferenceUnitsInteger"},
         "CreationTime":{"shape":"Timestamp"},
-        "LastModifiedTime":{"shape":"Timestamp"}
+        "LastModifiedTime":{"shape":"Timestamp"},
+        "DataAccessRoleArn":{"shape":"IamRoleArn"},
+        "DesiredDataAccessRoleArn":{"shape":"IamRoleArn"}
       }
     },
     "EndpointPropertiesList":{
@@ -1575,6 +1921,7 @@
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobName":{"shape":"JobName"},
         "JobStatus":{"shape":"JobStatus"},
         "Message":{"shape":"AnyLengthString"},
@@ -1603,23 +1950,44 @@
         "EndOffset":{"shape":"Integer"}
       }
     },
+    "EntityLabel":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"PiiEntityType"},
+        "Score":{"shape":"Float"}
+      }
+    },
     "EntityRecognizerAnnotations":{
       "type":"structure",
       "required":["S3Uri"],
       "members":{
-        "S3Uri":{"shape":"S3Uri"}
+        "S3Uri":{"shape":"S3Uri"},
+        "TestS3Uri":{"shape":"S3Uri"}
       }
     },
     "EntityRecognizerArn":{
       "type":"string",
       "max":256,
-      "pattern":"arn:aws(-[^:]+)?:comprehend:[a-zA-Z0-9-]*:[0-9]{12}:entity-recognizer/[a-zA-Z0-9](-*[a-zA-Z0-9])*"
+      "pattern":"arn:aws(-[^:]+)?:comprehend:[a-zA-Z0-9-]*:[0-9]{12}:entity-recognizer/[a-zA-Z0-9](-*[a-zA-Z0-9])*(/version/[a-zA-Z0-9](-*[a-zA-Z0-9])*)?"
+    },
+    "EntityRecognizerAugmentedManifestsList":{
+      "type":"list",
+      "member":{"shape":"AugmentedManifestsListItem"}
+    },
+    "EntityRecognizerDataFormat":{
+      "type":"string",
+      "enum":[
+        "COMPREHEND_CSV",
+        "AUGMENTED_MANIFEST"
+      ]
     },
     "EntityRecognizerDocuments":{
       "type":"structure",
       "required":["S3Uri"],
       "members":{
-        "S3Uri":{"shape":"S3Uri"}
+        "S3Uri":{"shape":"S3Uri"},
+        "TestS3Uri":{"shape":"S3Uri"},
+        "InputFormat":{"shape":"InputFormat"}
       }
     },
     "EntityRecognizerEndpointArn":{
@@ -1646,21 +2014,21 @@
       "type":"structure",
       "members":{
         "Status":{"shape":"ModelStatus"},
+        "RecognizerName":{"shape":"ComprehendArnName"},
         "SubmitTimeBefore":{"shape":"Timestamp"},
         "SubmitTimeAfter":{"shape":"Timestamp"}
       }
     },
     "EntityRecognizerInputDataConfig":{
       "type":"structure",
-      "required":[
-        "EntityTypes",
-        "Documents"
-      ],
+      "required":["EntityTypes"],
       "members":{
+        "DataFormat":{"shape":"EntityRecognizerDataFormat"},
         "EntityTypes":{"shape":"EntityTypesList"},
         "Documents":{"shape":"EntityRecognizerDocuments"},
         "Annotations":{"shape":"EntityRecognizerAnnotations"},
-        "EntityList":{"shape":"EntityRecognizerEntityList"}
+        "EntityList":{"shape":"EntityRecognizerEntityList"},
+        "AugmentedManifests":{"shape":"EntityRecognizerAugmentedManifestsList"}
       }
     },
     "EntityRecognizerMetadata":{
@@ -1700,12 +2068,28 @@
         "RecognizerMetadata":{"shape":"EntityRecognizerMetadata"},
         "DataAccessRoleArn":{"shape":"IamRoleArn"},
         "VolumeKmsKeyId":{"shape":"KmsKeyId"},
-        "VpcConfig":{"shape":"VpcConfig"}
+        "VpcConfig":{"shape":"VpcConfig"},
+        "ModelKmsKeyId":{"shape":"KmsKeyId"},
+        "VersionName":{"shape":"VersionName"}
       }
     },
     "EntityRecognizerPropertiesList":{
       "type":"list",
       "member":{"shape":"EntityRecognizerProperties"}
+    },
+    "EntityRecognizerSummariesList":{
+      "type":"list",
+      "member":{"shape":"EntityRecognizerSummary"}
+    },
+    "EntityRecognizerSummary":{
+      "type":"structure",
+      "members":{
+        "RecognizerName":{"shape":"ComprehendArnName"},
+        "NumberOfVersions":{"shape":"Integer"},
+        "LatestVersionCreatedAt":{"shape":"Timestamp"},
+        "LatestVersionName":{"shape":"VersionName"},
+        "LatestVersionStatus":{"shape":"ModelStatus"}
+      }
     },
     "EntityType":{
       "type":"string",
@@ -1724,7 +2108,7 @@
     "EntityTypeName":{
       "type":"string",
       "max":64,
-      "pattern":"[_A-Z0-9]+"
+      "pattern":"^(?:(?!\\\\n+|\\\\t+|\\\\r+|[\\r\\t\\n,]).)+$"
     },
     "EntityTypesEvaluationMetrics":{
       "type":"structure",
@@ -1745,6 +2129,42 @@
         "Type":{"shape":"EntityTypeName"}
       }
     },
+    "EventTypeString":{
+      "type":"string",
+      "max":40,
+      "min":1,
+      "pattern":"[A-Z_]*"
+    },
+    "EventsDetectionJobFilter":{
+      "type":"structure",
+      "members":{
+        "JobName":{"shape":"JobName"},
+        "JobStatus":{"shape":"JobStatus"},
+        "SubmitTimeBefore":{"shape":"Timestamp"},
+        "SubmitTimeAfter":{"shape":"Timestamp"}
+      }
+    },
+    "EventsDetectionJobProperties":{
+      "type":"structure",
+      "members":{
+        "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
+        "JobName":{"shape":"JobName"},
+        "JobStatus":{"shape":"JobStatus"},
+        "Message":{"shape":"AnyLengthString"},
+        "SubmitTime":{"shape":"Timestamp"},
+        "EndTime":{"shape":"Timestamp"},
+        "InputDataConfig":{"shape":"InputDataConfig"},
+        "OutputDataConfig":{"shape":"OutputDataConfig"},
+        "LanguageCode":{"shape":"LanguageCode"},
+        "DataAccessRoleArn":{"shape":"IamRoleArn"},
+        "TargetEventTypes":{"shape":"TargetEventTypes"}
+      }
+    },
+    "EventsDetectionJobPropertiesList":{
+      "type":"list",
+      "member":{"shape":"EventsDetectionJobProperties"}
+    },
     "Float":{"type":"float"},
     "IamRoleArn":{
       "type":"string",
@@ -1761,7 +2181,8 @@
       "required":["S3Uri"],
       "members":{
         "S3Uri":{"shape":"S3Uri"},
-        "InputFormat":{"shape":"InputFormat"}
+        "InputFormat":{"shape":"InputFormat"},
+        "DocumentReaderConfig":{"shape":"DocumentReaderConfig"}
       }
     },
     "InputFormat":{
@@ -1846,6 +2267,7 @@
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobName":{"shape":"JobName"},
         "JobStatus":{"shape":"JobStatus"},
         "Message":{"shape":"AnyLengthString"},
@@ -1865,7 +2287,8 @@
     },
     "KmsKeyId":{
       "type":"string",
-      "max":2048
+      "max":2048,
+      "pattern":".*"
     },
     "KmsKeyValidationException":{
       "type":"structure",
@@ -1909,6 +2332,20 @@
       "type":"structure",
       "members":{
         "DocumentClassificationJobPropertiesList":{"shape":"DocumentClassificationJobPropertiesList"},
+        "NextToken":{"shape":"String"}
+      }
+    },
+    "ListDocumentClassifierSummariesRequest":{
+      "type":"structure",
+      "members":{
+        "NextToken":{"shape":"String"},
+        "MaxResults":{"shape":"MaxResultsInteger"}
+      }
+    },
+    "ListDocumentClassifierSummariesResponse":{
+      "type":"structure",
+      "members":{
+        "DocumentClassifierSummariesList":{"shape":"DocumentClassifierSummariesList"},
         "NextToken":{"shape":"String"}
       }
     },
@@ -1972,6 +2409,20 @@
         "NextToken":{"shape":"String"}
       }
     },
+    "ListEntityRecognizerSummariesRequest":{
+      "type":"structure",
+      "members":{
+        "NextToken":{"shape":"String"},
+        "MaxResults":{"shape":"MaxResultsInteger"}
+      }
+    },
+    "ListEntityRecognizerSummariesResponse":{
+      "type":"structure",
+      "members":{
+        "EntityRecognizerSummariesList":{"shape":"EntityRecognizerSummariesList"},
+        "NextToken":{"shape":"String"}
+      }
+    },
     "ListEntityRecognizersRequest":{
       "type":"structure",
       "members":{
@@ -1984,6 +2435,21 @@
       "type":"structure",
       "members":{
         "EntityRecognizerPropertiesList":{"shape":"EntityRecognizerPropertiesList"},
+        "NextToken":{"shape":"String"}
+      }
+    },
+    "ListEventsDetectionJobsRequest":{
+      "type":"structure",
+      "members":{
+        "Filter":{"shape":"EventsDetectionJobFilter"},
+        "NextToken":{"shape":"String"},
+        "MaxResults":{"shape":"MaxResultsInteger"}
+      }
+    },
+    "ListEventsDetectionJobsResponse":{
+      "type":"structure",
+      "members":{
+        "EventsDetectionJobPropertiesList":{"shape":"EventsDetectionJobPropertiesList"},
         "NextToken":{"shape":"String"}
       }
     },
@@ -2026,6 +2492,12 @@
       "type":"list",
       "member":{"shape":"BatchDetectSyntaxItemResult"}
     },
+    "ListOfDocumentReadFeatureTypes":{
+      "type":"list",
+      "member":{"shape":"DocumentReadFeatureTypes"},
+      "max":2,
+      "min":1
+    },
     "ListOfDominantLanguages":{
       "type":"list",
       "member":{"shape":"DominantLanguage"}
@@ -2033,6 +2505,10 @@
     "ListOfEntities":{
       "type":"list",
       "member":{"shape":"Entity"}
+    },
+    "ListOfEntityLabels":{
+      "type":"list",
+      "member":{"shape":"EntityLabel"}
     },
     "ListOfKeyPhrases":{
       "type":"list",
@@ -2042,9 +2518,32 @@
       "type":"list",
       "member":{"shape":"DocumentLabel"}
     },
+    "ListOfPiiEntities":{
+      "type":"list",
+      "member":{"shape":"PiiEntity"}
+    },
+    "ListOfPiiEntityTypes":{
+      "type":"list",
+      "member":{"shape":"PiiEntityType"}
+    },
     "ListOfSyntaxTokens":{
       "type":"list",
       "member":{"shape":"SyntaxToken"}
+    },
+    "ListPiiEntitiesDetectionJobsRequest":{
+      "type":"structure",
+      "members":{
+        "Filter":{"shape":"PiiEntitiesDetectionJobFilter"},
+        "NextToken":{"shape":"String"},
+        "MaxResults":{"shape":"MaxResultsInteger"}
+      }
+    },
+    "ListPiiEntitiesDetectionJobsResponse":{
+      "type":"structure",
+      "members":{
+        "PiiEntitiesDetectionJobPropertiesList":{"shape":"PiiEntitiesDetectionJobPropertiesList"},
+        "NextToken":{"shape":"String"}
+      }
     },
     "ListSentimentDetectionJobsRequest":{
       "type":"structure",
@@ -2089,6 +2588,12 @@
         "TopicsDetectionJobPropertiesList":{"shape":"TopicsDetectionJobPropertiesList"},
         "NextToken":{"shape":"String"}
       }
+    },
+    "MaskCharacter":{
+      "type":"string",
+      "max":1,
+      "min":1,
+      "pattern":"[!@#$%&*]"
     },
     "MaxResultsInteger":{
       "type":"integer",
@@ -2150,6 +2655,104 @@
         "VERB"
       ]
     },
+    "PiiEntitiesDetectionJobFilter":{
+      "type":"structure",
+      "members":{
+        "JobName":{"shape":"JobName"},
+        "JobStatus":{"shape":"JobStatus"},
+        "SubmitTimeBefore":{"shape":"Timestamp"},
+        "SubmitTimeAfter":{"shape":"Timestamp"}
+      }
+    },
+    "PiiEntitiesDetectionJobProperties":{
+      "type":"structure",
+      "members":{
+        "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
+        "JobName":{"shape":"JobName"},
+        "JobStatus":{"shape":"JobStatus"},
+        "Message":{"shape":"AnyLengthString"},
+        "SubmitTime":{"shape":"Timestamp"},
+        "EndTime":{"shape":"Timestamp"},
+        "InputDataConfig":{"shape":"InputDataConfig"},
+        "OutputDataConfig":{"shape":"PiiOutputDataConfig"},
+        "RedactionConfig":{"shape":"RedactionConfig"},
+        "LanguageCode":{"shape":"LanguageCode"},
+        "DataAccessRoleArn":{"shape":"IamRoleArn"},
+        "Mode":{"shape":"PiiEntitiesDetectionMode"}
+      }
+    },
+    "PiiEntitiesDetectionJobPropertiesList":{
+      "type":"list",
+      "member":{"shape":"PiiEntitiesDetectionJobProperties"}
+    },
+    "PiiEntitiesDetectionMaskMode":{
+      "type":"string",
+      "enum":[
+        "MASK",
+        "REPLACE_WITH_PII_ENTITY_TYPE"
+      ]
+    },
+    "PiiEntitiesDetectionMode":{
+      "type":"string",
+      "enum":[
+        "ONLY_REDACTION",
+        "ONLY_OFFSETS"
+      ]
+    },
+    "PiiEntity":{
+      "type":"structure",
+      "members":{
+        "Score":{"shape":"Float"},
+        "Type":{"shape":"PiiEntityType"},
+        "BeginOffset":{"shape":"Integer"},
+        "EndOffset":{"shape":"Integer"}
+      }
+    },
+    "PiiEntityType":{
+      "type":"string",
+      "enum":[
+        "BANK_ACCOUNT_NUMBER",
+        "BANK_ROUTING",
+        "CREDIT_DEBIT_NUMBER",
+        "CREDIT_DEBIT_CVV",
+        "CREDIT_DEBIT_EXPIRY",
+        "PIN",
+        "EMAIL",
+        "ADDRESS",
+        "NAME",
+        "PHONE",
+        "SSN",
+        "DATE_TIME",
+        "PASSPORT_NUMBER",
+        "DRIVER_ID",
+        "URL",
+        "AGE",
+        "USERNAME",
+        "PASSWORD",
+        "AWS_ACCESS_KEY",
+        "AWS_SECRET_KEY",
+        "IP_ADDRESS",
+        "MAC_ADDRESS",
+        "ALL"
+      ]
+    },
+    "PiiOutputDataConfig":{
+      "type":"structure",
+      "required":["S3Uri"],
+      "members":{
+        "S3Uri":{"shape":"S3Uri"},
+        "KmsKeyId":{"shape":"KmsKeyId"}
+      }
+    },
+    "RedactionConfig":{
+      "type":"structure",
+      "members":{
+        "PiiEntityTypes":{"shape":"ListOfPiiEntityTypes"},
+        "MaskMode":{"shape":"PiiEntitiesDetectionMaskMode"},
+        "MaskCharacter":{"shape":"MaskCharacter"}
+      }
+    },
     "ResourceInUseException":{
       "type":"structure",
       "members":{
@@ -2208,6 +2811,7 @@
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobName":{"shape":"JobName"},
         "JobStatus":{"shape":"JobStatus"},
         "Message":{"shape":"AnyLengthString"},
@@ -2243,6 +2847,13 @@
         "MIXED"
       ]
     },
+    "Split":{
+      "type":"string",
+      "enum":[
+        "TRAIN",
+        "TEST"
+      ]
+    },
     "StartDocumentClassificationJobRequest":{
       "type":"structure",
       "required":[
@@ -2262,13 +2873,15 @@
           "idempotencyToken":true
         },
         "VolumeKmsKeyId":{"shape":"KmsKeyId"},
-        "VpcConfig":{"shape":"VpcConfig"}
+        "VpcConfig":{"shape":"VpcConfig"},
+        "Tags":{"shape":"TagList"}
       }
     },
     "StartDocumentClassificationJobResponse":{
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobStatus":{"shape":"JobStatus"}
       }
     },
@@ -2289,13 +2902,15 @@
           "idempotencyToken":true
         },
         "VolumeKmsKeyId":{"shape":"KmsKeyId"},
-        "VpcConfig":{"shape":"VpcConfig"}
+        "VpcConfig":{"shape":"VpcConfig"},
+        "Tags":{"shape":"TagList"}
       }
     },
     "StartDominantLanguageDetectionJobResponse":{
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobStatus":{"shape":"JobStatus"}
       }
     },
@@ -2319,13 +2934,46 @@
           "idempotencyToken":true
         },
         "VolumeKmsKeyId":{"shape":"KmsKeyId"},
-        "VpcConfig":{"shape":"VpcConfig"}
+        "VpcConfig":{"shape":"VpcConfig"},
+        "Tags":{"shape":"TagList"}
       }
     },
     "StartEntitiesDetectionJobResponse":{
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
+        "JobStatus":{"shape":"JobStatus"}
+      }
+    },
+    "StartEventsDetectionJobRequest":{
+      "type":"structure",
+      "required":[
+        "InputDataConfig",
+        "OutputDataConfig",
+        "DataAccessRoleArn",
+        "LanguageCode",
+        "TargetEventTypes"
+      ],
+      "members":{
+        "InputDataConfig":{"shape":"InputDataConfig"},
+        "OutputDataConfig":{"shape":"OutputDataConfig"},
+        "DataAccessRoleArn":{"shape":"IamRoleArn"},
+        "JobName":{"shape":"JobName"},
+        "LanguageCode":{"shape":"LanguageCode"},
+        "ClientRequestToken":{
+          "shape":"ClientRequestTokenString",
+          "idempotencyToken":true
+        },
+        "TargetEventTypes":{"shape":"TargetEventTypes"},
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "StartEventsDetectionJobResponse":{
+      "type":"structure",
+      "members":{
+        "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobStatus":{"shape":"JobStatus"}
       }
     },
@@ -2348,13 +2996,47 @@
           "idempotencyToken":true
         },
         "VolumeKmsKeyId":{"shape":"KmsKeyId"},
-        "VpcConfig":{"shape":"VpcConfig"}
+        "VpcConfig":{"shape":"VpcConfig"},
+        "Tags":{"shape":"TagList"}
       }
     },
     "StartKeyPhrasesDetectionJobResponse":{
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
+        "JobStatus":{"shape":"JobStatus"}
+      }
+    },
+    "StartPiiEntitiesDetectionJobRequest":{
+      "type":"structure",
+      "required":[
+        "InputDataConfig",
+        "OutputDataConfig",
+        "Mode",
+        "DataAccessRoleArn",
+        "LanguageCode"
+      ],
+      "members":{
+        "InputDataConfig":{"shape":"InputDataConfig"},
+        "OutputDataConfig":{"shape":"OutputDataConfig"},
+        "Mode":{"shape":"PiiEntitiesDetectionMode"},
+        "RedactionConfig":{"shape":"RedactionConfig"},
+        "DataAccessRoleArn":{"shape":"IamRoleArn"},
+        "JobName":{"shape":"JobName"},
+        "LanguageCode":{"shape":"LanguageCode"},
+        "ClientRequestToken":{
+          "shape":"ClientRequestTokenString",
+          "idempotencyToken":true
+        },
+        "Tags":{"shape":"TagList"}
+      }
+    },
+    "StartPiiEntitiesDetectionJobResponse":{
+      "type":"structure",
+      "members":{
+        "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobStatus":{"shape":"JobStatus"}
       }
     },
@@ -2377,13 +3059,15 @@
           "idempotencyToken":true
         },
         "VolumeKmsKeyId":{"shape":"KmsKeyId"},
-        "VpcConfig":{"shape":"VpcConfig"}
+        "VpcConfig":{"shape":"VpcConfig"},
+        "Tags":{"shape":"TagList"}
       }
     },
     "StartSentimentDetectionJobResponse":{
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobStatus":{"shape":"JobStatus"}
       }
     },
@@ -2405,13 +3089,15 @@
           "idempotencyToken":true
         },
         "VolumeKmsKeyId":{"shape":"KmsKeyId"},
-        "VpcConfig":{"shape":"VpcConfig"}
+        "VpcConfig":{"shape":"VpcConfig"},
+        "Tags":{"shape":"TagList"}
       }
     },
     "StartTopicsDetectionJobResponse":{
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobStatus":{"shape":"JobStatus"}
       }
     },
@@ -2443,6 +3129,20 @@
         "JobStatus":{"shape":"JobStatus"}
       }
     },
+    "StopEventsDetectionJobRequest":{
+      "type":"structure",
+      "required":["JobId"],
+      "members":{
+        "JobId":{"shape":"JobId"}
+      }
+    },
+    "StopEventsDetectionJobResponse":{
+      "type":"structure",
+      "members":{
+        "JobId":{"shape":"JobId"},
+        "JobStatus":{"shape":"JobStatus"}
+      }
+    },
     "StopKeyPhrasesDetectionJobRequest":{
       "type":"structure",
       "required":["JobId"],
@@ -2451,6 +3151,20 @@
       }
     },
     "StopKeyPhrasesDetectionJobResponse":{
+      "type":"structure",
+      "members":{
+        "JobId":{"shape":"JobId"},
+        "JobStatus":{"shape":"JobStatus"}
+      }
+    },
+    "StopPiiEntitiesDetectionJobRequest":{
+      "type":"structure",
+      "required":["JobId"],
+      "members":{
+        "JobId":{"shape":"JobId"}
+      }
+    },
+    "StopPiiEntitiesDetectionJobResponse":{
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
@@ -2574,6 +3288,11 @@
       "max":256,
       "min":0
     },
+    "TargetEventTypes":{
+      "type":"list",
+      "member":{"shape":"EventTypeString"},
+      "min":1
+    },
     "TextSizeLimitExceededException":{
       "type":"structure",
       "members":{
@@ -2616,6 +3335,7 @@
       "type":"structure",
       "members":{
         "JobId":{"shape":"JobId"},
+        "JobArn":{"shape":"ComprehendArn"},
         "JobName":{"shape":"JobName"},
         "JobStatus":{"shape":"JobStatus"},
         "Message":{"shape":"AnyLengthString"},
@@ -2658,19 +3378,23 @@
     },
     "UpdateEndpointRequest":{
       "type":"structure",
-      "required":[
-        "EndpointArn",
-        "DesiredInferenceUnits"
-      ],
+      "required":["EndpointArn"],
       "members":{
         "EndpointArn":{"shape":"ComprehendEndpointArn"},
-        "DesiredInferenceUnits":{"shape":"InferenceUnitsInteger"}
+        "DesiredModelArn":{"shape":"ComprehendModelArn"},
+        "DesiredInferenceUnits":{"shape":"InferenceUnitsInteger"},
+        "DesiredDataAccessRoleArn":{"shape":"IamRoleArn"}
       }
     },
     "UpdateEndpointResponse":{
       "type":"structure",
       "members":{
       }
+    },
+    "VersionName":{
+      "type":"string",
+      "max":63,
+      "pattern":"^[a-zA-Z0-9](-*[a-zA-Z0-9])*$"
     },
     "VpcConfig":{
       "type":"structure",

@@ -64,7 +64,8 @@
         {"shape":"ResourceQuotaExceededFault"},
         {"shape":"InvalidResourceStateFault"},
         {"shape":"ResourceNotFoundFault"},
-        {"shape":"AccessDeniedFault"}
+        {"shape":"AccessDeniedFault"},
+        {"shape":"S3AccessDeniedFault"}
       ]
     },
     "CreateEventSubscription":{
@@ -295,6 +296,15 @@
       "errors":[
         {"shape":"ResourceNotFoundFault"}
       ]
+    },
+    "DescribeEndpointSettings":{
+      "name":"DescribeEndpointSettings",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"DescribeEndpointSettingsMessage"},
+      "output":{"shape":"DescribeEndpointSettingsResponse"}
     },
     "DescribeEndpointTypes":{
       "name":"DescribeEndpointTypes",
@@ -604,6 +614,22 @@
         {"shape":"KMSKeyNotAccessibleFault"}
       ]
     },
+    "MoveReplicationTask":{
+      "name":"MoveReplicationTask",
+      "http":{
+        "method":"POST",
+        "requestUri":"/"
+      },
+      "input":{"shape":"MoveReplicationTaskMessage"},
+      "output":{"shape":"MoveReplicationTaskResponse"},
+      "errors":[
+        {"shape":"AccessDeniedFault"},
+        {"shape":"InvalidResourceStateFault"},
+        {"shape":"ResourceNotFoundFault"},
+        {"shape":"KMSKeyNotAccessibleFault"},
+        {"shape":"ResourceQuotaExceededFault"}
+      ]
+    },
     "RebootReplicationInstance":{
       "name":"RebootReplicationInstance",
       "http":{
@@ -732,7 +758,8 @@
         {"shape":"ResourceNotFoundFault"},
         {"shape":"InvalidResourceStateFault"},
         {"shape":"KMSKeyNotAccessibleFault"},
-        {"shape":"ResourceQuotaExceededFault"}
+        {"shape":"ResourceQuotaExceededFault"},
+        {"shape":"AccessDeniedFault"}
       ]
     }
   },
@@ -791,6 +818,10 @@
         "ResourcePendingMaintenanceActions":{"shape":"ResourcePendingMaintenanceActions"}
       }
     },
+    "ArnList":{
+      "type":"list",
+      "member":{"shape":"String"}
+    },
     "AuthMechanismValue":{
       "type":"string",
       "enum":[
@@ -831,6 +862,19 @@
         "ReplicationTaskAssessmentRun":{"shape":"ReplicationTaskAssessmentRun"}
       }
     },
+    "CannedAclForObjectsValue":{
+      "type":"string",
+      "enum":[
+        "none",
+        "private",
+        "public-read",
+        "public-read-write",
+        "authenticated-read",
+        "aws-exec-read",
+        "bucket-owner-read",
+        "bucket-owner-full-control"
+      ]
+    },
     "Certificate":{
       "type":"structure",
       "members":{
@@ -851,6 +895,14 @@
       "member":{"shape":"Certificate"}
     },
     "CertificateWallet":{"type":"blob"},
+    "CharLengthSemantics":{
+      "type":"string",
+      "enum":[
+        "default",
+        "char",
+        "byte"
+      ]
+    },
     "CompressionTypeValue":{
       "type":"string",
       "enum":[
@@ -910,7 +962,11 @@
         "OracleSettings":{"shape":"OracleSettings"},
         "SybaseSettings":{"shape":"SybaseSettings"},
         "MicrosoftSQLServerSettings":{"shape":"MicrosoftSQLServerSettings"},
-        "IBMDb2Settings":{"shape":"IBMDb2Settings"}
+        "IBMDb2Settings":{"shape":"IBMDb2Settings"},
+        "ResourceIdentifier":{"shape":"String"},
+        "DocDbSettings":{"shape":"DocDbSettings"},
+        "RedisSettings":{"shape":"RedisSettings"},
+        "GcpMySQLSettings":{"shape":"GcpMySQLSettings"}
       }
     },
     "CreateEndpointResponse":{
@@ -961,7 +1017,8 @@
         "Tags":{"shape":"TagList"},
         "KmsKeyId":{"shape":"String"},
         "PubliclyAccessible":{"shape":"BooleanOptional"},
-        "DnsNameServers":{"shape":"String"}
+        "DnsNameServers":{"shape":"String"},
+        "ResourceIdentifier":{"shape":"String"}
       }
     },
     "CreateReplicationInstanceResponse":{
@@ -1012,7 +1069,8 @@
         "CdcStartPosition":{"shape":"String"},
         "CdcStopPosition":{"shape":"String"},
         "Tags":{"shape":"TagList"},
-        "TaskData":{"shape":"String"}
+        "TaskData":{"shape":"String"},
+        "ResourceIdentifier":{"shape":"String"}
       }
     },
     "CreateReplicationTaskResponse":{
@@ -1026,6 +1084,25 @@
       "enum":[
         "csv",
         "parquet"
+      ]
+    },
+    "DatePartitionDelimiterValue":{
+      "type":"string",
+      "enum":[
+        "SLASH",
+        "UNDERSCORE",
+        "DASH",
+        "NONE"
+      ]
+    },
+    "DatePartitionSequenceValue":{
+      "type":"string",
+      "enum":[
+        "YYYYMMDD",
+        "YYYYMMDDHH",
+        "YYYYMM",
+        "MMYYYYDD",
+        "DDMMYYYY"
       ]
     },
     "DeleteCertificateMessage":{
@@ -1194,6 +1271,22 @@
       "members":{
         "Marker":{"shape":"String"},
         "Connections":{"shape":"ConnectionList"}
+      }
+    },
+    "DescribeEndpointSettingsMessage":{
+      "type":"structure",
+      "required":["EngineName"],
+      "members":{
+        "EngineName":{"shape":"String"},
+        "MaxRecords":{"shape":"IntegerOptional"},
+        "Marker":{"shape":"String"}
+      }
+    },
+    "DescribeEndpointSettingsResponse":{
+      "type":"structure",
+      "members":{
+        "Marker":{"shape":"String"},
+        "EndpointSettings":{"shape":"EndpointSettingsList"}
       }
     },
     "DescribeEndpointTypesMessage":{
@@ -1478,6 +1571,22 @@
         "BucketName":{"shape":"String"}
       }
     },
+    "DocDbSettings":{
+      "type":"structure",
+      "members":{
+        "Username":{"shape":"String"},
+        "Password":{"shape":"SecretString"},
+        "ServerName":{"shape":"String"},
+        "Port":{"shape":"IntegerOptional"},
+        "DatabaseName":{"shape":"String"},
+        "NestingLevel":{"shape":"NestingLevelValue"},
+        "ExtractDocId":{"shape":"BooleanOptional"},
+        "DocsToInvestigate":{"shape":"IntegerOptional"},
+        "KmsKeyId":{"shape":"String"},
+        "SecretsManagerAccessRoleArn":{"shape":"String"},
+        "SecretsManagerSecretId":{"shape":"String"}
+      }
+    },
     "DynamoDbSettings":{
       "type":"structure",
       "required":["ServiceAccessRoleArn"],
@@ -1547,12 +1656,46 @@
         "OracleSettings":{"shape":"OracleSettings"},
         "SybaseSettings":{"shape":"SybaseSettings"},
         "MicrosoftSQLServerSettings":{"shape":"MicrosoftSQLServerSettings"},
-        "IBMDb2Settings":{"shape":"IBMDb2Settings"}
+        "IBMDb2Settings":{"shape":"IBMDb2Settings"},
+        "DocDbSettings":{"shape":"DocDbSettings"},
+        "RedisSettings":{"shape":"RedisSettings"},
+        "GcpMySQLSettings":{"shape":"GcpMySQLSettings"}
       }
     },
     "EndpointList":{
       "type":"list",
       "member":{"shape":"Endpoint"}
+    },
+    "EndpointSetting":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"String"},
+        "Type":{"shape":"EndpointSettingTypeValue"},
+        "EnumValues":{"shape":"EndpointSettingEnumValues"},
+        "Sensitive":{"shape":"BooleanOptional"},
+        "Units":{"shape":"String"},
+        "Applicability":{"shape":"String"},
+        "IntValueMin":{"shape":"IntegerOptional"},
+        "IntValueMax":{"shape":"IntegerOptional"},
+        "DefaultValue":{"shape":"String"}
+      }
+    },
+    "EndpointSettingEnumValues":{
+      "type":"list",
+      "member":{"shape":"String"}
+    },
+    "EndpointSettingTypeValue":{
+      "type":"string",
+      "enum":[
+        "string",
+        "boolean",
+        "integer",
+        "enum"
+      ]
+    },
+    "EndpointSettingsList":{
+      "type":"list",
+      "member":{"shape":"EndpointSetting"}
     },
     "Event":{
       "type":"structure",
@@ -1625,6 +1768,25 @@
       "type":"list",
       "member":{"shape":"String"}
     },
+    "GcpMySQLSettings":{
+      "type":"structure",
+      "members":{
+        "AfterConnectScript":{"shape":"String"},
+        "CleanSourceMetadataOnMismatch":{"shape":"BooleanOptional"},
+        "DatabaseName":{"shape":"String"},
+        "EventsPollInterval":{"shape":"IntegerOptional"},
+        "TargetDbType":{"shape":"TargetDbType"},
+        "MaxFileSize":{"shape":"IntegerOptional"},
+        "ParallelLoadThreads":{"shape":"IntegerOptional"},
+        "Password":{"shape":"SecretString"},
+        "Port":{"shape":"IntegerOptional"},
+        "ServerName":{"shape":"String"},
+        "ServerTimezone":{"shape":"String"},
+        "Username":{"shape":"String"},
+        "SecretsManagerAccessRoleArn":{"shape":"String"},
+        "SecretsManagerSecretId":{"shape":"String"}
+      }
+    },
     "IBMDb2Settings":{
       "type":"structure",
       "members":{
@@ -1632,7 +1794,12 @@
         "Password":{"shape":"SecretString"},
         "Port":{"shape":"IntegerOptional"},
         "ServerName":{"shape":"String"},
-        "Username":{"shape":"String"}
+        "SetDataCaptureChanges":{"shape":"BooleanOptional"},
+        "CurrentLsn":{"shape":"String"},
+        "MaxKBytesPerRead":{"shape":"IntegerOptional"},
+        "Username":{"shape":"String"},
+        "SecretsManagerAccessRoleArn":{"shape":"String"},
+        "SecretsManagerSecretId":{"shape":"String"}
       }
     },
     "ImportCertificateMessage":{
@@ -1640,7 +1807,7 @@
       "required":["CertificateIdentifier"],
       "members":{
         "CertificateIdentifier":{"shape":"String"},
-        "CertificatePem":{"shape":"String"},
+        "CertificatePem":{"shape":"SecretString"},
         "CertificateWallet":{"shape":"CertificateWallet"},
         "Tags":{"shape":"TagList"}
       }
@@ -1667,6 +1834,10 @@
       "exception":true
     },
     "Integer":{"type":"integer"},
+    "IntegerList":{
+      "type":"list",
+      "member":{"shape":"Integer"}
+    },
     "IntegerOptional":{"type":"integer"},
     "InvalidCertificateFault":{
       "type":"structure",
@@ -1738,6 +1909,15 @@
       },
       "exception":true
     },
+    "KafkaSecurityProtocol":{
+      "type":"string",
+      "enum":[
+        "plaintext",
+        "ssl-authentication",
+        "ssl-encryption",
+        "sasl-ssl"
+      ]
+    },
     "KafkaSettings":{
       "type":"structure",
       "members":{
@@ -1748,7 +1928,17 @@
         "IncludePartitionValue":{"shape":"BooleanOptional"},
         "PartitionIncludeSchemaTable":{"shape":"BooleanOptional"},
         "IncludeTableAlterOperations":{"shape":"BooleanOptional"},
-        "IncludeControlDetails":{"shape":"BooleanOptional"}
+        "IncludeControlDetails":{"shape":"BooleanOptional"},
+        "MessageMaxBytes":{"shape":"IntegerOptional"},
+        "IncludeNullAndEmpty":{"shape":"BooleanOptional"},
+        "SecurityProtocol":{"shape":"KafkaSecurityProtocol"},
+        "SslClientCertificateArn":{"shape":"String"},
+        "SslClientKeyArn":{"shape":"String"},
+        "SslClientKeyPassword":{"shape":"SecretString"},
+        "SslCaCertificateArn":{"shape":"String"},
+        "SaslUsername":{"shape":"String"},
+        "SaslPassword":{"shape":"SecretString"},
+        "NoHexPrefix":{"shape":"BooleanOptional"}
       }
     },
     "KeyList":{
@@ -1765,14 +1955,16 @@
         "IncludePartitionValue":{"shape":"BooleanOptional"},
         "PartitionIncludeSchemaTable":{"shape":"BooleanOptional"},
         "IncludeTableAlterOperations":{"shape":"BooleanOptional"},
-        "IncludeControlDetails":{"shape":"BooleanOptional"}
+        "IncludeControlDetails":{"shape":"BooleanOptional"},
+        "IncludeNullAndEmpty":{"shape":"BooleanOptional"},
+        "NoHexPrefix":{"shape":"BooleanOptional"}
       }
     },
     "ListTagsForResourceMessage":{
       "type":"structure",
-      "required":["ResourceArn"],
       "members":{
-        "ResourceArn":{"shape":"String"}
+        "ResourceArn":{"shape":"String"},
+        "ResourceArnList":{"shape":"ArnList"}
       }
     },
     "ListTagsForResourceResponse":{
@@ -1793,10 +1985,19 @@
       "type":"structure",
       "members":{
         "Port":{"shape":"IntegerOptional"},
+        "BcpPacketSize":{"shape":"IntegerOptional"},
         "DatabaseName":{"shape":"String"},
+        "ControlTablesFileGroup":{"shape":"String"},
         "Password":{"shape":"SecretString"},
+        "QuerySingleAlwaysOnNode":{"shape":"BooleanOptional"},
+        "ReadBackupOnly":{"shape":"BooleanOptional"},
+        "SafeguardPolicy":{"shape":"SafeguardPolicy"},
         "ServerName":{"shape":"String"},
-        "Username":{"shape":"String"}
+        "Username":{"shape":"String"},
+        "UseBcpFullLoad":{"shape":"BooleanOptional"},
+        "UseThirdPartyBackupDevice":{"shape":"BooleanOptional"},
+        "SecretsManagerAccessRoleArn":{"shape":"String"},
+        "SecretsManagerSecretId":{"shape":"String"}
       }
     },
     "MigrationTypeValue":{
@@ -1839,7 +2040,11 @@
         "OracleSettings":{"shape":"OracleSettings"},
         "SybaseSettings":{"shape":"SybaseSettings"},
         "MicrosoftSQLServerSettings":{"shape":"MicrosoftSQLServerSettings"},
-        "IBMDb2Settings":{"shape":"IBMDb2Settings"}
+        "IBMDb2Settings":{"shape":"IBMDb2Settings"},
+        "DocDbSettings":{"shape":"DocDbSettings"},
+        "RedisSettings":{"shape":"RedisSettings"},
+        "ExactSettings":{"shape":"BooleanOptional"},
+        "GcpMySQLSettings":{"shape":"GcpMySQLSettings"}
       }
     },
     "ModifyEndpointResponse":{
@@ -1941,17 +2146,45 @@
         "ExtractDocId":{"shape":"String"},
         "DocsToInvestigate":{"shape":"String"},
         "AuthSource":{"shape":"String"},
-        "KmsKeyId":{"shape":"String"}
+        "KmsKeyId":{"shape":"String"},
+        "SecretsManagerAccessRoleArn":{"shape":"String"},
+        "SecretsManagerSecretId":{"shape":"String"}
+      }
+    },
+    "MoveReplicationTaskMessage":{
+      "type":"structure",
+      "required":[
+        "ReplicationTaskArn",
+        "TargetReplicationInstanceArn"
+      ],
+      "members":{
+        "ReplicationTaskArn":{"shape":"String"},
+        "TargetReplicationInstanceArn":{"shape":"String"}
+      }
+    },
+    "MoveReplicationTaskResponse":{
+      "type":"structure",
+      "members":{
+        "ReplicationTask":{"shape":"ReplicationTask"}
       }
     },
     "MySQLSettings":{
       "type":"structure",
       "members":{
+        "AfterConnectScript":{"shape":"String"},
+        "CleanSourceMetadataOnMismatch":{"shape":"BooleanOptional"},
         "DatabaseName":{"shape":"String"},
+        "EventsPollInterval":{"shape":"IntegerOptional"},
+        "TargetDbType":{"shape":"TargetDbType"},
+        "MaxFileSize":{"shape":"IntegerOptional"},
+        "ParallelLoadThreads":{"shape":"IntegerOptional"},
         "Password":{"shape":"SecretString"},
         "Port":{"shape":"IntegerOptional"},
         "ServerName":{"shape":"String"},
-        "Username":{"shape":"String"}
+        "ServerTimezone":{"shape":"String"},
+        "Username":{"shape":"String"},
+        "SecretsManagerAccessRoleArn":{"shape":"String"},
+        "SecretsManagerSecretId":{"shape":"String"}
       }
     },
     "NeptuneSettings":{
@@ -1980,16 +2213,46 @@
     "OracleSettings":{
       "type":"structure",
       "members":{
+        "AddSupplementalLogging":{"shape":"BooleanOptional"},
+        "ArchivedLogDestId":{"shape":"IntegerOptional"},
+        "AdditionalArchivedLogDestId":{"shape":"IntegerOptional"},
+        "ExtraArchivedLogDestIds":{"shape":"IntegerList"},
+        "AllowSelectNestedTables":{"shape":"BooleanOptional"},
+        "ParallelAsmReadThreads":{"shape":"IntegerOptional"},
+        "ReadAheadBlocks":{"shape":"IntegerOptional"},
+        "AccessAlternateDirectly":{"shape":"BooleanOptional"},
+        "UseAlternateFolderForOnline":{"shape":"BooleanOptional"},
+        "OraclePathPrefix":{"shape":"String"},
+        "UsePathPrefix":{"shape":"String"},
+        "ReplacePathPrefix":{"shape":"BooleanOptional"},
+        "EnableHomogenousTablespace":{"shape":"BooleanOptional"},
+        "DirectPathNoLog":{"shape":"BooleanOptional"},
+        "ArchivedLogsOnly":{"shape":"BooleanOptional"},
         "AsmPassword":{"shape":"SecretString"},
         "AsmServer":{"shape":"String"},
         "AsmUser":{"shape":"String"},
+        "CharLengthSemantics":{"shape":"CharLengthSemantics"},
         "DatabaseName":{"shape":"String"},
+        "DirectPathParallelLoad":{"shape":"BooleanOptional"},
+        "FailTasksOnLobTruncation":{"shape":"BooleanOptional"},
+        "NumberDatatypeScale":{"shape":"IntegerOptional"},
         "Password":{"shape":"SecretString"},
         "Port":{"shape":"IntegerOptional"},
+        "ReadTableSpaceName":{"shape":"BooleanOptional"},
+        "RetryInterval":{"shape":"IntegerOptional"},
         "SecurityDbEncryption":{"shape":"SecretString"},
         "SecurityDbEncryptionName":{"shape":"String"},
         "ServerName":{"shape":"String"},
-        "Username":{"shape":"String"}
+        "SpatialDataOptionToGeoJsonFunctionName":{"shape":"String"},
+        "StandbyDelayTime":{"shape":"IntegerOptional"},
+        "Username":{"shape":"String"},
+        "UseBFile":{"shape":"BooleanOptional"},
+        "UseDirectPathFullLoad":{"shape":"BooleanOptional"},
+        "UseLogminerReader":{"shape":"BooleanOptional"},
+        "SecretsManagerAccessRoleArn":{"shape":"String"},
+        "SecretsManagerSecretId":{"shape":"String"},
+        "SecretsManagerOracleAsmAccessRoleArn":{"shape":"String"},
+        "SecretsManagerOracleAsmSecretId":{"shape":"String"}
       }
     },
     "OrderableReplicationInstance":{
@@ -2036,14 +2299,35 @@
       "type":"list",
       "member":{"shape":"ResourcePendingMaintenanceActions"}
     },
+    "PluginNameValue":{
+      "type":"string",
+      "enum":[
+        "no-preference",
+        "test-decoding",
+        "pglogical"
+      ]
+    },
     "PostgreSQLSettings":{
       "type":"structure",
       "members":{
+        "AfterConnectScript":{"shape":"String"},
+        "CaptureDdls":{"shape":"BooleanOptional"},
+        "MaxFileSize":{"shape":"IntegerOptional"},
         "DatabaseName":{"shape":"String"},
+        "DdlArtifactsSchema":{"shape":"String"},
+        "ExecuteTimeout":{"shape":"IntegerOptional"},
+        "FailTasksOnLobTruncation":{"shape":"BooleanOptional"},
+        "HeartbeatEnable":{"shape":"BooleanOptional"},
+        "HeartbeatSchema":{"shape":"String"},
+        "HeartbeatFrequency":{"shape":"IntegerOptional"},
         "Password":{"shape":"SecretString"},
         "Port":{"shape":"IntegerOptional"},
         "ServerName":{"shape":"String"},
-        "Username":{"shape":"String"}
+        "Username":{"shape":"String"},
+        "SlotName":{"shape":"String"},
+        "PluginName":{"shape":"PluginNameValue"},
+        "SecretsManagerAccessRoleArn":{"shape":"String"},
+        "SecretsManagerSecretId":{"shape":"String"}
       }
     },
     "RebootReplicationInstanceMessage":{
@@ -2051,13 +2335,38 @@
       "required":["ReplicationInstanceArn"],
       "members":{
         "ReplicationInstanceArn":{"shape":"String"},
-        "ForceFailover":{"shape":"BooleanOptional"}
+        "ForceFailover":{"shape":"BooleanOptional"},
+        "ForcePlannedFailover":{"shape":"BooleanOptional"}
       }
     },
     "RebootReplicationInstanceResponse":{
       "type":"structure",
       "members":{
         "ReplicationInstance":{"shape":"ReplicationInstance"}
+      }
+    },
+    "RedisAuthTypeValue":{
+      "type":"string",
+      "enum":[
+        "none",
+        "auth-role",
+        "auth-token"
+      ]
+    },
+    "RedisSettings":{
+      "type":"structure",
+      "required":[
+        "ServerName",
+        "Port"
+      ],
+      "members":{
+        "ServerName":{"shape":"String"},
+        "Port":{"shape":"Integer"},
+        "SslSecurityProtocol":{"shape":"SslSecurityProtocolValue"},
+        "AuthType":{"shape":"RedisAuthTypeValue"},
+        "AuthUserName":{"shape":"String"},
+        "AuthPassword":{"shape":"SecretString"},
+        "SslCaCertificateArn":{"shape":"String"}
       }
     },
     "RedshiftSettings":{
@@ -2067,11 +2376,14 @@
         "AfterConnectScript":{"shape":"String"},
         "BucketFolder":{"shape":"String"},
         "BucketName":{"shape":"String"},
+        "CaseSensitiveNames":{"shape":"BooleanOptional"},
+        "CompUpdate":{"shape":"BooleanOptional"},
         "ConnectionTimeout":{"shape":"IntegerOptional"},
         "DatabaseName":{"shape":"String"},
         "DateFormat":{"shape":"String"},
         "EmptyAsNull":{"shape":"BooleanOptional"},
         "EncryptionMode":{"shape":"EncryptionModeValue"},
+        "ExplicitIds":{"shape":"BooleanOptional"},
         "FileTransferUploadStreams":{"shape":"IntegerOptional"},
         "LoadTimeout":{"shape":"IntegerOptional"},
         "MaxFileSize":{"shape":"IntegerOptional"},
@@ -2087,7 +2399,9 @@
         "TrimBlanks":{"shape":"BooleanOptional"},
         "TruncateColumns":{"shape":"BooleanOptional"},
         "Username":{"shape":"String"},
-        "WriteBufferSize":{"shape":"IntegerOptional"}
+        "WriteBufferSize":{"shape":"IntegerOptional"},
+        "SecretsManagerAccessRoleArn":{"shape":"String"},
+        "SecretsManagerSecretId":{"shape":"String"}
       }
     },
     "RefreshSchemasMessage":{
@@ -2285,7 +2599,8 @@
         "RecoveryCheckpoint":{"shape":"String"},
         "ReplicationTaskArn":{"shape":"String"},
         "ReplicationTaskStats":{"shape":"ReplicationTaskStats"},
-        "TaskData":{"shape":"String"}
+        "TaskData":{"shape":"String"},
+        "TargetReplicationInstanceArn":{"shape":"String"}
       }
     },
     "ReplicationTaskAssessmentResult":{
@@ -2433,7 +2748,24 @@
         "CdcInsertsOnly":{"shape":"BooleanOptional"},
         "TimestampColumnName":{"shape":"String"},
         "ParquetTimestampInMillisecond":{"shape":"BooleanOptional"},
-        "CdcInsertsAndUpdates":{"shape":"BooleanOptional"}
+        "CdcInsertsAndUpdates":{"shape":"BooleanOptional"},
+        "DatePartitionEnabled":{"shape":"BooleanOptional"},
+        "DatePartitionSequence":{"shape":"DatePartitionSequenceValue"},
+        "DatePartitionDelimiter":{"shape":"DatePartitionDelimiterValue"},
+        "UseCsvNoSupValue":{"shape":"BooleanOptional"},
+        "CsvNoSupValue":{"shape":"String"},
+        "PreserveTransactions":{"shape":"BooleanOptional"},
+        "CdcPath":{"shape":"String"},
+        "UseTaskStartTimeForFullLoadTimestamp":{"shape":"BooleanOptional"},
+        "CannedAclForObjects":{"shape":"CannedAclForObjectsValue"},
+        "AddColumnName":{"shape":"BooleanOptional"},
+        "CdcMaxBatchInterval":{"shape":"IntegerOptional"},
+        "CdcMinFileSize":{"shape":"IntegerOptional"},
+        "CsvNullValue":{"shape":"String"},
+        "IgnoreHeaderRows":{"shape":"IntegerOptional"},
+        "MaxFileSize":{"shape":"IntegerOptional"},
+        "Rfc4180":{"shape":"BooleanOptional"},
+        "DatePartitionTimezone":{"shape":"String"}
       }
     },
     "SNSInvalidTopicFault":{
@@ -2450,6 +2782,14 @@
       },
       "exception":true
     },
+    "SafeguardPolicy":{
+      "type":"string",
+      "enum":[
+        "rely-on-sql-server-replication-agent",
+        "exclusive-automatic-truncation",
+        "shared-automatic-truncation"
+      ]
+    },
     "SchemaList":{
       "type":"list",
       "member":{"shape":"String"}
@@ -2465,6 +2805,13 @@
     "SourceType":{
       "type":"string",
       "enum":["replication-instance"]
+    },
+    "SslSecurityProtocolValue":{
+      "type":"string",
+      "enum":[
+        "plaintext",
+        "ssl-encryption"
+      ]
     },
     "StartReplicationTaskAssessmentMessage":{
       "type":"structure",
@@ -2598,7 +2945,9 @@
         "Password":{"shape":"SecretString"},
         "Port":{"shape":"IntegerOptional"},
         "ServerName":{"shape":"String"},
-        "Username":{"shape":"String"}
+        "Username":{"shape":"String"},
+        "SecretsManagerAccessRoleArn":{"shape":"String"},
+        "SecretsManagerSecretId":{"shape":"String"}
       }
     },
     "TStamp":{"type":"timestamp"},
@@ -2649,12 +2998,20 @@
       "type":"structure",
       "members":{
         "Key":{"shape":"String"},
-        "Value":{"shape":"String"}
+        "Value":{"shape":"String"},
+        "ResourceArn":{"shape":"String"}
       }
     },
     "TagList":{
       "type":"list",
       "member":{"shape":"Tag"}
+    },
+    "TargetDbType":{
+      "type":"string",
+      "enum":[
+        "specific-database",
+        "multiple-databases"
+      ]
     },
     "TestConnectionMessage":{
       "type":"structure",

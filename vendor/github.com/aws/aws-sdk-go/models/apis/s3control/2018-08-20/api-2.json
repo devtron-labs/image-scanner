@@ -21,7 +21,41 @@
         "shape":"CreateAccessPointRequest",
         "locationName":"CreateAccessPointRequest",
         "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+      },
+      "output":{"shape":"CreateAccessPointResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
       }
+    },
+    "CreateAccessPointForObjectLambda":{
+      "name":"CreateAccessPointForObjectLambda",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/v20180820/accesspointforobjectlambda/{name}"
+      },
+      "input":{
+        "shape":"CreateAccessPointForObjectLambdaRequest",
+        "locationName":"CreateAccessPointForObjectLambdaRequest",
+        "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+      },
+      "output":{"shape":"CreateAccessPointForObjectLambdaResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "CreateBucket":{
+      "name":"CreateBucket",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/v20180820/bucket/{name}"
+      },
+      "input":{"shape":"CreateBucketRequest"},
+      "output":{"shape":"CreateBucketResult"},
+      "errors":[
+        {"shape":"BucketAlreadyExists"},
+        {"shape":"BucketAlreadyOwnedByYou"}
+      ],
+      "httpChecksumRequired":true
     },
     "CreateJob":{
       "name":"CreateJob",
@@ -40,7 +74,27 @@
         {"shape":"BadRequestException"},
         {"shape":"IdempotencyException"},
         {"shape":"InternalServiceException"}
-      ]
+      ],
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "CreateMultiRegionAccessPoint":{
+      "name":"CreateMultiRegionAccessPoint",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v20180820/async-requests/mrap/create"
+      },
+      "input":{
+        "shape":"CreateMultiRegionAccessPointRequest",
+        "locationName":"CreateMultiRegionAccessPointRequest",
+        "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+      },
+      "output":{"shape":"CreateMultiRegionAccessPointResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      },
+      "httpChecksumRequired":true
     },
     "DeleteAccessPoint":{
       "name":"DeleteAccessPoint",
@@ -48,7 +102,21 @@
         "method":"DELETE",
         "requestUri":"/v20180820/accesspoint/{name}"
       },
-      "input":{"shape":"DeleteAccessPointRequest"}
+      "input":{"shape":"DeleteAccessPointRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "DeleteAccessPointForObjectLambda":{
+      "name":"DeleteAccessPointForObjectLambda",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/v20180820/accesspointforobjectlambda/{name}"
+      },
+      "input":{"shape":"DeleteAccessPointForObjectLambdaRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     },
     "DeleteAccessPointPolicy":{
       "name":"DeleteAccessPointPolicy",
@@ -56,7 +124,66 @@
         "method":"DELETE",
         "requestUri":"/v20180820/accesspoint/{name}/policy"
       },
-      "input":{"shape":"DeleteAccessPointPolicyRequest"}
+      "input":{"shape":"DeleteAccessPointPolicyRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "DeleteAccessPointPolicyForObjectLambda":{
+      "name":"DeleteAccessPointPolicyForObjectLambda",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/v20180820/accesspointforobjectlambda/{name}/policy"
+      },
+      "input":{"shape":"DeleteAccessPointPolicyForObjectLambdaRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "DeleteBucket":{
+      "name":"DeleteBucket",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/v20180820/bucket/{name}"
+      },
+      "input":{"shape":"DeleteBucketRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "DeleteBucketLifecycleConfiguration":{
+      "name":"DeleteBucketLifecycleConfiguration",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/v20180820/bucket/{name}/lifecycleconfiguration"
+      },
+      "input":{"shape":"DeleteBucketLifecycleConfigurationRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "DeleteBucketPolicy":{
+      "name":"DeleteBucketPolicy",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/v20180820/bucket/{name}/policy"
+      },
+      "input":{"shape":"DeleteBucketPolicyRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "DeleteBucketTagging":{
+      "name":"DeleteBucketTagging",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/v20180820/bucket/{name}/tagging",
+        "responseCode":204
+      },
+      "input":{"shape":"DeleteBucketTaggingRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     },
     "DeleteJobTagging":{
       "name":"DeleteJobTagging",
@@ -70,7 +197,27 @@
         {"shape":"InternalServiceException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"NotFoundException"}
-      ]
+      ],
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "DeleteMultiRegionAccessPoint":{
+      "name":"DeleteMultiRegionAccessPoint",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v20180820/async-requests/mrap/delete"
+      },
+      "input":{
+        "shape":"DeleteMultiRegionAccessPointRequest",
+        "locationName":"DeleteMultiRegionAccessPointRequest",
+        "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+      },
+      "output":{"shape":"DeleteMultiRegionAccessPointResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      },
+      "httpChecksumRequired":true
     },
     "DeletePublicAccessBlock":{
       "name":"DeletePublicAccessBlock",
@@ -78,7 +225,33 @@
         "method":"DELETE",
         "requestUri":"/v20180820/configuration/publicAccessBlock"
       },
-      "input":{"shape":"DeletePublicAccessBlockRequest"}
+      "input":{"shape":"DeletePublicAccessBlockRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "DeleteStorageLensConfiguration":{
+      "name":"DeleteStorageLensConfiguration",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/v20180820/storagelens/{storagelensid}"
+      },
+      "input":{"shape":"DeleteStorageLensConfigurationRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "DeleteStorageLensConfigurationTagging":{
+      "name":"DeleteStorageLensConfigurationTagging",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/v20180820/storagelens/{storagelensid}/tagging"
+      },
+      "input":{"shape":"DeleteStorageLensConfigurationTaggingRequest"},
+      "output":{"shape":"DeleteStorageLensConfigurationTaggingResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     },
     "DescribeJob":{
       "name":"DescribeJob",
@@ -93,7 +266,23 @@
         {"shape":"TooManyRequestsException"},
         {"shape":"NotFoundException"},
         {"shape":"InternalServiceException"}
-      ]
+      ],
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "DescribeMultiRegionAccessPointOperation":{
+      "name":"DescribeMultiRegionAccessPointOperation",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/async-requests/mrap/{request_token+}"
+      },
+      "input":{"shape":"DescribeMultiRegionAccessPointOperationRequest"},
+      "output":{"shape":"DescribeMultiRegionAccessPointOperationResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      },
+      "httpChecksumRequired":true
     },
     "GetAccessPoint":{
       "name":"GetAccessPoint",
@@ -102,7 +291,34 @@
         "requestUri":"/v20180820/accesspoint/{name}"
       },
       "input":{"shape":"GetAccessPointRequest"},
-      "output":{"shape":"GetAccessPointResult"}
+      "output":{"shape":"GetAccessPointResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "GetAccessPointConfigurationForObjectLambda":{
+      "name":"GetAccessPointConfigurationForObjectLambda",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/accesspointforobjectlambda/{name}/configuration"
+      },
+      "input":{"shape":"GetAccessPointConfigurationForObjectLambdaRequest"},
+      "output":{"shape":"GetAccessPointConfigurationForObjectLambdaResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "GetAccessPointForObjectLambda":{
+      "name":"GetAccessPointForObjectLambda",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/accesspointforobjectlambda/{name}"
+      },
+      "input":{"shape":"GetAccessPointForObjectLambdaRequest"},
+      "output":{"shape":"GetAccessPointForObjectLambdaResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     },
     "GetAccessPointPolicy":{
       "name":"GetAccessPointPolicy",
@@ -111,7 +327,22 @@
         "requestUri":"/v20180820/accesspoint/{name}/policy"
       },
       "input":{"shape":"GetAccessPointPolicyRequest"},
-      "output":{"shape":"GetAccessPointPolicyResult"}
+      "output":{"shape":"GetAccessPointPolicyResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "GetAccessPointPolicyForObjectLambda":{
+      "name":"GetAccessPointPolicyForObjectLambda",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/accesspointforobjectlambda/{name}/policy"
+      },
+      "input":{"shape":"GetAccessPointPolicyForObjectLambdaRequest"},
+      "output":{"shape":"GetAccessPointPolicyForObjectLambdaResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     },
     "GetAccessPointPolicyStatus":{
       "name":"GetAccessPointPolicyStatus",
@@ -120,7 +351,70 @@
         "requestUri":"/v20180820/accesspoint/{name}/policyStatus"
       },
       "input":{"shape":"GetAccessPointPolicyStatusRequest"},
-      "output":{"shape":"GetAccessPointPolicyStatusResult"}
+      "output":{"shape":"GetAccessPointPolicyStatusResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "GetAccessPointPolicyStatusForObjectLambda":{
+      "name":"GetAccessPointPolicyStatusForObjectLambda",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/accesspointforobjectlambda/{name}/policyStatus"
+      },
+      "input":{"shape":"GetAccessPointPolicyStatusForObjectLambdaRequest"},
+      "output":{"shape":"GetAccessPointPolicyStatusForObjectLambdaResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "GetBucket":{
+      "name":"GetBucket",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/bucket/{name}"
+      },
+      "input":{"shape":"GetBucketRequest"},
+      "output":{"shape":"GetBucketResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "GetBucketLifecycleConfiguration":{
+      "name":"GetBucketLifecycleConfiguration",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/bucket/{name}/lifecycleconfiguration"
+      },
+      "input":{"shape":"GetBucketLifecycleConfigurationRequest"},
+      "output":{"shape":"GetBucketLifecycleConfigurationResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "GetBucketPolicy":{
+      "name":"GetBucketPolicy",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/bucket/{name}/policy"
+      },
+      "input":{"shape":"GetBucketPolicyRequest"},
+      "output":{"shape":"GetBucketPolicyResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "GetBucketTagging":{
+      "name":"GetBucketTagging",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/bucket/{name}/tagging"
+      },
+      "input":{"shape":"GetBucketTaggingRequest"},
+      "output":{"shape":"GetBucketTaggingResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     },
     "GetJobTagging":{
       "name":"GetJobTagging",
@@ -134,7 +428,49 @@
         {"shape":"InternalServiceException"},
         {"shape":"TooManyRequestsException"},
         {"shape":"NotFoundException"}
-      ]
+      ],
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "GetMultiRegionAccessPoint":{
+      "name":"GetMultiRegionAccessPoint",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/mrap/instances/{name}"
+      },
+      "input":{"shape":"GetMultiRegionAccessPointRequest"},
+      "output":{"shape":"GetMultiRegionAccessPointResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      },
+      "httpChecksumRequired":true
+    },
+    "GetMultiRegionAccessPointPolicy":{
+      "name":"GetMultiRegionAccessPointPolicy",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/mrap/instances/{name}/policy"
+      },
+      "input":{"shape":"GetMultiRegionAccessPointPolicyRequest"},
+      "output":{"shape":"GetMultiRegionAccessPointPolicyResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      },
+      "httpChecksumRequired":true
+    },
+    "GetMultiRegionAccessPointPolicyStatus":{
+      "name":"GetMultiRegionAccessPointPolicyStatus",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/mrap/instances/{name}/policystatus"
+      },
+      "input":{"shape":"GetMultiRegionAccessPointPolicyStatusRequest"},
+      "output":{"shape":"GetMultiRegionAccessPointPolicyStatusResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      },
+      "httpChecksumRequired":true
     },
     "GetPublicAccessBlock":{
       "name":"GetPublicAccessBlock",
@@ -146,7 +482,34 @@
       "output":{"shape":"GetPublicAccessBlockOutput"},
       "errors":[
         {"shape":"NoSuchPublicAccessBlockConfiguration"}
-      ]
+      ],
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "GetStorageLensConfiguration":{
+      "name":"GetStorageLensConfiguration",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/storagelens/{storagelensid}"
+      },
+      "input":{"shape":"GetStorageLensConfigurationRequest"},
+      "output":{"shape":"GetStorageLensConfigurationResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "GetStorageLensConfigurationTagging":{
+      "name":"GetStorageLensConfigurationTagging",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/storagelens/{storagelensid}/tagging"
+      },
+      "input":{"shape":"GetStorageLensConfigurationTaggingRequest"},
+      "output":{"shape":"GetStorageLensConfigurationTaggingResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     },
     "ListAccessPoints":{
       "name":"ListAccessPoints",
@@ -155,7 +518,22 @@
         "requestUri":"/v20180820/accesspoint"
       },
       "input":{"shape":"ListAccessPointsRequest"},
-      "output":{"shape":"ListAccessPointsResult"}
+      "output":{"shape":"ListAccessPointsResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "ListAccessPointsForObjectLambda":{
+      "name":"ListAccessPointsForObjectLambda",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/accesspointforobjectlambda"
+      },
+      "input":{"shape":"ListAccessPointsForObjectLambdaRequest"},
+      "output":{"shape":"ListAccessPointsForObjectLambdaResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     },
     "ListJobs":{
       "name":"ListJobs",
@@ -169,7 +547,62 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalServiceException"},
         {"shape":"InvalidNextTokenException"}
-      ]
+      ],
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "ListMultiRegionAccessPoints":{
+      "name":"ListMultiRegionAccessPoints",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/mrap/instances"
+      },
+      "input":{"shape":"ListMultiRegionAccessPointsRequest"},
+      "output":{"shape":"ListMultiRegionAccessPointsResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      },
+      "httpChecksumRequired":true
+    },
+    "ListRegionalBuckets":{
+      "name":"ListRegionalBuckets",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/bucket"
+      },
+      "input":{"shape":"ListRegionalBucketsRequest"},
+      "output":{"shape":"ListRegionalBucketsResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "ListStorageLensConfigurations":{
+      "name":"ListStorageLensConfigurations",
+      "http":{
+        "method":"GET",
+        "requestUri":"/v20180820/storagelens"
+      },
+      "input":{"shape":"ListStorageLensConfigurationsRequest"},
+      "output":{"shape":"ListStorageLensConfigurationsResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "PutAccessPointConfigurationForObjectLambda":{
+      "name":"PutAccessPointConfigurationForObjectLambda",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/v20180820/accesspointforobjectlambda/{name}/configuration"
+      },
+      "input":{
+        "shape":"PutAccessPointConfigurationForObjectLambdaRequest",
+        "locationName":"PutAccessPointConfigurationForObjectLambdaRequest",
+        "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+      },
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     },
     "PutAccessPointPolicy":{
       "name":"PutAccessPointPolicy",
@@ -181,7 +614,65 @@
         "shape":"PutAccessPointPolicyRequest",
         "locationName":"PutAccessPointPolicyRequest",
         "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+      },
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
       }
+    },
+    "PutAccessPointPolicyForObjectLambda":{
+      "name":"PutAccessPointPolicyForObjectLambda",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/v20180820/accesspointforobjectlambda/{name}/policy"
+      },
+      "input":{
+        "shape":"PutAccessPointPolicyForObjectLambdaRequest",
+        "locationName":"PutAccessPointPolicyForObjectLambdaRequest",
+        "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+      },
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "PutBucketLifecycleConfiguration":{
+      "name":"PutBucketLifecycleConfiguration",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/v20180820/bucket/{name}/lifecycleconfiguration"
+      },
+      "input":{"shape":"PutBucketLifecycleConfigurationRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      },
+      "httpChecksumRequired":true
+    },
+    "PutBucketPolicy":{
+      "name":"PutBucketPolicy",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/v20180820/bucket/{name}/policy"
+      },
+      "input":{
+        "shape":"PutBucketPolicyRequest",
+        "locationName":"PutBucketPolicyRequest",
+        "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+      },
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      },
+      "httpChecksumRequired":true
+    },
+    "PutBucketTagging":{
+      "name":"PutBucketTagging",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/v20180820/bucket/{name}/tagging"
+      },
+      "input":{"shape":"PutBucketTaggingRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      },
+      "httpChecksumRequired":true
     },
     "PutJobTagging":{
       "name":"PutJobTagging",
@@ -200,7 +691,27 @@
         {"shape":"TooManyRequestsException"},
         {"shape":"NotFoundException"},
         {"shape":"TooManyTagsException"}
-      ]
+      ],
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "PutMultiRegionAccessPointPolicy":{
+      "name":"PutMultiRegionAccessPointPolicy",
+      "http":{
+        "method":"POST",
+        "requestUri":"/v20180820/async-requests/mrap/put-policy"
+      },
+      "input":{
+        "shape":"PutMultiRegionAccessPointPolicyRequest",
+        "locationName":"PutMultiRegionAccessPointPolicyRequest",
+        "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+      },
+      "output":{"shape":"PutMultiRegionAccessPointPolicyResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      },
+      "httpChecksumRequired":true
     },
     "PutPublicAccessBlock":{
       "name":"PutPublicAccessBlock",
@@ -208,7 +719,41 @@
         "method":"PUT",
         "requestUri":"/v20180820/configuration/publicAccessBlock"
       },
-      "input":{"shape":"PutPublicAccessBlockRequest"}
+      "input":{"shape":"PutPublicAccessBlockRequest"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "PutStorageLensConfiguration":{
+      "name":"PutStorageLensConfiguration",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/v20180820/storagelens/{storagelensid}"
+      },
+      "input":{
+        "shape":"PutStorageLensConfigurationRequest",
+        "locationName":"PutStorageLensConfigurationRequest",
+        "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+      },
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
+    },
+    "PutStorageLensConfigurationTagging":{
+      "name":"PutStorageLensConfigurationTagging",
+      "http":{
+        "method":"PUT",
+        "requestUri":"/v20180820/storagelens/{storagelensid}/tagging"
+      },
+      "input":{
+        "shape":"PutStorageLensConfigurationTaggingRequest",
+        "locationName":"PutStorageLensConfigurationTaggingRequest",
+        "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+      },
+      "output":{"shape":"PutStorageLensConfigurationTaggingResult"},
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     },
     "UpdateJobPriority":{
       "name":"UpdateJobPriority",
@@ -223,7 +768,10 @@
         {"shape":"TooManyRequestsException"},
         {"shape":"NotFoundException"},
         {"shape":"InternalServiceException"}
-      ]
+      ],
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     },
     "UpdateJobStatus":{
       "name":"UpdateJobStatus",
@@ -239,10 +787,19 @@
         {"shape":"NotFoundException"},
         {"shape":"JobStatusException"},
         {"shape":"InternalServiceException"}
-      ]
+      ],
+      "endpoint":{
+        "hostPrefix":"{AccountId}."
+      }
     }
   },
   "shapes":{
+    "AbortIncompleteMultipartUpload":{
+      "type":"structure",
+      "members":{
+        "DaysAfterInitiation":{"shape":"DaysAfterInitiation"}
+      }
+    },
     "AccessPoint":{
       "type":"structure",
       "required":[
@@ -254,7 +811,9 @@
         "Name":{"shape":"AccessPointName"},
         "NetworkOrigin":{"shape":"NetworkOrigin"},
         "VpcConfiguration":{"shape":"VpcConfiguration"},
-        "Bucket":{"shape":"BucketName"}
+        "Bucket":{"shape":"BucketName"},
+        "AccessPointArn":{"shape":"S3AccessPointArn"},
+        "Alias":{"shape":"Alias"}
       }
     },
     "AccessPointList":{
@@ -266,13 +825,98 @@
     },
     "AccessPointName":{
       "type":"string",
-      "max":50,
+      "max":63,
       "min":3
     },
     "AccountId":{
       "type":"string",
       "max":64,
       "pattern":"^\\d{12}$"
+    },
+    "AccountLevel":{
+      "type":"structure",
+      "required":["BucketLevel"],
+      "members":{
+        "ActivityMetrics":{"shape":"ActivityMetrics"},
+        "BucketLevel":{"shape":"BucketLevel"}
+      }
+    },
+    "ActivityMetrics":{
+      "type":"structure",
+      "members":{
+        "IsEnabled":{"shape":"IsEnabled"}
+      }
+    },
+    "Alias":{
+      "type":"string",
+      "max":63,
+      "pattern":"^[0-9a-z\\\\-]{63}"
+    },
+    "AsyncCreationTimestamp":{"type":"timestamp"},
+    "AsyncErrorDetails":{
+      "type":"structure",
+      "members":{
+        "Code":{"shape":"MaxLength1024String"},
+        "Message":{"shape":"MaxLength1024String"},
+        "Resource":{"shape":"MaxLength1024String"},
+        "RequestId":{"shape":"MaxLength1024String"}
+      }
+    },
+    "AsyncOperation":{
+      "type":"structure",
+      "members":{
+        "CreationTime":{"shape":"AsyncCreationTimestamp"},
+        "Operation":{"shape":"AsyncOperationName"},
+        "RequestTokenARN":{"shape":"AsyncRequestTokenARN"},
+        "RequestParameters":{"shape":"AsyncRequestParameters"},
+        "RequestStatus":{"shape":"AsyncRequestStatus"},
+        "ResponseDetails":{"shape":"AsyncResponseDetails"}
+      }
+    },
+    "AsyncOperationName":{
+      "type":"string",
+      "enum":[
+        "CreateMultiRegionAccessPoint",
+        "DeleteMultiRegionAccessPoint",
+        "PutMultiRegionAccessPointPolicy"
+      ]
+    },
+    "AsyncRequestParameters":{
+      "type":"structure",
+      "members":{
+        "CreateMultiRegionAccessPointRequest":{"shape":"CreateMultiRegionAccessPointInput"},
+        "DeleteMultiRegionAccessPointRequest":{"shape":"DeleteMultiRegionAccessPointInput"},
+        "PutMultiRegionAccessPointPolicyRequest":{"shape":"PutMultiRegionAccessPointPolicyInput"}
+      }
+    },
+    "AsyncRequestStatus":{"type":"string"},
+    "AsyncRequestTokenARN":{
+      "type":"string",
+      "max":1024,
+      "min":1,
+      "pattern":"arn:.+"
+    },
+    "AsyncResponseDetails":{
+      "type":"structure",
+      "members":{
+        "MultiRegionAccessPointDetails":{"shape":"MultiRegionAccessPointsAsyncResponse"},
+        "ErrorDetails":{"shape":"AsyncErrorDetails"}
+      }
+    },
+    "AwsLambdaTransformation":{
+      "type":"structure",
+      "required":["FunctionArn"],
+      "members":{
+        "FunctionArn":{"shape":"FunctionArnString"},
+        "FunctionPayload":{"shape":"AwsLambdaTransformationPayload"}
+      }
+    },
+    "AwsLambdaTransformationPayload":{"type":"string"},
+    "AwsOrgArn":{
+      "type":"string",
+      "max":1024,
+      "min":1,
+      "pattern":"arn:[a-z\\-]+:organizations::\\d{12}:organization\\/o-[a-z0-9]{10,32}"
     },
     "BadRequestException":{
       "type":"structure",
@@ -282,12 +926,106 @@
       "exception":true
     },
     "Boolean":{"type":"boolean"},
+    "BucketAlreadyExists":{
+      "type":"structure",
+      "members":{
+      },
+      "exception":true
+    },
+    "BucketAlreadyOwnedByYou":{
+      "type":"structure",
+      "members":{
+      },
+      "exception":true
+    },
+    "BucketCannedACL":{
+      "type":"string",
+      "enum":[
+        "private",
+        "public-read",
+        "public-read-write",
+        "authenticated-read"
+      ]
+    },
+    "BucketLevel":{
+      "type":"structure",
+      "members":{
+        "ActivityMetrics":{"shape":"ActivityMetrics"},
+        "PrefixLevel":{"shape":"PrefixLevel"}
+      }
+    },
+    "BucketLocationConstraint":{
+      "type":"string",
+      "enum":[
+        "EU",
+        "eu-west-1",
+        "us-west-1",
+        "us-west-2",
+        "ap-south-1",
+        "ap-southeast-1",
+        "ap-southeast-2",
+        "ap-northeast-1",
+        "sa-east-1",
+        "cn-north-1",
+        "eu-central-1"
+      ]
+    },
     "BucketName":{
       "type":"string",
       "max":255,
       "min":3
     },
+    "Buckets":{
+      "type":"list",
+      "member":{
+        "shape":"S3BucketArnString",
+        "locationName":"Arn"
+      }
+    },
+    "CloudWatchMetrics":{
+      "type":"structure",
+      "required":["IsEnabled"],
+      "members":{
+        "IsEnabled":{"shape":"IsEnabled"}
+      }
+    },
+    "ConfigId":{
+      "type":"string",
+      "max":64,
+      "min":1,
+      "pattern":"[a-zA-Z0-9\\-\\_\\.]+"
+    },
+    "ConfirmRemoveSelfBucketAccess":{"type":"boolean"},
     "ConfirmationRequired":{"type":"boolean"},
+    "ContinuationToken":{"type":"string"},
+    "CreateAccessPointForObjectLambdaRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name",
+        "Configuration"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"ObjectLambdaAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "Configuration":{"shape":"ObjectLambdaConfiguration"}
+      }
+    },
+    "CreateAccessPointForObjectLambdaResult":{
+      "type":"structure",
+      "members":{
+        "ObjectLambdaAccessPointArn":{"shape":"ObjectLambdaAccessPointArn"}
+      }
+    },
     "CreateAccessPointRequest":{
       "type":"structure",
       "required":[
@@ -298,6 +1036,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -309,6 +1048,87 @@
         "Bucket":{"shape":"BucketName"},
         "VpcConfiguration":{"shape":"VpcConfiguration"},
         "PublicAccessBlockConfiguration":{"shape":"PublicAccessBlockConfiguration"}
+      }
+    },
+    "CreateAccessPointResult":{
+      "type":"structure",
+      "members":{
+        "AccessPointArn":{"shape":"S3AccessPointArn"},
+        "Alias":{"shape":"Alias"}
+      }
+    },
+    "CreateBucketConfiguration":{
+      "type":"structure",
+      "members":{
+        "LocationConstraint":{"shape":"BucketLocationConstraint"}
+      }
+    },
+    "CreateBucketRequest":{
+      "type":"structure",
+      "required":["Bucket"],
+      "members":{
+        "ACL":{
+          "shape":"BucketCannedACL",
+          "location":"header",
+          "locationName":"x-amz-acl"
+        },
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "CreateBucketConfiguration":{
+          "shape":"CreateBucketConfiguration",
+          "locationName":"CreateBucketConfiguration",
+          "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+        },
+        "GrantFullControl":{
+          "shape":"GrantFullControl",
+          "location":"header",
+          "locationName":"x-amz-grant-full-control"
+        },
+        "GrantRead":{
+          "shape":"GrantRead",
+          "location":"header",
+          "locationName":"x-amz-grant-read"
+        },
+        "GrantReadACP":{
+          "shape":"GrantReadACP",
+          "location":"header",
+          "locationName":"x-amz-grant-read-acp"
+        },
+        "GrantWrite":{
+          "shape":"GrantWrite",
+          "location":"header",
+          "locationName":"x-amz-grant-write"
+        },
+        "GrantWriteACP":{
+          "shape":"GrantWriteACP",
+          "location":"header",
+          "locationName":"x-amz-grant-write-acp"
+        },
+        "ObjectLockEnabledForBucket":{
+          "shape":"ObjectLockEnabledForBucket",
+          "location":"header",
+          "locationName":"x-amz-bucket-object-lock-enabled"
+        },
+        "OutpostId":{
+          "shape":"NonEmptyMaxLength64String",
+          "location":"header",
+          "locationName":"x-amz-outpost-id"
+        }
+      },
+      "payload":"CreateBucketConfiguration"
+    },
+    "CreateBucketResult":{
+      "type":"structure",
+      "members":{
+        "Location":{
+          "shape":"Location",
+          "location":"header",
+          "locationName":"Location"
+        },
+        "BucketArn":{"shape":"S3RegionalBucketArn"}
       }
     },
     "CreateJobRequest":{
@@ -325,6 +1145,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -354,7 +1175,90 @@
         "JobId":{"shape":"JobId"}
       }
     },
+    "CreateMultiRegionAccessPointInput":{
+      "type":"structure",
+      "required":[
+        "Name",
+        "Regions"
+      ],
+      "members":{
+        "Name":{"shape":"MultiRegionAccessPointName"},
+        "PublicAccessBlock":{"shape":"PublicAccessBlockConfiguration"},
+        "Regions":{"shape":"RegionCreationList"}
+      }
+    },
+    "CreateMultiRegionAccessPointRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "ClientToken",
+        "Details"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "ClientToken":{
+          "shape":"MultiRegionAccessPointClientToken",
+          "idempotencyToken":true
+        },
+        "Details":{"shape":"CreateMultiRegionAccessPointInput"}
+      }
+    },
+    "CreateMultiRegionAccessPointResult":{
+      "type":"structure",
+      "members":{
+        "RequestTokenARN":{"shape":"AsyncRequestTokenARN"}
+      }
+    },
     "CreationDate":{"type":"timestamp"},
+    "CreationTimestamp":{"type":"timestamp"},
+    "Date":{"type":"timestamp"},
+    "Days":{"type":"integer"},
+    "DaysAfterInitiation":{"type":"integer"},
+    "DeleteAccessPointForObjectLambdaRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"ObjectLambdaAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "DeleteAccessPointPolicyForObjectLambdaRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"ObjectLambdaAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
     "DeleteAccessPointPolicyRequest":{
       "type":"structure",
       "required":[
@@ -364,6 +1268,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -383,11 +1288,92 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
         "Name":{
           "shape":"AccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "DeleteBucketLifecycleConfigurationRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Bucket"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "DeleteBucketPolicyRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Bucket"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "DeleteBucketRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Bucket"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "DeleteBucketTaggingRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Bucket"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Bucket":{
+          "shape":"BucketName",
           "location":"uri",
           "locationName":"name"
         }
@@ -402,6 +1388,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -417,15 +1404,95 @@
       "members":{
       }
     },
+    "DeleteMultiRegionAccessPointInput":{
+      "type":"structure",
+      "required":["Name"],
+      "members":{
+        "Name":{"shape":"MultiRegionAccessPointName"}
+      }
+    },
+    "DeleteMultiRegionAccessPointRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "ClientToken",
+        "Details"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "ClientToken":{
+          "shape":"MultiRegionAccessPointClientToken",
+          "idempotencyToken":true
+        },
+        "Details":{"shape":"DeleteMultiRegionAccessPointInput"}
+      }
+    },
+    "DeleteMultiRegionAccessPointResult":{
+      "type":"structure",
+      "members":{
+        "RequestTokenARN":{"shape":"AsyncRequestTokenARN"}
+      }
+    },
     "DeletePublicAccessBlockRequest":{
       "type":"structure",
       "required":["AccountId"],
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         }
+      }
+    },
+    "DeleteStorageLensConfigurationRequest":{
+      "type":"structure",
+      "required":[
+        "ConfigId",
+        "AccountId"
+      ],
+      "members":{
+        "ConfigId":{
+          "shape":"ConfigId",
+          "location":"uri",
+          "locationName":"storagelensid"
+        },
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        }
+      }
+    },
+    "DeleteStorageLensConfigurationTaggingRequest":{
+      "type":"structure",
+      "required":[
+        "ConfigId",
+        "AccountId"
+      ],
+      "members":{
+        "ConfigId":{
+          "shape":"ConfigId",
+          "location":"uri",
+          "locationName":"storagelensid"
+        },
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        }
+      }
+    },
+    "DeleteStorageLensConfigurationTaggingResult":{
+      "type":"structure",
+      "members":{
       }
     },
     "DescribeJobRequest":{
@@ -437,6 +1504,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -453,16 +1521,155 @@
         "Job":{"shape":"JobDescriptor"}
       }
     },
+    "DescribeMultiRegionAccessPointOperationRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "RequestTokenARN"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "RequestTokenARN":{
+          "shape":"AsyncRequestTokenARN",
+          "location":"uri",
+          "locationName":"request_token"
+        }
+      }
+    },
+    "DescribeMultiRegionAccessPointOperationResult":{
+      "type":"structure",
+      "members":{
+        "AsyncOperation":{"shape":"AsyncOperation"}
+      }
+    },
+    "Endpoints":{
+      "type":"map",
+      "key":{"shape":"NonEmptyMaxLength64String"},
+      "value":{"shape":"NonEmptyMaxLength1024String"}
+    },
+    "EstablishedMultiRegionAccessPointPolicy":{
+      "type":"structure",
+      "members":{
+        "Policy":{"shape":"Policy"}
+      }
+    },
     "ExceptionMessage":{
       "type":"string",
       "max":1024,
       "min":1
+    },
+    "Exclude":{
+      "type":"structure",
+      "members":{
+        "Buckets":{"shape":"Buckets"},
+        "Regions":{"shape":"Regions"}
+      }
+    },
+    "ExpirationStatus":{
+      "type":"string",
+      "enum":[
+        "Enabled",
+        "Disabled"
+      ]
+    },
+    "ExpiredObjectDeleteMarker":{"type":"boolean"},
+    "Format":{
+      "type":"string",
+      "enum":[
+        "CSV",
+        "Parquet"
+      ]
     },
     "FunctionArnString":{
       "type":"string",
       "max":1024,
       "min":1,
       "pattern":"(arn:(aws[a-zA-Z-]*)?:lambda:)?([a-z]{2}((-gov)|(-iso(b?)))?-[a-z]+-\\d{1}:)?(\\d{12}:)?(function:)?([a-zA-Z0-9-_]+)(:(\\$LATEST|[a-zA-Z0-9-_]+))?"
+    },
+    "GetAccessPointConfigurationForObjectLambdaRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"ObjectLambdaAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetAccessPointConfigurationForObjectLambdaResult":{
+      "type":"structure",
+      "members":{
+        "Configuration":{"shape":"ObjectLambdaConfiguration"}
+      }
+    },
+    "GetAccessPointForObjectLambdaRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"ObjectLambdaAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetAccessPointForObjectLambdaResult":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"ObjectLambdaAccessPointName"},
+        "PublicAccessBlockConfiguration":{"shape":"PublicAccessBlockConfiguration"},
+        "CreationDate":{"shape":"CreationDate"}
+      }
+    },
+    "GetAccessPointPolicyForObjectLambdaRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"ObjectLambdaAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetAccessPointPolicyForObjectLambdaResult":{
+      "type":"structure",
+      "members":{
+        "Policy":{"shape":"ObjectLambdaPolicy"}
+      }
     },
     "GetAccessPointPolicyRequest":{
       "type":"structure",
@@ -473,6 +1680,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -489,6 +1697,32 @@
         "Policy":{"shape":"Policy"}
       }
     },
+    "GetAccessPointPolicyStatusForObjectLambdaRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"ObjectLambdaAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetAccessPointPolicyStatusForObjectLambdaResult":{
+      "type":"structure",
+      "members":{
+        "PolicyStatus":{"shape":"PolicyStatus"}
+      }
+    },
     "GetAccessPointPolicyStatusRequest":{
       "type":"structure",
       "required":[
@@ -498,6 +1732,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -523,6 +1758,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -541,7 +1777,117 @@
         "NetworkOrigin":{"shape":"NetworkOrigin"},
         "VpcConfiguration":{"shape":"VpcConfiguration"},
         "PublicAccessBlockConfiguration":{"shape":"PublicAccessBlockConfiguration"},
+        "CreationDate":{"shape":"CreationDate"},
+        "Alias":{"shape":"Alias"},
+        "AccessPointArn":{"shape":"S3AccessPointArn"},
+        "Endpoints":{"shape":"Endpoints"}
+      }
+    },
+    "GetBucketLifecycleConfigurationRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Bucket"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetBucketLifecycleConfigurationResult":{
+      "type":"structure",
+      "members":{
+        "Rules":{"shape":"LifecycleRules"}
+      }
+    },
+    "GetBucketPolicyRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Bucket"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetBucketPolicyResult":{
+      "type":"structure",
+      "members":{
+        "Policy":{"shape":"Policy"}
+      }
+    },
+    "GetBucketRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Bucket"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetBucketResult":{
+      "type":"structure",
+      "members":{
+        "Bucket":{"shape":"BucketName"},
+        "PublicAccessBlockEnabled":{"shape":"PublicAccessBlockEnabled"},
         "CreationDate":{"shape":"CreationDate"}
+      }
+    },
+    "GetBucketTaggingRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Bucket"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetBucketTaggingResult":{
+      "type":"structure",
+      "required":["TagSet"],
+      "members":{
+        "TagSet":{"shape":"S3TagSet"}
       }
     },
     "GetJobTaggingRequest":{
@@ -553,6 +1899,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -569,6 +1916,84 @@
         "Tags":{"shape":"S3TagSet"}
       }
     },
+    "GetMultiRegionAccessPointPolicyRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"MultiRegionAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetMultiRegionAccessPointPolicyResult":{
+      "type":"structure",
+      "members":{
+        "Policy":{"shape":"MultiRegionAccessPointPolicyDocument"}
+      }
+    },
+    "GetMultiRegionAccessPointPolicyStatusRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"MultiRegionAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetMultiRegionAccessPointPolicyStatusResult":{
+      "type":"structure",
+      "members":{
+        "Established":{"shape":"PolicyStatus"}
+      }
+    },
+    "GetMultiRegionAccessPointRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"MultiRegionAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        }
+      }
+    },
+    "GetMultiRegionAccessPointResult":{
+      "type":"structure",
+      "members":{
+        "AccessPoint":{"shape":"MultiRegionAccessPointReport"}
+      }
+    },
     "GetPublicAccessBlockOutput":{
       "type":"structure",
       "members":{
@@ -582,23 +2007,90 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         }
       }
     },
+    "GetStorageLensConfigurationRequest":{
+      "type":"structure",
+      "required":[
+        "ConfigId",
+        "AccountId"
+      ],
+      "members":{
+        "ConfigId":{
+          "shape":"ConfigId",
+          "location":"uri",
+          "locationName":"storagelensid"
+        },
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        }
+      }
+    },
+    "GetStorageLensConfigurationResult":{
+      "type":"structure",
+      "members":{
+        "StorageLensConfiguration":{"shape":"StorageLensConfiguration"}
+      },
+      "payload":"StorageLensConfiguration"
+    },
+    "GetStorageLensConfigurationTaggingRequest":{
+      "type":"structure",
+      "required":[
+        "ConfigId",
+        "AccountId"
+      ],
+      "members":{
+        "ConfigId":{
+          "shape":"ConfigId",
+          "location":"uri",
+          "locationName":"storagelensid"
+        },
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        }
+      }
+    },
+    "GetStorageLensConfigurationTaggingResult":{
+      "type":"structure",
+      "members":{
+        "Tags":{"shape":"StorageLensTags"}
+      }
+    },
+    "GrantFullControl":{"type":"string"},
+    "GrantRead":{"type":"string"},
+    "GrantReadACP":{"type":"string"},
+    "GrantWrite":{"type":"string"},
+    "GrantWriteACP":{"type":"string"},
     "IAMRoleArn":{
       "type":"string",
       "max":2048,
       "min":1,
       "pattern":"arn:[^:]+:iam::\\d{12}:role/.*"
     },
+    "ID":{"type":"string"},
     "IdempotencyException":{
       "type":"structure",
       "members":{
         "Message":{"shape":"ExceptionMessage"}
       },
       "exception":true
+    },
+    "Include":{
+      "type":"structure",
+      "members":{
+        "Buckets":{"shape":"Buckets"},
+        "Regions":{"shape":"Regions"}
+      }
     },
     "InternalServiceException":{
       "type":"structure",
@@ -622,6 +2114,7 @@
       },
       "exception":true
     },
+    "IsEnabled":{"type":"boolean"},
     "IsPublic":{"type":"boolean"},
     "JobArn":{
       "type":"string",
@@ -819,6 +2312,10 @@
           "shape":"S3SetObjectTaggingOperation",
           "box":true
         },
+        "S3DeleteObjectTagging":{
+          "shape":"S3DeleteObjectTaggingOperation",
+          "box":true
+        },
         "S3InitiateRestoreObject":{
           "shape":"S3InitiateRestoreObjectOperation",
           "box":true
@@ -939,12 +2436,92 @@
         "FunctionArn":{"shape":"FunctionArnString"}
       }
     },
+    "LifecycleConfiguration":{
+      "type":"structure",
+      "members":{
+        "Rules":{"shape":"LifecycleRules"}
+      }
+    },
+    "LifecycleExpiration":{
+      "type":"structure",
+      "members":{
+        "Date":{"shape":"Date"},
+        "Days":{"shape":"Days"},
+        "ExpiredObjectDeleteMarker":{"shape":"ExpiredObjectDeleteMarker"}
+      }
+    },
+    "LifecycleRule":{
+      "type":"structure",
+      "required":["Status"],
+      "members":{
+        "Expiration":{"shape":"LifecycleExpiration"},
+        "ID":{"shape":"ID"},
+        "Filter":{"shape":"LifecycleRuleFilter"},
+        "Status":{"shape":"ExpirationStatus"},
+        "Transitions":{"shape":"TransitionList"},
+        "NoncurrentVersionTransitions":{"shape":"NoncurrentVersionTransitionList"},
+        "NoncurrentVersionExpiration":{"shape":"NoncurrentVersionExpiration"},
+        "AbortIncompleteMultipartUpload":{"shape":"AbortIncompleteMultipartUpload"}
+      }
+    },
+    "LifecycleRuleAndOperator":{
+      "type":"structure",
+      "members":{
+        "Prefix":{"shape":"Prefix"},
+        "Tags":{"shape":"S3TagSet"}
+      }
+    },
+    "LifecycleRuleFilter":{
+      "type":"structure",
+      "members":{
+        "Prefix":{"shape":"Prefix"},
+        "Tag":{"shape":"S3Tag"},
+        "And":{"shape":"LifecycleRuleAndOperator"}
+      }
+    },
+    "LifecycleRules":{
+      "type":"list",
+      "member":{
+        "shape":"LifecycleRule",
+        "locationName":"Rule"
+      }
+    },
+    "ListAccessPointsForObjectLambdaRequest":{
+      "type":"structure",
+      "required":["AccountId"],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "NextToken":{
+          "shape":"NonEmptyMaxLength1024String",
+          "location":"querystring",
+          "locationName":"nextToken"
+        },
+        "MaxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"maxResults"
+        }
+      }
+    },
+    "ListAccessPointsForObjectLambdaResult":{
+      "type":"structure",
+      "members":{
+        "ObjectLambdaAccessPointList":{"shape":"ObjectLambdaAccessPointList"},
+        "NextToken":{"shape":"NonEmptyMaxLength1024String"}
+      }
+    },
     "ListAccessPointsRequest":{
       "type":"structure",
       "required":["AccountId"],
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -978,6 +2555,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -1006,6 +2584,108 @@
         "Jobs":{"shape":"JobListDescriptorList"}
       }
     },
+    "ListMultiRegionAccessPointsRequest":{
+      "type":"structure",
+      "required":["AccountId"],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "NextToken":{
+          "shape":"NonEmptyMaxLength1024String",
+          "location":"querystring",
+          "locationName":"nextToken"
+        },
+        "MaxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"maxResults"
+        }
+      }
+    },
+    "ListMultiRegionAccessPointsResult":{
+      "type":"structure",
+      "members":{
+        "AccessPoints":{"shape":"MultiRegionAccessPointReportList"},
+        "NextToken":{"shape":"NonEmptyMaxLength1024String"}
+      }
+    },
+    "ListRegionalBucketsRequest":{
+      "type":"structure",
+      "required":["AccountId"],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "NextToken":{
+          "shape":"NonEmptyMaxLength1024String",
+          "location":"querystring",
+          "locationName":"nextToken"
+        },
+        "MaxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"maxResults"
+        },
+        "OutpostId":{
+          "shape":"NonEmptyMaxLength64String",
+          "location":"header",
+          "locationName":"x-amz-outpost-id"
+        }
+      }
+    },
+    "ListRegionalBucketsResult":{
+      "type":"structure",
+      "members":{
+        "RegionalBucketList":{"shape":"RegionalBucketList"},
+        "NextToken":{"shape":"NonEmptyMaxLength1024String"}
+      }
+    },
+    "ListStorageLensConfigurationEntry":{
+      "type":"structure",
+      "required":[
+        "Id",
+        "StorageLensArn",
+        "HomeRegion"
+      ],
+      "members":{
+        "Id":{"shape":"ConfigId"},
+        "StorageLensArn":{"shape":"StorageLensArn"},
+        "HomeRegion":{"shape":"S3AWSRegion"},
+        "IsEnabled":{"shape":"IsEnabled"}
+      }
+    },
+    "ListStorageLensConfigurationsRequest":{
+      "type":"structure",
+      "required":["AccountId"],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "NextToken":{
+          "shape":"ContinuationToken",
+          "location":"querystring",
+          "locationName":"nextToken"
+        }
+      }
+    },
+    "ListStorageLensConfigurationsResult":{
+      "type":"structure",
+      "members":{
+        "NextToken":{"shape":"ContinuationToken"},
+        "StorageLensConfigurationList":{"shape":"StorageLensConfigurationList"}
+      }
+    },
+    "Location":{"type":"string"},
     "MaxLength1024String":{
       "type":"string",
       "max":1024
@@ -1013,7 +2693,83 @@
     "MaxResults":{
       "type":"integer",
       "max":1000,
-      "min":1
+      "min":0
+    },
+    "MinStorageBytesPercentage":{
+      "type":"double",
+      "max":100,
+      "min":0.1
+    },
+    "MultiRegionAccessPointAlias":{
+      "type":"string",
+      "max":63,
+      "pattern":"^[a-z][a-z0-9]*[.]mrap$"
+    },
+    "MultiRegionAccessPointClientToken":{
+      "type":"string",
+      "max":64,
+      "pattern":"\\S+"
+    },
+    "MultiRegionAccessPointName":{
+      "type":"string",
+      "max":50,
+      "pattern":"^[a-z0-9][-a-z0-9]{1,48}[a-z0-9]$"
+    },
+    "MultiRegionAccessPointPolicyDocument":{
+      "type":"structure",
+      "members":{
+        "Established":{"shape":"EstablishedMultiRegionAccessPointPolicy"},
+        "Proposed":{"shape":"ProposedMultiRegionAccessPointPolicy"}
+      }
+    },
+    "MultiRegionAccessPointRegionalResponse":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"RegionName"},
+        "RequestStatus":{"shape":"AsyncRequestStatus"}
+      }
+    },
+    "MultiRegionAccessPointRegionalResponseList":{
+      "type":"list",
+      "member":{
+        "shape":"MultiRegionAccessPointRegionalResponse",
+        "locationName":"Region"
+      }
+    },
+    "MultiRegionAccessPointReport":{
+      "type":"structure",
+      "members":{
+        "Name":{"shape":"MultiRegionAccessPointName"},
+        "Alias":{"shape":"MultiRegionAccessPointAlias"},
+        "CreatedAt":{"shape":"CreationTimestamp"},
+        "PublicAccessBlock":{"shape":"PublicAccessBlockConfiguration"},
+        "Status":{"shape":"MultiRegionAccessPointStatus"},
+        "Regions":{"shape":"RegionReportList"}
+      }
+    },
+    "MultiRegionAccessPointReportList":{
+      "type":"list",
+      "member":{
+        "shape":"MultiRegionAccessPointReport",
+        "locationName":"AccessPoint"
+      }
+    },
+    "MultiRegionAccessPointStatus":{
+      "type":"string",
+      "enum":[
+        "READY",
+        "INCONSISTENT_ACROSS_REGIONS",
+        "CREATING",
+        "PARTIALLY_CREATED",
+        "PARTIALLY_DELETED",
+        "DELETING"
+      ]
+    },
+    "MultiRegionAccessPointsAsyncResponse":{
+      "type":"structure",
+      "members":{
+        "Regions":{"shape":"MultiRegionAccessPointRegionalResponseList"}
+      }
     },
     "NetworkOrigin":{
       "type":"string",
@@ -1051,6 +2807,26 @@
       "max":64,
       "min":1
     },
+    "NoncurrentVersionExpiration":{
+      "type":"structure",
+      "members":{
+        "NoncurrentDays":{"shape":"Days"}
+      }
+    },
+    "NoncurrentVersionTransition":{
+      "type":"structure",
+      "members":{
+        "NoncurrentDays":{"shape":"Days"},
+        "StorageClass":{"shape":"TransitionStorageClass"}
+      }
+    },
+    "NoncurrentVersionTransitionList":{
+      "type":"list",
+      "member":{
+        "shape":"NoncurrentVersionTransition",
+        "locationName":"NoncurrentVersionTransition"
+      }
+    },
     "NotFoundException":{
       "type":"structure",
       "members":{
@@ -1058,6 +2834,104 @@
       },
       "exception":true
     },
+    "ObjectLambdaAccessPoint":{
+      "type":"structure",
+      "required":["Name"],
+      "members":{
+        "Name":{"shape":"ObjectLambdaAccessPointName"},
+        "ObjectLambdaAccessPointArn":{"shape":"ObjectLambdaAccessPointArn"}
+      }
+    },
+    "ObjectLambdaAccessPointArn":{
+      "type":"string",
+      "max":2048,
+      "min":1,
+      "pattern":"arn:[^:]+:s3-object-lambda:[^:]*:\\d{12}:accesspoint/.*"
+    },
+    "ObjectLambdaAccessPointList":{
+      "type":"list",
+      "member":{
+        "shape":"ObjectLambdaAccessPoint",
+        "locationName":"ObjectLambdaAccessPoint"
+      }
+    },
+    "ObjectLambdaAccessPointName":{
+      "type":"string",
+      "max":45,
+      "min":3,
+      "pattern":"^[a-z0-9]([a-z0-9\\-]*[a-z0-9])?$"
+    },
+    "ObjectLambdaAllowedFeature":{
+      "type":"string",
+      "enum":[
+        "GetObject-Range",
+        "GetObject-PartNumber"
+      ]
+    },
+    "ObjectLambdaAllowedFeaturesList":{
+      "type":"list",
+      "member":{
+        "shape":"ObjectLambdaAllowedFeature",
+        "locationName":"AllowedFeature"
+      }
+    },
+    "ObjectLambdaConfiguration":{
+      "type":"structure",
+      "required":[
+        "SupportingAccessPoint",
+        "TransformationConfigurations"
+      ],
+      "members":{
+        "SupportingAccessPoint":{"shape":"ObjectLambdaSupportingAccessPointArn"},
+        "CloudWatchMetricsEnabled":{"shape":"Boolean"},
+        "AllowedFeatures":{"shape":"ObjectLambdaAllowedFeaturesList"},
+        "TransformationConfigurations":{"shape":"ObjectLambdaTransformationConfigurationsList"}
+      }
+    },
+    "ObjectLambdaContentTransformation":{
+      "type":"structure",
+      "members":{
+        "AwsLambda":{"shape":"AwsLambdaTransformation"}
+      },
+      "union":true
+    },
+    "ObjectLambdaPolicy":{"type":"string"},
+    "ObjectLambdaSupportingAccessPointArn":{
+      "type":"string",
+      "max":2048,
+      "min":1,
+      "pattern":"arn:[^:]+:s3:[^:]*:\\d{12}:accesspoint/.*"
+    },
+    "ObjectLambdaTransformationConfiguration":{
+      "type":"structure",
+      "required":[
+        "Actions",
+        "ContentTransformation"
+      ],
+      "members":{
+        "Actions":{"shape":"ObjectLambdaTransformationConfigurationActionsList"},
+        "ContentTransformation":{"shape":"ObjectLambdaContentTransformation"}
+      }
+    },
+    "ObjectLambdaTransformationConfigurationAction":{
+      "type":"string",
+      "enum":["GetObject"]
+    },
+    "ObjectLambdaTransformationConfigurationActionsList":{
+      "type":"list",
+      "member":{
+        "shape":"ObjectLambdaTransformationConfigurationAction",
+        "locationName":"Action"
+      }
+    },
+    "ObjectLambdaTransformationConfigurationsList":{
+      "type":"list",
+      "member":{
+        "shape":"ObjectLambdaTransformationConfiguration",
+        "locationName":"TransformationConfiguration"
+      }
+    },
+    "ObjectLockEnabledForBucket":{"type":"boolean"},
     "OperationName":{
       "type":"string",
       "enum":[
@@ -1065,10 +2939,15 @@
         "S3PutObjectCopy",
         "S3PutObjectAcl",
         "S3PutObjectTagging",
+        "S3DeleteObjectTagging",
         "S3InitiateRestoreObject",
         "S3PutObjectLegalHold",
         "S3PutObjectRetention"
       ]
+    },
+    "OutputSchemaVersion":{
+      "type":"string",
+      "enum":["V_1"]
     },
     "Policy":{"type":"string"},
     "PolicyStatus":{
@@ -1078,6 +2957,27 @@
           "shape":"IsPublic",
           "locationName":"IsPublic"
         }
+      }
+    },
+    "Prefix":{"type":"string"},
+    "PrefixLevel":{
+      "type":"structure",
+      "required":["StorageMetrics"],
+      "members":{
+        "StorageMetrics":{"shape":"PrefixLevelStorageMetrics"}
+      }
+    },
+    "PrefixLevelStorageMetrics":{
+      "type":"structure",
+      "members":{
+        "IsEnabled":{"shape":"IsEnabled"},
+        "SelectionCriteria":{"shape":"SelectionCriteria"}
+      }
+    },
+    "ProposedMultiRegionAccessPointPolicy":{
+      "type":"structure",
+      "members":{
+        "Policy":{"shape":"Policy"}
       }
     },
     "PublicAccessBlockConfiguration":{
@@ -1101,6 +3001,51 @@
         }
       }
     },
+    "PublicAccessBlockEnabled":{"type":"boolean"},
+    "PutAccessPointConfigurationForObjectLambdaRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name",
+        "Configuration"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"ObjectLambdaAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "Configuration":{"shape":"ObjectLambdaConfiguration"}
+      }
+    },
+    "PutAccessPointPolicyForObjectLambdaRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Name",
+        "Policy"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Name":{
+          "shape":"ObjectLambdaAccessPointName",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "Policy":{"shape":"ObjectLambdaPolicy"}
+      }
+    },
     "PutAccessPointPolicyRequest":{
       "type":"structure",
       "required":[
@@ -1111,6 +3056,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -1122,6 +3068,86 @@
         "Policy":{"shape":"Policy"}
       }
     },
+    "PutBucketLifecycleConfigurationRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Bucket"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "LifecycleConfiguration":{
+          "shape":"LifecycleConfiguration",
+          "locationName":"LifecycleConfiguration",
+          "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+        }
+      },
+      "payload":"LifecycleConfiguration"
+    },
+    "PutBucketPolicyRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Bucket",
+        "Policy"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "ConfirmRemoveSelfBucketAccess":{
+          "shape":"ConfirmRemoveSelfBucketAccess",
+          "location":"header",
+          "locationName":"x-amz-confirm-remove-self-bucket-access"
+        },
+        "Policy":{"shape":"Policy"}
+      }
+    },
+    "PutBucketTaggingRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "Bucket",
+        "Tagging"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Bucket":{
+          "shape":"BucketName",
+          "location":"uri",
+          "locationName":"name"
+        },
+        "Tagging":{
+          "shape":"Tagging",
+          "locationName":"Tagging",
+          "xmlNamespace":{"uri":"http://awss3control.amazonaws.com/doc/2018-08-20/"}
+        }
+      },
+      "payload":"Tagging"
+    },
     "PutJobTaggingRequest":{
       "type":"structure",
       "required":[
@@ -1132,6 +3158,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -1148,6 +3175,44 @@
       "members":{
       }
     },
+    "PutMultiRegionAccessPointPolicyInput":{
+      "type":"structure",
+      "required":[
+        "Name",
+        "Policy"
+      ],
+      "members":{
+        "Name":{"shape":"MultiRegionAccessPointName"},
+        "Policy":{"shape":"Policy"}
+      }
+    },
+    "PutMultiRegionAccessPointPolicyRequest":{
+      "type":"structure",
+      "required":[
+        "AccountId",
+        "ClientToken",
+        "Details"
+      ],
+      "members":{
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "ClientToken":{
+          "shape":"MultiRegionAccessPointClientToken",
+          "idempotencyToken":true
+        },
+        "Details":{"shape":"PutMultiRegionAccessPointPolicyInput"}
+      }
+    },
+    "PutMultiRegionAccessPointPolicyResult":{
+      "type":"structure",
+      "members":{
+        "RequestTokenARN":{"shape":"AsyncRequestTokenARN"}
+      }
+    },
     "PutPublicAccessBlockRequest":{
       "type":"structure",
       "required":[
@@ -1162,11 +3227,124 @@
         },
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         }
       },
       "payload":"PublicAccessBlockConfiguration"
+    },
+    "PutStorageLensConfigurationRequest":{
+      "type":"structure",
+      "required":[
+        "ConfigId",
+        "AccountId",
+        "StorageLensConfiguration"
+      ],
+      "members":{
+        "ConfigId":{
+          "shape":"ConfigId",
+          "location":"uri",
+          "locationName":"storagelensid"
+        },
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "StorageLensConfiguration":{"shape":"StorageLensConfiguration"},
+        "Tags":{"shape":"StorageLensTags"}
+      }
+    },
+    "PutStorageLensConfigurationTaggingRequest":{
+      "type":"structure",
+      "required":[
+        "ConfigId",
+        "AccountId",
+        "Tags"
+      ],
+      "members":{
+        "ConfigId":{
+          "shape":"ConfigId",
+          "location":"uri",
+          "locationName":"storagelensid"
+        },
+        "AccountId":{
+          "shape":"AccountId",
+          "hostLabel":true,
+          "location":"header",
+          "locationName":"x-amz-account-id"
+        },
+        "Tags":{"shape":"StorageLensTags"}
+      }
+    },
+    "PutStorageLensConfigurationTaggingResult":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "Region":{
+      "type":"structure",
+      "required":["Bucket"],
+      "members":{
+        "Bucket":{"shape":"BucketName"}
+      }
+    },
+    "RegionCreationList":{
+      "type":"list",
+      "member":{
+        "shape":"Region",
+        "locationName":"Region"
+      }
+    },
+    "RegionName":{
+      "type":"string",
+      "max":64,
+      "min":1
+    },
+    "RegionReport":{
+      "type":"structure",
+      "members":{
+        "Bucket":{"shape":"BucketName"},
+        "Region":{"shape":"RegionName"}
+      }
+    },
+    "RegionReportList":{
+      "type":"list",
+      "member":{
+        "shape":"RegionReport",
+        "locationName":"Region"
+      }
+    },
+    "RegionalBucket":{
+      "type":"structure",
+      "required":[
+        "Bucket",
+        "PublicAccessBlockEnabled",
+        "CreationDate"
+      ],
+      "members":{
+        "Bucket":{"shape":"BucketName"},
+        "BucketArn":{"shape":"S3RegionalBucketArn"},
+        "PublicAccessBlockEnabled":{"shape":"PublicAccessBlockEnabled"},
+        "CreationDate":{"shape":"CreationDate"},
+        "OutpostId":{"shape":"NonEmptyMaxLength64String"}
+      }
+    },
+    "RegionalBucketList":{
+      "type":"list",
+      "member":{
+        "shape":"RegionalBucket",
+        "locationName":"RegionalBucket"
+      }
+    },
+    "Regions":{
+      "type":"list",
+      "member":{
+        "shape":"S3AWSRegion",
+        "locationName":"Region"
+      }
     },
     "ReportPrefixString":{
       "type":"string",
@@ -1179,6 +3357,12 @@
         "Cancelled",
         "Ready"
       ]
+    },
+    "S3AWSRegion":{
+      "type":"string",
+      "max":30,
+      "min":5,
+      "pattern":"[a-z0-9\\-]+"
     },
     "S3AccessControlList":{
       "type":"structure",
@@ -1201,11 +3385,33 @@
         }
       }
     },
+    "S3AccessPointArn":{
+      "type":"string",
+      "max":128,
+      "min":4
+    },
     "S3BucketArnString":{
       "type":"string",
       "max":128,
       "min":1,
       "pattern":"arn:[^:]+:s3:.*"
+    },
+    "S3BucketDestination":{
+      "type":"structure",
+      "required":[
+        "Format",
+        "OutputSchemaVersion",
+        "AccountId",
+        "Arn"
+      ],
+      "members":{
+        "Format":{"shape":"Format"},
+        "OutputSchemaVersion":{"shape":"OutputSchemaVersion"},
+        "AccountId":{"shape":"AccountId"},
+        "Arn":{"shape":"S3BucketArnString"},
+        "Prefix":{"shape":"Prefix"},
+        "Encryption":{"shape":"StorageLensDataExportEncryption"}
+      }
     },
     "S3CannedAccessControlList":{
       "type":"string",
@@ -1247,7 +3453,13 @@
         "TargetKeyPrefix":{"shape":"NonEmptyMaxLength1024String"},
         "ObjectLockLegalHoldStatus":{"shape":"S3ObjectLockLegalHoldStatus"},
         "ObjectLockMode":{"shape":"S3ObjectLockMode"},
-        "ObjectLockRetainUntilDate":{"shape":"TimeStamp"}
+        "ObjectLockRetainUntilDate":{"shape":"TimeStamp"},
+        "BucketKeyEnabled":{"shape":"Boolean"}
+      }
+    },
+    "S3DeleteObjectTaggingOperation":{
+      "type":"structure",
+      "members":{
       }
     },
     "S3ExpirationInDays":{
@@ -1294,7 +3506,10 @@
     "S3InitiateRestoreObjectOperation":{
       "type":"structure",
       "members":{
-        "ExpirationInDays":{"shape":"S3ExpirationInDays"},
+        "ExpirationInDays":{
+          "shape":"S3ExpirationInDays",
+          "box":true
+        },
         "GlacierJobTier":{"shape":"S3GlacierJobTier"}
       }
     },
@@ -1380,6 +3595,11 @@
         "WRITE_ACP"
       ]
     },
+    "S3RegionalBucketArn":{
+      "type":"string",
+      "max":128,
+      "min":4
+    },
     "S3Retention":{
       "type":"structure",
       "members":{
@@ -1456,7 +3676,116 @@
       "value":{"shape":"MaxLength1024String"},
       "max":8192
     },
+    "SSEKMS":{
+      "type":"structure",
+      "required":["KeyId"],
+      "members":{
+        "KeyId":{"shape":"SSEKMSKeyId"}
+      },
+      "locationName":"SSE-KMS"
+    },
+    "SSEKMSKeyId":{"type":"string"},
+    "SSES3":{
+      "type":"structure",
+      "members":{
+      },
+      "locationName":"SSE-S3"
+    },
+    "SelectionCriteria":{
+      "type":"structure",
+      "members":{
+        "Delimiter":{"shape":"StorageLensPrefixLevelDelimiter"},
+        "MaxDepth":{"shape":"StorageLensPrefixLevelMaxDepth"},
+        "MinStorageBytesPercentage":{"shape":"MinStorageBytesPercentage"}
+      }
+    },
     "Setting":{"type":"boolean"},
+    "StorageLensArn":{
+      "type":"string",
+      "max":1024,
+      "min":1,
+      "pattern":"arn:[a-z\\-]+:s3:[a-z0-9\\-]+:\\d{12}:storage\\-lens\\/.*"
+    },
+    "StorageLensAwsOrg":{
+      "type":"structure",
+      "required":["Arn"],
+      "members":{
+        "Arn":{"shape":"AwsOrgArn"}
+      }
+    },
+    "StorageLensConfiguration":{
+      "type":"structure",
+      "required":[
+        "Id",
+        "AccountLevel",
+        "IsEnabled"
+      ],
+      "members":{
+        "Id":{"shape":"ConfigId"},
+        "AccountLevel":{"shape":"AccountLevel"},
+        "Include":{"shape":"Include"},
+        "Exclude":{"shape":"Exclude"},
+        "DataExport":{"shape":"StorageLensDataExport"},
+        "IsEnabled":{"shape":"IsEnabled"},
+        "AwsOrg":{"shape":"StorageLensAwsOrg"},
+        "StorageLensArn":{"shape":"StorageLensArn"}
+      }
+    },
+    "StorageLensConfigurationList":{
+      "type":"list",
+      "member":{
+        "shape":"ListStorageLensConfigurationEntry",
+        "locationName":"StorageLensConfiguration"
+      },
+      "flattened":true
+    },
+    "StorageLensDataExport":{
+      "type":"structure",
+      "members":{
+        "S3BucketDestination":{"shape":"S3BucketDestination"},
+        "CloudWatchMetrics":{"shape":"CloudWatchMetrics"}
+      }
+    },
+    "StorageLensDataExportEncryption":{
+      "type":"structure",
+      "members":{
+        "SSES3":{
+          "shape":"SSES3",
+          "locationName":"SSE-S3"
+        },
+        "SSEKMS":{
+          "shape":"SSEKMS",
+          "locationName":"SSE-KMS"
+        }
+      }
+    },
+    "StorageLensPrefixLevelDelimiter":{
+      "type":"string",
+      "max":1
+    },
+    "StorageLensPrefixLevelMaxDepth":{
+      "type":"integer",
+      "max":10,
+      "min":1
+    },
+    "StorageLensTag":{
+      "type":"structure",
+      "required":[
+        "Key",
+        "Value"
+      ],
+      "members":{
+        "Key":{"shape":"TagKeyString"},
+        "Value":{"shape":"TagValueString"}
+      }
+    },
+    "StorageLensTags":{
+      "type":"list",
+      "member":{
+        "shape":"StorageLensTag",
+        "locationName":"Tag"
+      }
+    },
     "StringForNextToken":{
       "type":"string",
       "max":1024,
@@ -1473,12 +3802,19 @@
       "type":"string",
       "max":1024,
       "min":1,
-      "pattern":"^([\\p{L}\\p{Z}\\p{N}_.:=+\\-@%]*)$"
+      "pattern":"^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
     },
     "TagValueString":{
       "type":"string",
       "max":1024,
-      "pattern":"^([\\p{L}\\p{Z}\\p{N}_.:=+\\-@%]*)$"
+      "pattern":"^([\\p{L}\\p{Z}\\p{N}_.:/=+\\-@]*)$"
+    },
+    "Tagging":{
+      "type":"structure",
+      "required":["TagSet"],
+      "members":{
+        "TagSet":{"shape":"S3TagSet"}
+      }
     },
     "TimeStamp":{"type":"timestamp"},
     "TooManyRequestsException":{
@@ -1495,6 +3831,31 @@
       },
       "exception":true
     },
+    "Transition":{
+      "type":"structure",
+      "members":{
+        "Date":{"shape":"Date"},
+        "Days":{"shape":"Days"},
+        "StorageClass":{"shape":"TransitionStorageClass"}
+      }
+    },
+    "TransitionList":{
+      "type":"list",
+      "member":{
+        "shape":"Transition",
+        "locationName":"Transition"
+      }
+    },
+    "TransitionStorageClass":{
+      "type":"string",
+      "enum":[
+        "GLACIER",
+        "STANDARD_IA",
+        "ONEZONE_IA",
+        "INTELLIGENT_TIERING",
+        "DEEP_ARCHIVE"
+      ]
+    },
     "UpdateJobPriorityRequest":{
       "type":"structure",
       "required":[
@@ -1505,6 +3866,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },
@@ -1541,6 +3903,7 @@
       "members":{
         "AccountId":{
           "shape":"AccountId",
+          "hostLabel":true,
           "location":"header",
           "locationName":"x-amz-account-id"
         },

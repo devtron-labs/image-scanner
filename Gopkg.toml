@@ -33,7 +33,6 @@
         non-go = false
         unused-packages = false
 
-
 [[constraint]]
   name = "go.uber.org/zap"
   version = "1.10.0"

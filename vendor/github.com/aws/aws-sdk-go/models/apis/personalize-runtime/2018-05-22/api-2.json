@@ -64,6 +64,22 @@
       "max":150
     },
     "ErrorMessage":{"type":"string"},
+    "FilterAttributeName":{
+      "type":"string",
+      "max":50,
+      "pattern":"[A-Za-z0-9_]+"
+    },
+    "FilterAttributeValue":{
+      "type":"string",
+      "max":1000,
+      "sensitive":true
+    },
+    "FilterValues":{
+      "type":"map",
+      "key":{"shape":"FilterAttributeName"},
+      "value":{"shape":"FilterAttributeValue"},
+      "max":25
+    },
     "GetPersonalizedRankingRequest":{
       "type":"structure",
       "required":[
@@ -76,7 +92,8 @@
         "inputList":{"shape":"InputList"},
         "userId":{"shape":"UserID"},
         "context":{"shape":"Context"},
-        "filterArn":{"shape":"Arn"}
+        "filterArn":{"shape":"Arn"},
+        "filterValues":{"shape":"FilterValues"}
       }
     },
     "GetPersonalizedRankingResponse":{
@@ -88,14 +105,15 @@
     },
     "GetRecommendationsRequest":{
       "type":"structure",
-      "required":["campaignArn"],
       "members":{
         "campaignArn":{"shape":"Arn"},
         "itemId":{"shape":"ItemID"},
         "userId":{"shape":"UserID"},
         "numResults":{"shape":"NumResults"},
         "context":{"shape":"Context"},
-        "filterArn":{"shape":"Arn"}
+        "filterArn":{"shape":"Arn"},
+        "filterValues":{"shape":"FilterValues"},
+        "recommenderArn":{"shape":"Arn"}
       }
     },
     "GetRecommendationsResponse":{

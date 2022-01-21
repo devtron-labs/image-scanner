@@ -1,3 +1,4 @@
+//go:build example
 // +build example
 
 package main
@@ -16,7 +17,7 @@ func main() {
 	s3CustResolverFn := func(service, region string, optFns ...func(*endpoints.Options)) (endpoints.ResolvedEndpoint, error) {
 		if service == "s3" {
 			return endpoints.ResolvedEndpoint{
-				URL:           "s3.custom.endpoint.com",
+				URL:           "https://s3.custom.endpoint.com",
 				SigningRegion: "custom-signing-region",
 			}, nil
 		}

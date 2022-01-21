@@ -11,8 +11,15 @@ const (
 	// ErrCodeConcurrentModificationException for service response error code
 	// "ConcurrentModificationException".
 	//
-	// There is concurrent modification on a rule or target.
+	// There is concurrent modification on a rule, target, archive, or replay.
 	ErrCodeConcurrentModificationException = "ConcurrentModificationException"
+
+	// ErrCodeIllegalStatusException for service response error code
+	// "IllegalStatusException".
+	//
+	// An error occurred because a replay can be canceled only when the state is
+	// Running or Starting.
+	ErrCodeIllegalStatusException = "IllegalStatusException"
 
 	// ErrCodeInternalException for service response error code
 	// "InternalException".
@@ -35,18 +42,19 @@ const (
 	// ErrCodeLimitExceededException for service response error code
 	// "LimitExceededException".
 	//
-	// You tried to create more rules or add more targets to a rule than is allowed.
+	// The request failed because it attempted to create resource beyond the allowed
+	// service quota.
 	ErrCodeLimitExceededException = "LimitExceededException"
 
 	// ErrCodeManagedRuleException for service response error code
 	// "ManagedRuleException".
 	//
-	// This rule was created by an AWS service on behalf of your account. It is
-	// managed by that service. If you see this error in response to DeleteRule
-	// or RemoveTargets, you can use the Force parameter in those calls to delete
-	// the rule or remove targets from the rule. You cannot modify these managed
-	// rules by using DisableRule, EnableRule, PutTargets, PutRule, TagResource,
-	// or UntagResource.
+	// This rule was created by an Amazon Web Services service on behalf of your
+	// account. It is managed by that service. If you see this error in response
+	// to DeleteRule or RemoveTargets, you can use the Force parameter in those
+	// calls to delete the rule or remove targets from the rule. You cannot modify
+	// these managed rules by using DisableRule, EnableRule, PutTargets, PutRule,
+	// TagResource, or UntagResource.
 	ErrCodeManagedRuleException = "ManagedRuleException"
 
 	// ErrCodeOperationDisabledException for service response error code
@@ -76,6 +84,7 @@ const (
 
 var exceptionFromCode = map[string]func(protocol.ResponseMetadata) error{
 	"ConcurrentModificationException": newErrorConcurrentModificationException,
+	"IllegalStatusException":          newErrorIllegalStatusException,
 	"InternalException":               newErrorInternalException,
 	"InvalidEventPatternException":    newErrorInvalidEventPatternException,
 	"InvalidStateException":           newErrorInvalidStateException,

@@ -567,6 +567,22 @@
         "shape" : "BadRequestException"
       } ]
     },
+    "ResetAuthorizersCache" : {
+      "name" : "ResetAuthorizersCache",
+      "http" : {
+        "method" : "DELETE",
+        "requestUri" : "/v2/apis/{apiId}/stages/{stageName}/cache/authorizers",
+        "responseCode" : 204
+      },
+      "input" : {
+        "shape" : "ResetAuthorizersCacheRequest"
+      },
+      "errors" : [ {
+        "shape" : "NotFoundException"
+      }, {
+        "shape" : "TooManyRequestsException"
+      } ]
+    },
     "GetApi" : {
       "name" : "GetApi",
       "http" : {
@@ -1487,6 +1503,10 @@
           "shape" : "__string",
           "locationName" : "apiEndpoint"
         },
+        "ApiGatewayManaged" : {
+          "shape" : "__boolean",
+          "locationName" : "apiGatewayManaged"
+        },
         "ApiId" : {
           "shape" : "Id",
           "locationName" : "apiId"
@@ -1510,6 +1530,10 @@
         "DisableSchemaValidation" : {
           "shape" : "__boolean",
           "locationName" : "disableSchemaValidation"
+        },
+        "DisableExecuteApiEndpoint" : {
+          "shape" : "__boolean",
+          "locationName" : "disableExecuteApiEndpoint"
         },
         "ImportInfo" : {
           "shape" : "__listOf__string",
@@ -1641,6 +1665,14 @@
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
+        },
+        "AuthorizerPayloadFormatVersion": {
+          "shape": "StringWithLengthBetween1And64",
+          "locationName": "authorizerPayloadFormatVersion"
+        },
+        "EnableSimpleResponses": {
+          "shape": "__boolean",
+          "locationName": "enableSimpleResponses"
         }
       },
       "required" : [ "Name" ]
@@ -1766,6 +1798,10 @@
           "shape" : "__boolean",
           "locationName" : "disableSchemaValidation"
         },
+        "DisableExecuteApiEndpoint" : {
+          "shape" : "__boolean",
+          "locationName" : "disableExecuteApiEndpoint"
+        },
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
@@ -1882,6 +1918,10 @@
           "shape" : "__boolean",
           "locationName" : "disableSchemaValidation"
         },
+        "DisableExecuteApiEndpoint" : {
+          "shape" : "__boolean",
+          "locationName" : "disableExecuteApiEndpoint"
+        },
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
@@ -1920,6 +1960,10 @@
           "shape" : "__string",
           "locationName" : "apiEndpoint"
         },
+        "ApiGatewayManaged" : {
+          "shape" : "__boolean",
+          "locationName" : "apiGatewayManaged"
+        },
         "ApiId" : {
           "shape" : "Id",
           "locationName" : "apiId"
@@ -1943,6 +1987,10 @@
         "DisableSchemaValidation" : {
           "shape" : "__boolean",
           "locationName" : "disableSchemaValidation"
+        },
+        "DisableExecuteApiEndpoint" : {
+          "shape" : "__boolean",
+          "locationName" : "disableExecuteApiEndpoint"
         },
         "ImportInfo" : {
           "shape" : "__listOf__string",
@@ -2008,6 +2056,14 @@
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
+        },
+        "AuthorizerPayloadFormatVersion": {
+          "shape": "StringWithLengthBetween1And64",
+          "locationName": "authorizerPayloadFormatVersion"
+        },
+        "EnableSimpleResponses": {
+          "shape": "__boolean",
+          "locationName": "enableSimpleResponses"
         }
       },
       "required" : [ "AuthorizerType", "IdentitySource", "Name" ]
@@ -2051,6 +2107,14 @@
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
+        },
+        "AuthorizerPayloadFormatVersion": {
+          "shape": "StringWithLengthBetween1And64",
+          "locationName": "authorizerPayloadFormatVersion"
+        },
+        "EnableSimpleResponses": {
+          "shape": "__boolean",
+          "locationName": "enableSimpleResponses"
         }
       },
       "required" : [ "ApiId", "AuthorizerType", "IdentitySource", "Name" ]
@@ -2093,6 +2157,14 @@
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
+        },
+        "AuthorizerPayloadFormatVersion": {
+          "shape": "StringWithLengthBetween1And64",
+          "locationName": "authorizerPayloadFormatVersion"
+        },
+        "EnableSimpleResponses": {
+          "shape": "__boolean",
+          "locationName": "enableSimpleResponses"
         }
       }
     },
@@ -2168,6 +2240,10 @@
           "shape" : "DomainNameConfigurations",
           "locationName" : "domainNameConfigurations"
         },
+        "MutualTlsAuthentication" : {
+          "shape" : "MutualTlsAuthenticationInput",
+          "locationName" : "mutualTlsAuthentication"
+        },
         "Tags" : {
           "shape" : "Tags",
           "locationName" : "tags"
@@ -2185,6 +2261,10 @@
         "DomainNameConfigurations" : {
           "shape" : "DomainNameConfigurations",
           "locationName" : "domainNameConfigurations"
+        },
+        "MutualTlsAuthentication" : {
+          "shape" : "MutualTlsAuthenticationInput",
+          "locationName" : "mutualTlsAuthentication"
         },
         "Tags" : {
           "shape" : "Tags",
@@ -2207,6 +2287,10 @@
         "DomainNameConfigurations" : {
           "shape" : "DomainNameConfigurations",
           "locationName" : "domainNameConfigurations"
+        },
+         "MutualTlsAuthentication" : {
+          "shape" : "MutualTlsAuthentication",
+          "locationName" : "mutualTlsAuthentication"
         },
         "Tags" : {
           "shape" : "Tags",
@@ -2241,6 +2325,10 @@
           "shape" : "StringWithLengthBetween1And64",
           "locationName" : "integrationMethod"
         },
+        "IntegrationSubtype" : {
+          "shape" : "StringWithLengthBetween1And128",
+          "locationName" : "integrationSubtype"
+        },
         "IntegrationType" : {
           "shape" : "IntegrationType",
           "locationName" : "integrationType"
@@ -2260,6 +2348,10 @@
         "RequestParameters" : {
           "shape" : "IntegrationParameters",
           "locationName" : "requestParameters"
+        },
+        "ResponseParameters" : {
+          "shape" : "ResponseParameters",
+          "locationName" : "responseParameters"
         },
         "RequestTemplates" : {
           "shape" : "TemplateMap",
@@ -2312,6 +2404,10 @@
           "shape" : "StringWithLengthBetween1And64",
           "locationName" : "integrationMethod"
         },
+        "IntegrationSubtype" : {
+          "shape" : "StringWithLengthBetween1And128",
+          "locationName" : "integrationSubtype"
+        },
         "IntegrationType" : {
           "shape" : "IntegrationType",
           "locationName" : "integrationType"
@@ -2331,6 +2427,10 @@
         "RequestParameters" : {
           "shape" : "IntegrationParameters",
           "locationName" : "requestParameters"
+        },
+        "ResponseParameters" : {
+          "shape" : "ResponseParameters",
+          "locationName" : "responseParameters"
         },
         "RequestTemplates" : {
           "shape" : "TemplateMap",
@@ -2390,6 +2490,10 @@
           "shape" : "SelectionExpression",
           "locationName" : "integrationResponseSelectionExpression"
         },
+        "IntegrationSubtype" : {
+          "shape" : "StringWithLengthBetween1And128",
+          "locationName" : "integrationSubtype"
+        },
         "IntegrationType" : {
           "shape" : "IntegrationType",
           "locationName" : "integrationType"
@@ -2409,6 +2513,10 @@
         "RequestParameters" : {
           "shape" : "IntegrationParameters",
           "locationName" : "requestParameters"
+        },
+        "ResponseParameters" : {
+          "shape" : "ResponseParameters",
+          "locationName" : "responseParameters"
         },
         "RequestTemplates" : {
           "shape" : "TemplateMap",
@@ -3398,6 +3506,10 @@
           "shape" : "DomainNameConfigurations",
           "locationName" : "domainNameConfigurations"
         },
+        "MutualTlsAuthentication" : {
+          "shape" : "MutualTlsAuthentication",
+          "locationName" : "mutualTlsAuthentication"
+        },
         "Tags" : {
           "shape" : "Tags",
           "locationName" : "tags"
@@ -3443,6 +3555,10 @@
         "SecurityPolicy" : {
           "shape" : "SecurityPolicy",
           "locationName" : "securityPolicy"
+        },
+        "OwnershipVerificationCertificateArn" : {
+          "shape" : "Arn",
+          "locationName" : "ownershipVerificationCertificateArn"
         }
       }
     },
@@ -3454,7 +3570,7 @@
     },
     "DomainNameStatus" : {
       "type" : "string",
-      "enum" : [ "AVAILABLE", "UPDATING" ]
+      "enum" : [ "AVAILABLE", "UPDATING", "PENDING_CERTIFICATE_REIMPORT", "PENDING_OWNERSHIP_VERIFICATION" ]
     },
     "DomainNames" : {
       "type" : "structure",
@@ -3522,6 +3638,22 @@
     },
     "ExportedApi" : {
       "type" : "blob"
+    },
+    "ResetAuthorizersCacheRequest" : {
+      "type" : "structure",
+      "members" : {
+        "ApiId" : {
+          "shape" : "__string",
+          "location" : "uri",
+          "locationName" : "apiId"
+        },
+        "StageName" : {
+          "shape" : "__string",
+          "location" : "uri",
+          "locationName" : "stageName"
+        }
+      },
+      "required" : [ "StageName", "ApiId" ]
     },
     "GetApiMappingRequest" : {
       "type" : "structure",
@@ -3612,6 +3744,10 @@
           "shape" : "__string",
           "locationName" : "apiEndpoint"
         },
+        "ApiGatewayManaged" : {
+          "shape" : "__boolean",
+          "locationName" : "apiGatewayManaged"
+        },
         "ApiId" : {
           "shape" : "Id",
           "locationName" : "apiId"
@@ -3635,6 +3771,10 @@
         "DisableSchemaValidation" : {
           "shape" : "__boolean",
           "locationName" : "disableSchemaValidation"
+        },
+        "DisableExecuteApiEndpoint" : {
+          "shape" : "__boolean",
+          "locationName" : "disableExecuteApiEndpoint"
         },
         "ImportInfo" : {
           "shape" : "__listOf__string",
@@ -3748,6 +3888,14 @@
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
+        },
+        "AuthorizerPayloadFormatVersion": {
+          "shape": "StringWithLengthBetween1And64",
+          "locationName": "authorizerPayloadFormatVersion"
+        },
+        "EnableSimpleResponses": {
+          "shape": "__boolean",
+          "locationName": "enableSimpleResponses"
         }
       }
     },
@@ -3890,6 +4038,10 @@
           "shape" : "DomainNameConfigurations",
           "locationName" : "domainNameConfigurations"
         },
+        "MutualTlsAuthentication" : {
+          "shape" : "MutualTlsAuthentication",
+          "locationName" : "mutualTlsAuthentication"
+        },
         "Tags" : {
           "shape" : "Tags",
           "locationName" : "tags"
@@ -3979,6 +4131,10 @@
           "shape" : "SelectionExpression",
           "locationName" : "integrationResponseSelectionExpression"
         },
+        "IntegrationSubtype" : {
+          "shape" : "StringWithLengthBetween1And128",
+          "locationName" : "integrationSubtype"
+        },
         "IntegrationType" : {
           "shape" : "IntegrationType",
           "locationName" : "integrationType"
@@ -3998,6 +4154,10 @@
         "RequestParameters" : {
           "shape" : "IntegrationParameters",
           "locationName" : "requestParameters"
+        },
+        "ResponseParameters" : {
+          "shape" : "ResponseParameters",
+          "locationName" : "responseParameters"
         },
         "RequestTemplates" : {
           "shape" : "TemplateMap",
@@ -4689,6 +4849,10 @@
           "shape" : "__string",
           "locationName" : "apiEndpoint"
         },
+        "ApiGatewayManaged" : {
+          "shape" : "__boolean",
+          "locationName" : "apiGatewayManaged"
+        },
         "ApiId" : {
           "shape" : "Id",
           "locationName" : "apiId"
@@ -4712,6 +4876,10 @@
         "DisableSchemaValidation" : {
           "shape" : "__boolean",
           "locationName" : "disableSchemaValidation"
+        },
+        "DisableExecuteApiEndpoint" : {
+          "shape" : "__boolean",
+          "locationName" : "disableExecuteApiEndpoint"
         },
         "ImportInfo" : {
           "shape" : "__listOf__string",
@@ -4797,6 +4965,10 @@
           "shape" : "SelectionExpression",
           "locationName" : "integrationResponseSelectionExpression"
         },
+        "IntegrationSubtype" : {
+          "shape" : "StringWithLengthBetween1And128",
+          "locationName" : "integrationSubtype"
+        },
         "IntegrationType" : {
           "shape" : "IntegrationType",
           "locationName" : "integrationType"
@@ -4816,6 +4988,10 @@
         "RequestParameters" : {
           "shape" : "IntegrationParameters",
           "locationName" : "requestParameters"
+        },
+        "ResponseParameters" : {
+          "shape" : "ResponseParameters",
+          "locationName" : "responseParameters"
         },
         "RequestTemplates" : {
           "shape" : "TemplateMap",
@@ -4842,6 +5018,15 @@
       },
       "value" : {
         "shape" : "StringWithLengthBetween1And512"
+      }
+    },
+    "ResponseParameters" : {
+      "type" : "map",
+      "key" : {
+        "shape" : "__string"
+      },
+      "value" : {
+        "shape" : "IntegrationParameters"
       }
     },
     "IntegrationResponse" : {
@@ -4972,6 +5157,37 @@
           "locationName" : "nextToken"
         }
       }
+    }
+    ,
+    "MutualTlsAuthentication" : {
+      "type" : "structure",
+      "members" : {
+        "TruststoreUri" : {
+          "shape" : "UriWithLengthBetween1And2048",
+          "locationName" : "truststoreUri"
+        },
+        "TruststoreVersion" : {
+          "shape" : "StringWithLengthBetween1And64",
+          "locationName" : "truststoreVersion"
+        },
+        "TruststoreWarnings" : {
+          "shape" : "__listOf__string",
+          "locationName" : "truststoreWarnings"
+        }
+      }
+    },
+    "MutualTlsAuthenticationInput" : {
+      "type" : "structure",
+      "members" : {
+        "TruststoreUri" : {
+          "shape" : "UriWithLengthBetween1And2048",
+          "locationName" : "truststoreUri"
+        },
+        "TruststoreVersion" : {
+          "shape" : "StringWithLengthBetween1And64",
+          "locationName" : "truststoreVersion"
+        }
+      }
     },
     "NextToken" : {
       "type" : "string"
@@ -5052,6 +5268,10 @@
           "shape" : "__string",
           "locationName" : "apiEndpoint"
         },
+        "ApiGatewayManaged" : {
+          "shape" : "__boolean",
+          "locationName" : "apiGatewayManaged"
+        },
         "ApiId" : {
           "shape" : "Id",
           "locationName" : "apiId"
@@ -5075,6 +5295,10 @@
         "DisableSchemaValidation" : {
           "shape" : "__boolean",
           "locationName" : "disableSchemaValidation"
+        },
+        "DisableExecuteApiEndpoint" : {
+          "shape" : "__boolean",
+          "locationName" : "disableExecuteApiEndpoint"
         },
         "ImportInfo" : {
           "shape" : "__listOf__string",
@@ -5530,6 +5754,10 @@
           "shape" : "__boolean",
           "locationName" : "disableSchemaValidation"
         },
+        "DisableExecuteApiEndpoint" : {
+          "shape" : "__boolean",
+          "locationName" : "disableExecuteApiEndpoint"
+        },
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
@@ -5646,6 +5874,10 @@
           "shape" : "__boolean",
           "locationName" : "disableSchemaValidation"
         },
+        "DisableExecuteApiEndpoint" : {
+          "shape" : "__boolean",
+          "locationName" : "disableExecuteApiEndpoint"
+        },
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
@@ -5676,6 +5908,10 @@
           "shape" : "__string",
           "locationName" : "apiEndpoint"
         },
+        "ApiGatewayManaged" : {
+          "shape" : "__boolean",
+          "locationName" : "apiGatewayManaged"
+        },
         "ApiId" : {
           "shape" : "Id",
           "locationName" : "apiId"
@@ -5699,6 +5935,10 @@
         "DisableSchemaValidation" : {
           "shape" : "__boolean",
           "locationName" : "disableSchemaValidation"
+        },
+        "DisableExecuteApiEndpoint" : {
+          "shape" : "__boolean",
+          "locationName" : "disableExecuteApiEndpoint"
         },
         "ImportInfo" : {
           "shape" : "__listOf__string",
@@ -5764,6 +6004,14 @@
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
+        },
+        "AuthorizerPayloadFormatVersion": {
+          "shape": "StringWithLengthBetween1And64",
+          "locationName": "authorizerPayloadFormatVersion"
+        },
+        "EnableSimpleResponses": {
+          "shape": "__boolean",
+          "locationName": "enableSimpleResponses"
         }
       }
     },
@@ -5811,6 +6059,14 @@
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
+        },
+        "AuthorizerPayloadFormatVersion": {
+          "shape": "StringWithLengthBetween1And64",
+          "locationName": "authorizerPayloadFormatVersion"
+        },
+        "EnableSimpleResponses": {
+          "shape": "__boolean",
+          "locationName": "enableSimpleResponses"
         }
       },
       "required" : [ "AuthorizerId", "ApiId" ]
@@ -5853,6 +6109,14 @@
         "Name" : {
           "shape" : "StringWithLengthBetween1And128",
           "locationName" : "name"
+        },
+        "AuthorizerPayloadFormatVersion": {
+          "shape": "StringWithLengthBetween1And64",
+          "locationName": "authorizerPayloadFormatVersion"
+        },
+        "EnableSimpleResponses": {
+          "shape": "__boolean",
+          "locationName": "enableSimpleResponses"
         }
       }
     },
@@ -5920,6 +6184,10 @@
         "DomainNameConfigurations" : {
           "shape" : "DomainNameConfigurations",
           "locationName" : "domainNameConfigurations"
+        },
+        "MutualTlsAuthentication" : {
+          "shape" : "MutualTlsAuthenticationInput",
+          "locationName" : "mutualTlsAuthentication"
         }
       }
     },
@@ -5934,6 +6202,10 @@
         "DomainNameConfigurations" : {
           "shape" : "DomainNameConfigurations",
           "locationName" : "domainNameConfigurations"
+        },
+        "MutualTlsAuthentication" : {
+          "shape" : "MutualTlsAuthenticationInput",
+          "locationName" : "mutualTlsAuthentication"
         }
       },
       "required" : [ "DomainName" ]
@@ -5952,6 +6224,10 @@
         "DomainNameConfigurations" : {
           "shape" : "DomainNameConfigurations",
           "locationName" : "domainNameConfigurations"
+        },
+        "MutualTlsAuthentication" : {
+          "shape" : "MutualTlsAuthentication",
+          "locationName" : "mutualTlsAuthentication"
         },
         "Tags" : {
           "shape" : "Tags",
@@ -5986,6 +6262,10 @@
           "shape" : "StringWithLengthBetween1And64",
           "locationName" : "integrationMethod"
         },
+        "IntegrationSubtype" : {
+          "shape" : "StringWithLengthBetween1And128",
+          "locationName" : "integrationSubtype"
+        },
         "IntegrationType" : {
           "shape" : "IntegrationType",
           "locationName" : "integrationType"
@@ -6005,6 +6285,10 @@
         "RequestParameters" : {
           "shape" : "IntegrationParameters",
           "locationName" : "requestParameters"
+        },
+        "ResponseParameters" : {
+          "shape" : "ResponseParameters",
+          "locationName" : "responseParameters"
         },
         "RequestTemplates" : {
           "shape" : "TemplateMap",
@@ -6061,6 +6345,10 @@
           "shape" : "StringWithLengthBetween1And64",
           "locationName" : "integrationMethod"
         },
+        "IntegrationSubtype" : {
+          "shape" : "StringWithLengthBetween1And128",
+          "locationName" : "integrationSubtype"
+        },
         "IntegrationType" : {
           "shape" : "IntegrationType",
           "locationName" : "integrationType"
@@ -6080,6 +6368,10 @@
         "RequestParameters" : {
           "shape" : "IntegrationParameters",
           "locationName" : "requestParameters"
+        },
+        "ResponseParameters" : {
+          "shape" : "ResponseParameters",
+          "locationName" : "responseParameters"
         },
         "RequestTemplates" : {
           "shape" : "TemplateMap",
@@ -6139,6 +6431,10 @@
           "shape" : "SelectionExpression",
           "locationName" : "integrationResponseSelectionExpression"
         },
+        "IntegrationSubtype" : {
+          "shape" : "StringWithLengthBetween1And128",
+          "locationName" : "integrationSubtype"
+        },
         "IntegrationType" : {
           "shape" : "IntegrationType",
           "locationName" : "integrationType"
@@ -6158,6 +6454,10 @@
         "RequestParameters" : {
           "shape" : "IntegrationParameters",
           "locationName" : "requestParameters"
+        },
+        "ResponseParameters" : {
+          "shape" : "ResponseParameters",
+          "locationName" : "responseParameters"
         },
         "RequestTemplates" : {
           "shape" : "TemplateMap",

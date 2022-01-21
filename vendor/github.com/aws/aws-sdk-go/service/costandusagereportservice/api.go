@@ -413,17 +413,25 @@ func (c *CostandUsageReportService) PutReportDefinitionWithContext(ctx aws.Conte
 type DeleteReportDefinitionInput struct {
 	_ struct{} `type:"structure"`
 
-	// The name of the report that you want to create. The name must be unique,
+	// The name of the report that you want to delete. The name must be unique,
 	// is case sensitive, and can't include spaces.
 	ReportName *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteReportDefinitionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteReportDefinitionInput) GoString() string {
 	return s.String()
 }
@@ -442,12 +450,20 @@ type DeleteReportDefinitionOutput struct {
 	ResponseMessage *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteReportDefinitionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteReportDefinitionOutput) GoString() string {
 	return s.String()
 }
@@ -469,12 +485,20 @@ type DescribeReportDefinitionsInput struct {
 	NextToken *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeReportDefinitionsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeReportDefinitionsInput) GoString() string {
 	return s.String()
 }
@@ -515,12 +539,20 @@ type DescribeReportDefinitionsOutput struct {
 	ReportDefinitions []*ReportDefinition `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeReportDefinitionsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeReportDefinitionsOutput) GoString() string {
 	return s.String()
 }
@@ -547,12 +579,20 @@ type DuplicateReportNameException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DuplicateReportNameException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DuplicateReportNameException) GoString() string {
 	return s.String()
 }
@@ -605,12 +645,20 @@ type InternalErrorException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalErrorException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalErrorException) GoString() string {
 	return s.String()
 }
@@ -670,12 +718,20 @@ type ModifyReportDefinitionInput struct {
 	ReportName *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ModifyReportDefinitionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ModifyReportDefinitionInput) GoString() string {
 	return s.String()
 }
@@ -717,12 +773,20 @@ type ModifyReportDefinitionOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ModifyReportDefinitionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ModifyReportDefinitionOutput) GoString() string {
 	return s.String()
 }
@@ -738,12 +802,20 @@ type PutReportDefinitionInput struct {
 	ReportDefinition *ReportDefinition `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PutReportDefinitionInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PutReportDefinitionInput) GoString() string {
 	return s.String()
 }
@@ -778,12 +850,20 @@ type PutReportDefinitionOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PutReportDefinitionOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PutReportDefinitionOutput) GoString() string {
 	return s.String()
 }
@@ -803,6 +883,10 @@ type ReportDefinition struct {
 	//
 	// AdditionalSchemaElements is a required field
 	AdditionalSchemaElements []*string `type:"list" required:"true"`
+
+	// The Amazon resource name of the billing view. You can get this value by using
+	// the billing view service public APIs.
+	BillingViewArn *string `type:"string"`
 
 	// The compression format that AWS uses for the report.
 	//
@@ -851,12 +935,20 @@ type ReportDefinition struct {
 	TimeUnit *string `type:"string" required:"true" enum:"TimeUnit"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ReportDefinition) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ReportDefinition) GoString() string {
 	return s.String()
 }
@@ -904,6 +996,12 @@ func (s *ReportDefinition) SetAdditionalArtifacts(v []*string) *ReportDefinition
 // SetAdditionalSchemaElements sets the AdditionalSchemaElements field's value.
 func (s *ReportDefinition) SetAdditionalSchemaElements(v []*string) *ReportDefinition {
 	s.AdditionalSchemaElements = v
+	return s
+}
+
+// SetBillingViewArn sets the BillingViewArn field's value.
+func (s *ReportDefinition) SetBillingViewArn(v string) *ReportDefinition {
+	s.BillingViewArn = &v
 	return s
 }
 
@@ -971,12 +1069,20 @@ type ReportLimitReachedException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ReportLimitReachedException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ReportLimitReachedException) GoString() string {
 	return s.String()
 }
@@ -1028,12 +1134,20 @@ type ValidationException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ValidationException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ValidationException) GoString() string {
 	return s.String()
 }
@@ -1078,20 +1192,14 @@ func (s *ValidationException) RequestID() string {
 
 // The region of the S3 bucket that AWS delivers the report into.
 const (
-	// AWSRegionUsEast1 is a AWSRegion enum value
-	AWSRegionUsEast1 = "us-east-1"
+	// AWSRegionAfSouth1 is a AWSRegion enum value
+	AWSRegionAfSouth1 = "af-south-1"
 
-	// AWSRegionUsWest1 is a AWSRegion enum value
-	AWSRegionUsWest1 = "us-west-1"
+	// AWSRegionApEast1 is a AWSRegion enum value
+	AWSRegionApEast1 = "ap-east-1"
 
-	// AWSRegionUsWest2 is a AWSRegion enum value
-	AWSRegionUsWest2 = "us-west-2"
-
-	// AWSRegionEuCentral1 is a AWSRegion enum value
-	AWSRegionEuCentral1 = "eu-central-1"
-
-	// AWSRegionEuWest1 is a AWSRegion enum value
-	AWSRegionEuWest1 = "eu-west-1"
+	// AWSRegionApSouth1 is a AWSRegion enum value
+	AWSRegionApSouth1 = "ap-south-1"
 
 	// AWSRegionApSoutheast1 is a AWSRegion enum value
 	AWSRegionApSoutheast1 = "ap-southeast-1"
@@ -1102,30 +1210,84 @@ const (
 	// AWSRegionApNortheast1 is a AWSRegion enum value
 	AWSRegionApNortheast1 = "ap-northeast-1"
 
-	// AWSRegionEuNorth1 is a AWSRegion enum value
-	AWSRegionEuNorth1 = "eu-north-1"
+	// AWSRegionApNortheast2 is a AWSRegion enum value
+	AWSRegionApNortheast2 = "ap-northeast-2"
 
 	// AWSRegionApNortheast3 is a AWSRegion enum value
 	AWSRegionApNortheast3 = "ap-northeast-3"
 
-	// AWSRegionApEast1 is a AWSRegion enum value
-	AWSRegionApEast1 = "ap-east-1"
+	// AWSRegionCaCentral1 is a AWSRegion enum value
+	AWSRegionCaCentral1 = "ca-central-1"
+
+	// AWSRegionEuCentral1 is a AWSRegion enum value
+	AWSRegionEuCentral1 = "eu-central-1"
+
+	// AWSRegionEuWest1 is a AWSRegion enum value
+	AWSRegionEuWest1 = "eu-west-1"
+
+	// AWSRegionEuWest2 is a AWSRegion enum value
+	AWSRegionEuWest2 = "eu-west-2"
+
+	// AWSRegionEuWest3 is a AWSRegion enum value
+	AWSRegionEuWest3 = "eu-west-3"
+
+	// AWSRegionEuNorth1 is a AWSRegion enum value
+	AWSRegionEuNorth1 = "eu-north-1"
+
+	// AWSRegionEuSouth1 is a AWSRegion enum value
+	AWSRegionEuSouth1 = "eu-south-1"
+
+	// AWSRegionMeSouth1 is a AWSRegion enum value
+	AWSRegionMeSouth1 = "me-south-1"
+
+	// AWSRegionSaEast1 is a AWSRegion enum value
+	AWSRegionSaEast1 = "sa-east-1"
+
+	// AWSRegionUsEast1 is a AWSRegion enum value
+	AWSRegionUsEast1 = "us-east-1"
+
+	// AWSRegionUsEast2 is a AWSRegion enum value
+	AWSRegionUsEast2 = "us-east-2"
+
+	// AWSRegionUsWest1 is a AWSRegion enum value
+	AWSRegionUsWest1 = "us-west-1"
+
+	// AWSRegionUsWest2 is a AWSRegion enum value
+	AWSRegionUsWest2 = "us-west-2"
+
+	// AWSRegionCnNorth1 is a AWSRegion enum value
+	AWSRegionCnNorth1 = "cn-north-1"
+
+	// AWSRegionCnNorthwest1 is a AWSRegion enum value
+	AWSRegionCnNorthwest1 = "cn-northwest-1"
 )
 
 // AWSRegion_Values returns all elements of the AWSRegion enum
 func AWSRegion_Values() []string {
 	return []string{
-		AWSRegionUsEast1,
-		AWSRegionUsWest1,
-		AWSRegionUsWest2,
-		AWSRegionEuCentral1,
-		AWSRegionEuWest1,
+		AWSRegionAfSouth1,
+		AWSRegionApEast1,
+		AWSRegionApSouth1,
 		AWSRegionApSoutheast1,
 		AWSRegionApSoutheast2,
 		AWSRegionApNortheast1,
-		AWSRegionEuNorth1,
+		AWSRegionApNortheast2,
 		AWSRegionApNortheast3,
-		AWSRegionApEast1,
+		AWSRegionCaCentral1,
+		AWSRegionEuCentral1,
+		AWSRegionEuWest1,
+		AWSRegionEuWest2,
+		AWSRegionEuWest3,
+		AWSRegionEuNorth1,
+		AWSRegionEuSouth1,
+		AWSRegionMeSouth1,
+		AWSRegionSaEast1,
+		AWSRegionUsEast1,
+		AWSRegionUsEast2,
+		AWSRegionUsWest1,
+		AWSRegionUsWest2,
+		AWSRegionCnNorth1,
+		AWSRegionCnNorthwest1,
 	}
 }
 
@@ -1224,6 +1386,9 @@ const (
 
 	// TimeUnitDaily is a TimeUnit enum value
 	TimeUnitDaily = "DAILY"
+
+	// TimeUnitMonthly is a TimeUnit enum value
+	TimeUnitMonthly = "MONTHLY"
 )
 
 // TimeUnit_Values returns all elements of the TimeUnit enum
@@ -1231,5 +1396,6 @@ func TimeUnit_Values() []string {
 	return []string{
 		TimeUnitHourly,
 		TimeUnitDaily,
+		TimeUnitMonthly,
 	}
 }

@@ -141,15 +141,21 @@ func (c *PersonalizeRuntime) GetRecommendationsRequest(input *GetRecommendations
 
 // GetRecommendations API operation for Amazon Personalize Runtime.
 //
-// Returns a list of recommended items. The required input depends on the recipe
-// type used to create the solution backing the campaign, as follows:
+// Returns a list of recommended items. For campaigns, the campaign's Amazon
+// Resource Name (ARN) is required and the required user and item input depends
+// on the recipe type used to create the solution backing the campaign as follows:
+//
+//    * USER_PERSONALIZATION - userId required, itemId not used
 //
 //    * RELATED_ITEMS - itemId required, userId not used
 //
-//    * USER_PERSONALIZATION - itemId optional, userId required
-//
 // Campaigns that are backed by a solution created using a recipe of type PERSONALIZED_RANKING
 // use the API.
+//
+// For recommenders, the recommender's ARN is required and the required item
+// and user input depends on the use case (domain-based recipe) backing the
+// recommender. For information on use case requirements see Choosing recommender
+// use cases (https://docs.aws.amazon.com/personalize/latest/dg/domain-use-cases.html).
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -201,9 +207,24 @@ type GetPersonalizedRankingInput struct {
 	// a user's recommendations, such as the user's current location or device type.
 	Context map[string]*string `locationName:"context" type:"map"`
 
-	// The Amazon Resource Name (ARN) of a filter you created to include or exclude
-	// items from recommendations for a given user.
+	// The Amazon Resource Name (ARN) of a filter you created to include items or
+	// exclude items from recommendations for a given user. For more information,
+	// see Filtering Recommendations (https://docs.aws.amazon.com/personalize/latest/dg/filter.html).
 	FilterArn *string `locationName:"filterArn" type:"string"`
+
+	// The values to use when filtering recommendations. For each placeholder parameter
+	// in your filter expression, provide the parameter name (in matching case)
+	// as a key and the filter value(s) as the corresponding value. Separate multiple
+	// values for one parameter with a comma.
+	//
+	// For filter expressions that use an INCLUDE element to include items, you
+	// must provide values for all parameters that are defined in the expression.
+	// For filters with expressions that use an EXCLUDE element to exclude items,
+	// you can omit the filter-values.In this case, Amazon Personalize doesn't use
+	// that portion of the expression to filter recommendations.
+	//
+	// For more information, see Filtering Recommendations (https://docs.aws.amazon.com/personalize/latest/dg/filter.html).
+	FilterValues map[string]*string `locationName:"filterValues" type:"map"`
 
 	// A list of items (by itemId) to rank. If an item was not included in the training
 	// dataset, the item is appended to the end of the reranked list. The maximum
@@ -218,12 +239,20 @@ type GetPersonalizedRankingInput struct {
 	UserId *string `locationName:"userId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPersonalizedRankingInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPersonalizedRankingInput) GoString() string {
 	return s.String()
 }
@@ -265,6 +294,12 @@ func (s *GetPersonalizedRankingInput) SetFilterArn(v string) *GetPersonalizedRan
 	return s
 }
 
+// SetFilterValues sets the FilterValues field's value.
+func (s *GetPersonalizedRankingInput) SetFilterValues(v map[string]*string) *GetPersonalizedRankingInput {
+	s.FilterValues = v
+	return s
+}
+
 // SetInputList sets the InputList field's value.
 func (s *GetPersonalizedRankingInput) SetInputList(v []*string) *GetPersonalizedRankingInput {
 	s.InputList = v
@@ -288,12 +323,20 @@ type GetPersonalizedRankingOutput struct {
 	RecommendationId *string `locationName:"recommendationId" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPersonalizedRankingOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetPersonalizedRankingOutput) GoString() string {
 	return s.String()
 }
@@ -314,9 +357,7 @@ type GetRecommendationsInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the campaign to use for getting recommendations.
-	//
-	// CampaignArn is a required field
-	CampaignArn *string `locationName:"campaignArn" type:"string" required:"true"`
+	CampaignArn *string `locationName:"campaignArn" type:"string"`
 
 	// The contextual metadata to use when getting recommendations. Contextual metadata
 	// includes any interaction information that might be relevant when getting
@@ -324,10 +365,24 @@ type GetRecommendationsInput struct {
 	Context map[string]*string `locationName:"context" type:"map"`
 
 	// The ARN of the filter to apply to the returned recommendations. For more
-	// information, see Using Filters with Amazon Personalize (https://docs.aws.amazon.com/personalize/latest/dg/filters.html).
+	// information, see Filtering Recommendations (https://docs.aws.amazon.com/personalize/latest/dg/filter.html).
 	//
 	// When using this parameter, be sure the filter resource is ACTIVE.
 	FilterArn *string `locationName:"filterArn" type:"string"`
+
+	// The values to use when filtering recommendations. For each placeholder parameter
+	// in your filter expression, provide the parameter name (in matching case)
+	// as a key and the filter value(s) as the corresponding value. Separate multiple
+	// values for one parameter with a comma.
+	//
+	// For filter expressions that use an INCLUDE element to include items, you
+	// must provide values for all parameters that are defined in the expression.
+	// For filters with expressions that use an EXCLUDE element to exclude items,
+	// you can omit the filter-values.In this case, Amazon Personalize doesn't use
+	// that portion of the expression to filter recommendations.
+	//
+	// For more information, see Filtering Recommendations (https://docs.aws.amazon.com/personalize/latest/dg/filter.html).
+	FilterValues map[string]*string `locationName:"filterValues" type:"map"`
 
 	// The item ID to provide recommendations for.
 	//
@@ -337,33 +392,33 @@ type GetRecommendationsInput struct {
 	// The number of results to return. The default is 25. The maximum is 500.
 	NumResults *int64 `locationName:"numResults" type:"integer"`
 
+	// The Amazon Resource Name (ARN) of the recommender to use to get recommendations.
+	// Provide a recommender ARN if you created a Domain dataset group with a recommender
+	// for a domain use case.
+	RecommenderArn *string `locationName:"recommenderArn" type:"string"`
+
 	// The user ID to provide recommendations for.
 	//
 	// Required for USER_PERSONALIZATION recipe type.
 	UserId *string `locationName:"userId" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRecommendationsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRecommendationsInput) GoString() string {
 	return s.String()
-}
-
-// Validate inspects the fields of the type to determine if they are valid.
-func (s *GetRecommendationsInput) Validate() error {
-	invalidParams := request.ErrInvalidParams{Context: "GetRecommendationsInput"}
-	if s.CampaignArn == nil {
-		invalidParams.Add(request.NewErrParamRequired("CampaignArn"))
-	}
-
-	if invalidParams.Len() > 0 {
-		return invalidParams
-	}
-	return nil
 }
 
 // SetCampaignArn sets the CampaignArn field's value.
@@ -384,6 +439,12 @@ func (s *GetRecommendationsInput) SetFilterArn(v string) *GetRecommendationsInpu
 	return s
 }
 
+// SetFilterValues sets the FilterValues field's value.
+func (s *GetRecommendationsInput) SetFilterValues(v map[string]*string) *GetRecommendationsInput {
+	s.FilterValues = v
+	return s
+}
+
 // SetItemId sets the ItemId field's value.
 func (s *GetRecommendationsInput) SetItemId(v string) *GetRecommendationsInput {
 	s.ItemId = &v
@@ -396,6 +457,12 @@ func (s *GetRecommendationsInput) SetNumResults(v int64) *GetRecommendationsInpu
 	return s
 }
 
+// SetRecommenderArn sets the RecommenderArn field's value.
+func (s *GetRecommendationsInput) SetRecommenderArn(v string) *GetRecommendationsInput {
+	s.RecommenderArn = &v
+	return s
+}
+
 // SetUserId sets the UserId field's value.
 func (s *GetRecommendationsInput) SetUserId(v string) *GetRecommendationsInput {
 	s.UserId = &v
@@ -405,7 +472,7 @@ func (s *GetRecommendationsInput) SetUserId(v string) *GetRecommendationsInput {
 type GetRecommendationsOutput struct {
 	_ struct{} `type:"structure"`
 
-	// A list of recommendations sorted in ascending order by prediction score.
+	// A list of recommendations sorted in descending order by prediction score.
 	// There can be a maximum of 500 items in the list.
 	ItemList []*PredictedItem `locationName:"itemList" type:"list"`
 
@@ -413,12 +480,20 @@ type GetRecommendationsOutput struct {
 	RecommendationId *string `locationName:"recommendationId" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRecommendationsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetRecommendationsOutput) GoString() string {
 	return s.String()
 }
@@ -443,12 +518,20 @@ type InvalidInputException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidInputException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidInputException) GoString() string {
 	return s.String()
 }
@@ -505,12 +588,20 @@ type PredictedItem struct {
 	Score *float64 `locationName:"score" type:"double"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PredictedItem) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PredictedItem) GoString() string {
 	return s.String()
 }
@@ -535,12 +626,20 @@ type ResourceNotFoundException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) GoString() string {
 	return s.String()
 }

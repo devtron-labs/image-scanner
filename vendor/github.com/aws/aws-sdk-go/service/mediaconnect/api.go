@@ -12,6 +12,114 @@ import (
 	"github.com/aws/aws-sdk-go/private/protocol/restjson"
 )
 
+const opAddFlowMediaStreams = "AddFlowMediaStreams"
+
+// AddFlowMediaStreamsRequest generates a "aws/request.Request" representing the
+// client's request for the AddFlowMediaStreams operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See AddFlowMediaStreams for more information on using the AddFlowMediaStreams
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the AddFlowMediaStreamsRequest method.
+//    req, resp := client.AddFlowMediaStreamsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/AddFlowMediaStreams
+func (c *MediaConnect) AddFlowMediaStreamsRequest(input *AddFlowMediaStreamsInput) (req *request.Request, output *AddFlowMediaStreamsOutput) {
+	op := &request.Operation{
+		Name:       opAddFlowMediaStreams,
+		HTTPMethod: "POST",
+		HTTPPath:   "/v1/flows/{flowArn}/mediaStreams",
+	}
+
+	if input == nil {
+		input = &AddFlowMediaStreamsInput{}
+	}
+
+	output = &AddFlowMediaStreamsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// AddFlowMediaStreams API operation for AWS MediaConnect.
+//
+// Adds media streams to an existing flow. After you add a media stream to a
+// flow, you can associate it with a source and/or an output that uses the ST
+// 2110 JPEG XS or CDI protocol.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS MediaConnect's
+// API operation AddFlowMediaStreams for usage and error information.
+//
+// Returned Error Types:
+//   * BadRequestException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * InternalServerErrorException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * ForbiddenException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * NotFoundException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * ServiceUnavailableException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * TooManyRequestsException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/AddFlowMediaStreams
+func (c *MediaConnect) AddFlowMediaStreams(input *AddFlowMediaStreamsInput) (*AddFlowMediaStreamsOutput, error) {
+	req, out := c.AddFlowMediaStreamsRequest(input)
+	return out, req.Send()
+}
+
+// AddFlowMediaStreamsWithContext is the same as AddFlowMediaStreams with the addition of
+// the ability to pass a context and additional request options.
+//
+// See AddFlowMediaStreams for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *MediaConnect) AddFlowMediaStreamsWithContext(ctx aws.Context, input *AddFlowMediaStreamsInput, opts ...request.Option) (*AddFlowMediaStreamsOutput, error) {
+	req, out := c.AddFlowMediaStreamsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opAddFlowOutputs = "AddFlowOutputs"
 
 // AddFlowOutputsRequest generates a "aws/request.Request" representing the
@@ -656,6 +764,211 @@ func (c *MediaConnect) DescribeFlowWithContext(ctx aws.Context, input *DescribeF
 	return out, req.Send()
 }
 
+const opDescribeOffering = "DescribeOffering"
+
+// DescribeOfferingRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeOffering operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DescribeOffering for more information on using the DescribeOffering
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DescribeOfferingRequest method.
+//    req, resp := client.DescribeOfferingRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DescribeOffering
+func (c *MediaConnect) DescribeOfferingRequest(input *DescribeOfferingInput) (req *request.Request, output *DescribeOfferingOutput) {
+	op := &request.Operation{
+		Name:       opDescribeOffering,
+		HTTPMethod: "GET",
+		HTTPPath:   "/v1/offerings/{offeringArn}",
+	}
+
+	if input == nil {
+		input = &DescribeOfferingInput{}
+	}
+
+	output = &DescribeOfferingOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DescribeOffering API operation for AWS MediaConnect.
+//
+// Displays the details of an offering. The response includes the offering description,
+// duration, outbound bandwidth, price, and Amazon Resource Name (ARN).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS MediaConnect's
+// API operation DescribeOffering for usage and error information.
+//
+// Returned Error Types:
+//   * NotFoundException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * ServiceUnavailableException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * TooManyRequestsException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * BadRequestException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * InternalServerErrorException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DescribeOffering
+func (c *MediaConnect) DescribeOffering(input *DescribeOfferingInput) (*DescribeOfferingOutput, error) {
+	req, out := c.DescribeOfferingRequest(input)
+	return out, req.Send()
+}
+
+// DescribeOfferingWithContext is the same as DescribeOffering with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DescribeOffering for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *MediaConnect) DescribeOfferingWithContext(ctx aws.Context, input *DescribeOfferingInput, opts ...request.Option) (*DescribeOfferingOutput, error) {
+	req, out := c.DescribeOfferingRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDescribeReservation = "DescribeReservation"
+
+// DescribeReservationRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeReservation operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DescribeReservation for more information on using the DescribeReservation
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DescribeReservationRequest method.
+//    req, resp := client.DescribeReservationRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DescribeReservation
+func (c *MediaConnect) DescribeReservationRequest(input *DescribeReservationInput) (req *request.Request, output *DescribeReservationOutput) {
+	op := &request.Operation{
+		Name:       opDescribeReservation,
+		HTTPMethod: "GET",
+		HTTPPath:   "/v1/reservations/{reservationArn}",
+	}
+
+	if input == nil {
+		input = &DescribeReservationInput{}
+	}
+
+	output = &DescribeReservationOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DescribeReservation API operation for AWS MediaConnect.
+//
+// Displays the details of a reservation. The response includes the reservation
+// name, state, start date and time, and the details of the offering that make
+// up the rest of the reservation (such as price, duration, and outbound bandwidth).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS MediaConnect's
+// API operation DescribeReservation for usage and error information.
+//
+// Returned Error Types:
+//   * NotFoundException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * ServiceUnavailableException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * TooManyRequestsException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * BadRequestException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * InternalServerErrorException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/DescribeReservation
+func (c *MediaConnect) DescribeReservation(input *DescribeReservationInput) (*DescribeReservationOutput, error) {
+	req, out := c.DescribeReservationRequest(input)
+	return out, req.Send()
+}
+
+// DescribeReservationWithContext is the same as DescribeReservation with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DescribeReservation for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *MediaConnect) DescribeReservationWithContext(ctx aws.Context, input *DescribeReservationInput, opts ...request.Option) (*DescribeReservationOutput, error) {
+	req, out := c.DescribeReservationRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opGrantFlowEntitlements = "GrantFlowEntitlements"
 
 // GrantFlowEntitlementsRequest generates a "aws/request.Request" representing the
@@ -1077,6 +1390,319 @@ func (c *MediaConnect) ListFlowsPagesWithContext(ctx aws.Context, input *ListFlo
 	return p.Err()
 }
 
+const opListOfferings = "ListOfferings"
+
+// ListOfferingsRequest generates a "aws/request.Request" representing the
+// client's request for the ListOfferings operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListOfferings for more information on using the ListOfferings
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListOfferingsRequest method.
+//    req, resp := client.ListOfferingsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListOfferings
+func (c *MediaConnect) ListOfferingsRequest(input *ListOfferingsInput) (req *request.Request, output *ListOfferingsOutput) {
+	op := &request.Operation{
+		Name:       opListOfferings,
+		HTTPMethod: "GET",
+		HTTPPath:   "/v1/offerings",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &ListOfferingsInput{}
+	}
+
+	output = &ListOfferingsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListOfferings API operation for AWS MediaConnect.
+//
+// Displays a list of all offerings that are available to this account in the
+// current AWS Region. If you have an active reservation (which means you've
+// purchased an offering that has already started and hasn't expired yet), your
+// account isn't eligible for other offerings.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS MediaConnect's
+// API operation ListOfferings for usage and error information.
+//
+// Returned Error Types:
+//   * ServiceUnavailableException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * TooManyRequestsException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * BadRequestException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * InternalServerErrorException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListOfferings
+func (c *MediaConnect) ListOfferings(input *ListOfferingsInput) (*ListOfferingsOutput, error) {
+	req, out := c.ListOfferingsRequest(input)
+	return out, req.Send()
+}
+
+// ListOfferingsWithContext is the same as ListOfferings with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListOfferings for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *MediaConnect) ListOfferingsWithContext(ctx aws.Context, input *ListOfferingsInput, opts ...request.Option) (*ListOfferingsOutput, error) {
+	req, out := c.ListOfferingsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// ListOfferingsPages iterates over the pages of a ListOfferings operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListOfferings method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListOfferings operation.
+//    pageNum := 0
+//    err := client.ListOfferingsPages(params,
+//        func(page *mediaconnect.ListOfferingsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *MediaConnect) ListOfferingsPages(input *ListOfferingsInput, fn func(*ListOfferingsOutput, bool) bool) error {
+	return c.ListOfferingsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// ListOfferingsPagesWithContext same as ListOfferingsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *MediaConnect) ListOfferingsPagesWithContext(ctx aws.Context, input *ListOfferingsInput, fn func(*ListOfferingsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *ListOfferingsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.ListOfferingsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*ListOfferingsOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
+const opListReservations = "ListReservations"
+
+// ListReservationsRequest generates a "aws/request.Request" representing the
+// client's request for the ListReservations operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListReservations for more information on using the ListReservations
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListReservationsRequest method.
+//    req, resp := client.ListReservationsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListReservations
+func (c *MediaConnect) ListReservationsRequest(input *ListReservationsInput) (req *request.Request, output *ListReservationsOutput) {
+	op := &request.Operation{
+		Name:       opListReservations,
+		HTTPMethod: "GET",
+		HTTPPath:   "/v1/reservations",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &ListReservationsInput{}
+	}
+
+	output = &ListReservationsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListReservations API operation for AWS MediaConnect.
+//
+// Displays a list of all reservations that have been purchased by this account
+// in the current AWS Region. This list includes all reservations in all states
+// (such as active and expired).
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS MediaConnect's
+// API operation ListReservations for usage and error information.
+//
+// Returned Error Types:
+//   * ServiceUnavailableException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * TooManyRequestsException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * BadRequestException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * InternalServerErrorException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/ListReservations
+func (c *MediaConnect) ListReservations(input *ListReservationsInput) (*ListReservationsOutput, error) {
+	req, out := c.ListReservationsRequest(input)
+	return out, req.Send()
+}
+
+// ListReservationsWithContext is the same as ListReservations with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListReservations for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *MediaConnect) ListReservationsWithContext(ctx aws.Context, input *ListReservationsInput, opts ...request.Option) (*ListReservationsOutput, error) {
+	req, out := c.ListReservationsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// ListReservationsPages iterates over the pages of a ListReservations operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListReservations method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListReservations operation.
+//    pageNum := 0
+//    err := client.ListReservationsPages(params,
+//        func(page *mediaconnect.ListReservationsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *MediaConnect) ListReservationsPages(input *ListReservationsInput, fn func(*ListReservationsOutput, bool) bool) error {
+	return c.ListReservationsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// ListReservationsPagesWithContext same as ListReservationsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *MediaConnect) ListReservationsPagesWithContext(ctx aws.Context, input *ListReservationsInput, fn func(*ListReservationsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *ListReservationsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.ListReservationsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*ListReservationsOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
 const opListTagsForResource = "ListTagsForResource"
 
 // ListTagsForResourceRequest generates a "aws/request.Request" representing the
@@ -1163,6 +1789,220 @@ func (c *MediaConnect) ListTagsForResource(input *ListTagsForResourceInput) (*Li
 // for more information on using Contexts.
 func (c *MediaConnect) ListTagsForResourceWithContext(ctx aws.Context, input *ListTagsForResourceInput, opts ...request.Option) (*ListTagsForResourceOutput, error) {
 	req, out := c.ListTagsForResourceRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opPurchaseOffering = "PurchaseOffering"
+
+// PurchaseOfferingRequest generates a "aws/request.Request" representing the
+// client's request for the PurchaseOffering operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See PurchaseOffering for more information on using the PurchaseOffering
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the PurchaseOfferingRequest method.
+//    req, resp := client.PurchaseOfferingRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/PurchaseOffering
+func (c *MediaConnect) PurchaseOfferingRequest(input *PurchaseOfferingInput) (req *request.Request, output *PurchaseOfferingOutput) {
+	op := &request.Operation{
+		Name:       opPurchaseOffering,
+		HTTPMethod: "POST",
+		HTTPPath:   "/v1/offerings/{offeringArn}",
+	}
+
+	if input == nil {
+		input = &PurchaseOfferingInput{}
+	}
+
+	output = &PurchaseOfferingOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// PurchaseOffering API operation for AWS MediaConnect.
+//
+// Submits a request to purchase an offering. If you already have an active
+// reservation, you can't purchase another offering.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS MediaConnect's
+// API operation PurchaseOffering for usage and error information.
+//
+// Returned Error Types:
+//   * BadRequestException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * InternalServerErrorException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * ForbiddenException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * NotFoundException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * ServiceUnavailableException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * TooManyRequestsException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/PurchaseOffering
+func (c *MediaConnect) PurchaseOffering(input *PurchaseOfferingInput) (*PurchaseOfferingOutput, error) {
+	req, out := c.PurchaseOfferingRequest(input)
+	return out, req.Send()
+}
+
+// PurchaseOfferingWithContext is the same as PurchaseOffering with the addition of
+// the ability to pass a context and additional request options.
+//
+// See PurchaseOffering for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *MediaConnect) PurchaseOfferingWithContext(ctx aws.Context, input *PurchaseOfferingInput, opts ...request.Option) (*PurchaseOfferingOutput, error) {
+	req, out := c.PurchaseOfferingRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opRemoveFlowMediaStream = "RemoveFlowMediaStream"
+
+// RemoveFlowMediaStreamRequest generates a "aws/request.Request" representing the
+// client's request for the RemoveFlowMediaStream operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See RemoveFlowMediaStream for more information on using the RemoveFlowMediaStream
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the RemoveFlowMediaStreamRequest method.
+//    req, resp := client.RemoveFlowMediaStreamRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RemoveFlowMediaStream
+func (c *MediaConnect) RemoveFlowMediaStreamRequest(input *RemoveFlowMediaStreamInput) (req *request.Request, output *RemoveFlowMediaStreamOutput) {
+	op := &request.Operation{
+		Name:       opRemoveFlowMediaStream,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/v1/flows/{flowArn}/mediaStreams/{mediaStreamName}",
+	}
+
+	if input == nil {
+		input = &RemoveFlowMediaStreamInput{}
+	}
+
+	output = &RemoveFlowMediaStreamOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// RemoveFlowMediaStream API operation for AWS MediaConnect.
+//
+// Removes a media stream from a flow. This action is only available if the
+// media stream is not associated with a source or output.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS MediaConnect's
+// API operation RemoveFlowMediaStream for usage and error information.
+//
+// Returned Error Types:
+//   * BadRequestException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * InternalServerErrorException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * ForbiddenException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * NotFoundException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * ServiceUnavailableException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * TooManyRequestsException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/RemoveFlowMediaStream
+func (c *MediaConnect) RemoveFlowMediaStream(input *RemoveFlowMediaStreamInput) (*RemoveFlowMediaStreamOutput, error) {
+	req, out := c.RemoveFlowMediaStreamRequest(input)
+	return out, req.Send()
+}
+
+// RemoveFlowMediaStreamWithContext is the same as RemoveFlowMediaStream with the addition of
+// the ability to pass a context and additional request options.
+//
+// See RemoveFlowMediaStream for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *MediaConnect) RemoveFlowMediaStreamWithContext(ctx aws.Context, input *RemoveFlowMediaStreamInput, opts ...request.Option) (*RemoveFlowMediaStreamOutput, error) {
+	req, out := c.RemoveFlowMediaStreamRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -2214,6 +3054,112 @@ func (c *MediaConnect) UpdateFlowEntitlementWithContext(ctx aws.Context, input *
 	return out, req.Send()
 }
 
+const opUpdateFlowMediaStream = "UpdateFlowMediaStream"
+
+// UpdateFlowMediaStreamRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateFlowMediaStream operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateFlowMediaStream for more information on using the UpdateFlowMediaStream
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateFlowMediaStreamRequest method.
+//    req, resp := client.UpdateFlowMediaStreamRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateFlowMediaStream
+func (c *MediaConnect) UpdateFlowMediaStreamRequest(input *UpdateFlowMediaStreamInput) (req *request.Request, output *UpdateFlowMediaStreamOutput) {
+	op := &request.Operation{
+		Name:       opUpdateFlowMediaStream,
+		HTTPMethod: "PUT",
+		HTTPPath:   "/v1/flows/{flowArn}/mediaStreams/{mediaStreamName}",
+	}
+
+	if input == nil {
+		input = &UpdateFlowMediaStreamInput{}
+	}
+
+	output = &UpdateFlowMediaStreamOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// UpdateFlowMediaStream API operation for AWS MediaConnect.
+//
+// Updates an existing media stream.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for AWS MediaConnect's
+// API operation UpdateFlowMediaStream for usage and error information.
+//
+// Returned Error Types:
+//   * BadRequestException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * InternalServerErrorException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * ForbiddenException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * NotFoundException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * ServiceUnavailableException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+//   * TooManyRequestsException
+//   Exception raised by AWS Elemental MediaConnect. See the error message and
+//   documentation for the operation for more information on the cause of this
+//   exception.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/mediaconnect-2018-11-14/UpdateFlowMediaStream
+func (c *MediaConnect) UpdateFlowMediaStream(input *UpdateFlowMediaStreamInput) (*UpdateFlowMediaStreamOutput, error) {
+	req, out := c.UpdateFlowMediaStreamRequest(input)
+	return out, req.Send()
+}
+
+// UpdateFlowMediaStreamWithContext is the same as UpdateFlowMediaStream with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateFlowMediaStream for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *MediaConnect) UpdateFlowMediaStreamWithContext(ctx aws.Context, input *UpdateFlowMediaStreamInput, opts ...request.Option) (*UpdateFlowMediaStreamOutput, error) {
+	req, out := c.UpdateFlowMediaStreamRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opUpdateFlowOutput = "UpdateFlowOutput"
 
 // UpdateFlowOutputRequest generates a "aws/request.Request" representing the
@@ -2426,6 +3372,120 @@ func (c *MediaConnect) UpdateFlowSourceWithContext(ctx aws.Context, input *Updat
 	return out, req.Send()
 }
 
+// Adds media streams to an existing flow.
+type AddFlowMediaStreamsInput struct {
+	_ struct{} `type:"structure"`
+
+	// FlowArn is a required field
+	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
+
+	// The media streams that you want to add to the flow.
+	//
+	// MediaStreams is a required field
+	MediaStreams []*AddMediaStreamRequest `locationName:"mediaStreams" type:"list" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AddFlowMediaStreamsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AddFlowMediaStreamsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AddFlowMediaStreamsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AddFlowMediaStreamsInput"}
+	if s.FlowArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("FlowArn"))
+	}
+	if s.FlowArn != nil && len(*s.FlowArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FlowArn", 1))
+	}
+	if s.MediaStreams == nil {
+		invalidParams.Add(request.NewErrParamRequired("MediaStreams"))
+	}
+	if s.MediaStreams != nil {
+		for i, v := range s.MediaStreams {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "MediaStreams", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFlowArn sets the FlowArn field's value.
+func (s *AddFlowMediaStreamsInput) SetFlowArn(v string) *AddFlowMediaStreamsInput {
+	s.FlowArn = &v
+	return s
+}
+
+// SetMediaStreams sets the MediaStreams field's value.
+func (s *AddFlowMediaStreamsInput) SetMediaStreams(v []*AddMediaStreamRequest) *AddFlowMediaStreamsInput {
+	s.MediaStreams = v
+	return s
+}
+
+// The result of a successful AddFlowMediaStreamsRequest request. The response
+// includes the details of the newly added media streams.
+type AddFlowMediaStreamsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The ARN of the flow that you added media streams to.
+	FlowArn *string `locationName:"flowArn" type:"string"`
+
+	// The media streams that you added to the flow.
+	MediaStreams []*MediaStream `locationName:"mediaStreams" type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AddFlowMediaStreamsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AddFlowMediaStreamsOutput) GoString() string {
+	return s.String()
+}
+
+// SetFlowArn sets the FlowArn field's value.
+func (s *AddFlowMediaStreamsOutput) SetFlowArn(v string) *AddFlowMediaStreamsOutput {
+	s.FlowArn = &v
+	return s
+}
+
+// SetMediaStreams sets the MediaStreams field's value.
+func (s *AddFlowMediaStreamsOutput) SetMediaStreams(v []*MediaStream) *AddFlowMediaStreamsOutput {
+	s.MediaStreams = v
+	return s
+}
+
 // Exception raised by AWS Elemental MediaConnect. See the error message and
 // documentation for the operation for more information on the cause of this
 // exception.
@@ -2436,12 +3496,20 @@ type AddFlowOutputs420Exception struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowOutputs420Exception) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowOutputs420Exception) GoString() string {
 	return s.String()
 }
@@ -2497,12 +3565,20 @@ type AddFlowOutputsInput struct {
 	Outputs []*AddOutputRequest `locationName:"outputs" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowOutputsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowOutputsInput) GoString() string {
 	return s.String()
 }
@@ -2560,12 +3636,20 @@ type AddFlowOutputsOutput struct {
 	Outputs []*Output `locationName:"outputs" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowOutputsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowOutputsOutput) GoString() string {
 	return s.String()
 }
@@ -2595,12 +3679,20 @@ type AddFlowSourcesInput struct {
 	Sources []*SetSourceRequest `locationName:"sources" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowSourcesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowSourcesInput) GoString() string {
 	return s.String()
 }
@@ -2658,12 +3750,20 @@ type AddFlowSourcesOutput struct {
 	Sources []*Source `locationName:"sources" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowSourcesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowSourcesOutput) GoString() string {
 	return s.String()
 }
@@ -2693,12 +3793,20 @@ type AddFlowVpcInterfacesInput struct {
 	VpcInterfaces []*VpcInterfaceRequest `locationName:"vpcInterfaces" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowVpcInterfacesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowVpcInterfacesInput) GoString() string {
 	return s.String()
 }
@@ -2756,12 +3864,20 @@ type AddFlowVpcInterfacesOutput struct {
 	VpcInterfaces []*VpcInterface `locationName:"vpcInterfaces" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowVpcInterfacesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddFlowVpcInterfacesOutput) GoString() string {
 	return s.String()
 }
@@ -2775,6 +3891,120 @@ func (s *AddFlowVpcInterfacesOutput) SetFlowArn(v string) *AddFlowVpcInterfacesO
 // SetVpcInterfaces sets the VpcInterfaces field's value.
 func (s *AddFlowVpcInterfacesOutput) SetVpcInterfaces(v []*VpcInterface) *AddFlowVpcInterfacesOutput {
 	s.VpcInterfaces = v
+	return s
+}
+
+// The media stream that you want to add to the flow.
+type AddMediaStreamRequest struct {
+	_ struct{} `type:"structure"`
+
+	// The attributes that you want to assign to the new media stream.
+	Attributes *MediaStreamAttributesRequest `locationName:"attributes" type:"structure"`
+
+	// The sample rate (in Hz) for the stream. If the media stream type is video
+	// or ancillary data, set this value to 90000. If the media stream type is audio,
+	// set this value to either 48000 or 96000.
+	ClockRate *int64 `locationName:"clockRate" type:"integer"`
+
+	// A description that can help you quickly identify what your media stream is
+	// used for.
+	Description *string `locationName:"description" type:"string"`
+
+	// A unique identifier for the media stream.
+	//
+	// MediaStreamId is a required field
+	MediaStreamId *int64 `locationName:"mediaStreamId" type:"integer" required:"true"`
+
+	// A name that helps you distinguish one media stream from another.
+	//
+	// MediaStreamName is a required field
+	MediaStreamName *string `locationName:"mediaStreamName" type:"string" required:"true"`
+
+	// The type of media stream.
+	//
+	// MediaStreamType is a required field
+	MediaStreamType *string `locationName:"mediaStreamType" type:"string" required:"true" enum:"MediaStreamType"`
+
+	// The resolution of the video.
+	VideoFormat *string `locationName:"videoFormat" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AddMediaStreamRequest) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AddMediaStreamRequest) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AddMediaStreamRequest) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AddMediaStreamRequest"}
+	if s.MediaStreamId == nil {
+		invalidParams.Add(request.NewErrParamRequired("MediaStreamId"))
+	}
+	if s.MediaStreamName == nil {
+		invalidParams.Add(request.NewErrParamRequired("MediaStreamName"))
+	}
+	if s.MediaStreamType == nil {
+		invalidParams.Add(request.NewErrParamRequired("MediaStreamType"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAttributes sets the Attributes field's value.
+func (s *AddMediaStreamRequest) SetAttributes(v *MediaStreamAttributesRequest) *AddMediaStreamRequest {
+	s.Attributes = v
+	return s
+}
+
+// SetClockRate sets the ClockRate field's value.
+func (s *AddMediaStreamRequest) SetClockRate(v int64) *AddMediaStreamRequest {
+	s.ClockRate = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *AddMediaStreamRequest) SetDescription(v string) *AddMediaStreamRequest {
+	s.Description = &v
+	return s
+}
+
+// SetMediaStreamId sets the MediaStreamId field's value.
+func (s *AddMediaStreamRequest) SetMediaStreamId(v int64) *AddMediaStreamRequest {
+	s.MediaStreamId = &v
+	return s
+}
+
+// SetMediaStreamName sets the MediaStreamName field's value.
+func (s *AddMediaStreamRequest) SetMediaStreamName(v string) *AddMediaStreamRequest {
+	s.MediaStreamName = &v
+	return s
+}
+
+// SetMediaStreamType sets the MediaStreamType field's value.
+func (s *AddMediaStreamRequest) SetMediaStreamType(v string) *AddMediaStreamRequest {
+	s.MediaStreamType = &v
+	return s
+}
+
+// SetVideoFormat sets the VideoFormat field's value.
+func (s *AddMediaStreamRequest) SetVideoFormat(v string) *AddMediaStreamRequest {
+	s.VideoFormat = &v
 	return s
 }
 
@@ -2795,11 +4025,23 @@ type AddOutputRequest struct {
 	Destination *string `locationName:"destination" type:"string"`
 
 	// The type of key used for the encryption. If no keyType is provided, the service
-	// will use the default setting (static-key).
+	// will use the default setting (static-key). Allowable encryption types: static-key.
 	Encryption *Encryption `locationName:"encryption" type:"structure"`
 
-	// The maximum latency in milliseconds for Zixi-based streams.
+	// The maximum latency in milliseconds. This parameter applies only to RIST-based,
+	// Zixi-based, and Fujitsu-based streams.
 	MaxLatency *int64 `locationName:"maxLatency" type:"integer"`
+
+	// The media streams that are associated with the output, and the parameters
+	// for those associations.
+	MediaStreamOutputConfigurations []*MediaStreamOutputConfigurationRequest `locationName:"mediaStreamOutputConfigurations" type:"list"`
+
+	// The minimum latency in milliseconds for SRT-based streams. In streams that
+	// use the SRT protocol, this value that you set on your MediaConnect source
+	// or output represents the minimal potential latency of that connection. The
+	// latency of the stream is set to the highest number between the sender’s
+	// minimum latency and the receiver’s minimum latency.
+	MinLatency *int64 `locationName:"minLatency" type:"integer"`
 
 	// The name of the output. This value must be unique within the current flow.
 	Name *string `locationName:"name" type:"string"`
@@ -2815,6 +4057,10 @@ type AddOutputRequest struct {
 	// The remote ID for the Zixi-pull output stream.
 	RemoteId *string `locationName:"remoteId" type:"string"`
 
+	// The port that the flow uses to send outbound requests to initiate connection
+	// with the sender.
+	SenderControlPort *int64 `locationName:"senderControlPort" type:"integer"`
+
 	// The smoothing latency in milliseconds for RIST, RTP, and RTP-FEC streams.
 	SmoothingLatency *int64 `locationName:"smoothingLatency" type:"integer"`
 
@@ -2826,12 +4072,20 @@ type AddOutputRequest struct {
 	VpcInterfaceAttachment *VpcInterfaceAttachment `locationName:"vpcInterfaceAttachment" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddOutputRequest) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AddOutputRequest) GoString() string {
 	return s.String()
 }
@@ -2845,6 +4099,16 @@ func (s *AddOutputRequest) Validate() error {
 	if s.Encryption != nil {
 		if err := s.Encryption.Validate(); err != nil {
 			invalidParams.AddNested("Encryption", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.MediaStreamOutputConfigurations != nil {
+		for i, v := range s.MediaStreamOutputConfigurations {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "MediaStreamOutputConfigurations", i), err.(request.ErrInvalidParams))
+			}
 		}
 	}
 
@@ -2884,6 +4148,18 @@ func (s *AddOutputRequest) SetMaxLatency(v int64) *AddOutputRequest {
 	return s
 }
 
+// SetMediaStreamOutputConfigurations sets the MediaStreamOutputConfigurations field's value.
+func (s *AddOutputRequest) SetMediaStreamOutputConfigurations(v []*MediaStreamOutputConfigurationRequest) *AddOutputRequest {
+	s.MediaStreamOutputConfigurations = v
+	return s
+}
+
+// SetMinLatency sets the MinLatency field's value.
+func (s *AddOutputRequest) SetMinLatency(v int64) *AddOutputRequest {
+	s.MinLatency = &v
+	return s
+}
+
 // SetName sets the Name field's value.
 func (s *AddOutputRequest) SetName(v string) *AddOutputRequest {
 	s.Name = &v
@@ -2905,6 +4181,12 @@ func (s *AddOutputRequest) SetProtocol(v string) *AddOutputRequest {
 // SetRemoteId sets the RemoteId field's value.
 func (s *AddOutputRequest) SetRemoteId(v string) *AddOutputRequest {
 	s.RemoteId = &v
+	return s
+}
+
+// SetSenderControlPort sets the SenderControlPort field's value.
+func (s *AddOutputRequest) SetSenderControlPort(v int64) *AddOutputRequest {
+	s.SenderControlPort = &v
 	return s
 }
 
@@ -2936,12 +4218,20 @@ type BadRequestException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s BadRequestException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s BadRequestException) GoString() string {
 	return s.String()
 }
@@ -2994,12 +4284,20 @@ type CreateFlow420Exception struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFlow420Exception) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFlow420Exception) GoString() string {
 	return s.String()
 }
@@ -3043,7 +4341,7 @@ func (s *CreateFlow420Exception) RequestID() string {
 }
 
 // Creates a new flow. The request must include one source. The request optionally
-// can include outputs (up to 50) and one entitlement.
+// can include outputs (up to 50) and entitlements (up to 50.)
 type CreateFlowInput struct {
 	_ struct{} `type:"structure"`
 
@@ -3053,6 +4351,10 @@ type CreateFlowInput struct {
 
 	// The entitlements that you want to grant on a flow.
 	Entitlements []*GrantEntitlementRequest `locationName:"entitlements" type:"list"`
+
+	// The media streams that you want to add to the flow. You can associate these
+	// media streams with sources and outputs on the flow.
+	MediaStreams []*AddMediaStreamRequest `locationName:"mediaStreams" type:"list"`
 
 	// The name of the flow.
 	//
@@ -3065,7 +4367,7 @@ type CreateFlowInput struct {
 	// The settings for the source of the flow.
 	Source *SetSourceRequest `locationName:"source" type:"structure"`
 
-	// The settings for source failover
+	// The settings for source failover.
 	SourceFailoverConfig *FailoverConfig `locationName:"sourceFailoverConfig" type:"structure"`
 
 	Sources []*SetSourceRequest `locationName:"sources" type:"list"`
@@ -3074,12 +4376,20 @@ type CreateFlowInput struct {
 	VpcInterfaces []*VpcInterfaceRequest `locationName:"vpcInterfaces" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFlowInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFlowInput) GoString() string {
 	return s.String()
 }
@@ -3097,6 +4407,16 @@ func (s *CreateFlowInput) Validate() error {
 			}
 			if err := v.Validate(); err != nil {
 				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Entitlements", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+	if s.MediaStreams != nil {
+		for i, v := range s.MediaStreams {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "MediaStreams", i), err.(request.ErrInvalidParams))
 			}
 		}
 	}
@@ -3154,6 +4474,12 @@ func (s *CreateFlowInput) SetEntitlements(v []*GrantEntitlementRequest) *CreateF
 	return s
 }
 
+// SetMediaStreams sets the MediaStreams field's value.
+func (s *CreateFlowInput) SetMediaStreams(v []*AddMediaStreamRequest) *CreateFlowInput {
+	s.MediaStreams = v
+	return s
+}
+
 // SetName sets the Name field's value.
 func (s *CreateFlowInput) SetName(v string) *CreateFlowInput {
 	s.Name = &v
@@ -3198,12 +4524,20 @@ type CreateFlowOutput struct {
 	Flow *Flow `locationName:"flow" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFlowOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateFlowOutput) GoString() string {
 	return s.String()
 }
@@ -3215,18 +4549,26 @@ func (s *CreateFlowOutput) SetFlow(v *Flow) *CreateFlowOutput {
 }
 
 type DeleteFlowInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// FlowArn is a required field
 	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFlowInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFlowInput) GoString() string {
 	return s.String()
 }
@@ -3264,12 +4606,20 @@ type DeleteFlowOutput struct {
 	Status *string `locationName:"status" type:"string" enum:"Status"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFlowOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteFlowOutput) GoString() string {
 	return s.String()
 }
@@ -3287,18 +4637,26 @@ func (s *DeleteFlowOutput) SetStatus(v string) *DeleteFlowOutput {
 }
 
 type DescribeFlowInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// FlowArn is a required field
 	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeFlowInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeFlowInput) GoString() string {
 	return s.String()
 }
@@ -3336,12 +4694,20 @@ type DescribeFlowOutput struct {
 	Messages *Messages `locationName:"messages" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeFlowOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeFlowOutput) GoString() string {
 	return s.String()
 }
@@ -3358,15 +4724,453 @@ func (s *DescribeFlowOutput) SetMessages(v *Messages) *DescribeFlowOutput {
 	return s
 }
 
+type DescribeOfferingInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// OfferingArn is a required field
+	OfferingArn *string `location:"uri" locationName:"offeringArn" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeOfferingInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeOfferingInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeOfferingInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeOfferingInput"}
+	if s.OfferingArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("OfferingArn"))
+	}
+	if s.OfferingArn != nil && len(*s.OfferingArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("OfferingArn", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetOfferingArn sets the OfferingArn field's value.
+func (s *DescribeOfferingInput) SetOfferingArn(v string) *DescribeOfferingInput {
+	s.OfferingArn = &v
+	return s
+}
+
+// The result of a successful DescribeOffering request.
+type DescribeOfferingOutput struct {
+	_ struct{} `type:"structure"`
+
+	// A savings plan that reserves a certain amount of outbound bandwidth usage
+	// at a discounted rate each month over a period of time.
+	Offering *Offering `locationName:"offering" type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeOfferingOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeOfferingOutput) GoString() string {
+	return s.String()
+}
+
+// SetOffering sets the Offering field's value.
+func (s *DescribeOfferingOutput) SetOffering(v *Offering) *DescribeOfferingOutput {
+	s.Offering = v
+	return s
+}
+
+type DescribeReservationInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// ReservationArn is a required field
+	ReservationArn *string `location:"uri" locationName:"reservationArn" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeReservationInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeReservationInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeReservationInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeReservationInput"}
+	if s.ReservationArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ReservationArn"))
+	}
+	if s.ReservationArn != nil && len(*s.ReservationArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ReservationArn", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetReservationArn sets the ReservationArn field's value.
+func (s *DescribeReservationInput) SetReservationArn(v string) *DescribeReservationInput {
+	s.ReservationArn = &v
+	return s
+}
+
+// The result of a successful DescribeReservation request.
+type DescribeReservationOutput struct {
+	_ struct{} `type:"structure"`
+
+	// A pricing agreement for a discounted rate for a specific outbound bandwidth
+	// that your MediaConnect account will use each month over a specific time period.
+	// The discounted rate in the reservation applies to outbound bandwidth for
+	// all flows from your account until your account reaches the amount of bandwidth
+	// in your reservation. If you use more outbound bandwidth than the agreed upon
+	// amount in a single month, the overage is charged at the on-demand rate.
+	Reservation *Reservation `locationName:"reservation" type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeReservationOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeReservationOutput) GoString() string {
+	return s.String()
+}
+
+// SetReservation sets the Reservation field's value.
+func (s *DescribeReservationOutput) SetReservation(v *Reservation) *DescribeReservationOutput {
+	s.Reservation = v
+	return s
+}
+
+// The transport parameters that are associated with an outbound media stream.
+type DestinationConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// The IP address where contents of the media stream will be sent.
+	//
+	// DestinationIp is a required field
+	DestinationIp *string `locationName:"destinationIp" type:"string" required:"true"`
+
+	// The port to use when the content of the media stream is distributed to the
+	// output.
+	//
+	// DestinationPort is a required field
+	DestinationPort *int64 `locationName:"destinationPort" type:"integer" required:"true"`
+
+	// The VPC interface that is used for the media stream associated with the output.
+	//
+	// Interface is a required field
+	Interface *Interface `locationName:"interface" type:"structure" required:"true"`
+
+	// The IP address that the receiver requires in order to establish a connection
+	// with the flow. This value is represented by the elastic network interface
+	// IP address of the VPC. This field applies only to outputs that use the CDI
+	// or ST 2110 JPEG XS protocol.
+	//
+	// OutboundIp is a required field
+	OutboundIp *string `locationName:"outboundIp" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DestinationConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DestinationConfiguration) GoString() string {
+	return s.String()
+}
+
+// SetDestinationIp sets the DestinationIp field's value.
+func (s *DestinationConfiguration) SetDestinationIp(v string) *DestinationConfiguration {
+	s.DestinationIp = &v
+	return s
+}
+
+// SetDestinationPort sets the DestinationPort field's value.
+func (s *DestinationConfiguration) SetDestinationPort(v int64) *DestinationConfiguration {
+	s.DestinationPort = &v
+	return s
+}
+
+// SetInterface sets the Interface field's value.
+func (s *DestinationConfiguration) SetInterface(v *Interface) *DestinationConfiguration {
+	s.Interface = v
+	return s
+}
+
+// SetOutboundIp sets the OutboundIp field's value.
+func (s *DestinationConfiguration) SetOutboundIp(v string) *DestinationConfiguration {
+	s.OutboundIp = &v
+	return s
+}
+
+// The transport parameters that you want to associate with an outbound media
+// stream.
+type DestinationConfigurationRequest struct {
+	_ struct{} `type:"structure"`
+
+	// The IP address where you want MediaConnect to send contents of the media
+	// stream.
+	//
+	// DestinationIp is a required field
+	DestinationIp *string `locationName:"destinationIp" type:"string" required:"true"`
+
+	// The port that you want MediaConnect to use when it distributes the media
+	// stream to the output.
+	//
+	// DestinationPort is a required field
+	DestinationPort *int64 `locationName:"destinationPort" type:"integer" required:"true"`
+
+	// The VPC interface that you want to use for the media stream associated with
+	// the output.
+	//
+	// Interface is a required field
+	Interface *InterfaceRequest `locationName:"interface" type:"structure" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DestinationConfigurationRequest) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DestinationConfigurationRequest) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DestinationConfigurationRequest) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DestinationConfigurationRequest"}
+	if s.DestinationIp == nil {
+		invalidParams.Add(request.NewErrParamRequired("DestinationIp"))
+	}
+	if s.DestinationPort == nil {
+		invalidParams.Add(request.NewErrParamRequired("DestinationPort"))
+	}
+	if s.Interface == nil {
+		invalidParams.Add(request.NewErrParamRequired("Interface"))
+	}
+	if s.Interface != nil {
+		if err := s.Interface.Validate(); err != nil {
+			invalidParams.AddNested("Interface", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDestinationIp sets the DestinationIp field's value.
+func (s *DestinationConfigurationRequest) SetDestinationIp(v string) *DestinationConfigurationRequest {
+	s.DestinationIp = &v
+	return s
+}
+
+// SetDestinationPort sets the DestinationPort field's value.
+func (s *DestinationConfigurationRequest) SetDestinationPort(v int64) *DestinationConfigurationRequest {
+	s.DestinationPort = &v
+	return s
+}
+
+// SetInterface sets the Interface field's value.
+func (s *DestinationConfigurationRequest) SetInterface(v *InterfaceRequest) *DestinationConfigurationRequest {
+	s.Interface = v
+	return s
+}
+
+// A collection of parameters that determine how MediaConnect will convert the
+// content. These fields only apply to outputs on flows that have a CDI source.
+type EncodingParameters struct {
+	_ struct{} `type:"structure"`
+
+	// A value that is used to calculate compression for an output. The bitrate
+	// of the output is calculated as follows: Output bitrate = (1 / compressionFactor)
+	// * (source bitrate) This property only applies to outputs that use the ST
+	// 2110 JPEG XS protocol, with a flow source that uses the CDI protocol. Valid
+	// values are floating point numbers in the range of 3.0 to 10.0, inclusive.
+	//
+	// CompressionFactor is a required field
+	CompressionFactor *float64 `locationName:"compressionFactor" type:"double" required:"true"`
+
+	// A setting on the encoder that drives compression settings. This property
+	// only applies to video media streams associated with outputs that use the
+	// ST 2110 JPEG XS protocol, with a flow source that uses the CDI protocol.
+	//
+	// EncoderProfile is a required field
+	EncoderProfile *string `locationName:"encoderProfile" type:"string" required:"true" enum:"EncoderProfile"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EncodingParameters) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EncodingParameters) GoString() string {
+	return s.String()
+}
+
+// SetCompressionFactor sets the CompressionFactor field's value.
+func (s *EncodingParameters) SetCompressionFactor(v float64) *EncodingParameters {
+	s.CompressionFactor = &v
+	return s
+}
+
+// SetEncoderProfile sets the EncoderProfile field's value.
+func (s *EncodingParameters) SetEncoderProfile(v string) *EncodingParameters {
+	s.EncoderProfile = &v
+	return s
+}
+
+// A collection of parameters that determine how MediaConnect will convert the
+// content. These fields only apply to outputs on flows that have a CDI source.
+type EncodingParametersRequest struct {
+	_ struct{} `type:"structure"`
+
+	// A value that is used to calculate compression for an output. The bitrate
+	// of the output is calculated as follows: Output bitrate = (1 / compressionFactor)
+	// * (source bitrate) This property only applies to outputs that use the ST
+	// 2110 JPEG XS protocol, with a flow source that uses the CDI protocol. Valid
+	// values are floating point numbers in the range of 3.0 to 10.0, inclusive.
+	//
+	// CompressionFactor is a required field
+	CompressionFactor *float64 `locationName:"compressionFactor" type:"double" required:"true"`
+
+	// A setting on the encoder that drives compression settings. This property
+	// only applies to video media streams associated with outputs that use the
+	// ST 2110 JPEG XS protocol, if at least one source on the flow uses the CDI
+	// protocol.
+	//
+	// EncoderProfile is a required field
+	EncoderProfile *string `locationName:"encoderProfile" type:"string" required:"true" enum:"EncoderProfile"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EncodingParametersRequest) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EncodingParametersRequest) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *EncodingParametersRequest) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "EncodingParametersRequest"}
+	if s.CompressionFactor == nil {
+		invalidParams.Add(request.NewErrParamRequired("CompressionFactor"))
+	}
+	if s.EncoderProfile == nil {
+		invalidParams.Add(request.NewErrParamRequired("EncoderProfile"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetCompressionFactor sets the CompressionFactor field's value.
+func (s *EncodingParametersRequest) SetCompressionFactor(v float64) *EncodingParametersRequest {
+	s.CompressionFactor = &v
+	return s
+}
+
+// SetEncoderProfile sets the EncoderProfile field's value.
+func (s *EncodingParametersRequest) SetEncoderProfile(v string) *EncodingParametersRequest {
+	s.EncoderProfile = &v
+	return s
+}
+
 // Information about the encryption of the flow.
 type Encryption struct {
 	_ struct{} `type:"structure"`
 
 	// The type of algorithm that is used for the encryption (such as aes128, aes192,
 	// or aes256).
-	//
-	// Algorithm is a required field
-	Algorithm *string `locationName:"algorithm" type:"string" required:"true" enum:"Algorithm"`
+	Algorithm *string `locationName:"algorithm" type:"string" enum:"Algorithm"`
 
 	// A 128-bit, 16-byte hex value represented by a 32-character string, to be
 	// used with the key for encrypting content. This parameter is not valid for
@@ -3409,12 +5213,20 @@ type Encryption struct {
 	Url *string `locationName:"url" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Encryption) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Encryption) GoString() string {
 	return s.String()
 }
@@ -3422,9 +5234,6 @@ func (s Encryption) GoString() string {
 // Validate inspects the fields of the type to determine if they are valid.
 func (s *Encryption) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "Encryption"}
-	if s.Algorithm == nil {
-		invalidParams.Add(request.NewErrParamRequired("Algorithm"))
-	}
 	if s.RoleArn == nil {
 		invalidParams.Add(request.NewErrParamRequired("RoleArn"))
 	}
@@ -3524,12 +5333,20 @@ type Entitlement struct {
 	Subscribers []*string `locationName:"subscribers" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Entitlement) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Entitlement) GoString() string {
 	return s.String()
 }
@@ -3576,29 +5393,58 @@ func (s *Entitlement) SetSubscribers(v []*string) *Entitlement {
 	return s
 }
 
-// The settings for source failover
+// The settings for source failover.
 type FailoverConfig struct {
 	_ struct{} `type:"structure"`
+
+	// The type of failover you choose for this flow. MERGE combines the source
+	// streams into a single stream, allowing graceful recovery from any single-source
+	// loss. FAILOVER allows switching between different streams.
+	FailoverMode *string `locationName:"failoverMode" type:"string" enum:"FailoverMode"`
 
 	// Search window time to look for dash-7 packets
 	RecoveryWindow *int64 `locationName:"recoveryWindow" type:"integer"`
 
+	// The priority you want to assign to a source. You can have a primary stream
+	// and a backup stream or two equally prioritized streams.
+	SourcePriority *SourcePriority `locationName:"sourcePriority" type:"structure"`
+
 	State *string `locationName:"state" type:"string" enum:"State"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FailoverConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FailoverConfig) GoString() string {
 	return s.String()
+}
+
+// SetFailoverMode sets the FailoverMode field's value.
+func (s *FailoverConfig) SetFailoverMode(v string) *FailoverConfig {
+	s.FailoverMode = &v
+	return s
 }
 
 // SetRecoveryWindow sets the RecoveryWindow field's value.
 func (s *FailoverConfig) SetRecoveryWindow(v int64) *FailoverConfig {
 	s.RecoveryWindow = &v
+	return s
+}
+
+// SetSourcePriority sets the SourcePriority field's value.
+func (s *FailoverConfig) SetSourcePriority(v *SourcePriority) *FailoverConfig {
+	s.SourcePriority = v
 	return s
 }
 
@@ -3636,6 +5482,11 @@ type Flow struct {
 	// FlowArn is a required field
 	FlowArn *string `locationName:"flowArn" type:"string" required:"true"`
 
+	// The media streams that are associated with the flow. After you associate
+	// a media stream with a source, you can also associate it with outputs on the
+	// flow.
+	MediaStreams []*MediaStream `locationName:"mediaStreams" type:"list"`
+
 	// The name of the flow.
 	//
 	// Name is a required field
@@ -3651,7 +5502,7 @@ type Flow struct {
 	// Source is a required field
 	Source *Source `locationName:"source" type:"structure" required:"true"`
 
-	// The settings for source failover
+	// The settings for source failover.
 	SourceFailoverConfig *FailoverConfig `locationName:"sourceFailoverConfig" type:"structure"`
 
 	Sources []*Source `locationName:"sources" type:"list"`
@@ -3665,12 +5516,20 @@ type Flow struct {
 	VpcInterfaces []*VpcInterface `locationName:"vpcInterfaces" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Flow) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Flow) GoString() string {
 	return s.String()
 }
@@ -3702,6 +5561,12 @@ func (s *Flow) SetEntitlements(v []*Entitlement) *Flow {
 // SetFlowArn sets the FlowArn field's value.
 func (s *Flow) SetFlowArn(v string) *Flow {
 	s.FlowArn = &v
+	return s
+}
+
+// SetMediaStreams sets the MediaStreams field's value.
+func (s *Flow) SetMediaStreams(v []*MediaStream) *Flow {
+	s.MediaStreams = v
 	return s
 }
 
@@ -3747,6 +5612,182 @@ func (s *Flow) SetVpcInterfaces(v []*VpcInterface) *Flow {
 	return s
 }
 
+// FMTP
+type Fmtp struct {
+	_ struct{} `type:"structure"`
+
+	// The format of the audio channel.
+	ChannelOrder *string `locationName:"channelOrder" type:"string"`
+
+	// The format that is used for the representation of color.
+	Colorimetry *string `locationName:"colorimetry" type:"string" enum:"Colorimetry"`
+
+	// The frame rate for the video stream, in frames/second. For example: 60000/1001.
+	// If you specify a whole number, MediaConnect uses a ratio of N/1. For example,
+	// if you specify 60, MediaConnect uses 60/1 as the exactFramerate.
+	ExactFramerate *string `locationName:"exactFramerate" type:"string"`
+
+	// The pixel aspect ratio (PAR) of the video.
+	Par *string `locationName:"par" type:"string"`
+
+	// The encoding range of the video.
+	Range *string `locationName:"range" type:"string" enum:"Range"`
+
+	// The type of compression that was used to smooth the video’s appearance
+	ScanMode *string `locationName:"scanMode" type:"string" enum:"ScanMode"`
+
+	// The transfer characteristic system (TCS) that is used in the video.
+	Tcs *string `locationName:"tcs" type:"string" enum:"Tcs"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Fmtp) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Fmtp) GoString() string {
+	return s.String()
+}
+
+// SetChannelOrder sets the ChannelOrder field's value.
+func (s *Fmtp) SetChannelOrder(v string) *Fmtp {
+	s.ChannelOrder = &v
+	return s
+}
+
+// SetColorimetry sets the Colorimetry field's value.
+func (s *Fmtp) SetColorimetry(v string) *Fmtp {
+	s.Colorimetry = &v
+	return s
+}
+
+// SetExactFramerate sets the ExactFramerate field's value.
+func (s *Fmtp) SetExactFramerate(v string) *Fmtp {
+	s.ExactFramerate = &v
+	return s
+}
+
+// SetPar sets the Par field's value.
+func (s *Fmtp) SetPar(v string) *Fmtp {
+	s.Par = &v
+	return s
+}
+
+// SetRange sets the Range field's value.
+func (s *Fmtp) SetRange(v string) *Fmtp {
+	s.Range = &v
+	return s
+}
+
+// SetScanMode sets the ScanMode field's value.
+func (s *Fmtp) SetScanMode(v string) *Fmtp {
+	s.ScanMode = &v
+	return s
+}
+
+// SetTcs sets the Tcs field's value.
+func (s *Fmtp) SetTcs(v string) *Fmtp {
+	s.Tcs = &v
+	return s
+}
+
+// The settings that you want to use to define the media stream.
+type FmtpRequest struct {
+	_ struct{} `type:"structure"`
+
+	// The format of the audio channel.
+	ChannelOrder *string `locationName:"channelOrder" type:"string"`
+
+	// The format that is used for the representation of color.
+	Colorimetry *string `locationName:"colorimetry" type:"string" enum:"Colorimetry"`
+
+	// The frame rate for the video stream, in frames/second. For example: 60000/1001.
+	// If you specify a whole number, MediaConnect uses a ratio of N/1. For example,
+	// if you specify 60, MediaConnect uses 60/1 as the exactFramerate.
+	ExactFramerate *string `locationName:"exactFramerate" type:"string"`
+
+	// The pixel aspect ratio (PAR) of the video.
+	Par *string `locationName:"par" type:"string"`
+
+	// The encoding range of the video.
+	Range *string `locationName:"range" type:"string" enum:"Range"`
+
+	// The type of compression that was used to smooth the video’s appearance.
+	ScanMode *string `locationName:"scanMode" type:"string" enum:"ScanMode"`
+
+	// The transfer characteristic system (TCS) that is used in the video.
+	Tcs *string `locationName:"tcs" type:"string" enum:"Tcs"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FmtpRequest) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s FmtpRequest) GoString() string {
+	return s.String()
+}
+
+// SetChannelOrder sets the ChannelOrder field's value.
+func (s *FmtpRequest) SetChannelOrder(v string) *FmtpRequest {
+	s.ChannelOrder = &v
+	return s
+}
+
+// SetColorimetry sets the Colorimetry field's value.
+func (s *FmtpRequest) SetColorimetry(v string) *FmtpRequest {
+	s.Colorimetry = &v
+	return s
+}
+
+// SetExactFramerate sets the ExactFramerate field's value.
+func (s *FmtpRequest) SetExactFramerate(v string) *FmtpRequest {
+	s.ExactFramerate = &v
+	return s
+}
+
+// SetPar sets the Par field's value.
+func (s *FmtpRequest) SetPar(v string) *FmtpRequest {
+	s.Par = &v
+	return s
+}
+
+// SetRange sets the Range field's value.
+func (s *FmtpRequest) SetRange(v string) *FmtpRequest {
+	s.Range = &v
+	return s
+}
+
+// SetScanMode sets the ScanMode field's value.
+func (s *FmtpRequest) SetScanMode(v string) *FmtpRequest {
+	s.ScanMode = &v
+	return s
+}
+
+// SetTcs sets the Tcs field's value.
+func (s *FmtpRequest) SetTcs(v string) *FmtpRequest {
+	s.Tcs = &v
+	return s
+}
+
 // Exception raised by AWS Elemental MediaConnect. See the error message and
 // documentation for the operation for more information on the cause of this
 // exception.
@@ -3757,12 +5798,20 @@ type ForbiddenException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ForbiddenException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ForbiddenException) GoString() string {
 	return s.String()
 }
@@ -3818,7 +5867,7 @@ type GrantEntitlementRequest struct {
 	Description *string `locationName:"description" type:"string"`
 
 	// The type of encryption that will be used on the output that is associated
-	// with this entitlement.
+	// with this entitlement. Allowable encryption types: static-key, speke.
 	Encryption *Encryption `locationName:"encryption" type:"structure"`
 
 	// An indication of whether the new entitlement should be enabled or disabled
@@ -3838,12 +5887,20 @@ type GrantEntitlementRequest struct {
 	Subscribers []*string `locationName:"subscribers" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GrantEntitlementRequest) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GrantEntitlementRequest) GoString() string {
 	return s.String()
 }
@@ -3912,12 +5969,20 @@ type GrantFlowEntitlements420Exception struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GrantFlowEntitlements420Exception) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GrantFlowEntitlements420Exception) GoString() string {
 	return s.String()
 }
@@ -3973,12 +6038,20 @@ type GrantFlowEntitlementsInput struct {
 	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GrantFlowEntitlementsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GrantFlowEntitlementsInput) GoString() string {
 	return s.String()
 }
@@ -4035,12 +6108,20 @@ type GrantFlowEntitlementsOutput struct {
 	FlowArn *string `locationName:"flowArn" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GrantFlowEntitlementsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GrantFlowEntitlementsOutput) GoString() string {
 	return s.String()
 }
@@ -4057,6 +6138,213 @@ func (s *GrantFlowEntitlementsOutput) SetFlowArn(v string) *GrantFlowEntitlement
 	return s
 }
 
+// The transport parameters that are associated with an incoming media stream.
+type InputConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// The IP address that the flow listens on for incoming content for a media
+	// stream.
+	//
+	// InputIp is a required field
+	InputIp *string `locationName:"inputIp" type:"string" required:"true"`
+
+	// The port that the flow listens on for an incoming media stream.
+	//
+	// InputPort is a required field
+	InputPort *int64 `locationName:"inputPort" type:"integer" required:"true"`
+
+	// The VPC interface where the media stream comes in from.
+	//
+	// Interface is a required field
+	Interface *Interface `locationName:"interface" type:"structure" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s InputConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s InputConfiguration) GoString() string {
+	return s.String()
+}
+
+// SetInputIp sets the InputIp field's value.
+func (s *InputConfiguration) SetInputIp(v string) *InputConfiguration {
+	s.InputIp = &v
+	return s
+}
+
+// SetInputPort sets the InputPort field's value.
+func (s *InputConfiguration) SetInputPort(v int64) *InputConfiguration {
+	s.InputPort = &v
+	return s
+}
+
+// SetInterface sets the Interface field's value.
+func (s *InputConfiguration) SetInterface(v *Interface) *InputConfiguration {
+	s.Interface = v
+	return s
+}
+
+// The transport parameters that you want to associate with an incoming media
+// stream.
+type InputConfigurationRequest struct {
+	_ struct{} `type:"structure"`
+
+	// The port that you want the flow to listen on for an incoming media stream.
+	//
+	// InputPort is a required field
+	InputPort *int64 `locationName:"inputPort" type:"integer" required:"true"`
+
+	// The VPC interface that you want to use for the incoming media stream.
+	//
+	// Interface is a required field
+	Interface *InterfaceRequest `locationName:"interface" type:"structure" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s InputConfigurationRequest) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s InputConfigurationRequest) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *InputConfigurationRequest) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "InputConfigurationRequest"}
+	if s.InputPort == nil {
+		invalidParams.Add(request.NewErrParamRequired("InputPort"))
+	}
+	if s.Interface == nil {
+		invalidParams.Add(request.NewErrParamRequired("Interface"))
+	}
+	if s.Interface != nil {
+		if err := s.Interface.Validate(); err != nil {
+			invalidParams.AddNested("Interface", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetInputPort sets the InputPort field's value.
+func (s *InputConfigurationRequest) SetInputPort(v int64) *InputConfigurationRequest {
+	s.InputPort = &v
+	return s
+}
+
+// SetInterface sets the Interface field's value.
+func (s *InputConfigurationRequest) SetInterface(v *InterfaceRequest) *InputConfigurationRequest {
+	s.Interface = v
+	return s
+}
+
+// The VPC interface that is used for the media stream associated with the source
+// or output.
+type Interface struct {
+	_ struct{} `type:"structure"`
+
+	// The name of the VPC interface.
+	//
+	// Name is a required field
+	Name *string `locationName:"name" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Interface) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Interface) GoString() string {
+	return s.String()
+}
+
+// SetName sets the Name field's value.
+func (s *Interface) SetName(v string) *Interface {
+	s.Name = &v
+	return s
+}
+
+// The VPC interface that you want to designate where the media stream is coming
+// from or going to.
+type InterfaceRequest struct {
+	_ struct{} `type:"structure"`
+
+	// The name of the VPC interface.
+	//
+	// Name is a required field
+	Name *string `locationName:"name" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s InterfaceRequest) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s InterfaceRequest) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *InterfaceRequest) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "InterfaceRequest"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetName sets the Name field's value.
+func (s *InterfaceRequest) SetName(v string) *InterfaceRequest {
+	s.Name = &v
+	return s
+}
+
 // Exception raised by AWS Elemental MediaConnect. See the error message and
 // documentation for the operation for more information on the cause of this
 // exception.
@@ -4067,12 +6355,20 @@ type InternalServerErrorException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalServerErrorException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalServerErrorException) GoString() string {
 	return s.String()
 }
@@ -4116,19 +6412,27 @@ func (s *InternalServerErrorException) RequestID() string {
 }
 
 type ListEntitlementsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
 
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListEntitlementsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListEntitlementsInput) GoString() string {
 	return s.String()
 }
@@ -4175,12 +6479,20 @@ type ListEntitlementsOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListEntitlementsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListEntitlementsOutput) GoString() string {
 	return s.String()
 }
@@ -4198,19 +6510,27 @@ func (s *ListEntitlementsOutput) SetNextToken(v string) *ListEntitlementsOutput 
 }
 
 type ListFlowsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
 
 	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFlowsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFlowsInput) GoString() string {
 	return s.String()
 }
@@ -4256,12 +6576,20 @@ type ListFlowsOutput struct {
 	NextToken *string `locationName:"nextToken" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFlowsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListFlowsOutput) GoString() string {
 	return s.String()
 }
@@ -4278,19 +6606,229 @@ func (s *ListFlowsOutput) SetNextToken(v string) *ListFlowsOutput {
 	return s
 }
 
-type ListTagsForResourceInput struct {
+type ListOfferingsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListOfferingsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListOfferingsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListOfferingsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListOfferingsInput"}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *ListOfferingsInput) SetMaxResults(v int64) *ListOfferingsInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListOfferingsInput) SetNextToken(v string) *ListOfferingsInput {
+	s.NextToken = &v
+	return s
+}
+
+// The result of a successful ListOfferings request. The response includes the
+// details of each offering that your account is eligible for. The response
+// includes the following information for each offering: description, duration,
+// outbound bandwidth, price, Amazon Resource Name (ARN), and the NextToken
+// to use in a subsequent ListOfferings request.
+type ListOfferingsOutput struct {
 	_ struct{} `type:"structure"`
+
+	// The token that identifies which batch of results that you want to see. For
+	// example, you submit a ListOfferings request with MaxResults set at 5. The
+	// service returns the first batch of results (up to 5) and a NextToken value.
+	// To see the next batch of results, you can submit the ListOfferings request
+	// a second time and specify the NextToken value.
+	NextToken *string `locationName:"nextToken" type:"string"`
+
+	// A list of offerings that are available to this account in the current AWS
+	// Region.
+	Offerings []*Offering `locationName:"offerings" type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListOfferingsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListOfferingsOutput) GoString() string {
+	return s.String()
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListOfferingsOutput) SetNextToken(v string) *ListOfferingsOutput {
+	s.NextToken = &v
+	return s
+}
+
+// SetOfferings sets the Offerings field's value.
+func (s *ListOfferingsOutput) SetOfferings(v []*Offering) *ListOfferingsOutput {
+	s.Offerings = v
+	return s
+}
+
+type ListReservationsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	MaxResults *int64 `location:"querystring" locationName:"maxResults" min:"1" type:"integer"`
+
+	NextToken *string `location:"querystring" locationName:"nextToken" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListReservationsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListReservationsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListReservationsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListReservationsInput"}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *ListReservationsInput) SetMaxResults(v int64) *ListReservationsInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListReservationsInput) SetNextToken(v string) *ListReservationsInput {
+	s.NextToken = &v
+	return s
+}
+
+// The result of a successful ListReservations request. The response includes
+// the details of each offering that your account is eligible for. The response
+// includes the following information for each offering: description, duration,
+// outbound bandwidth, price, Amazon Resource Name (ARN), and the NextToken
+// to use in a subsequent ListOfferings request.
+type ListReservationsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The token that identifies which batch of results that you want to see. For
+	// example, you submit a ListReservations request with MaxResults set at 5.
+	// The service returns the first batch of results (up to 5) and a NextToken
+	// value. To see the next batch of results, you can submit the ListReservations
+	// request a second time and specify the NextToken value.
+	NextToken *string `locationName:"nextToken" type:"string"`
+
+	// A list of all reservations that have been purchased by this account in the
+	// current AWS Region.
+	Reservations []*Reservation `locationName:"reservations" type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListReservationsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListReservationsOutput) GoString() string {
+	return s.String()
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListReservationsOutput) SetNextToken(v string) *ListReservationsOutput {
+	s.NextToken = &v
+	return s
+}
+
+// SetReservations sets the Reservations field's value.
+func (s *ListReservationsOutput) SetReservations(v []*Reservation) *ListReservationsOutput {
+	s.Reservations = v
+	return s
+}
+
+type ListTagsForResourceInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ResourceArn is a required field
 	ResourceArn *string `location:"uri" locationName:"resourceArn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) GoString() string {
 	return s.String()
 }
@@ -4326,12 +6864,20 @@ type ListTagsForResourceOutput struct {
 	Tags map[string]*string `locationName:"tags" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) GoString() string {
 	return s.String()
 }
@@ -4360,12 +6906,20 @@ type ListedEntitlement struct {
 	EntitlementName *string `locationName:"entitlementName" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListedEntitlement) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListedEntitlement) GoString() string {
 	return s.String()
 }
@@ -4427,12 +6981,20 @@ type ListedFlow struct {
 	Status *string `locationName:"status" type:"string" required:"true" enum:"Status"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListedFlow) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListedFlow) GoString() string {
 	return s.String()
 }
@@ -4473,6 +7035,507 @@ func (s *ListedFlow) SetStatus(v string) *ListedFlow {
 	return s
 }
 
+// A single track or stream of media that contains video, audio, or ancillary
+// data. After you add a media stream to a flow, you can associate it with sources
+// and outputs on that flow, as long as they use the CDI protocol or the ST
+// 2110 JPEG XS protocol. Each source or output can consist of one or many media
+// streams.
+type MediaStream struct {
+	_ struct{} `type:"structure"`
+
+	// Attributes that are related to the media stream.
+	Attributes *MediaStreamAttributes `locationName:"attributes" type:"structure"`
+
+	// The sample rate for the stream. This value is measured in Hz.
+	ClockRate *int64 `locationName:"clockRate" type:"integer"`
+
+	// A description that can help you quickly identify what your media stream is
+	// used for.
+	Description *string `locationName:"description" type:"string"`
+
+	// The format type number (sometimes referred to as RTP payload type) of the
+	// media stream. MediaConnect assigns this value to the media stream. For ST
+	// 2110 JPEG XS outputs, you need to provide this value to the receiver.
+	//
+	// Fmt is a required field
+	Fmt *int64 `locationName:"fmt" type:"integer" required:"true"`
+
+	// A unique identifier for the media stream.
+	//
+	// MediaStreamId is a required field
+	MediaStreamId *int64 `locationName:"mediaStreamId" type:"integer" required:"true"`
+
+	// A name that helps you distinguish one media stream from another.
+	//
+	// MediaStreamName is a required field
+	MediaStreamName *string `locationName:"mediaStreamName" type:"string" required:"true"`
+
+	// The type of media stream.
+	//
+	// MediaStreamType is a required field
+	MediaStreamType *string `locationName:"mediaStreamType" type:"string" required:"true" enum:"MediaStreamType"`
+
+	// The resolution of the video.
+	VideoFormat *string `locationName:"videoFormat" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStream) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStream) GoString() string {
+	return s.String()
+}
+
+// SetAttributes sets the Attributes field's value.
+func (s *MediaStream) SetAttributes(v *MediaStreamAttributes) *MediaStream {
+	s.Attributes = v
+	return s
+}
+
+// SetClockRate sets the ClockRate field's value.
+func (s *MediaStream) SetClockRate(v int64) *MediaStream {
+	s.ClockRate = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *MediaStream) SetDescription(v string) *MediaStream {
+	s.Description = &v
+	return s
+}
+
+// SetFmt sets the Fmt field's value.
+func (s *MediaStream) SetFmt(v int64) *MediaStream {
+	s.Fmt = &v
+	return s
+}
+
+// SetMediaStreamId sets the MediaStreamId field's value.
+func (s *MediaStream) SetMediaStreamId(v int64) *MediaStream {
+	s.MediaStreamId = &v
+	return s
+}
+
+// SetMediaStreamName sets the MediaStreamName field's value.
+func (s *MediaStream) SetMediaStreamName(v string) *MediaStream {
+	s.MediaStreamName = &v
+	return s
+}
+
+// SetMediaStreamType sets the MediaStreamType field's value.
+func (s *MediaStream) SetMediaStreamType(v string) *MediaStream {
+	s.MediaStreamType = &v
+	return s
+}
+
+// SetVideoFormat sets the VideoFormat field's value.
+func (s *MediaStream) SetVideoFormat(v string) *MediaStream {
+	s.VideoFormat = &v
+	return s
+}
+
+// Attributes that are related to the media stream.
+type MediaStreamAttributes struct {
+	_ struct{} `type:"structure"`
+
+	// A set of parameters that define the media stream.
+	//
+	// Fmtp is a required field
+	Fmtp *Fmtp `locationName:"fmtp" type:"structure" required:"true"`
+
+	// The audio language, in a format that is recognized by the receiver.
+	Lang *string `locationName:"lang" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamAttributes) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamAttributes) GoString() string {
+	return s.String()
+}
+
+// SetFmtp sets the Fmtp field's value.
+func (s *MediaStreamAttributes) SetFmtp(v *Fmtp) *MediaStreamAttributes {
+	s.Fmtp = v
+	return s
+}
+
+// SetLang sets the Lang field's value.
+func (s *MediaStreamAttributes) SetLang(v string) *MediaStreamAttributes {
+	s.Lang = &v
+	return s
+}
+
+// Attributes that are related to the media stream.
+type MediaStreamAttributesRequest struct {
+	_ struct{} `type:"structure"`
+
+	// The settings that you want to use to define the media stream.
+	Fmtp *FmtpRequest `locationName:"fmtp" type:"structure"`
+
+	// The audio language, in a format that is recognized by the receiver.
+	Lang *string `locationName:"lang" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamAttributesRequest) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamAttributesRequest) GoString() string {
+	return s.String()
+}
+
+// SetFmtp sets the Fmtp field's value.
+func (s *MediaStreamAttributesRequest) SetFmtp(v *FmtpRequest) *MediaStreamAttributesRequest {
+	s.Fmtp = v
+	return s
+}
+
+// SetLang sets the Lang field's value.
+func (s *MediaStreamAttributesRequest) SetLang(v string) *MediaStreamAttributesRequest {
+	s.Lang = &v
+	return s
+}
+
+// The media stream that is associated with the output, and the parameters for
+// that association.
+type MediaStreamOutputConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// The transport parameters that are associated with each outbound media stream.
+	DestinationConfigurations []*DestinationConfiguration `locationName:"destinationConfigurations" type:"list"`
+
+	// The format that was used to encode the data. For ancillary data streams,
+	// set the encoding name to smpte291. For audio streams, set the encoding name
+	// to pcm. For video, 2110 streams, set the encoding name to raw. For video,
+	// JPEG XS streams, set the encoding name to jxsv.
+	//
+	// EncodingName is a required field
+	EncodingName *string `locationName:"encodingName" type:"string" required:"true" enum:"EncodingName"`
+
+	// Encoding parameters
+	EncodingParameters *EncodingParameters `locationName:"encodingParameters" type:"structure"`
+
+	// The name of the media stream.
+	//
+	// MediaStreamName is a required field
+	MediaStreamName *string `locationName:"mediaStreamName" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamOutputConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamOutputConfiguration) GoString() string {
+	return s.String()
+}
+
+// SetDestinationConfigurations sets the DestinationConfigurations field's value.
+func (s *MediaStreamOutputConfiguration) SetDestinationConfigurations(v []*DestinationConfiguration) *MediaStreamOutputConfiguration {
+	s.DestinationConfigurations = v
+	return s
+}
+
+// SetEncodingName sets the EncodingName field's value.
+func (s *MediaStreamOutputConfiguration) SetEncodingName(v string) *MediaStreamOutputConfiguration {
+	s.EncodingName = &v
+	return s
+}
+
+// SetEncodingParameters sets the EncodingParameters field's value.
+func (s *MediaStreamOutputConfiguration) SetEncodingParameters(v *EncodingParameters) *MediaStreamOutputConfiguration {
+	s.EncodingParameters = v
+	return s
+}
+
+// SetMediaStreamName sets the MediaStreamName field's value.
+func (s *MediaStreamOutputConfiguration) SetMediaStreamName(v string) *MediaStreamOutputConfiguration {
+	s.MediaStreamName = &v
+	return s
+}
+
+// The media stream that you want to associate with the output, and the parameters
+// for that association.
+type MediaStreamOutputConfigurationRequest struct {
+	_ struct{} `type:"structure"`
+
+	// The transport parameters that you want to associate with the media stream.
+	DestinationConfigurations []*DestinationConfigurationRequest `locationName:"destinationConfigurations" type:"list"`
+
+	// The format that will be used to encode the data. For ancillary data streams,
+	// set the encoding name to smpte291. For audio streams, set the encoding name
+	// to pcm. For video, 2110 streams, set the encoding name to raw. For video,
+	// JPEG XS streams, set the encoding name to jxsv.
+	//
+	// EncodingName is a required field
+	EncodingName *string `locationName:"encodingName" type:"string" required:"true" enum:"EncodingName"`
+
+	// A collection of parameters that determine how MediaConnect will convert the
+	// content. These fields only apply to outputs on flows that have a CDI source.
+	EncodingParameters *EncodingParametersRequest `locationName:"encodingParameters" type:"structure"`
+
+	// The name of the media stream that is associated with the output.
+	//
+	// MediaStreamName is a required field
+	MediaStreamName *string `locationName:"mediaStreamName" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamOutputConfigurationRequest) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamOutputConfigurationRequest) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *MediaStreamOutputConfigurationRequest) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "MediaStreamOutputConfigurationRequest"}
+	if s.EncodingName == nil {
+		invalidParams.Add(request.NewErrParamRequired("EncodingName"))
+	}
+	if s.MediaStreamName == nil {
+		invalidParams.Add(request.NewErrParamRequired("MediaStreamName"))
+	}
+	if s.DestinationConfigurations != nil {
+		for i, v := range s.DestinationConfigurations {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "DestinationConfigurations", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+	if s.EncodingParameters != nil {
+		if err := s.EncodingParameters.Validate(); err != nil {
+			invalidParams.AddNested("EncodingParameters", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDestinationConfigurations sets the DestinationConfigurations field's value.
+func (s *MediaStreamOutputConfigurationRequest) SetDestinationConfigurations(v []*DestinationConfigurationRequest) *MediaStreamOutputConfigurationRequest {
+	s.DestinationConfigurations = v
+	return s
+}
+
+// SetEncodingName sets the EncodingName field's value.
+func (s *MediaStreamOutputConfigurationRequest) SetEncodingName(v string) *MediaStreamOutputConfigurationRequest {
+	s.EncodingName = &v
+	return s
+}
+
+// SetEncodingParameters sets the EncodingParameters field's value.
+func (s *MediaStreamOutputConfigurationRequest) SetEncodingParameters(v *EncodingParametersRequest) *MediaStreamOutputConfigurationRequest {
+	s.EncodingParameters = v
+	return s
+}
+
+// SetMediaStreamName sets the MediaStreamName field's value.
+func (s *MediaStreamOutputConfigurationRequest) SetMediaStreamName(v string) *MediaStreamOutputConfigurationRequest {
+	s.MediaStreamName = &v
+	return s
+}
+
+// The media stream that is associated with the source, and the parameters for
+// that association.
+type MediaStreamSourceConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// The format that was used to encode the data. For ancillary data streams,
+	// set the encoding name to smpte291. For audio streams, set the encoding name
+	// to pcm. For video, 2110 streams, set the encoding name to raw. For video,
+	// JPEG XS streams, set the encoding name to jxsv.
+	//
+	// EncodingName is a required field
+	EncodingName *string `locationName:"encodingName" type:"string" required:"true" enum:"EncodingName"`
+
+	// The transport parameters that are associated with an incoming media stream.
+	InputConfigurations []*InputConfiguration `locationName:"inputConfigurations" type:"list"`
+
+	// The name of the media stream.
+	//
+	// MediaStreamName is a required field
+	MediaStreamName *string `locationName:"mediaStreamName" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamSourceConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamSourceConfiguration) GoString() string {
+	return s.String()
+}
+
+// SetEncodingName sets the EncodingName field's value.
+func (s *MediaStreamSourceConfiguration) SetEncodingName(v string) *MediaStreamSourceConfiguration {
+	s.EncodingName = &v
+	return s
+}
+
+// SetInputConfigurations sets the InputConfigurations field's value.
+func (s *MediaStreamSourceConfiguration) SetInputConfigurations(v []*InputConfiguration) *MediaStreamSourceConfiguration {
+	s.InputConfigurations = v
+	return s
+}
+
+// SetMediaStreamName sets the MediaStreamName field's value.
+func (s *MediaStreamSourceConfiguration) SetMediaStreamName(v string) *MediaStreamSourceConfiguration {
+	s.MediaStreamName = &v
+	return s
+}
+
+// The definition of a media stream that you want to associate with the source.
+type MediaStreamSourceConfigurationRequest struct {
+	_ struct{} `type:"structure"`
+
+	// The format you want to use to encode the data. For ancillary data streams,
+	// set the encoding name to smpte291. For audio streams, set the encoding name
+	// to pcm. For video, 2110 streams, set the encoding name to raw. For video,
+	// JPEG XS streams, set the encoding name to jxsv.
+	//
+	// EncodingName is a required field
+	EncodingName *string `locationName:"encodingName" type:"string" required:"true" enum:"EncodingName"`
+
+	// The transport parameters that you want to associate with the media stream.
+	InputConfigurations []*InputConfigurationRequest `locationName:"inputConfigurations" type:"list"`
+
+	// The name of the media stream.
+	//
+	// MediaStreamName is a required field
+	MediaStreamName *string `locationName:"mediaStreamName" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamSourceConfigurationRequest) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s MediaStreamSourceConfigurationRequest) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *MediaStreamSourceConfigurationRequest) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "MediaStreamSourceConfigurationRequest"}
+	if s.EncodingName == nil {
+		invalidParams.Add(request.NewErrParamRequired("EncodingName"))
+	}
+	if s.MediaStreamName == nil {
+		invalidParams.Add(request.NewErrParamRequired("MediaStreamName"))
+	}
+	if s.InputConfigurations != nil {
+		for i, v := range s.InputConfigurations {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "InputConfigurations", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetEncodingName sets the EncodingName field's value.
+func (s *MediaStreamSourceConfigurationRequest) SetEncodingName(v string) *MediaStreamSourceConfigurationRequest {
+	s.EncodingName = &v
+	return s
+}
+
+// SetInputConfigurations sets the InputConfigurations field's value.
+func (s *MediaStreamSourceConfigurationRequest) SetInputConfigurations(v []*InputConfigurationRequest) *MediaStreamSourceConfigurationRequest {
+	s.InputConfigurations = v
+	return s
+}
+
+// SetMediaStreamName sets the MediaStreamName field's value.
+func (s *MediaStreamSourceConfigurationRequest) SetMediaStreamName(v string) *MediaStreamSourceConfigurationRequest {
+	s.MediaStreamName = &v
+	return s
+}
+
 // Messages that provide the state of the flow.
 type Messages struct {
 	_ struct{} `type:"structure"`
@@ -4483,12 +7546,20 @@ type Messages struct {
 	Errors []*string `locationName:"errors" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Messages) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Messages) GoString() string {
 	return s.String()
 }
@@ -4509,12 +7580,20 @@ type NotFoundException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NotFoundException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NotFoundException) GoString() string {
 	return s.String()
 }
@@ -4557,6 +7636,122 @@ func (s *NotFoundException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
+// A savings plan that reserves a certain amount of outbound bandwidth usage
+// at a discounted rate each month over a period of time.
+type Offering struct {
+	_ struct{} `type:"structure"`
+
+	// The type of currency that is used for billing. The currencyCode used for
+	// all reservations is US dollars.
+	//
+	// CurrencyCode is a required field
+	CurrencyCode *string `locationName:"currencyCode" type:"string" required:"true"`
+
+	// The length of time that your reservation would be active.
+	//
+	// Duration is a required field
+	Duration *int64 `locationName:"duration" type:"integer" required:"true"`
+
+	// The unit of measurement for the duration of the offering.
+	//
+	// DurationUnits is a required field
+	DurationUnits *string `locationName:"durationUnits" type:"string" required:"true" enum:"DurationUnits"`
+
+	// The Amazon Resource Name (ARN) that MediaConnect assigns to the offering.
+	//
+	// OfferingArn is a required field
+	OfferingArn *string `locationName:"offeringArn" type:"string" required:"true"`
+
+	// A description of the offering.
+	//
+	// OfferingDescription is a required field
+	OfferingDescription *string `locationName:"offeringDescription" type:"string" required:"true"`
+
+	// The cost of a single unit. This value, in combination with priceUnits, makes
+	// up the rate.
+	//
+	// PricePerUnit is a required field
+	PricePerUnit *string `locationName:"pricePerUnit" type:"string" required:"true"`
+
+	// The unit of measurement that is used for billing. This value, in combination
+	// with pricePerUnit, makes up the rate.
+	//
+	// PriceUnits is a required field
+	PriceUnits *string `locationName:"priceUnits" type:"string" required:"true" enum:"PriceUnits"`
+
+	// A definition of the amount of outbound bandwidth that you would be reserving
+	// if you purchase the offering.
+	//
+	// ResourceSpecification is a required field
+	ResourceSpecification *ResourceSpecification `locationName:"resourceSpecification" type:"structure" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Offering) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Offering) GoString() string {
+	return s.String()
+}
+
+// SetCurrencyCode sets the CurrencyCode field's value.
+func (s *Offering) SetCurrencyCode(v string) *Offering {
+	s.CurrencyCode = &v
+	return s
+}
+
+// SetDuration sets the Duration field's value.
+func (s *Offering) SetDuration(v int64) *Offering {
+	s.Duration = &v
+	return s
+}
+
+// SetDurationUnits sets the DurationUnits field's value.
+func (s *Offering) SetDurationUnits(v string) *Offering {
+	s.DurationUnits = &v
+	return s
+}
+
+// SetOfferingArn sets the OfferingArn field's value.
+func (s *Offering) SetOfferingArn(v string) *Offering {
+	s.OfferingArn = &v
+	return s
+}
+
+// SetOfferingDescription sets the OfferingDescription field's value.
+func (s *Offering) SetOfferingDescription(v string) *Offering {
+	s.OfferingDescription = &v
+	return s
+}
+
+// SetPricePerUnit sets the PricePerUnit field's value.
+func (s *Offering) SetPricePerUnit(v string) *Offering {
+	s.PricePerUnit = &v
+	return s
+}
+
+// SetPriceUnits sets the PriceUnits field's value.
+func (s *Offering) SetPriceUnits(v string) *Offering {
+	s.PriceUnits = &v
+	return s
+}
+
+// SetResourceSpecification sets the ResourceSpecification field's value.
+func (s *Offering) SetResourceSpecification(v *ResourceSpecification) *Offering {
+	s.ResourceSpecification = v
+	return s
+}
+
 // The settings for an output.
 type Output struct {
 	_ struct{} `type:"structure"`
@@ -4578,9 +7773,19 @@ type Output struct {
 	// only on entitled flows.
 	EntitlementArn *string `locationName:"entitlementArn" type:"string"`
 
+	// The IP address that the receiver requires in order to establish a connection
+	// with the flow. For public networking, the ListenerAddress is represented
+	// by the elastic IP address of the flow. For private networking, the ListenerAddress
+	// is represented by the elastic network interface IP address of the VPC. This
+	// field applies only to outputs that use the Zixi pull or SRT listener protocol.
+	ListenerAddress *string `locationName:"listenerAddress" type:"string"`
+
 	// The input ARN of the AWS Elemental MediaLive channel. This parameter is relevant
 	// only for outputs that were added by creating a MediaLive input.
 	MediaLiveInputArn *string `locationName:"mediaLiveInputArn" type:"string"`
+
+	// The configuration for each media stream that is associated with the output.
+	MediaStreamOutputConfigurations []*MediaStreamOutputConfiguration `locationName:"mediaStreamOutputConfigurations" type:"list"`
 
 	// The name of the output. This value must be unique within the current flow.
 	//
@@ -4602,12 +7807,20 @@ type Output struct {
 	VpcInterfaceAttachment *VpcInterfaceAttachment `locationName:"vpcInterfaceAttachment" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Output) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Output) GoString() string {
 	return s.String()
 }
@@ -4642,9 +7855,21 @@ func (s *Output) SetEntitlementArn(v string) *Output {
 	return s
 }
 
+// SetListenerAddress sets the ListenerAddress field's value.
+func (s *Output) SetListenerAddress(v string) *Output {
+	s.ListenerAddress = &v
+	return s
+}
+
 // SetMediaLiveInputArn sets the MediaLiveInputArn field's value.
 func (s *Output) SetMediaLiveInputArn(v string) *Output {
 	s.MediaLiveInputArn = &v
+	return s
+}
+
+// SetMediaStreamOutputConfigurations sets the MediaStreamOutputConfigurations field's value.
+func (s *Output) SetMediaStreamOutputConfigurations(v []*MediaStreamOutputConfiguration) *Output {
+	s.MediaStreamOutputConfigurations = v
 	return s
 }
 
@@ -4678,8 +7903,231 @@ func (s *Output) SetVpcInterfaceAttachment(v *VpcInterfaceAttachment) *Output {
 	return s
 }
 
-type RemoveFlowOutputInput struct {
+// Submits a request to purchase an offering, which creates a reservation in
+// your AWS account. If you already have an active reservation, you can't purchase
+// another offering.
+type PurchaseOfferingInput struct {
 	_ struct{} `type:"structure"`
+
+	// OfferingArn is a required field
+	OfferingArn *string `location:"uri" locationName:"offeringArn" type:"string" required:"true"`
+
+	// The name that you want to use for the reservation.
+	//
+	// ReservationName is a required field
+	ReservationName *string `locationName:"reservationName" type:"string" required:"true"`
+
+	// The date and time that you want the reservation to begin, in Coordinated
+	// Universal Time (UTC). You can specify any date and time between 12:00am on
+	// the first day of the current month to the current time on today's date, inclusive.
+	// Specify the start in a 24-hour notation. Use the following format: YYYY-MM-DDTHH:mm:SSZ,
+	// where T and Z are literal characters. For example, to specify 11:30pm on
+	// March 5, 2020, enter 2020-03-05T23:30:00Z.
+	//
+	// Start is a required field
+	Start *string `locationName:"start" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PurchaseOfferingInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PurchaseOfferingInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *PurchaseOfferingInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "PurchaseOfferingInput"}
+	if s.OfferingArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("OfferingArn"))
+	}
+	if s.OfferingArn != nil && len(*s.OfferingArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("OfferingArn", 1))
+	}
+	if s.ReservationName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ReservationName"))
+	}
+	if s.Start == nil {
+		invalidParams.Add(request.NewErrParamRequired("Start"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetOfferingArn sets the OfferingArn field's value.
+func (s *PurchaseOfferingInput) SetOfferingArn(v string) *PurchaseOfferingInput {
+	s.OfferingArn = &v
+	return s
+}
+
+// SetReservationName sets the ReservationName field's value.
+func (s *PurchaseOfferingInput) SetReservationName(v string) *PurchaseOfferingInput {
+	s.ReservationName = &v
+	return s
+}
+
+// SetStart sets the Start field's value.
+func (s *PurchaseOfferingInput) SetStart(v string) *PurchaseOfferingInput {
+	s.Start = &v
+	return s
+}
+
+// The result of a successful PurchaseOffering request.
+type PurchaseOfferingOutput struct {
+	_ struct{} `type:"structure"`
+
+	// A pricing agreement for a discounted rate for a specific outbound bandwidth
+	// that your MediaConnect account will use each month over a specific time period.
+	// The discounted rate in the reservation applies to outbound bandwidth for
+	// all flows from your account until your account reaches the amount of bandwidth
+	// in your reservation. If you use more outbound bandwidth than the agreed upon
+	// amount in a single month, the overage is charged at the on-demand rate.
+	Reservation *Reservation `locationName:"reservation" type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PurchaseOfferingOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PurchaseOfferingOutput) GoString() string {
+	return s.String()
+}
+
+// SetReservation sets the Reservation field's value.
+func (s *PurchaseOfferingOutput) SetReservation(v *Reservation) *PurchaseOfferingOutput {
+	s.Reservation = v
+	return s
+}
+
+type RemoveFlowMediaStreamInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// FlowArn is a required field
+	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
+
+	// MediaStreamName is a required field
+	MediaStreamName *string `location:"uri" locationName:"mediaStreamName" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RemoveFlowMediaStreamInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RemoveFlowMediaStreamInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RemoveFlowMediaStreamInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RemoveFlowMediaStreamInput"}
+	if s.FlowArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("FlowArn"))
+	}
+	if s.FlowArn != nil && len(*s.FlowArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FlowArn", 1))
+	}
+	if s.MediaStreamName == nil {
+		invalidParams.Add(request.NewErrParamRequired("MediaStreamName"))
+	}
+	if s.MediaStreamName != nil && len(*s.MediaStreamName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("MediaStreamName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFlowArn sets the FlowArn field's value.
+func (s *RemoveFlowMediaStreamInput) SetFlowArn(v string) *RemoveFlowMediaStreamInput {
+	s.FlowArn = &v
+	return s
+}
+
+// SetMediaStreamName sets the MediaStreamName field's value.
+func (s *RemoveFlowMediaStreamInput) SetMediaStreamName(v string) *RemoveFlowMediaStreamInput {
+	s.MediaStreamName = &v
+	return s
+}
+
+// The result of a successful RemoveFlowMediaStream request.
+type RemoveFlowMediaStreamOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the flow.
+	FlowArn *string `locationName:"flowArn" type:"string"`
+
+	// The name of the media stream that was removed.
+	MediaStreamName *string `locationName:"mediaStreamName" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RemoveFlowMediaStreamOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RemoveFlowMediaStreamOutput) GoString() string {
+	return s.String()
+}
+
+// SetFlowArn sets the FlowArn field's value.
+func (s *RemoveFlowMediaStreamOutput) SetFlowArn(v string) *RemoveFlowMediaStreamOutput {
+	s.FlowArn = &v
+	return s
+}
+
+// SetMediaStreamName sets the MediaStreamName field's value.
+func (s *RemoveFlowMediaStreamOutput) SetMediaStreamName(v string) *RemoveFlowMediaStreamOutput {
+	s.MediaStreamName = &v
+	return s
+}
+
+type RemoveFlowOutputInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// FlowArn is a required field
 	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
@@ -4688,12 +8136,20 @@ type RemoveFlowOutputInput struct {
 	OutputArn *string `location:"uri" locationName:"outputArn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowOutputInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowOutputInput) GoString() string {
 	return s.String()
 }
@@ -4744,12 +8200,20 @@ type RemoveFlowOutputOutput struct {
 	OutputArn *string `locationName:"outputArn" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowOutputOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowOutputOutput) GoString() string {
 	return s.String()
 }
@@ -4767,7 +8231,7 @@ func (s *RemoveFlowOutputOutput) SetOutputArn(v string) *RemoveFlowOutputOutput 
 }
 
 type RemoveFlowSourceInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// FlowArn is a required field
 	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
@@ -4776,12 +8240,20 @@ type RemoveFlowSourceInput struct {
 	SourceArn *string `location:"uri" locationName:"sourceArn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowSourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowSourceInput) GoString() string {
 	return s.String()
 }
@@ -4832,12 +8304,20 @@ type RemoveFlowSourceOutput struct {
 	SourceArn *string `locationName:"sourceArn" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowSourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowSourceOutput) GoString() string {
 	return s.String()
 }
@@ -4855,7 +8335,7 @@ func (s *RemoveFlowSourceOutput) SetSourceArn(v string) *RemoveFlowSourceOutput 
 }
 
 type RemoveFlowVpcInterfaceInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// FlowArn is a required field
 	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
@@ -4864,12 +8344,20 @@ type RemoveFlowVpcInterfaceInput struct {
 	VpcInterfaceName *string `location:"uri" locationName:"vpcInterfaceName" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowVpcInterfaceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowVpcInterfaceInput) GoString() string {
 	return s.String()
 }
@@ -4924,12 +8412,20 @@ type RemoveFlowVpcInterfaceOutput struct {
 	VpcInterfaceName *string `locationName:"vpcInterfaceName" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowVpcInterfaceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RemoveFlowVpcInterfaceOutput) GoString() string {
 	return s.String()
 }
@@ -4952,8 +8448,233 @@ func (s *RemoveFlowVpcInterfaceOutput) SetVpcInterfaceName(v string) *RemoveFlow
 	return s
 }
 
-type RevokeFlowEntitlementInput struct {
+// A pricing agreement for a discounted rate for a specific outbound bandwidth
+// that your MediaConnect account will use each month over a specific time period.
+// The discounted rate in the reservation applies to outbound bandwidth for
+// all flows from your account until your account reaches the amount of bandwidth
+// in your reservation. If you use more outbound bandwidth than the agreed upon
+// amount in a single month, the overage is charged at the on-demand rate.
+type Reservation struct {
 	_ struct{} `type:"structure"`
+
+	// The type of currency that is used for billing. The currencyCode used for
+	// your reservation is US dollars.
+	//
+	// CurrencyCode is a required field
+	CurrencyCode *string `locationName:"currencyCode" type:"string" required:"true"`
+
+	// The length of time that this reservation is active. MediaConnect defines
+	// this value in the offering.
+	//
+	// Duration is a required field
+	Duration *int64 `locationName:"duration" type:"integer" required:"true"`
+
+	// The unit of measurement for the duration of the reservation. MediaConnect
+	// defines this value in the offering.
+	//
+	// DurationUnits is a required field
+	DurationUnits *string `locationName:"durationUnits" type:"string" required:"true" enum:"DurationUnits"`
+
+	// The day and time that this reservation expires. This value is calculated
+	// based on the start date and time that you set and the offering's duration.
+	//
+	// End is a required field
+	End *string `locationName:"end" type:"string" required:"true"`
+
+	// The Amazon Resource Name (ARN) that MediaConnect assigns to the offering.
+	//
+	// OfferingArn is a required field
+	OfferingArn *string `locationName:"offeringArn" type:"string" required:"true"`
+
+	// A description of the offering. MediaConnect defines this value in the offering.
+	//
+	// OfferingDescription is a required field
+	OfferingDescription *string `locationName:"offeringDescription" type:"string" required:"true"`
+
+	// The cost of a single unit. This value, in combination with priceUnits, makes
+	// up the rate. MediaConnect defines this value in the offering.
+	//
+	// PricePerUnit is a required field
+	PricePerUnit *string `locationName:"pricePerUnit" type:"string" required:"true"`
+
+	// The unit of measurement that is used for billing. This value, in combination
+	// with pricePerUnit, makes up the rate. MediaConnect defines this value in
+	// the offering.
+	//
+	// PriceUnits is a required field
+	PriceUnits *string `locationName:"priceUnits" type:"string" required:"true" enum:"PriceUnits"`
+
+	// The Amazon Resource Name (ARN) that MediaConnect assigns to the reservation
+	// when you purchase an offering.
+	//
+	// ReservationArn is a required field
+	ReservationArn *string `locationName:"reservationArn" type:"string" required:"true"`
+
+	// The name that you assigned to the reservation when you purchased the offering.
+	//
+	// ReservationName is a required field
+	ReservationName *string `locationName:"reservationName" type:"string" required:"true"`
+
+	// The status of your reservation.
+	//
+	// ReservationState is a required field
+	ReservationState *string `locationName:"reservationState" type:"string" required:"true" enum:"ReservationState"`
+
+	// A definition of the amount of outbound bandwidth that you would be reserving
+	// if you purchase the offering. MediaConnect defines the values that make up
+	// the resourceSpecification in the offering.
+	//
+	// ResourceSpecification is a required field
+	ResourceSpecification *ResourceSpecification `locationName:"resourceSpecification" type:"structure" required:"true"`
+
+	// The day and time that the reservation becomes active. You set this value
+	// when you purchase the offering.
+	//
+	// Start is a required field
+	Start *string `locationName:"start" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Reservation) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s Reservation) GoString() string {
+	return s.String()
+}
+
+// SetCurrencyCode sets the CurrencyCode field's value.
+func (s *Reservation) SetCurrencyCode(v string) *Reservation {
+	s.CurrencyCode = &v
+	return s
+}
+
+// SetDuration sets the Duration field's value.
+func (s *Reservation) SetDuration(v int64) *Reservation {
+	s.Duration = &v
+	return s
+}
+
+// SetDurationUnits sets the DurationUnits field's value.
+func (s *Reservation) SetDurationUnits(v string) *Reservation {
+	s.DurationUnits = &v
+	return s
+}
+
+// SetEnd sets the End field's value.
+func (s *Reservation) SetEnd(v string) *Reservation {
+	s.End = &v
+	return s
+}
+
+// SetOfferingArn sets the OfferingArn field's value.
+func (s *Reservation) SetOfferingArn(v string) *Reservation {
+	s.OfferingArn = &v
+	return s
+}
+
+// SetOfferingDescription sets the OfferingDescription field's value.
+func (s *Reservation) SetOfferingDescription(v string) *Reservation {
+	s.OfferingDescription = &v
+	return s
+}
+
+// SetPricePerUnit sets the PricePerUnit field's value.
+func (s *Reservation) SetPricePerUnit(v string) *Reservation {
+	s.PricePerUnit = &v
+	return s
+}
+
+// SetPriceUnits sets the PriceUnits field's value.
+func (s *Reservation) SetPriceUnits(v string) *Reservation {
+	s.PriceUnits = &v
+	return s
+}
+
+// SetReservationArn sets the ReservationArn field's value.
+func (s *Reservation) SetReservationArn(v string) *Reservation {
+	s.ReservationArn = &v
+	return s
+}
+
+// SetReservationName sets the ReservationName field's value.
+func (s *Reservation) SetReservationName(v string) *Reservation {
+	s.ReservationName = &v
+	return s
+}
+
+// SetReservationState sets the ReservationState field's value.
+func (s *Reservation) SetReservationState(v string) *Reservation {
+	s.ReservationState = &v
+	return s
+}
+
+// SetResourceSpecification sets the ResourceSpecification field's value.
+func (s *Reservation) SetResourceSpecification(v *ResourceSpecification) *Reservation {
+	s.ResourceSpecification = v
+	return s
+}
+
+// SetStart sets the Start field's value.
+func (s *Reservation) SetStart(v string) *Reservation {
+	s.Start = &v
+	return s
+}
+
+// A definition of what is being billed for, including the type and amount.
+type ResourceSpecification struct {
+	_ struct{} `type:"structure"`
+
+	// The amount of outbound bandwidth that is discounted in the offering.
+	ReservedBitrate *int64 `locationName:"reservedBitrate" type:"integer"`
+
+	// The type of resource and the unit that is being billed for.
+	//
+	// ResourceType is a required field
+	ResourceType *string `locationName:"resourceType" type:"string" required:"true" enum:"ResourceType"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResourceSpecification) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ResourceSpecification) GoString() string {
+	return s.String()
+}
+
+// SetReservedBitrate sets the ReservedBitrate field's value.
+func (s *ResourceSpecification) SetReservedBitrate(v int64) *ResourceSpecification {
+	s.ReservedBitrate = &v
+	return s
+}
+
+// SetResourceType sets the ResourceType field's value.
+func (s *ResourceSpecification) SetResourceType(v string) *ResourceSpecification {
+	s.ResourceType = &v
+	return s
+}
+
+type RevokeFlowEntitlementInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// EntitlementArn is a required field
 	EntitlementArn *string `location:"uri" locationName:"entitlementArn" type:"string" required:"true"`
@@ -4962,12 +8683,20 @@ type RevokeFlowEntitlementInput struct {
 	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RevokeFlowEntitlementInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RevokeFlowEntitlementInput) GoString() string {
 	return s.String()
 }
@@ -5019,12 +8748,20 @@ type RevokeFlowEntitlementOutput struct {
 	FlowArn *string `locationName:"flowArn" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RevokeFlowEntitlementOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RevokeFlowEntitlementOutput) GoString() string {
 	return s.String()
 }
@@ -5051,12 +8788,20 @@ type ServiceUnavailableException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ServiceUnavailableException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ServiceUnavailableException) GoString() string {
 	return s.String()
 }
@@ -5104,6 +8849,7 @@ type SetSourceRequest struct {
 	_ struct{} `type:"structure"`
 
 	// The type of encryption that is used on the content ingested from this source.
+	// Allowable encryption types: static-key.
 	Decryption *Encryption `locationName:"decryption" type:"structure"`
 
 	// A description for the source. This value is not used or seen outside of the
@@ -5121,15 +8867,37 @@ type SetSourceRequest struct {
 	// The smoothing max bitrate for RIST, RTP, and RTP-FEC streams.
 	MaxBitrate *int64 `locationName:"maxBitrate" type:"integer"`
 
-	// The maximum latency in milliseconds. This parameter applies only to RIST-based
-	// and Zixi-based streams.
+	// The maximum latency in milliseconds. This parameter applies only to RIST-based,
+	// Zixi-based, and Fujitsu-based streams.
 	MaxLatency *int64 `locationName:"maxLatency" type:"integer"`
+
+	// The size of the buffer (in milliseconds) to use to sync incoming source data.
+	MaxSyncBuffer *int64 `locationName:"maxSyncBuffer" type:"integer"`
+
+	// The media streams that are associated with the source, and the parameters
+	// for those associations.
+	MediaStreamSourceConfigurations []*MediaStreamSourceConfigurationRequest `locationName:"mediaStreamSourceConfigurations" type:"list"`
+
+	// The minimum latency in milliseconds for SRT-based streams. In streams that
+	// use the SRT protocol, this value that you set on your MediaConnect source
+	// or output represents the minimal potential latency of that connection. The
+	// latency of the stream is set to the highest number between the sender’s
+	// minimum latency and the receiver’s minimum latency.
+	MinLatency *int64 `locationName:"minLatency" type:"integer"`
 
 	// The name of the source.
 	Name *string `locationName:"name" type:"string"`
 
 	// The protocol that is used by the source.
 	Protocol *string `locationName:"protocol" type:"string" enum:"Protocol"`
+
+	// The port that the flow uses to send outbound requests to initiate connection
+	// with the sender.
+	SenderControlPort *int64 `locationName:"senderControlPort" type:"integer"`
+
+	// The IP address that the flow communicates with to initiate connection with
+	// the sender.
+	SenderIpAddress *string `locationName:"senderIpAddress" type:"string"`
 
 	// The stream ID that you want to use for this transport. This parameter applies
 	// only to Zixi-based streams.
@@ -5144,12 +8912,20 @@ type SetSourceRequest struct {
 	WhitelistCidr *string `locationName:"whitelistCidr" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SetSourceRequest) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SetSourceRequest) GoString() string {
 	return s.String()
 }
@@ -5160,6 +8936,16 @@ func (s *SetSourceRequest) Validate() error {
 	if s.Decryption != nil {
 		if err := s.Decryption.Validate(); err != nil {
 			invalidParams.AddNested("Decryption", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.MediaStreamSourceConfigurations != nil {
+		for i, v := range s.MediaStreamSourceConfigurations {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "MediaStreamSourceConfigurations", i), err.(request.ErrInvalidParams))
+			}
 		}
 	}
 
@@ -5205,6 +8991,24 @@ func (s *SetSourceRequest) SetMaxLatency(v int64) *SetSourceRequest {
 	return s
 }
 
+// SetMaxSyncBuffer sets the MaxSyncBuffer field's value.
+func (s *SetSourceRequest) SetMaxSyncBuffer(v int64) *SetSourceRequest {
+	s.MaxSyncBuffer = &v
+	return s
+}
+
+// SetMediaStreamSourceConfigurations sets the MediaStreamSourceConfigurations field's value.
+func (s *SetSourceRequest) SetMediaStreamSourceConfigurations(v []*MediaStreamSourceConfigurationRequest) *SetSourceRequest {
+	s.MediaStreamSourceConfigurations = v
+	return s
+}
+
+// SetMinLatency sets the MinLatency field's value.
+func (s *SetSourceRequest) SetMinLatency(v int64) *SetSourceRequest {
+	s.MinLatency = &v
+	return s
+}
+
 // SetName sets the Name field's value.
 func (s *SetSourceRequest) SetName(v string) *SetSourceRequest {
 	s.Name = &v
@@ -5214,6 +9018,18 @@ func (s *SetSourceRequest) SetName(v string) *SetSourceRequest {
 // SetProtocol sets the Protocol field's value.
 func (s *SetSourceRequest) SetProtocol(v string) *SetSourceRequest {
 	s.Protocol = &v
+	return s
+}
+
+// SetSenderControlPort sets the SenderControlPort field's value.
+func (s *SetSourceRequest) SetSenderControlPort(v int64) *SetSourceRequest {
+	s.SenderControlPort = &v
+	return s
+}
+
+// SetSenderIpAddress sets the SenderIpAddress field's value.
+func (s *SetSourceRequest) SetSenderIpAddress(v string) *SetSourceRequest {
+	s.SenderIpAddress = &v
 	return s
 }
 
@@ -5260,10 +9076,22 @@ type Source struct {
 	// The port that the flow will be listening on for incoming content.
 	IngestPort *int64 `locationName:"ingestPort" type:"integer"`
 
+	// The media streams that are associated with the source, and the parameters
+	// for those associations.
+	MediaStreamSourceConfigurations []*MediaStreamSourceConfiguration `locationName:"mediaStreamSourceConfigurations" type:"list"`
+
 	// The name of the source.
 	//
 	// Name is a required field
 	Name *string `locationName:"name" type:"string" required:"true"`
+
+	// The port that the flow uses to send outbound requests to initiate connection
+	// with the sender.
+	SenderControlPort *int64 `locationName:"senderControlPort" type:"integer"`
+
+	// The IP address that the flow communicates with to initiate connection with
+	// the sender.
+	SenderIpAddress *string `locationName:"senderIpAddress" type:"string"`
 
 	// The ARN of the source.
 	//
@@ -5273,7 +9101,7 @@ type Source struct {
 	// Attributes related to the transport stream that are used in the source.
 	Transport *Transport `locationName:"transport" type:"structure"`
 
-	// The name of the VPC Interface this Source is configured with.
+	// The name of the VPC interface that is used for this source.
 	VpcInterfaceName *string `locationName:"vpcInterfaceName" type:"string"`
 
 	// The range of IP addresses that should be allowed to contribute content to
@@ -5282,12 +9110,20 @@ type Source struct {
 	WhitelistCidr *string `locationName:"whitelistCidr" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Source) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Source) GoString() string {
 	return s.String()
 }
@@ -5328,9 +9164,27 @@ func (s *Source) SetIngestPort(v int64) *Source {
 	return s
 }
 
+// SetMediaStreamSourceConfigurations sets the MediaStreamSourceConfigurations field's value.
+func (s *Source) SetMediaStreamSourceConfigurations(v []*MediaStreamSourceConfiguration) *Source {
+	s.MediaStreamSourceConfigurations = v
+	return s
+}
+
 // SetName sets the Name field's value.
 func (s *Source) SetName(v string) *Source {
 	s.Name = &v
+	return s
+}
+
+// SetSenderControlPort sets the SenderControlPort field's value.
+func (s *Source) SetSenderControlPort(v int64) *Source {
+	s.SenderControlPort = &v
+	return s
+}
+
+// SetSenderIpAddress sets the SenderIpAddress field's value.
+func (s *Source) SetSenderIpAddress(v string) *Source {
+	s.SenderIpAddress = &v
 	return s
 }
 
@@ -5358,19 +9212,60 @@ func (s *Source) SetWhitelistCidr(v string) *Source {
 	return s
 }
 
-type StartFlowInput struct {
+// The priority you want to assign to a source. You can have a primary stream
+// and a backup stream or two equally prioritized streams.
+type SourcePriority struct {
 	_ struct{} `type:"structure"`
+
+	// The name of the source you choose as the primary source for this flow.
+	PrimarySource *string `locationName:"primarySource" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s SourcePriority) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s SourcePriority) GoString() string {
+	return s.String()
+}
+
+// SetPrimarySource sets the PrimarySource field's value.
+func (s *SourcePriority) SetPrimarySource(v string) *SourcePriority {
+	s.PrimarySource = &v
+	return s
+}
+
+type StartFlowInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// FlowArn is a required field
 	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartFlowInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartFlowInput) GoString() string {
 	return s.String()
 }
@@ -5408,12 +9303,20 @@ type StartFlowOutput struct {
 	Status *string `locationName:"status" type:"string" enum:"Status"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartFlowOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StartFlowOutput) GoString() string {
 	return s.String()
 }
@@ -5431,18 +9334,26 @@ func (s *StartFlowOutput) SetStatus(v string) *StartFlowOutput {
 }
 
 type StopFlowInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// FlowArn is a required field
 	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StopFlowInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StopFlowInput) GoString() string {
 	return s.String()
 }
@@ -5480,12 +9391,20 @@ type StopFlowOutput struct {
 	Status *string `locationName:"status" type:"string" enum:"Status"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StopFlowOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s StopFlowOutput) GoString() string {
 	return s.String()
 }
@@ -5517,12 +9436,20 @@ type TagResourceInput struct {
 	Tags map[string]*string `locationName:"tags" type:"map" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) GoString() string {
 	return s.String()
 }
@@ -5562,12 +9489,20 @@ type TagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) GoString() string {
 	return s.String()
 }
@@ -5582,12 +9517,20 @@ type TooManyRequestsException struct {
 	Message_ *string `locationName:"message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TooManyRequestsException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TooManyRequestsException) GoString() string {
 	return s.String()
 }
@@ -5642,9 +9585,19 @@ type Transport struct {
 	// The smoothing max bitrate for RIST, RTP, and RTP-FEC streams.
 	MaxBitrate *int64 `locationName:"maxBitrate" type:"integer"`
 
-	// The maximum latency in milliseconds. This parameter applies only to RIST-based
-	// and Zixi-based streams.
+	// The maximum latency in milliseconds. This parameter applies only to RIST-based,
+	// Zixi-based, and Fujitsu-based streams.
 	MaxLatency *int64 `locationName:"maxLatency" type:"integer"`
+
+	// The size of the buffer (in milliseconds) to use to sync incoming source data.
+	MaxSyncBuffer *int64 `locationName:"maxSyncBuffer" type:"integer"`
+
+	// The minimum latency in milliseconds for SRT-based streams. In streams that
+	// use the SRT protocol, this value that you set on your MediaConnect source
+	// or output represents the minimal potential latency of that connection. The
+	// latency of the stream is set to the highest number between the sender’s
+	// minimum latency and the receiver’s minimum latency.
+	MinLatency *int64 `locationName:"minLatency" type:"integer"`
 
 	// The protocol that is used by the source or output.
 	//
@@ -5654,6 +9607,14 @@ type Transport struct {
 	// The remote ID for the Zixi-pull stream.
 	RemoteId *string `locationName:"remoteId" type:"string"`
 
+	// The port that the flow uses to send outbound requests to initiate connection
+	// with the sender.
+	SenderControlPort *int64 `locationName:"senderControlPort" type:"integer"`
+
+	// The IP address that the flow communicates with to initiate connection with
+	// the sender.
+	SenderIpAddress *string `locationName:"senderIpAddress" type:"string"`
+
 	// The smoothing latency in milliseconds for RIST, RTP, and RTP-FEC streams.
 	SmoothingLatency *int64 `locationName:"smoothingLatency" type:"integer"`
 
@@ -5662,12 +9623,20 @@ type Transport struct {
 	StreamId *string `locationName:"streamId" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Transport) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Transport) GoString() string {
 	return s.String()
 }
@@ -5690,6 +9659,18 @@ func (s *Transport) SetMaxLatency(v int64) *Transport {
 	return s
 }
 
+// SetMaxSyncBuffer sets the MaxSyncBuffer field's value.
+func (s *Transport) SetMaxSyncBuffer(v int64) *Transport {
+	s.MaxSyncBuffer = &v
+	return s
+}
+
+// SetMinLatency sets the MinLatency field's value.
+func (s *Transport) SetMinLatency(v int64) *Transport {
+	s.MinLatency = &v
+	return s
+}
+
 // SetProtocol sets the Protocol field's value.
 func (s *Transport) SetProtocol(v string) *Transport {
 	s.Protocol = &v
@@ -5699,6 +9680,18 @@ func (s *Transport) SetProtocol(v string) *Transport {
 // SetRemoteId sets the RemoteId field's value.
 func (s *Transport) SetRemoteId(v string) *Transport {
 	s.RemoteId = &v
+	return s
+}
+
+// SetSenderControlPort sets the SenderControlPort field's value.
+func (s *Transport) SetSenderControlPort(v int64) *Transport {
+	s.SenderControlPort = &v
+	return s
+}
+
+// SetSenderIpAddress sets the SenderIpAddress field's value.
+func (s *Transport) SetSenderIpAddress(v string) *Transport {
+	s.SenderIpAddress = &v
 	return s
 }
 
@@ -5715,7 +9708,7 @@ func (s *Transport) SetStreamId(v string) *Transport {
 }
 
 type UntagResourceInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// ResourceArn is a required field
 	ResourceArn *string `location:"uri" locationName:"resourceArn" type:"string" required:"true"`
@@ -5724,12 +9717,20 @@ type UntagResourceInput struct {
 	TagKeys []*string `location:"querystring" locationName:"tagKeys" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) GoString() string {
 	return s.String()
 }
@@ -5769,12 +9770,20 @@ type UntagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) GoString() string {
 	return s.String()
 }
@@ -5826,12 +9835,20 @@ type UpdateEncryption struct {
 	Url *string `locationName:"url" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateEncryption) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateEncryption) GoString() string {
 	return s.String()
 }
@@ -5890,29 +9907,58 @@ func (s *UpdateEncryption) SetUrl(v string) *UpdateEncryption {
 	return s
 }
 
-// The settings for source failover
+// The settings for source failover.
 type UpdateFailoverConfig struct {
 	_ struct{} `type:"structure"`
+
+	// The type of failover you choose for this flow. MERGE combines the source
+	// streams into a single stream, allowing graceful recovery from any single-source
+	// loss. FAILOVER allows switching between different streams.
+	FailoverMode *string `locationName:"failoverMode" type:"string" enum:"FailoverMode"`
 
 	// Recovery window time to look for dash-7 packets
 	RecoveryWindow *int64 `locationName:"recoveryWindow" type:"integer"`
 
+	// The priority you want to assign to a source. You can have a primary stream
+	// and a backup stream or two equally prioritized streams.
+	SourcePriority *SourcePriority `locationName:"sourcePriority" type:"structure"`
+
 	State *string `locationName:"state" type:"string" enum:"State"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFailoverConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFailoverConfig) GoString() string {
 	return s.String()
+}
+
+// SetFailoverMode sets the FailoverMode field's value.
+func (s *UpdateFailoverConfig) SetFailoverMode(v string) *UpdateFailoverConfig {
+	s.FailoverMode = &v
+	return s
 }
 
 // SetRecoveryWindow sets the RecoveryWindow field's value.
 func (s *UpdateFailoverConfig) SetRecoveryWindow(v int64) *UpdateFailoverConfig {
 	s.RecoveryWindow = &v
+	return s
+}
+
+// SetSourcePriority sets the SourcePriority field's value.
+func (s *UpdateFailoverConfig) SetSourcePriority(v *SourcePriority) *UpdateFailoverConfig {
+	s.SourcePriority = v
 	return s
 }
 
@@ -5932,7 +9978,7 @@ type UpdateFlowEntitlementInput struct {
 	Description *string `locationName:"description" type:"string"`
 
 	// The type of encryption that will be used on the output associated with this
-	// entitlement.
+	// entitlement. Allowable encryption types: static-key, speke.
 	Encryption *UpdateEncryption `locationName:"encryption" type:"structure"`
 
 	// EntitlementArn is a required field
@@ -5953,12 +9999,20 @@ type UpdateFlowEntitlementInput struct {
 	Subscribers []*string `locationName:"subscribers" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowEntitlementInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowEntitlementInput) GoString() string {
 	return s.String()
 }
@@ -6026,19 +10080,27 @@ func (s *UpdateFlowEntitlementInput) SetSubscribers(v []*string) *UpdateFlowEnti
 type UpdateFlowEntitlementOutput struct {
 	_ struct{} `type:"structure"`
 
-	// The settings for a flow entitlement.
+	// The new configuration of the entitlement that you updated.
 	Entitlement *Entitlement `locationName:"entitlement" type:"structure"`
 
 	// The ARN of the flow that this entitlement was granted on.
 	FlowArn *string `locationName:"flowArn" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowEntitlementOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowEntitlementOutput) GoString() string {
 	return s.String()
 }
@@ -6062,16 +10124,24 @@ type UpdateFlowInput struct {
 	// FlowArn is a required field
 	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
 
-	// The settings for source failover
+	// The settings for source failover.
 	SourceFailoverConfig *UpdateFailoverConfig `locationName:"sourceFailoverConfig" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowInput) GoString() string {
 	return s.String()
 }
@@ -6104,6 +10174,157 @@ func (s *UpdateFlowInput) SetSourceFailoverConfig(v *UpdateFailoverConfig) *Upda
 	return s
 }
 
+// Update a media stream on a flow.
+type UpdateFlowMediaStreamInput struct {
+	_ struct{} `type:"structure"`
+
+	// The attributes that you want to assign to the media stream.
+	Attributes *MediaStreamAttributesRequest `locationName:"attributes" type:"structure"`
+
+	// The sample rate (in Hz) for the stream. If the media stream type is video
+	// or ancillary data, set this value to 90000. If the media stream type is audio,
+	// set this value to either 48000 or 96000.
+	ClockRate *int64 `locationName:"clockRate" type:"integer"`
+
+	// Description
+	Description *string `locationName:"description" type:"string"`
+
+	// FlowArn is a required field
+	FlowArn *string `location:"uri" locationName:"flowArn" type:"string" required:"true"`
+
+	// MediaStreamName is a required field
+	MediaStreamName *string `location:"uri" locationName:"mediaStreamName" type:"string" required:"true"`
+
+	// The type of media stream.
+	MediaStreamType *string `locationName:"mediaStreamType" type:"string" enum:"MediaStreamType"`
+
+	// The resolution of the video.
+	VideoFormat *string `locationName:"videoFormat" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFlowMediaStreamInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFlowMediaStreamInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateFlowMediaStreamInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateFlowMediaStreamInput"}
+	if s.FlowArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("FlowArn"))
+	}
+	if s.FlowArn != nil && len(*s.FlowArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("FlowArn", 1))
+	}
+	if s.MediaStreamName == nil {
+		invalidParams.Add(request.NewErrParamRequired("MediaStreamName"))
+	}
+	if s.MediaStreamName != nil && len(*s.MediaStreamName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("MediaStreamName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAttributes sets the Attributes field's value.
+func (s *UpdateFlowMediaStreamInput) SetAttributes(v *MediaStreamAttributesRequest) *UpdateFlowMediaStreamInput {
+	s.Attributes = v
+	return s
+}
+
+// SetClockRate sets the ClockRate field's value.
+func (s *UpdateFlowMediaStreamInput) SetClockRate(v int64) *UpdateFlowMediaStreamInput {
+	s.ClockRate = &v
+	return s
+}
+
+// SetDescription sets the Description field's value.
+func (s *UpdateFlowMediaStreamInput) SetDescription(v string) *UpdateFlowMediaStreamInput {
+	s.Description = &v
+	return s
+}
+
+// SetFlowArn sets the FlowArn field's value.
+func (s *UpdateFlowMediaStreamInput) SetFlowArn(v string) *UpdateFlowMediaStreamInput {
+	s.FlowArn = &v
+	return s
+}
+
+// SetMediaStreamName sets the MediaStreamName field's value.
+func (s *UpdateFlowMediaStreamInput) SetMediaStreamName(v string) *UpdateFlowMediaStreamInput {
+	s.MediaStreamName = &v
+	return s
+}
+
+// SetMediaStreamType sets the MediaStreamType field's value.
+func (s *UpdateFlowMediaStreamInput) SetMediaStreamType(v string) *UpdateFlowMediaStreamInput {
+	s.MediaStreamType = &v
+	return s
+}
+
+// SetVideoFormat sets the VideoFormat field's value.
+func (s *UpdateFlowMediaStreamInput) SetVideoFormat(v string) *UpdateFlowMediaStreamInput {
+	s.VideoFormat = &v
+	return s
+}
+
+// Update response
+type UpdateFlowMediaStreamOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The ARN of the flow that is associated with the media stream that you updated.
+	FlowArn *string `locationName:"flowArn" type:"string"`
+
+	// The media stream that you updated.
+	MediaStream *MediaStream `locationName:"mediaStream" type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFlowMediaStreamOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateFlowMediaStreamOutput) GoString() string {
+	return s.String()
+}
+
+// SetFlowArn sets the FlowArn field's value.
+func (s *UpdateFlowMediaStreamOutput) SetFlowArn(v string) *UpdateFlowMediaStreamOutput {
+	s.FlowArn = &v
+	return s
+}
+
+// SetMediaStream sets the MediaStream field's value.
+func (s *UpdateFlowMediaStreamOutput) SetMediaStream(v *MediaStream) *UpdateFlowMediaStreamOutput {
+	s.MediaStream = v
+	return s
+}
+
 // Updates an existing flow.
 type UpdateFlowOutput struct {
 	_ struct{} `type:"structure"`
@@ -6112,12 +10333,20 @@ type UpdateFlowOutput struct {
 	Flow *Flow `locationName:"flow" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowOutput) GoString() string {
 	return s.String()
 }
@@ -6145,7 +10374,7 @@ type UpdateFlowOutputInput struct {
 	Destination *string `locationName:"destination" type:"string"`
 
 	// The type of key used for the encryption. If no keyType is provided, the service
-	// will use the default setting (static-key).
+	// will use the default setting (static-key). Allowable encryption types: static-key.
 	Encryption *UpdateEncryption `locationName:"encryption" type:"structure"`
 
 	// FlowArn is a required field
@@ -6153,6 +10382,17 @@ type UpdateFlowOutputInput struct {
 
 	// The maximum latency in milliseconds for Zixi-based streams.
 	MaxLatency *int64 `locationName:"maxLatency" type:"integer"`
+
+	// The media streams that are associated with the output, and the parameters
+	// for those associations.
+	MediaStreamOutputConfigurations []*MediaStreamOutputConfigurationRequest `locationName:"mediaStreamOutputConfigurations" type:"list"`
+
+	// The minimum latency in milliseconds for SRT-based streams. In streams that
+	// use the SRT protocol, this value that you set on your MediaConnect source
+	// or output represents the minimal potential latency of that connection. The
+	// latency of the stream is set to the highest number between the sender’s
+	// minimum latency and the receiver’s minimum latency.
+	MinLatency *int64 `locationName:"minLatency" type:"integer"`
 
 	// OutputArn is a required field
 	OutputArn *string `location:"uri" locationName:"outputArn" type:"string" required:"true"`
@@ -6166,6 +10406,14 @@ type UpdateFlowOutputInput struct {
 	// The remote ID for the Zixi-pull stream.
 	RemoteId *string `locationName:"remoteId" type:"string"`
 
+	// The port that the flow uses to send outbound requests to initiate connection
+	// with the sender.
+	SenderControlPort *int64 `locationName:"senderControlPort" type:"integer"`
+
+	// The IP address that the flow communicates with to initiate connection with
+	// the sender.
+	SenderIpAddress *string `locationName:"senderIpAddress" type:"string"`
+
 	// The smoothing latency in milliseconds for RIST, RTP, and RTP-FEC streams.
 	SmoothingLatency *int64 `locationName:"smoothingLatency" type:"integer"`
 
@@ -6177,12 +10425,20 @@ type UpdateFlowOutputInput struct {
 	VpcInterfaceAttachment *VpcInterfaceAttachment `locationName:"vpcInterfaceAttachment" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowOutputInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowOutputInput) GoString() string {
 	return s.String()
 }
@@ -6201,6 +10457,16 @@ func (s *UpdateFlowOutputInput) Validate() error {
 	}
 	if s.OutputArn != nil && len(*s.OutputArn) < 1 {
 		invalidParams.Add(request.NewErrParamMinLen("OutputArn", 1))
+	}
+	if s.MediaStreamOutputConfigurations != nil {
+		for i, v := range s.MediaStreamOutputConfigurations {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "MediaStreamOutputConfigurations", i), err.(request.ErrInvalidParams))
+			}
+		}
 	}
 
 	if invalidParams.Len() > 0 {
@@ -6245,6 +10511,18 @@ func (s *UpdateFlowOutputInput) SetMaxLatency(v int64) *UpdateFlowOutputInput {
 	return s
 }
 
+// SetMediaStreamOutputConfigurations sets the MediaStreamOutputConfigurations field's value.
+func (s *UpdateFlowOutputInput) SetMediaStreamOutputConfigurations(v []*MediaStreamOutputConfigurationRequest) *UpdateFlowOutputInput {
+	s.MediaStreamOutputConfigurations = v
+	return s
+}
+
+// SetMinLatency sets the MinLatency field's value.
+func (s *UpdateFlowOutputInput) SetMinLatency(v int64) *UpdateFlowOutputInput {
+	s.MinLatency = &v
+	return s
+}
+
 // SetOutputArn sets the OutputArn field's value.
 func (s *UpdateFlowOutputInput) SetOutputArn(v string) *UpdateFlowOutputInput {
 	s.OutputArn = &v
@@ -6266,6 +10544,18 @@ func (s *UpdateFlowOutputInput) SetProtocol(v string) *UpdateFlowOutputInput {
 // SetRemoteId sets the RemoteId field's value.
 func (s *UpdateFlowOutputInput) SetRemoteId(v string) *UpdateFlowOutputInput {
 	s.RemoteId = &v
+	return s
+}
+
+// SetSenderControlPort sets the SenderControlPort field's value.
+func (s *UpdateFlowOutputInput) SetSenderControlPort(v int64) *UpdateFlowOutputInput {
+	s.SenderControlPort = &v
+	return s
+}
+
+// SetSenderIpAddress sets the SenderIpAddress field's value.
+func (s *UpdateFlowOutputInput) SetSenderIpAddress(v string) *UpdateFlowOutputInput {
+	s.SenderIpAddress = &v
 	return s
 }
 
@@ -6295,16 +10585,24 @@ type UpdateFlowOutputOutput struct {
 	// The ARN of the flow that is associated with the updated output.
 	FlowArn *string `locationName:"flowArn" type:"string"`
 
-	// The settings for an output.
+	// The new settings of the output that you updated.
 	Output *Output `locationName:"output" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowOutputOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowOutputOutput) GoString() string {
 	return s.String()
 }
@@ -6321,11 +10619,12 @@ func (s *UpdateFlowOutputOutput) SetOutput(v *Output) *UpdateFlowOutputOutput {
 	return s
 }
 
-// The settings for the updated source of the flow.
+// The updates that you want to make to an existing source of an existing flow.
 type UpdateFlowSourceInput struct {
 	_ struct{} `type:"structure"`
 
-	// The type of encryption used on the content ingested from this source.
+	// The type of encryption used on the content ingested from this source. Allowable
+	// encryption types: static-key.
 	Decryption *UpdateEncryption `locationName:"decryption" type:"structure"`
 
 	// A description for the source. This value is not used or seen outside of the
@@ -6346,12 +10645,32 @@ type UpdateFlowSourceInput struct {
 	// The smoothing max bitrate for RIST, RTP, and RTP-FEC streams.
 	MaxBitrate *int64 `locationName:"maxBitrate" type:"integer"`
 
-	// The maximum latency in milliseconds. This parameter applies only to RIST-based
-	// and Zixi-based streams.
+	// The maximum latency in milliseconds. This parameter applies only to RIST-based,
+	// Zixi-based, and Fujitsu-based streams.
 	MaxLatency *int64 `locationName:"maxLatency" type:"integer"`
+
+	// The size of the buffer (in milliseconds) to use to sync incoming source data.
+	MaxSyncBuffer *int64 `locationName:"maxSyncBuffer" type:"integer"`
+
+	// The media streams that are associated with the source, and the parameters
+	// for those associations.
+	MediaStreamSourceConfigurations []*MediaStreamSourceConfigurationRequest `locationName:"mediaStreamSourceConfigurations" type:"list"`
+
+	// The minimum latency in milliseconds for SRT-based streams. In streams that
+	// use the SRT protocol, this value that you set on your MediaConnect source
+	// or output represents the minimal potential latency of that connection. The
+	// latency of the stream is set to the highest number between the sender’s
+	// minimum latency and the receiver’s minimum latency.
+	MinLatency *int64 `locationName:"minLatency" type:"integer"`
 
 	// The protocol that is used by the source.
 	Protocol *string `locationName:"protocol" type:"string" enum:"Protocol"`
+
+	SenderControlPort *int64 `locationName:"senderControlPort" type:"integer"`
+
+	// The IP address that the flow communicates with to initiate connection with
+	// the sender.
+	SenderIpAddress *string `locationName:"senderIpAddress" type:"string"`
 
 	// SourceArn is a required field
 	SourceArn *string `location:"uri" locationName:"sourceArn" type:"string" required:"true"`
@@ -6360,7 +10679,7 @@ type UpdateFlowSourceInput struct {
 	// only to Zixi-based streams.
 	StreamId *string `locationName:"streamId" type:"string"`
 
-	// The name of the VPC Interface to configure this Source with.
+	// The name of the VPC interface to use for this source.
 	VpcInterfaceName *string `locationName:"vpcInterfaceName" type:"string"`
 
 	// The range of IP addresses that should be allowed to contribute content to
@@ -6369,12 +10688,20 @@ type UpdateFlowSourceInput struct {
 	WhitelistCidr *string `locationName:"whitelistCidr" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowSourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowSourceInput) GoString() string {
 	return s.String()
 }
@@ -6393,6 +10720,16 @@ func (s *UpdateFlowSourceInput) Validate() error {
 	}
 	if s.SourceArn != nil && len(*s.SourceArn) < 1 {
 		invalidParams.Add(request.NewErrParamMinLen("SourceArn", 1))
+	}
+	if s.MediaStreamSourceConfigurations != nil {
+		for i, v := range s.MediaStreamSourceConfigurations {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "MediaStreamSourceConfigurations", i), err.(request.ErrInvalidParams))
+			}
+		}
 	}
 
 	if invalidParams.Len() > 0 {
@@ -6443,9 +10780,39 @@ func (s *UpdateFlowSourceInput) SetMaxLatency(v int64) *UpdateFlowSourceInput {
 	return s
 }
 
+// SetMaxSyncBuffer sets the MaxSyncBuffer field's value.
+func (s *UpdateFlowSourceInput) SetMaxSyncBuffer(v int64) *UpdateFlowSourceInput {
+	s.MaxSyncBuffer = &v
+	return s
+}
+
+// SetMediaStreamSourceConfigurations sets the MediaStreamSourceConfigurations field's value.
+func (s *UpdateFlowSourceInput) SetMediaStreamSourceConfigurations(v []*MediaStreamSourceConfigurationRequest) *UpdateFlowSourceInput {
+	s.MediaStreamSourceConfigurations = v
+	return s
+}
+
+// SetMinLatency sets the MinLatency field's value.
+func (s *UpdateFlowSourceInput) SetMinLatency(v int64) *UpdateFlowSourceInput {
+	s.MinLatency = &v
+	return s
+}
+
 // SetProtocol sets the Protocol field's value.
 func (s *UpdateFlowSourceInput) SetProtocol(v string) *UpdateFlowSourceInput {
 	s.Protocol = &v
+	return s
+}
+
+// SetSenderControlPort sets the SenderControlPort field's value.
+func (s *UpdateFlowSourceInput) SetSenderControlPort(v int64) *UpdateFlowSourceInput {
+	s.SenderControlPort = &v
+	return s
+}
+
+// SetSenderIpAddress sets the SenderIpAddress field's value.
+func (s *UpdateFlowSourceInput) SetSenderIpAddress(v string) *UpdateFlowSourceInput {
+	s.SenderIpAddress = &v
 	return s
 }
 
@@ -6485,12 +10852,20 @@ type UpdateFlowSourceOutput struct {
 	Source *Source `locationName:"source" type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowSourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateFlowSourceOutput) GoString() string {
 	return s.String()
 }
@@ -6511,7 +10886,7 @@ func (s *UpdateFlowSourceOutput) SetSource(v *Source) *UpdateFlowSourceOutput {
 type VpcInterface struct {
 	_ struct{} `type:"structure"`
 
-	// Immutable and has to be a unique against other VpcInterfaces in this Flow
+	// Immutable and has to be a unique against other VpcInterfaces in this Flow.
 	//
 	// Name is a required field
 	Name *string `locationName:"name" type:"string" required:"true"`
@@ -6520,6 +10895,11 @@ type VpcInterface struct {
 	//
 	// NetworkInterfaceIds is a required field
 	NetworkInterfaceIds []*string `locationName:"networkInterfaceIds" type:"list" required:"true"`
+
+	// The type of network interface.
+	//
+	// NetworkInterfaceType is a required field
+	NetworkInterfaceType *string `locationName:"networkInterfaceType" type:"string" required:"true" enum:"NetworkInterfaceType"`
 
 	// Role Arn MediaConnect can assumes to create ENIs in customer's account
 	//
@@ -6537,12 +10917,20 @@ type VpcInterface struct {
 	SubnetId *string `locationName:"subnetId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcInterface) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcInterface) GoString() string {
 	return s.String()
 }
@@ -6556,6 +10944,12 @@ func (s *VpcInterface) SetName(v string) *VpcInterface {
 // SetNetworkInterfaceIds sets the NetworkInterfaceIds field's value.
 func (s *VpcInterface) SetNetworkInterfaceIds(v []*string) *VpcInterface {
 	s.NetworkInterfaceIds = v
+	return s
+}
+
+// SetNetworkInterfaceType sets the NetworkInterfaceType field's value.
+func (s *VpcInterface) SetNetworkInterfaceType(v string) *VpcInterface {
+	s.NetworkInterfaceType = &v
 	return s
 }
 
@@ -6585,12 +10979,20 @@ type VpcInterfaceAttachment struct {
 	VpcInterfaceName *string `locationName:"vpcInterfaceName" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcInterfaceAttachment) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcInterfaceAttachment) GoString() string {
 	return s.String()
 }
@@ -6611,6 +11013,10 @@ type VpcInterfaceRequest struct {
 	// Name is a required field
 	Name *string `locationName:"name" type:"string" required:"true"`
 
+	// The type of network interface. If this value is not included in the request,
+	// MediaConnect uses ENA as the networkInterfaceType.
+	NetworkInterfaceType *string `locationName:"networkInterfaceType" type:"string" enum:"NetworkInterfaceType"`
+
 	// Role Arn MediaConnect can assumes to create ENIs in customer's account
 	//
 	// RoleArn is a required field
@@ -6627,12 +11033,20 @@ type VpcInterfaceRequest struct {
 	SubnetId *string `locationName:"subnetId" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcInterfaceRequest) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s VpcInterfaceRequest) GoString() string {
 	return s.String()
 }
@@ -6662,6 +11076,12 @@ func (s *VpcInterfaceRequest) Validate() error {
 // SetName sets the Name field's value.
 func (s *VpcInterfaceRequest) SetName(v string) *VpcInterfaceRequest {
 	s.Name = &v
+	return s
+}
+
+// SetNetworkInterfaceType sets the NetworkInterfaceType field's value.
+func (s *VpcInterfaceRequest) SetNetworkInterfaceType(v string) *VpcInterfaceRequest {
+	s.NetworkInterfaceType = &v
 	return s
 }
 
@@ -6704,6 +11124,94 @@ func Algorithm_Values() []string {
 }
 
 const (
+	// ColorimetryBt601 is a Colorimetry enum value
+	ColorimetryBt601 = "BT601"
+
+	// ColorimetryBt709 is a Colorimetry enum value
+	ColorimetryBt709 = "BT709"
+
+	// ColorimetryBt2020 is a Colorimetry enum value
+	ColorimetryBt2020 = "BT2020"
+
+	// ColorimetryBt2100 is a Colorimetry enum value
+	ColorimetryBt2100 = "BT2100"
+
+	// ColorimetrySt20651 is a Colorimetry enum value
+	ColorimetrySt20651 = "ST2065-1"
+
+	// ColorimetrySt20653 is a Colorimetry enum value
+	ColorimetrySt20653 = "ST2065-3"
+
+	// ColorimetryXyz is a Colorimetry enum value
+	ColorimetryXyz = "XYZ"
+)
+
+// Colorimetry_Values returns all elements of the Colorimetry enum
+func Colorimetry_Values() []string {
+	return []string{
+		ColorimetryBt601,
+		ColorimetryBt709,
+		ColorimetryBt2020,
+		ColorimetryBt2100,
+		ColorimetrySt20651,
+		ColorimetrySt20653,
+		ColorimetryXyz,
+	}
+}
+
+const (
+	// DurationUnitsMonths is a DurationUnits enum value
+	DurationUnitsMonths = "MONTHS"
+)
+
+// DurationUnits_Values returns all elements of the DurationUnits enum
+func DurationUnits_Values() []string {
+	return []string{
+		DurationUnitsMonths,
+	}
+}
+
+const (
+	// EncoderProfileMain is a EncoderProfile enum value
+	EncoderProfileMain = "main"
+
+	// EncoderProfileHigh is a EncoderProfile enum value
+	EncoderProfileHigh = "high"
+)
+
+// EncoderProfile_Values returns all elements of the EncoderProfile enum
+func EncoderProfile_Values() []string {
+	return []string{
+		EncoderProfileMain,
+		EncoderProfileHigh,
+	}
+}
+
+const (
+	// EncodingNameJxsv is a EncodingName enum value
+	EncodingNameJxsv = "jxsv"
+
+	// EncodingNameRaw is a EncodingName enum value
+	EncodingNameRaw = "raw"
+
+	// EncodingNameSmpte291 is a EncodingName enum value
+	EncodingNameSmpte291 = "smpte291"
+
+	// EncodingNamePcm is a EncodingName enum value
+	EncodingNamePcm = "pcm"
+)
+
+// EncodingName_Values returns all elements of the EncodingName enum
+func EncodingName_Values() []string {
+	return []string{
+		EncodingNameJxsv,
+		EncodingNameRaw,
+		EncodingNameSmpte291,
+		EncodingNamePcm,
+	}
+}
+
+const (
 	// EntitlementStatusEnabled is a EntitlementStatus enum value
 	EntitlementStatusEnabled = "ENABLED"
 
@@ -6720,11 +11228,30 @@ func EntitlementStatus_Values() []string {
 }
 
 const (
+	// FailoverModeMerge is a FailoverMode enum value
+	FailoverModeMerge = "MERGE"
+
+	// FailoverModeFailover is a FailoverMode enum value
+	FailoverModeFailover = "FAILOVER"
+)
+
+// FailoverMode_Values returns all elements of the FailoverMode enum
+func FailoverMode_Values() []string {
+	return []string{
+		FailoverModeMerge,
+		FailoverModeFailover,
+	}
+}
+
+const (
 	// KeyTypeSpeke is a KeyType enum value
 	KeyTypeSpeke = "speke"
 
 	// KeyTypeStaticKey is a KeyType enum value
 	KeyTypeStaticKey = "static-key"
+
+	// KeyTypeSrtPassword is a KeyType enum value
+	KeyTypeSrtPassword = "srt-password"
 )
 
 // KeyType_Values returns all elements of the KeyType enum
@@ -6732,6 +11259,55 @@ func KeyType_Values() []string {
 	return []string{
 		KeyTypeSpeke,
 		KeyTypeStaticKey,
+		KeyTypeSrtPassword,
+	}
+}
+
+const (
+	// MediaStreamTypeVideo is a MediaStreamType enum value
+	MediaStreamTypeVideo = "video"
+
+	// MediaStreamTypeAudio is a MediaStreamType enum value
+	MediaStreamTypeAudio = "audio"
+
+	// MediaStreamTypeAncillaryData is a MediaStreamType enum value
+	MediaStreamTypeAncillaryData = "ancillary-data"
+)
+
+// MediaStreamType_Values returns all elements of the MediaStreamType enum
+func MediaStreamType_Values() []string {
+	return []string{
+		MediaStreamTypeVideo,
+		MediaStreamTypeAudio,
+		MediaStreamTypeAncillaryData,
+	}
+}
+
+const (
+	// NetworkInterfaceTypeEna is a NetworkInterfaceType enum value
+	NetworkInterfaceTypeEna = "ena"
+
+	// NetworkInterfaceTypeEfa is a NetworkInterfaceType enum value
+	NetworkInterfaceTypeEfa = "efa"
+)
+
+// NetworkInterfaceType_Values returns all elements of the NetworkInterfaceType enum
+func NetworkInterfaceType_Values() []string {
+	return []string{
+		NetworkInterfaceTypeEna,
+		NetworkInterfaceTypeEfa,
+	}
+}
+
+const (
+	// PriceUnitsHourly is a PriceUnits enum value
+	PriceUnitsHourly = "HOURLY"
+)
+
+// PriceUnits_Values returns all elements of the PriceUnits enum
+func PriceUnits_Values() []string {
+	return []string{
+		PriceUnitsHourly,
 	}
 }
 
@@ -6750,6 +11326,18 @@ const (
 
 	// ProtocolRist is a Protocol enum value
 	ProtocolRist = "rist"
+
+	// ProtocolSt2110Jpegxs is a Protocol enum value
+	ProtocolSt2110Jpegxs = "st2110-jpegxs"
+
+	// ProtocolCdi is a Protocol enum value
+	ProtocolCdi = "cdi"
+
+	// ProtocolSrtListener is a Protocol enum value
+	ProtocolSrtListener = "srt-listener"
+
+	// ProtocolFujitsuQos is a Protocol enum value
+	ProtocolFujitsuQos = "fujitsu-qos"
 )
 
 // Protocol_Values returns all elements of the Protocol enum
@@ -6760,6 +11348,86 @@ func Protocol_Values() []string {
 		ProtocolRtp,
 		ProtocolZixiPull,
 		ProtocolRist,
+		ProtocolSt2110Jpegxs,
+		ProtocolCdi,
+		ProtocolSrtListener,
+		ProtocolFujitsuQos,
+	}
+}
+
+const (
+	// RangeNarrow is a Range enum value
+	RangeNarrow = "NARROW"
+
+	// RangeFull is a Range enum value
+	RangeFull = "FULL"
+
+	// RangeFullprotect is a Range enum value
+	RangeFullprotect = "FULLPROTECT"
+)
+
+// Range_Values returns all elements of the Range enum
+func Range_Values() []string {
+	return []string{
+		RangeNarrow,
+		RangeFull,
+		RangeFullprotect,
+	}
+}
+
+const (
+	// ReservationStateActive is a ReservationState enum value
+	ReservationStateActive = "ACTIVE"
+
+	// ReservationStateExpired is a ReservationState enum value
+	ReservationStateExpired = "EXPIRED"
+
+	// ReservationStateProcessing is a ReservationState enum value
+	ReservationStateProcessing = "PROCESSING"
+
+	// ReservationStateCanceled is a ReservationState enum value
+	ReservationStateCanceled = "CANCELED"
+)
+
+// ReservationState_Values returns all elements of the ReservationState enum
+func ReservationState_Values() []string {
+	return []string{
+		ReservationStateActive,
+		ReservationStateExpired,
+		ReservationStateProcessing,
+		ReservationStateCanceled,
+	}
+}
+
+const (
+	// ResourceTypeMbpsOutboundBandwidth is a ResourceType enum value
+	ResourceTypeMbpsOutboundBandwidth = "Mbps_Outbound_Bandwidth"
+)
+
+// ResourceType_Values returns all elements of the ResourceType enum
+func ResourceType_Values() []string {
+	return []string{
+		ResourceTypeMbpsOutboundBandwidth,
+	}
+}
+
+const (
+	// ScanModeProgressive is a ScanMode enum value
+	ScanModeProgressive = "progressive"
+
+	// ScanModeInterlace is a ScanMode enum value
+	ScanModeInterlace = "interlace"
+
+	// ScanModeProgressiveSegmentedFrame is a ScanMode enum value
+	ScanModeProgressiveSegmentedFrame = "progressive-segmented-frame"
+)
+
+// ScanMode_Values returns all elements of the ScanMode enum
+func ScanMode_Values() []string {
+	return []string{
+		ScanModeProgressive,
+		ScanModeInterlace,
+		ScanModeProgressiveSegmentedFrame,
 	}
 }
 
@@ -6828,5 +11496,49 @@ func Status_Values() []string {
 		StatusStarting,
 		StatusStopping,
 		StatusError,
+	}
+}
+
+const (
+	// TcsSdr is a Tcs enum value
+	TcsSdr = "SDR"
+
+	// TcsPq is a Tcs enum value
+	TcsPq = "PQ"
+
+	// TcsHlg is a Tcs enum value
+	TcsHlg = "HLG"
+
+	// TcsLinear is a Tcs enum value
+	TcsLinear = "LINEAR"
+
+	// TcsBt2100linpq is a Tcs enum value
+	TcsBt2100linpq = "BT2100LINPQ"
+
+	// TcsBt2100linhlg is a Tcs enum value
+	TcsBt2100linhlg = "BT2100LINHLG"
+
+	// TcsSt20651 is a Tcs enum value
+	TcsSt20651 = "ST2065-1"
+
+	// TcsSt4281 is a Tcs enum value
+	TcsSt4281 = "ST428-1"
+
+	// TcsDensity is a Tcs enum value
+	TcsDensity = "DENSITY"
+)
+
+// Tcs_Values returns all elements of the Tcs enum
+func Tcs_Values() []string {
+	return []string{
+		TcsSdr,
+		TcsPq,
+		TcsHlg,
+		TcsLinear,
+		TcsBt2100linpq,
+		TcsBt2100linhlg,
+		TcsSt20651,
+		TcsSt4281,
+		TcsDensity,
 	}
 }

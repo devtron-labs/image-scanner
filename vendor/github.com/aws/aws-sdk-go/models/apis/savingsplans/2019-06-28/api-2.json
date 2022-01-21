@@ -28,6 +28,21 @@
         {"shape":"ServiceQuotaExceededException"}
       ]
     },
+    "DeleteQueuedSavingsPlan":{
+      "name":"DeleteQueuedSavingsPlan",
+      "http":{
+        "method":"POST",
+        "requestUri":"/DeleteQueuedSavingsPlan"
+      },
+      "input":{"shape":"DeleteQueuedSavingsPlanRequest"},
+      "output":{"shape":"DeleteQueuedSavingsPlanResponse"},
+      "errors":[
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalServerException"},
+        {"shape":"ServiceQuotaExceededException"}
+      ]
+    },
     "DescribeSavingsPlanRates":{
       "name":"DescribeSavingsPlanRates",
       "http":{
@@ -137,6 +152,7 @@
         "savingsPlanOfferingId":{"shape":"SavingsPlanOfferingId"},
         "commitment":{"shape":"Amount"},
         "upfrontPaymentAmount":{"shape":"Amount"},
+        "purchaseTime":{"shape":"DateTime"},
         "clientToken":{
           "shape":"ClientToken",
           "idempotencyToken":true
@@ -160,6 +176,19 @@
     "CurrencyList":{
       "type":"list",
       "member":{"shape":"CurrencyCode"}
+    },
+    "DateTime":{"type":"timestamp"},
+    "DeleteQueuedSavingsPlanRequest":{
+      "type":"structure",
+      "required":["savingsPlanId"],
+      "members":{
+        "savingsPlanId":{"shape":"SavingsPlanId"}
+      }
+    },
+    "DeleteQueuedSavingsPlanResponse":{
+      "type":"structure",
+      "members":{
+      }
     },
     "DescribeSavingsPlanRatesRequest":{
       "type":"structure",
@@ -501,7 +530,8 @@
       "enum":[
         "EC2",
         "Fargate",
-        "Lambda"
+        "Lambda",
+        "SageMaker"
       ]
     },
     "SavingsPlanProductTypeList":{
@@ -597,7 +627,8 @@
         "AmazonEC2",
         "AmazonECS",
         "AmazonEKS",
-        "AWSLambda"
+        "AWSLambda",
+        "AmazonSageMaker"
       ]
     },
     "SavingsPlanRateServiceCodeList":{
@@ -636,7 +667,9 @@
         "payment-pending",
         "payment-failed",
         "active",
-        "retired"
+        "retired",
+        "queued",
+        "queued-deleted"
       ]
     },
     "SavingsPlanStateList":{
@@ -647,7 +680,8 @@
       "type":"string",
       "enum":[
         "Compute",
-        "EC2Instance"
+        "EC2Instance",
+        "SageMaker"
       ]
     },
     "SavingsPlanTypeList":{
@@ -721,7 +755,7 @@
     "TermDurationInSeconds":{"type":"long"},
     "UUID":{
       "type":"string",
-      "pattern":"^(([0-9a-f]+)(-?))+$"
+      "pattern":"[a-f0-9]+(-[a-f0-9]+)*"
     },
     "UUIDs":{
       "type":"list",

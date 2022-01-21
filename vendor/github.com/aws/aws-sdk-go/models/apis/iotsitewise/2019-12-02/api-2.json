@@ -27,7 +27,23 @@
         {"shape":"ThrottlingException"},
         {"shape":"ConflictingOperationException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
+    },
+    "AssociateTimeSeriesToAssetProperty":{
+      "name":"AssociateTimeSeriesToAssetProperty",
+      "http":{
+        "method":"POST",
+        "requestUri":"/timeseries/associate/"
+      },
+      "input":{"shape":"AssociateTimeSeriesToAssetPropertyRequest"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ConflictingOperationException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
     },
     "BatchAssociateProjectAssets":{
       "name":"BatchAssociateProjectAssets",
@@ -119,7 +135,7 @@
         {"shape":"LimitExceededException"},
         {"shape":"ConflictingOperationException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "CreateAssetModel":{
       "name":"CreateAssetModel",
@@ -139,7 +155,7 @@
         {"shape":"LimitExceededException"},
         {"shape":"ConflictingOperationException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "CreateDashboard":{
       "name":"CreateDashboard",
@@ -175,7 +191,7 @@
         {"shape":"ThrottlingException"},
         {"shape":"LimitExceededException"}
       ],
-      "endpoint":{"hostPrefix":"edge."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "CreatePortal":{
       "name":"CreatePortal",
@@ -246,7 +262,7 @@
         {"shape":"ThrottlingException"},
         {"shape":"ConflictingOperationException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "DeleteAssetModel":{
       "name":"DeleteAssetModel",
@@ -264,7 +280,7 @@
         {"shape":"ThrottlingException"},
         {"shape":"ConflictingOperationException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "DeleteDashboard":{
       "name":"DeleteDashboard",
@@ -296,7 +312,7 @@
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"}
       ],
-      "endpoint":{"hostPrefix":"edge."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "DeletePortal":{
       "name":"DeletePortal",
@@ -333,6 +349,22 @@
       ],
       "endpoint":{"hostPrefix":"monitor."}
     },
+    "DeleteTimeSeries":{
+      "name":"DeleteTimeSeries",
+      "http":{
+        "method":"POST",
+        "requestUri":"/timeseries/delete/"
+      },
+      "input":{"shape":"DeleteTimeSeriesRequest"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ConflictingOperationException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
+    },
     "DescribeAccessPolicy":{
       "name":"DescribeAccessPolicy",
       "http":{
@@ -364,7 +396,7 @@
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "DescribeAssetModel":{
       "name":"DescribeAssetModel",
@@ -380,7 +412,7 @@
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "DescribeAssetProperty":{
       "name":"DescribeAssetProperty",
@@ -396,7 +428,7 @@
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "DescribeDashboard":{
       "name":"DescribeDashboard",
@@ -415,6 +447,21 @@
       ],
       "endpoint":{"hostPrefix":"monitor."}
     },
+    "DescribeDefaultEncryptionConfiguration":{
+      "name":"DescribeDefaultEncryptionConfiguration",
+      "http":{
+        "method":"GET",
+        "requestUri":"/configuration/account/encryption"
+      },
+      "input":{"shape":"DescribeDefaultEncryptionConfigurationRequest"},
+      "output":{"shape":"DescribeDefaultEncryptionConfigurationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
+    },
     "DescribeGateway":{
       "name":"DescribeGateway",
       "http":{
@@ -429,7 +476,7 @@
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"}
       ],
-      "endpoint":{"hostPrefix":"edge."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "DescribeGatewayCapabilityConfiguration":{
       "name":"DescribeGatewayCapabilityConfiguration",
@@ -445,7 +492,7 @@
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"}
       ],
-      "endpoint":{"hostPrefix":"edge."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "DescribeLoggingOptions":{
       "name":"DescribeLoggingOptions",
@@ -461,7 +508,7 @@
         {"shape":"InternalFailureException"},
         {"shape":"ResourceNotFoundException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "DescribePortal":{
       "name":"DescribePortal",
@@ -497,6 +544,40 @@
       ],
       "endpoint":{"hostPrefix":"monitor."}
     },
+    "DescribeStorageConfiguration":{
+      "name":"DescribeStorageConfiguration",
+      "http":{
+        "method":"GET",
+        "requestUri":"/configuration/account/storage"
+      },
+      "input":{"shape":"DescribeStorageConfigurationRequest"},
+      "output":{"shape":"DescribeStorageConfigurationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"ConflictingOperationException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
+    },
+    "DescribeTimeSeries":{
+      "name":"DescribeTimeSeries",
+      "http":{
+        "method":"GET",
+        "requestUri":"/timeseries/describe/"
+      },
+      "input":{"shape":"DescribeTimeSeriesRequest"},
+      "output":{"shape":"DescribeTimeSeriesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
+    },
     "DisassociateAssets":{
       "name":"DisassociateAssets",
       "http":{
@@ -511,7 +592,23 @@
         {"shape":"ThrottlingException"},
         {"shape":"ConflictingOperationException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
+    },
+    "DisassociateTimeSeriesFromAssetProperty":{
+      "name":"DisassociateTimeSeriesFromAssetProperty",
+      "http":{
+        "method":"POST",
+        "requestUri":"/timeseries/disassociate/"
+      },
+      "input":{"shape":"DisassociateTimeSeriesFromAssetPropertyRequest"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ConflictingOperationException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
     },
     "GetAssetPropertyAggregates":{
       "name":"GetAssetPropertyAggregates",
@@ -564,6 +661,23 @@
       ],
       "endpoint":{"hostPrefix":"data."}
     },
+    "GetInterpolatedAssetPropertyValues":{
+      "name":"GetInterpolatedAssetPropertyValues",
+      "http":{
+        "method":"GET",
+        "requestUri":"/properties/interpolated"
+      },
+      "input":{"shape":"GetInterpolatedAssetPropertyValuesRequest"},
+      "output":{"shape":"GetInterpolatedAssetPropertyValuesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"ServiceUnavailableException"}
+      ],
+      "endpoint":{"hostPrefix":"data."}
+    },
     "ListAccessPolicies":{
       "name":"ListAccessPolicies",
       "http":{
@@ -593,7 +707,23 @@
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
+    },
+    "ListAssetRelationships":{
+      "name":"ListAssetRelationships",
+      "http":{
+        "method":"GET",
+        "requestUri":"/assets/{assetId}/assetRelationships"
+      },
+      "input":{"shape":"ListAssetRelationshipsRequest"},
+      "output":{"shape":"ListAssetRelationshipsResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
     },
     "ListAssets":{
       "name":"ListAssets",
@@ -609,7 +739,7 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "ListAssociatedAssets":{
       "name":"ListAssociatedAssets",
@@ -625,7 +755,7 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"ThrottlingException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "ListDashboards":{
       "name":"ListDashboards",
@@ -656,7 +786,7 @@
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"}
       ],
-      "endpoint":{"hostPrefix":"edge."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "ListPortals":{
       "name":"ListPortals",
@@ -718,8 +848,45 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"},
-        {"shape":"ResourceNotFoundException"}
-      ]
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ConflictingOperationException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"UnauthorizedException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
+    },
+    "ListTimeSeries":{
+      "name":"ListTimeSeries",
+      "http":{
+        "method":"GET",
+        "requestUri":"/timeseries/"
+      },
+      "input":{"shape":"ListTimeSeriesRequest"},
+      "output":{"shape":"ListTimeSeriesResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ThrottlingException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
+    },
+    "PutDefaultEncryptionConfiguration":{
+      "name":"PutDefaultEncryptionConfiguration",
+      "http":{
+        "method":"POST",
+        "requestUri":"/configuration/account/encryption"
+      },
+      "input":{"shape":"PutDefaultEncryptionConfigurationRequest"},
+      "output":{"shape":"PutDefaultEncryptionConfigurationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"ConflictingOperationException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
     },
     "PutLoggingOptions":{
       "name":"PutLoggingOptions",
@@ -736,7 +903,26 @@
         {"shape":"ConflictingOperationException"},
         {"shape":"ResourceNotFoundException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
+    },
+    "PutStorageConfiguration":{
+      "name":"PutStorageConfiguration",
+      "http":{
+        "method":"POST",
+        "requestUri":"/configuration/account/storage"
+      },
+      "input":{"shape":"PutStorageConfigurationRequest"},
+      "output":{"shape":"PutStorageConfigurationResponse"},
+      "errors":[
+        {"shape":"InvalidRequestException"},
+        {"shape":"ResourceAlreadyExistsException"},
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ThrottlingException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"ConflictingOperationException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
     },
     "TagResource":{
       "name":"TagResource",
@@ -751,8 +937,12 @@
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"},
         {"shape":"ResourceNotFoundException"},
+        {"shape":"ConflictingOperationException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"UnauthorizedException"},
         {"shape":"TooManyTagsException"}
-      ]
+      ],
+      "endpoint":{"hostPrefix":"api."}
     },
     "UntagResource":{
       "name":"UntagResource",
@@ -766,8 +956,12 @@
         {"shape":"InvalidRequestException"},
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"},
-        {"shape":"ResourceNotFoundException"}
-      ]
+        {"shape":"ResourceNotFoundException"},
+        {"shape":"ConflictingOperationException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"UnauthorizedException"}
+      ],
+      "endpoint":{"hostPrefix":"api."}
     },
     "UpdateAccessPolicy":{
       "name":"UpdateAccessPolicy",
@@ -803,7 +997,7 @@
         {"shape":"ThrottlingException"},
         {"shape":"ConflictingOperationException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "UpdateAssetModel":{
       "name":"UpdateAssetModel",
@@ -823,7 +1017,7 @@
         {"shape":"ThrottlingException"},
         {"shape":"ConflictingOperationException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "UpdateAssetProperty":{
       "name":"UpdateAssetProperty",
@@ -839,7 +1033,7 @@
         {"shape":"ThrottlingException"},
         {"shape":"ConflictingOperationException"}
       ],
-      "endpoint":{"hostPrefix":"model."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "UpdateDashboard":{
       "name":"UpdateDashboard",
@@ -872,7 +1066,7 @@
         {"shape":"InternalFailureException"},
         {"shape":"ThrottlingException"}
       ],
-      "endpoint":{"hostPrefix":"edge."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "UpdateGatewayCapabilityConfiguration":{
       "name":"UpdateGatewayCapabilityConfiguration",
@@ -891,7 +1085,7 @@
         {"shape":"ThrottlingException"},
         {"shape":"LimitExceededException"}
       ],
-      "endpoint":{"hostPrefix":"edge."}
+      "endpoint":{"hostPrefix":"api."}
     },
     "UpdatePortal":{
       "name":"UpdatePortal",
@@ -1001,10 +1195,36 @@
         "standardDeviation":{"shape":"AggregatedDoubleValue"}
       }
     },
+    "Alarms":{
+      "type":"structure",
+      "required":["alarmRoleArn"],
+      "members":{
+        "alarmRoleArn":{"shape":"ARN"},
+        "notificationLambdaArn":{"shape":"ARN"}
+      }
+    },
     "AmazonResourceName":{
       "type":"string",
       "max":1011,
       "min":1
+    },
+    "AssetCompositeModel":{
+      "type":"structure",
+      "required":[
+        "name",
+        "type",
+        "properties"
+      ],
+      "members":{
+        "name":{"shape":"Name"},
+        "description":{"shape":"Description"},
+        "type":{"shape":"Name"},
+        "properties":{"shape":"AssetProperties"}
+      }
+    },
+    "AssetCompositeModels":{
+      "type":"list",
+      "member":{"shape":"AssetCompositeModel"}
     },
     "AssetErrorCode":{
       "type":"string",
@@ -1036,9 +1256,50 @@
         "name":{"shape":"Name"}
       }
     },
+    "AssetHierarchyInfo":{
+      "type":"structure",
+      "members":{
+        "parentAssetId":{"shape":"ID"},
+        "childAssetId":{"shape":"ID"}
+      }
+    },
     "AssetIDs":{
       "type":"list",
       "member":{"shape":"ID"}
+    },
+    "AssetModelCompositeModel":{
+      "type":"structure",
+      "required":[
+        "name",
+        "type"
+      ],
+      "members":{
+        "name":{"shape":"Name"},
+        "description":{"shape":"Description"},
+        "type":{"shape":"Name"},
+        "properties":{"shape":"AssetModelProperties"}
+      }
+    },
+    "AssetModelCompositeModelDefinition":{
+      "type":"structure",
+      "required":[
+        "name",
+        "type"
+      ],
+      "members":{
+        "name":{"shape":"Name"},
+        "description":{"shape":"Description"},
+        "type":{"shape":"Name"},
+        "properties":{"shape":"AssetModelPropertyDefinitions"}
+      }
+    },
+    "AssetModelCompositeModelDefinitions":{
+      "type":"list",
+      "member":{"shape":"AssetModelCompositeModelDefinition"}
+    },
+    "AssetModelCompositeModels":{
+      "type":"list",
+      "member":{"shape":"AssetModelCompositeModel"}
     },
     "AssetModelHierarchies":{
       "type":"list",
@@ -1086,6 +1347,7 @@
         "id":{"shape":"ID"},
         "name":{"shape":"Name"},
         "dataType":{"shape":"PropertyDataType"},
+        "dataTypeSpec":{"shape":"Name"},
         "unit":{"shape":"PropertyUnit"},
         "type":{"shape":"PropertyType"}
       }
@@ -1100,6 +1362,7 @@
       "members":{
         "name":{"shape":"Name"},
         "dataType":{"shape":"PropertyDataType"},
+        "dataTypeSpec":{"shape":"Name"},
         "unit":{"shape":"PropertyUnit"},
         "type":{"shape":"PropertyType"}
       }
@@ -1169,6 +1432,7 @@
         "alias":{"shape":"PropertyAlias"},
         "notification":{"shape":"PropertyNotification"},
         "dataType":{"shape":"PropertyDataType"},
+        "dataTypeSpec":{"shape":"Name"},
         "unit":{"shape":"PropertyUnit"}
       }
     },
@@ -1197,6 +1461,22 @@
     "AssetPropertyValues":{
       "type":"list",
       "member":{"shape":"AssetPropertyValue"}
+    },
+    "AssetRelationshipSummaries":{
+      "type":"list",
+      "member":{"shape":"AssetRelationshipSummary"}
+    },
+    "AssetRelationshipSummary":{
+      "type":"structure",
+      "required":["relationshipType"],
+      "members":{
+        "hierarchyInfo":{"shape":"AssetHierarchyInfo"},
+        "relationshipType":{"shape":"AssetRelationshipType"}
+      }
+    },
+    "AssetRelationshipType":{
+      "type":"string",
+      "enum":["HIERARCHY"]
     },
     "AssetState":{
       "type":"string",
@@ -1264,6 +1544,35 @@
         }
       }
     },
+    "AssociateTimeSeriesToAssetPropertyRequest":{
+      "type":"structure",
+      "required":[
+        "alias",
+        "assetId",
+        "propertyId"
+      ],
+      "members":{
+        "alias":{
+          "shape":"PropertyAlias",
+          "location":"querystring",
+          "locationName":"alias"
+        },
+        "assetId":{
+          "shape":"ID",
+          "location":"querystring",
+          "locationName":"assetId"
+        },
+        "propertyId":{
+          "shape":"ID",
+          "location":"querystring",
+          "locationName":"propertyId"
+        },
+        "clientToken":{
+          "shape":"ClientToken",
+          "idempotencyToken":true
+        }
+      }
+    },
     "AssociatedAssetsSummaries":{
       "type":"list",
       "member":{"shape":"AssociatedAssetsSummary"}
@@ -1296,6 +1605,13 @@
       "members":{
         "defaultValue":{"shape":"DefaultValue"}
       }
+    },
+    "AuthMode":{
+      "type":"string",
+      "enum":[
+        "IAM",
+        "SSO"
+      ]
     },
     "BatchAssociateProjectAssetsErrors":{
       "type":"list",
@@ -1417,7 +1733,7 @@
     },
     "CapabilityConfiguration":{
       "type":"string",
-      "max":204800,
+      "max":104857600,
       "min":1
     },
     "CapabilityNamespace":{
@@ -1431,7 +1747,8 @@
       "enum":[
         "IN_SYNC",
         "OUT_OF_SYNC",
-        "SYNC_FAILED"
+        "SYNC_FAILED",
+        "UNKNOWN"
       ]
     },
     "ClientToken":{
@@ -1439,6 +1756,53 @@
       "max":64,
       "min":36,
       "pattern":"\\S{36,64}"
+    },
+    "CompositeModelProperty":{
+      "type":"structure",
+      "required":[
+        "name",
+        "type",
+        "assetProperty"
+      ],
+      "members":{
+        "name":{"shape":"Name"},
+        "type":{"shape":"Name"},
+        "assetProperty":{"shape":"Property"}
+      }
+    },
+    "ComputeLocation":{
+      "type":"string",
+      "enum":[
+        "EDGE",
+        "CLOUD"
+      ]
+    },
+    "ConfigurationErrorDetails":{
+      "type":"structure",
+      "required":[
+        "code",
+        "message"
+      ],
+      "members":{
+        "code":{"shape":"ErrorCode"},
+        "message":{"shape":"ErrorMessage"}
+      }
+    },
+    "ConfigurationState":{
+      "type":"string",
+      "enum":[
+        "ACTIVE",
+        "UPDATE_IN_PROGRESS",
+        "UPDATE_FAILED"
+      ]
+    },
+    "ConfigurationStatus":{
+      "type":"structure",
+      "required":["state"],
+      "members":{
+        "state":{"shape":"ConfigurationState"},
+        "error":{"shape":"ConfigurationErrorDetails"}
+      }
     },
     "ConflictingOperationException":{
       "type":"structure",
@@ -1454,6 +1818,11 @@
       },
       "error":{"httpStatusCode":409},
       "exception":true
+    },
+    "CoreDeviceThingName":{
+      "type":"string",
+      "max":128,
+      "min":1
     },
     "CreateAccessPolicyRequest":{
       "type":"structure",
@@ -1492,6 +1861,7 @@
         "assetModelDescription":{"shape":"Description"},
         "assetModelProperties":{"shape":"AssetModelPropertyDefinitions"},
         "assetModelHierarchies":{"shape":"AssetModelHierarchyDefinitions"},
+        "assetModelCompositeModels":{"shape":"AssetModelCompositeModelDefinitions"},
         "clientToken":{
           "shape":"ClientToken",
           "idempotencyToken":true
@@ -1611,7 +1981,10 @@
         },
         "portalLogoImageFile":{"shape":"ImageFile"},
         "roleArn":{"shape":"ARN"},
-        "tags":{"shape":"TagMap"}
+        "tags":{"shape":"TagMap"},
+        "portalAuthMode":{"shape":"AuthMode"},
+        "notificationSenderEmail":{"shape":"Email"},
+        "alarms":{"shape":"Alarms"}
       }
     },
     "CreatePortalResponse":{
@@ -1657,6 +2030,17 @@
       "members":{
         "projectId":{"shape":"ID"},
         "projectArn":{"shape":"ARN"}
+      }
+    },
+    "CustomerManagedS3Storage":{
+      "type":"structure",
+      "required":[
+        "s3ResourceArn",
+        "roleArn"
+      ],
+      "members":{
+        "s3ResourceArn":{"shape":"ARN"},
+        "roleArn":{"shape":"ARN"}
       }
     },
     "DashboardDefinition":{
@@ -1838,6 +2222,30 @@
       "members":{
       }
     },
+    "DeleteTimeSeriesRequest":{
+      "type":"structure",
+      "members":{
+        "alias":{
+          "shape":"PropertyAlias",
+          "location":"querystring",
+          "locationName":"alias"
+        },
+        "assetId":{
+          "shape":"ID",
+          "location":"querystring",
+          "locationName":"assetId"
+        },
+        "propertyId":{
+          "shape":"ID",
+          "location":"querystring",
+          "locationName":"propertyId"
+        },
+        "clientToken":{
+          "shape":"ClientToken",
+          "idempotencyToken":true
+        }
+      }
+    },
     "DescribeAccessPolicyRequest":{
       "type":"structure",
       "required":["accessPolicyId"],
@@ -1901,6 +2309,7 @@
         "assetModelDescription":{"shape":"Description"},
         "assetModelProperties":{"shape":"AssetModelProperties"},
         "assetModelHierarchies":{"shape":"AssetModelHierarchies"},
+        "assetModelCompositeModels":{"shape":"AssetModelCompositeModels"},
         "assetModelCreationDate":{"shape":"Timestamp"},
         "assetModelLastUpdateDate":{"shape":"Timestamp"},
         "assetModelStatus":{"shape":"AssetModelStatus"}
@@ -1930,14 +2339,14 @@
       "required":[
         "assetId",
         "assetName",
-        "assetModelId",
-        "assetProperty"
+        "assetModelId"
       ],
       "members":{
         "assetId":{"shape":"ID"},
         "assetName":{"shape":"Name"},
         "assetModelId":{"shape":"ID"},
-        "assetProperty":{"shape":"Property"}
+        "assetProperty":{"shape":"Property"},
+        "compositeModel":{"shape":"CompositeModelProperty"}
       }
     },
     "DescribeAssetRequest":{
@@ -1971,6 +2380,7 @@
         "assetModelId":{"shape":"ID"},
         "assetProperties":{"shape":"AssetProperties"},
         "assetHierarchies":{"shape":"AssetHierarchies"},
+        "assetCompositeModels":{"shape":"AssetCompositeModels"},
         "assetCreationDate":{"shape":"Timestamp"},
         "assetLastUpdateDate":{"shape":"Timestamp"},
         "assetStatus":{"shape":"AssetStatus"}
@@ -2007,6 +2417,23 @@
         "dashboardDefinition":{"shape":"DashboardDefinition"},
         "dashboardCreationDate":{"shape":"Timestamp"},
         "dashboardLastUpdateDate":{"shape":"Timestamp"}
+      }
+    },
+    "DescribeDefaultEncryptionConfigurationRequest":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DescribeDefaultEncryptionConfigurationResponse":{
+      "type":"structure",
+      "required":[
+        "encryptionType",
+        "configurationStatus"
+      ],
+      "members":{
+        "encryptionType":{"shape":"EncryptionType"},
+        "kmsKeyArn":{"shape":"ARN"},
+        "configurationStatus":{"shape":"ConfigurationStatus"}
       }
     },
     "DescribeGatewayCapabilityConfigurationRequest":{
@@ -2122,7 +2549,10 @@
         "portalCreationDate":{"shape":"Timestamp"},
         "portalLastUpdateDate":{"shape":"Timestamp"},
         "portalLogoImageLocation":{"shape":"ImageLocation"},
-        "roleArn":{"shape":"ARN"}
+        "roleArn":{"shape":"ARN"},
+        "portalAuthMode":{"shape":"AuthMode"},
+        "notificationSenderEmail":{"shape":"Email"},
+        "alarms":{"shape":"Alarms"}
       }
     },
     "DescribeProjectRequest":{
@@ -2156,11 +2586,93 @@
         "projectLastUpdateDate":{"shape":"Timestamp"}
       }
     },
+    "DescribeStorageConfigurationRequest":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "DescribeStorageConfigurationResponse":{
+      "type":"structure",
+      "required":[
+        "storageType",
+        "configurationStatus"
+      ],
+      "members":{
+        "storageType":{"shape":"StorageType"},
+        "multiLayerStorage":{"shape":"MultiLayerStorage"},
+        "disassociatedDataStorage":{"shape":"DisassociatedDataStorageState"},
+        "retentionPeriod":{"shape":"RetentionPeriod"},
+        "configurationStatus":{"shape":"ConfigurationStatus"},
+        "lastUpdateDate":{"shape":"Timestamp"}
+      }
+    },
+    "DescribeTimeSeriesRequest":{
+      "type":"structure",
+      "members":{
+        "alias":{
+          "shape":"PropertyAlias",
+          "location":"querystring",
+          "locationName":"alias"
+        },
+        "assetId":{
+          "shape":"ID",
+          "location":"querystring",
+          "locationName":"assetId"
+        },
+        "propertyId":{
+          "shape":"ID",
+          "location":"querystring",
+          "locationName":"propertyId"
+        }
+      }
+    },
+    "DescribeTimeSeriesResponse":{
+      "type":"structure",
+      "required":[
+        "timeSeriesId",
+        "dataType",
+        "timeSeriesCreationDate",
+        "timeSeriesLastUpdateDate"
+      ],
+      "members":{
+        "assetId":{"shape":"ID"},
+        "propertyId":{"shape":"ID"},
+        "alias":{"shape":"PropertyAlias"},
+        "timeSeriesId":{"shape":"TimeSeriesId"},
+        "dataType":{"shape":"PropertyDataType"},
+        "dataTypeSpec":{"shape":"Name"},
+        "timeSeriesCreationDate":{"shape":"Timestamp"},
+        "timeSeriesLastUpdateDate":{"shape":"Timestamp"}
+      }
+    },
     "Description":{
       "type":"string",
       "max":2048,
       "min":1,
       "pattern":"[^\\u0000-\\u001F\\u007F]+"
+    },
+    "DetailedError":{
+      "type":"structure",
+      "required":[
+        "code",
+        "message"
+      ],
+      "members":{
+        "code":{"shape":"DetailedErrorCode"},
+        "message":{"shape":"DetailedErrorMessage"}
+      }
+    },
+    "DetailedErrorCode":{
+      "type":"string",
+      "enum":[
+        "INCOMPATIBLE_COMPUTE_LOCATION",
+        "INCOMPATIBLE_FORWARDING_CONFIGURATION"
+      ]
+    },
+    "DetailedErrorMessage":{"type":"string"},
+    "DetailedErrors":{
+      "type":"list",
+      "member":{"shape":"DetailedError"}
     },
     "DisassociateAssetsRequest":{
       "type":"structure",
@@ -2183,11 +2695,54 @@
         }
       }
     },
+    "DisassociateTimeSeriesFromAssetPropertyRequest":{
+      "type":"structure",
+      "required":[
+        "alias",
+        "assetId",
+        "propertyId"
+      ],
+      "members":{
+        "alias":{
+          "shape":"PropertyAlias",
+          "location":"querystring",
+          "locationName":"alias"
+        },
+        "assetId":{
+          "shape":"ID",
+          "location":"querystring",
+          "locationName":"assetId"
+        },
+        "propertyId":{
+          "shape":"ID",
+          "location":"querystring",
+          "locationName":"propertyId"
+        },
+        "clientToken":{
+          "shape":"ClientToken",
+          "idempotencyToken":true
+        }
+      }
+    },
+    "DisassociatedDataStorageState":{
+      "type":"string",
+      "enum":[
+        "ENABLED",
+        "DISABLED"
+      ]
+    },
     "Email":{
       "type":"string",
       "max":255,
       "min":1,
       "pattern":"[^@]+@[^@]+"
+    },
+    "EncryptionType":{
+      "type":"string",
+      "enum":[
+        "SITEWISE_DEFAULT_ENCRYPTION",
+        "KMS_BASED_ENCRYPTION"
+      ]
     },
     "EntryId":{
       "type":"string",
@@ -2210,7 +2765,8 @@
       ],
       "members":{
         "code":{"shape":"ErrorCode"},
-        "message":{"shape":"ErrorMessage"}
+        "message":{"shape":"ErrorMessage"},
+        "details":{"shape":"DetailedErrors"}
       }
     },
     "ErrorMessage":{"type":"string"},
@@ -2218,8 +2774,7 @@
     "Expression":{
       "type":"string",
       "max":1024,
-      "min":1,
-      "pattern":"^[a-z0-9._+\\-*%/^, ()]+$"
+      "min":1
     },
     "ExpressionVariable":{
       "type":"structure",
@@ -2235,6 +2790,20 @@
     "ExpressionVariables":{
       "type":"list",
       "member":{"shape":"ExpressionVariable"}
+    },
+    "ForwardingConfig":{
+      "type":"structure",
+      "required":["state"],
+      "members":{
+        "state":{"shape":"ForwardingConfigState"}
+      }
+    },
+    "ForwardingConfigState":{
+      "type":"string",
+      "enum":[
+        "DISABLED",
+        "ENABLED"
+      ]
     },
     "GatewayCapabilitySummaries":{
       "type":"list",
@@ -2253,9 +2822,9 @@
     },
     "GatewayPlatform":{
       "type":"structure",
-      "required":["greengrass"],
       "members":{
-        "greengrass":{"shape":"Greengrass"}
+        "greengrass":{"shape":"Greengrass"},
+        "greengrassV2":{"shape":"GreengrassV2"}
       }
     },
     "GatewaySummaries":{
@@ -2273,6 +2842,7 @@
       "members":{
         "gatewayId":{"shape":"ID"},
         "gatewayName":{"shape":"Name"},
+        "gatewayPlatform":{"shape":"GatewayPlatform"},
         "gatewayCapabilitySummaries":{"shape":"GatewayCapabilitySummaries"},
         "creationDate":{"shape":"Timestamp"},
         "lastUpdateDate":{"shape":"Timestamp"}
@@ -2436,6 +3006,91 @@
         "propertyValue":{"shape":"AssetPropertyValue"}
       }
     },
+    "GetInterpolatedAssetPropertyValuesRequest":{
+      "type":"structure",
+      "required":[
+        "startTimeInSeconds",
+        "endTimeInSeconds",
+        "quality",
+        "intervalInSeconds",
+        "type"
+      ],
+      "members":{
+        "assetId":{
+          "shape":"ID",
+          "location":"querystring",
+          "locationName":"assetId"
+        },
+        "propertyId":{
+          "shape":"ID",
+          "location":"querystring",
+          "locationName":"propertyId"
+        },
+        "propertyAlias":{
+          "shape":"AssetPropertyAlias",
+          "location":"querystring",
+          "locationName":"propertyAlias"
+        },
+        "startTimeInSeconds":{
+          "shape":"TimeInSeconds",
+          "location":"querystring",
+          "locationName":"startTimeInSeconds"
+        },
+        "startTimeOffsetInNanos":{
+          "shape":"OffsetInNanos",
+          "location":"querystring",
+          "locationName":"startTimeOffsetInNanos"
+        },
+        "endTimeInSeconds":{
+          "shape":"TimeInSeconds",
+          "location":"querystring",
+          "locationName":"endTimeInSeconds"
+        },
+        "endTimeOffsetInNanos":{
+          "shape":"OffsetInNanos",
+          "location":"querystring",
+          "locationName":"endTimeOffsetInNanos"
+        },
+        "quality":{
+          "shape":"Quality",
+          "location":"querystring",
+          "locationName":"quality"
+        },
+        "intervalInSeconds":{
+          "shape":"IntervalInSeconds",
+          "location":"querystring",
+          "locationName":"intervalInSeconds"
+        },
+        "nextToken":{
+          "shape":"NextToken",
+          "location":"querystring",
+          "locationName":"nextToken"
+        },
+        "maxResults":{
+          "shape":"MaxInterpolatedResults",
+          "location":"querystring",
+          "locationName":"maxResults"
+        },
+        "type":{
+          "shape":"InterpolationType",
+          "location":"querystring",
+          "locationName":"type"
+        },
+        "intervalWindowInSeconds":{
+          "shape":"IntervalWindowInSeconds",
+          "location":"querystring",
+          "locationName":"intervalWindowInSeconds"
+        }
+      }
+    },
+    "GetInterpolatedAssetPropertyValuesResponse":{
+      "type":"structure",
+      "required":["interpolatedAssetPropertyValues"],
+      "members":{
+        "interpolatedAssetPropertyValues":{"shape":"InterpolatedAssetPropertyValues"},
+        "nextToken":{"shape":"NextToken"}
+      }
+    },
     "Greengrass":{
       "type":"structure",
       "required":["groupArn"],
@@ -2443,11 +3098,32 @@
         "groupArn":{"shape":"ARN"}
       }
     },
+    "GreengrassV2":{
+      "type":"structure",
+      "required":["coreDeviceThingName"],
+      "members":{
+        "coreDeviceThingName":{"shape":"CoreDeviceThingName"}
+      }
+    },
     "GroupIdentity":{
       "type":"structure",
       "required":["id"],
       "members":{
         "id":{"shape":"IdentityId"}
+      }
+    },
+    "IAMRoleIdentity":{
+      "type":"structure",
+      "required":["arn"],
+      "members":{
+        "arn":{"shape":"ARN"}
+      }
+    },
+    "IAMUserIdentity":{
+      "type":"structure",
+      "required":["arn"],
+      "members":{
+        "arn":{"shape":"ARN"}
       }
     },
     "ID":{
@@ -2466,7 +3142,9 @@
       "type":"structure",
       "members":{
         "user":{"shape":"UserIdentity"},
-        "group":{"shape":"GroupIdentity"}
+        "group":{"shape":"GroupIdentity"},
+        "iamUser":{"shape":"IAMUserIdentity"},
+        "iamRole":{"shape":"IAMRoleIdentity"}
       }
     },
     "IdentityId":{
@@ -2479,7 +3157,8 @@
       "type":"string",
       "enum":[
         "USER",
-        "GROUP"
+        "GROUP",
+        "IAM"
       ]
     },
     "Image":{
@@ -2530,11 +3209,40 @@
       "exception":true,
       "fault":true
     },
+    "InterpolatedAssetPropertyValue":{
+      "type":"structure",
+      "required":[
+        "timestamp",
+        "value"
+      ],
+      "members":{
+        "timestamp":{"shape":"TimeInNanos"},
+        "value":{"shape":"Variant"}
+      }
+    },
+    "InterpolatedAssetPropertyValues":{
+      "type":"list",
+      "member":{"shape":"InterpolatedAssetPropertyValue"}
+    },
+    "InterpolationType":{
+      "type":"string",
+      "max":256,
+      "min":1
+    },
     "Interval":{
       "type":"string",
-      "max":3,
-      "min":2,
-      "pattern":"1w|1d|1h|15m|5m|1m"
+      "max":23,
+      "min":2
+    },
+    "IntervalInSeconds":{
+      "type":"long",
+      "max":320000000,
+      "min":1
+    },
+    "IntervalWindowInSeconds":{
+      "type":"long",
+      "max":320000000,
+      "min":1
     },
     "InvalidRequestException":{
       "type":"structure",
@@ -2544,6 +3252,11 @@
       },
       "error":{"httpStatusCode":400},
       "exception":true
+    },
+    "KmsKeyId":{
+      "type":"string",
+      "max":2048,
+      "min":1
     },
     "LimitExceededException":{
       "type":"structure",
@@ -2576,6 +3289,11 @@
           "shape":"ID",
           "location":"querystring",
           "locationName":"resourceId"
+        },
+        "iamArn":{
+          "shape":"ARN",
+          "location":"querystring",
+          "locationName":"iamArn"
         },
         "nextToken":{
           "shape":"NextToken",
@@ -2617,6 +3335,43 @@
       "required":["assetModelSummaries"],
       "members":{
         "assetModelSummaries":{"shape":"AssetModelSummaries"},
+        "nextToken":{"shape":"NextToken"}
+      }
+    },
+    "ListAssetRelationshipsRequest":{
+      "type":"structure",
+      "required":[
+        "assetId",
+        "traversalType"
+      ],
+      "members":{
+        "assetId":{
+          "shape":"ID",
+          "location":"uri",
+          "locationName":"assetId"
+        },
+        "traversalType":{
+          "shape":"TraversalType",
+          "location":"querystring",
+          "locationName":"traversalType"
+        },
+        "nextToken":{
+          "shape":"NextToken",
+          "location":"querystring",
+          "locationName":"nextToken"
+        },
+        "maxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"maxResults"
+        }
+      }
+    },
+    "ListAssetRelationshipsResponse":{
+      "type":"structure",
+      "required":["assetRelationshipSummaries"],
+      "members":{
+        "assetRelationshipSummaries":{"shape":"AssetRelationshipSummaries"},
         "nextToken":{"shape":"NextToken"}
       }
     },
@@ -2662,10 +3417,7 @@
     },
     "ListAssociatedAssetsRequest":{
       "type":"structure",
-      "required":[
-        "assetId",
-        "hierarchyId"
-      ],
+      "required":["assetId"],
       "members":{
         "assetId":{
           "shape":"ID",
@@ -2676,6 +3428,11 @@
           "shape":"ID",
           "location":"querystring",
           "locationName":"hierarchyId"
+        },
+        "traversalDirection":{
+          "shape":"TraversalDirection",
+          "location":"querystring",
+          "locationName":"traversalDirection"
         },
         "nextToken":{
           "shape":"NextToken",
@@ -2846,6 +3603,51 @@
         "tags":{"shape":"TagMap"}
       }
     },
+    "ListTimeSeriesRequest":{
+      "type":"structure",
+      "members":{
+        "nextToken":{
+          "shape":"NextToken",
+          "location":"querystring",
+          "locationName":"nextToken"
+        },
+        "maxResults":{
+          "shape":"MaxResults",
+          "location":"querystring",
+          "locationName":"maxResults"
+        },
+        "assetId":{
+          "shape":"ID",
+          "location":"querystring",
+          "locationName":"assetId"
+        },
+        "aliasPrefix":{
+          "shape":"PropertyAlias",
+          "location":"querystring",
+          "locationName":"aliasPrefix"
+        },
+        "timeSeriesType":{
+          "shape":"ListTimeSeriesType",
+          "location":"querystring",
+          "locationName":"timeSeriesType"
+        }
+      }
+    },
+    "ListTimeSeriesResponse":{
+      "type":"structure",
+      "required":["TimeSeriesSummaries"],
+      "members":{
+        "TimeSeriesSummaries":{"shape":"TimeSeriesSummaries"},
+        "nextToken":{"shape":"NextToken"}
+      }
+    },
+    "ListTimeSeriesType":{
+      "type":"string",
+      "enum":[
+        "ASSOCIATED",
+        "DISASSOCIATED"
+      ]
+    },
     "LoggingLevel":{
       "type":"string",
       "enum":[
@@ -2867,6 +3669,10 @@
       "min":1,
       "pattern":"[^\\u0000-\\u001F\\u007F]+"
     },
+    "MaxInterpolatedResults":{
+      "type":"integer",
+      "min":1
+    },
     "MaxResults":{
       "type":"integer",
       "max":250,
@@ -2875,6 +3681,14 @@
     "Measurement":{
       "type":"structure",
       "members":{
+        "processingConfig":{"shape":"MeasurementProcessingConfig"}
+      }
+    },
+    "MeasurementProcessingConfig":{
+      "type":"structure",
+      "required":["forwardingConfig"],
+      "members":{
+        "forwardingConfig":{"shape":"ForwardingConfig"}
       }
     },
     "Metric":{
@@ -2887,7 +3701,15 @@
       "members":{
         "expression":{"shape":"Expression"},
         "variables":{"shape":"ExpressionVariables"},
-        "window":{"shape":"MetricWindow"}
+        "window":{"shape":"MetricWindow"},
+        "processingConfig":{"shape":"MetricProcessingConfig"}
+      }
+    },
+    "MetricProcessingConfig":{
+      "type":"structure",
+      "required":["computeLocation"],
+      "members":{
+        "computeLocation":{"shape":"ComputeLocation"}
       }
     },
     "MetricWindow":{
@@ -2898,7 +3720,11 @@
     },
     "MonitorErrorCode":{
       "type":"string",
-      "enum":["INTERNAL_FAILURE"]
+      "enum":[
+        "INTERNAL_FAILURE",
+        "VALIDATION_ERROR",
+        "LIMIT_EXCEEDED"
+      ]
     },
     "MonitorErrorDetails":{
       "type":"structure",
@@ -2908,6 +3734,13 @@
       }
     },
     "MonitorErrorMessage":{"type":"string"},
+    "MultiLayerStorage":{
+      "type":"structure",
+      "required":["customerManagedS3Storage"],
+      "members":{
+        "customerManagedS3Storage":{"shape":"CustomerManagedS3Storage"}
+      }
+    },
     "Name":{
       "type":"string",
       "max":256,
@@ -2916,9 +3749,18 @@
     },
     "NextToken":{
       "type":"string",
-      "max":2048,
+      "max":4096,
       "min":1,
       "pattern":"[A-Za-z0-9+/=]+"
+    },
+    "NumberOfDays":{
+      "type":"integer",
+      "min":30
+    },
+    "Offset":{
+      "type":"string",
+      "max":25,
+      "min":2
     },
     "OffsetInNanos":{
       "type":"integer",
@@ -2972,7 +3814,8 @@
       "required":[
         "id",
         "name",
-        "startUrl"
+        "startUrl",
+        "status"
       ],
       "members":{
         "id":{"shape":"ID"},
@@ -2981,7 +3824,8 @@
         "startUrl":{"shape":"Url"},
         "creationDate":{"shape":"Timestamp"},
         "lastUpdateDate":{"shape":"Timestamp"},
-        "roleArn":{"shape":"ARN"}
+        "roleArn":{"shape":"ARN"},
+        "status":{"shape":"PortalStatus"}
       }
     },
     "ProjectResource":{
@@ -3028,7 +3872,6 @@
     },
     "PropertyAlias":{
       "type":"string",
-      "max":2048,
       "min":1,
       "pattern":"[^\\u0000-\\u001F\\u007F]+"
     },
@@ -3038,7 +3881,8 @@
         "STRING",
         "INTEGER",
         "DOUBLE",
-        "BOOLEAN"
+        "BOOLEAN",
+        "STRUCT"
       ]
     },
     "PropertyNotification":{
@@ -3080,8 +3924,6 @@
     "PropertyValueIntegerValue":{"type":"integer"},
     "PropertyValueStringValue":{
       "type":"string",
-      "max":1024,
-      "min":1,
       "pattern":"[^\\u0000-\\u001F\\u007F]+"
     },
     "PutAssetPropertyValueEntries":{
@@ -3102,6 +3944,26 @@
         "propertyValues":{"shape":"AssetPropertyValues"}
       }
     },
+    "PutDefaultEncryptionConfigurationRequest":{
+      "type":"structure",
+      "required":["encryptionType"],
+      "members":{
+        "encryptionType":{"shape":"EncryptionType"},
+        "kmsKeyId":{"shape":"KmsKeyId"}
+      }
+    },
+    "PutDefaultEncryptionConfigurationResponse":{
+      "type":"structure",
+      "required":[
+        "encryptionType",
+        "configurationStatus"
+      ],
+      "members":{
+        "encryptionType":{"shape":"EncryptionType"},
+        "kmsKeyArn":{"shape":"ARN"},
+        "configurationStatus":{"shape":"ConfigurationStatus"}
+      }
+    },
     "PutLoggingOptionsRequest":{
       "type":"structure",
       "required":["loggingOptions"],
@@ -3112,6 +3974,30 @@
     "PutLoggingOptionsResponse":{
       "type":"structure",
       "members":{
+      }
+    },
+    "PutStorageConfigurationRequest":{
+      "type":"structure",
+      "required":["storageType"],
+      "members":{
+        "storageType":{"shape":"StorageType"},
+        "multiLayerStorage":{"shape":"MultiLayerStorage"},
+        "disassociatedDataStorage":{"shape":"DisassociatedDataStorageState"},
+        "retentionPeriod":{"shape":"RetentionPeriod"}
+      }
+    },
+    "PutStorageConfigurationResponse":{
+      "type":"structure",
+      "required":[
+        "storageType",
+        "configurationStatus"
+      ],
+      "members":{
+        "storageType":{"shape":"StorageType"},
+        "multiLayerStorage":{"shape":"MultiLayerStorage"},
+        "disassociatedDataStorage":{"shape":"DisassociatedDataStorageState"},
+        "retentionPeriod":{"shape":"RetentionPeriod"},
+        "configurationStatus":{"shape":"ConfigurationStatus"}
       }
     },
     "Qualities":{
@@ -3174,6 +4060,13 @@
         "PROJECT"
       ]
     },
+    "RetentionPeriod":{
+      "type":"structure",
+      "members":{
+        "numberOfDays":{"shape":"NumberOfDays"},
+        "unlimited":{"shape":"Unlimited"}
+      }
+    },
     "SSOApplicationId":{
       "type":"string",
       "max":64,
@@ -3189,6 +4082,13 @@
       "error":{"httpStatusCode":503},
       "exception":true,
       "fault":true
+    },
+    "StorageType":{
+      "type":"string",
+      "enum":[
+        "SITEWISE_DEFAULT_STORAGE",
+        "MULTI_LAYER_STORAGE"
+      ]
     },
     "TagKey":{
       "type":"string",
@@ -3262,6 +4162,34 @@
         "DESCENDING"
       ]
     },
+    "TimeSeriesId":{
+      "type":"string",
+      "max":73,
+      "min":36
+    },
+    "TimeSeriesSummaries":{
+      "type":"list",
+      "member":{"shape":"TimeSeriesSummary"}
+    },
+    "TimeSeriesSummary":{
+      "type":"structure",
+      "required":[
+        "timeSeriesId",
+        "dataType",
+        "timeSeriesCreationDate",
+        "timeSeriesLastUpdateDate"
+      ],
+      "members":{
+        "assetId":{"shape":"ID"},
+        "propertyId":{"shape":"ID"},
+        "alias":{"shape":"PropertyAlias"},
+        "timeSeriesId":{"shape":"TimeSeriesId"},
+        "dataType":{"shape":"PropertyDataType"},
+        "dataTypeSpec":{"shape":"Name"},
+        "timeSeriesCreationDate":{"shape":"Timestamp"},
+        "timeSeriesLastUpdateDate":{"shape":"Timestamp"}
+      }
+    },
     "Timestamp":{"type":"timestamp"},
     "Timestamps":{
       "type":"list",
@@ -3284,16 +4212,47 @@
       ],
       "members":{
         "expression":{"shape":"Expression"},
-        "variables":{"shape":"ExpressionVariables"}
+        "variables":{"shape":"ExpressionVariables"},
+        "processingConfig":{"shape":"TransformProcessingConfig"}
       }
+    },
+    "TransformProcessingConfig":{
+      "type":"structure",
+      "required":["computeLocation"],
+      "members":{
+        "computeLocation":{"shape":"ComputeLocation"},
+        "forwardingConfig":{"shape":"ForwardingConfig"}
+      }
+    },
+    "TraversalDirection":{
+      "type":"string",
+      "enum":[
+        "PARENT",
+        "CHILD"
+      ]
+    },
+    "TraversalType":{
+      "type":"string",
+      "enum":["PATH_TO_ROOT"]
     },
     "TumblingWindow":{
       "type":"structure",
       "required":["interval"],
       "members":{
-        "interval":{"shape":"Interval"}
+        "interval":{"shape":"Interval"},
+        "offset":{"shape":"Offset"}
       }
     },
+    "UnauthorizedException":{
+      "type":"structure",
+      "required":["message"],
+      "members":{
+        "message":{"shape":"ErrorMessage"}
+      },
+      "error":{"httpStatusCode":401},
+      "exception":true
+    },
+    "Unlimited":{"type":"boolean"},
     "UntagResourceRequest":{
       "type":"structure",
       "required":[
@@ -3362,6 +4321,7 @@
         "assetModelDescription":{"shape":"Description"},
         "assetModelProperties":{"shape":"AssetModelProperties"},
         "assetModelHierarchies":{"shape":"AssetModelHierarchies"},
+        "assetModelCompositeModels":{"shape":"AssetModelCompositeModels"},
         "clientToken":{
           "shape":"ClientToken",
           "idempotencyToken":true
@@ -3518,7 +4478,9 @@
         "clientToken":{
           "shape":"ClientToken",
           "idempotencyToken":true
-        }
+        },
+        "notificationSenderEmail":{"shape":"Email"},
+        "alarms":{"shape":"Alarms"}
       }
     },
     "UpdatePortalResponse":{

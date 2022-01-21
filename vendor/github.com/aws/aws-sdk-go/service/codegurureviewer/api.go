@@ -57,26 +57,27 @@ func (c *CodeGuruReviewer) AssociateRepositoryRequest(input *AssociateRepository
 
 // AssociateRepository API operation for Amazon CodeGuru Reviewer.
 //
-// Use to associate an AWS CodeCommit repository or a repostory managed by AWS
-// CodeStar Connections with Amazon CodeGuru Reviewer. When you associate a
-// repository, CodeGuru Reviewer reviews source code changes in the repository's
-// pull requests and provides automatic recommendations. You can view recommendations
-// using the CodeGuru Reviewer console. For more information, see Recommendations
-// in Amazon CodeGuru Reviewer (https://docs.aws.amazon.com/codeguru/latest/reviewer-ug/recommendations.html)
+// Use to associate an Amazon Web Services CodeCommit repository or a repostory
+// managed by Amazon Web Services CodeStar Connections with Amazon CodeGuru
+// Reviewer. When you associate a repository, CodeGuru Reviewer reviews source
+// code changes in the repository's pull requests and provides automatic recommendations.
+// You can view recommendations using the CodeGuru Reviewer console. For more
+// information, see Recommendations in Amazon CodeGuru Reviewer (https://docs.aws.amazon.com/codeguru/latest/reviewer-ug/recommendations.html)
 // in the Amazon CodeGuru Reviewer User Guide.
 //
-// If you associate a CodeCommit repository, it must be in the same AWS Region
-// and AWS account where its CodeGuru Reviewer code reviews are configured.
+// If you associate a CodeCommit or S3 repository, it must be in the same Amazon
+// Web Services Region and Amazon Web Services account where its CodeGuru Reviewer
+// code reviews are configured.
 //
-// Bitbucket and GitHub Enterprise Server repositories are managed by AWS CodeStar
-// Connections to connect to CodeGuru Reviewer. For more information, see Connect
-// to a repository source provider (https://docs.aws.amazon.com/codeguru/latest/reviewer-ug/reviewer-ug/step-one.html#select-repository-source-provider)
+// Bitbucket and GitHub Enterprise Server repositories are managed by Amazon
+// Web Services CodeStar Connections to connect to CodeGuru Reviewer. For more
+// information, see Associate a repository (https://docs.aws.amazon.com/codeguru/latest/reviewer-ug/getting-started-associate-repository.html)
 // in the Amazon CodeGuru Reviewer User Guide.
 //
-// You cannot use the CodeGuru Reviewer SDK or the AWS CLI to associate a GitHub
-// repository with Amazon CodeGuru Reviewer. To associate a GitHub repository,
-// use the console. For more information, see Getting started with CodeGuru
-// Reviewer (https://docs.aws.amazon.com/codeguru/latest/reviewer-ug/getting-started-with-guru.html)
+// You cannot use the CodeGuru Reviewer SDK or the Amazon Web Services CLI to
+// associate a GitHub repository with Amazon CodeGuru Reviewer. To associate
+// a GitHub repository, use the console. For more information, see Getting started
+// with CodeGuru Reviewer (https://docs.aws.amazon.com/codeguru/latest/reviewer-ug/getting-started-with-guru.html)
 // in the CodeGuru Reviewer User Guide.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -121,6 +122,105 @@ func (c *CodeGuruReviewer) AssociateRepository(input *AssociateRepositoryInput) 
 // for more information on using Contexts.
 func (c *CodeGuruReviewer) AssociateRepositoryWithContext(ctx aws.Context, input *AssociateRepositoryInput, opts ...request.Option) (*AssociateRepositoryOutput, error) {
 	req, out := c.AssociateRepositoryRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateCodeReview = "CreateCodeReview"
+
+// CreateCodeReviewRequest generates a "aws/request.Request" representing the
+// client's request for the CreateCodeReview operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateCodeReview for more information on using the CreateCodeReview
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateCodeReviewRequest method.
+//    req, resp := client.CreateCodeReviewRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguru-reviewer-2019-09-19/CreateCodeReview
+func (c *CodeGuruReviewer) CreateCodeReviewRequest(input *CreateCodeReviewInput) (req *request.Request, output *CreateCodeReviewOutput) {
+	op := &request.Operation{
+		Name:       opCreateCodeReview,
+		HTTPMethod: "POST",
+		HTTPPath:   "/codereviews",
+	}
+
+	if input == nil {
+		input = &CreateCodeReviewInput{}
+	}
+
+	output = &CreateCodeReviewOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateCodeReview API operation for Amazon CodeGuru Reviewer.
+//
+// Use to create a code review with a CodeReviewType (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_CodeReviewType.html)
+// of RepositoryAnalysis. This type of code review analyzes all code under a
+// specified branch in an associated repository. PullRequest code reviews are
+// automatically triggered by a pull request.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CodeGuru Reviewer's
+// API operation CreateCodeReview for usage and error information.
+//
+// Returned Error Types:
+//   * ResourceNotFoundException
+//   The resource specified in the request was not found.
+//
+//   * InternalServerException
+//   The server encountered an internal error and is unable to complete the request.
+//
+//   * ValidationException
+//   The input fails to satisfy the specified constraints.
+//
+//   * ConflictException
+//   The requested operation would cause a conflict with the current state of
+//   a service resource associated with the request. Resolve the conflict before
+//   retrying this request.
+//
+//   * AccessDeniedException
+//   You do not have sufficient access to perform this action.
+//
+//   * ThrottlingException
+//   The request was denied due to request throttling.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguru-reviewer-2019-09-19/CreateCodeReview
+func (c *CodeGuruReviewer) CreateCodeReview(input *CreateCodeReviewInput) (*CreateCodeReviewOutput, error) {
+	req, out := c.CreateCodeReviewRequest(input)
+	return out, req.Send()
+}
+
+// CreateCodeReviewWithContext is the same as CreateCodeReview with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateCodeReview for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CodeGuruReviewer) CreateCodeReviewWithContext(ctx aws.Context, input *CreateCodeReviewInput, opts ...request.Option) (*CreateCodeReviewOutput, error) {
+	req, out := c.CreateCodeReviewRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -1090,6 +1190,91 @@ func (c *CodeGuruReviewer) ListRepositoryAssociationsPagesWithContext(ctx aws.Co
 	return p.Err()
 }
 
+const opListTagsForResource = "ListTagsForResource"
+
+// ListTagsForResourceRequest generates a "aws/request.Request" representing the
+// client's request for the ListTagsForResource operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListTagsForResource for more information on using the ListTagsForResource
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListTagsForResourceRequest method.
+//    req, resp := client.ListTagsForResourceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguru-reviewer-2019-09-19/ListTagsForResource
+func (c *CodeGuruReviewer) ListTagsForResourceRequest(input *ListTagsForResourceInput) (req *request.Request, output *ListTagsForResourceOutput) {
+	op := &request.Operation{
+		Name:       opListTagsForResource,
+		HTTPMethod: "GET",
+		HTTPPath:   "/tags/{resourceArn}",
+	}
+
+	if input == nil {
+		input = &ListTagsForResourceInput{}
+	}
+
+	output = &ListTagsForResourceOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListTagsForResource API operation for Amazon CodeGuru Reviewer.
+//
+// Returns the list of tags associated with an associated repository resource.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CodeGuru Reviewer's
+// API operation ListTagsForResource for usage and error information.
+//
+// Returned Error Types:
+//   * InternalServerException
+//   The server encountered an internal error and is unable to complete the request.
+//
+//   * ValidationException
+//   The input fails to satisfy the specified constraints.
+//
+//   * ResourceNotFoundException
+//   The resource specified in the request was not found.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguru-reviewer-2019-09-19/ListTagsForResource
+func (c *CodeGuruReviewer) ListTagsForResource(input *ListTagsForResourceInput) (*ListTagsForResourceOutput, error) {
+	req, out := c.ListTagsForResourceRequest(input)
+	return out, req.Send()
+}
+
+// ListTagsForResourceWithContext is the same as ListTagsForResource with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListTagsForResource for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CodeGuruReviewer) ListTagsForResourceWithContext(ctx aws.Context, input *ListTagsForResourceInput, opts ...request.Option) (*ListTagsForResourceOutput, error) {
+	req, out := c.ListTagsForResourceRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opPutRecommendationFeedback = "PutRecommendationFeedback"
 
 // PutRecommendationFeedbackRequest generates a "aws/request.Request" representing the
@@ -1183,6 +1368,178 @@ func (c *CodeGuruReviewer) PutRecommendationFeedbackWithContext(ctx aws.Context,
 	return out, req.Send()
 }
 
+const opTagResource = "TagResource"
+
+// TagResourceRequest generates a "aws/request.Request" representing the
+// client's request for the TagResource operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See TagResource for more information on using the TagResource
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the TagResourceRequest method.
+//    req, resp := client.TagResourceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguru-reviewer-2019-09-19/TagResource
+func (c *CodeGuruReviewer) TagResourceRequest(input *TagResourceInput) (req *request.Request, output *TagResourceOutput) {
+	op := &request.Operation{
+		Name:       opTagResource,
+		HTTPMethod: "POST",
+		HTTPPath:   "/tags/{resourceArn}",
+	}
+
+	if input == nil {
+		input = &TagResourceInput{}
+	}
+
+	output = &TagResourceOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restjson.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// TagResource API operation for Amazon CodeGuru Reviewer.
+//
+// Adds one or more tags to an associated repository.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CodeGuru Reviewer's
+// API operation TagResource for usage and error information.
+//
+// Returned Error Types:
+//   * InternalServerException
+//   The server encountered an internal error and is unable to complete the request.
+//
+//   * ValidationException
+//   The input fails to satisfy the specified constraints.
+//
+//   * ResourceNotFoundException
+//   The resource specified in the request was not found.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguru-reviewer-2019-09-19/TagResource
+func (c *CodeGuruReviewer) TagResource(input *TagResourceInput) (*TagResourceOutput, error) {
+	req, out := c.TagResourceRequest(input)
+	return out, req.Send()
+}
+
+// TagResourceWithContext is the same as TagResource with the addition of
+// the ability to pass a context and additional request options.
+//
+// See TagResource for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CodeGuruReviewer) TagResourceWithContext(ctx aws.Context, input *TagResourceInput, opts ...request.Option) (*TagResourceOutput, error) {
+	req, out := c.TagResourceRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opUntagResource = "UntagResource"
+
+// UntagResourceRequest generates a "aws/request.Request" representing the
+// client's request for the UntagResource operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UntagResource for more information on using the UntagResource
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UntagResourceRequest method.
+//    req, resp := client.UntagResourceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguru-reviewer-2019-09-19/UntagResource
+func (c *CodeGuruReviewer) UntagResourceRequest(input *UntagResourceInput) (req *request.Request, output *UntagResourceOutput) {
+	op := &request.Operation{
+		Name:       opUntagResource,
+		HTTPMethod: "DELETE",
+		HTTPPath:   "/tags/{resourceArn}",
+	}
+
+	if input == nil {
+		input = &UntagResourceInput{}
+	}
+
+	output = &UntagResourceOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(restjson.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// UntagResource API operation for Amazon CodeGuru Reviewer.
+//
+// Removes a tag from an associated repository.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon CodeGuru Reviewer's
+// API operation UntagResource for usage and error information.
+//
+// Returned Error Types:
+//   * InternalServerException
+//   The server encountered an internal error and is unable to complete the request.
+//
+//   * ValidationException
+//   The input fails to satisfy the specified constraints.
+//
+//   * ResourceNotFoundException
+//   The resource specified in the request was not found.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/codeguru-reviewer-2019-09-19/UntagResource
+func (c *CodeGuruReviewer) UntagResource(input *UntagResourceInput) (*UntagResourceOutput, error) {
+	req, out := c.UntagResourceRequest(input)
+	return out, req.Send()
+}
+
+// UntagResourceWithContext is the same as UntagResource with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UntagResource for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *CodeGuruReviewer) UntagResourceWithContext(ctx aws.Context, input *UntagResourceInput, opts ...request.Option) (*UntagResourceOutput, error) {
+	req, out := c.UntagResourceRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 // You do not have sufficient access to perform this action.
 type AccessDeniedException struct {
 	_            struct{}                  `type:"structure"`
@@ -1191,12 +1548,20 @@ type AccessDeniedException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AccessDeniedException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AccessDeniedException) GoString() string {
 	return s.String()
 }
@@ -1242,40 +1607,51 @@ func (s *AccessDeniedException) RequestID() string {
 type AssociateRepositoryInput struct {
 	_ struct{} `type:"structure"`
 
-	// Unique, case-sensitive identifier that you provide to ensure the idempotency
-	// of the request.
-	//
-	// To add a new repository association, this parameter specifies a unique identifier
-	// for the new repository association that helps ensure idempotency.
-	//
-	// If you use the AWS CLI or one of the AWS SDKs to call this operation, you
-	// can leave this parameter empty. The CLI or SDK generates a random UUID for
-	// you and includes that in the request. If you don't use the SDK and instead
-	// generate a raw HTTP request to the Secrets Manager service endpoint, you
-	// must generate a ClientRequestToken yourself for new versions and include
-	// that value in the request.
-	//
-	// You typically interact with this value if you implement your own retry logic
-	// and want to ensure that a given repository association is not created twice.
-	// We recommend that you generate a UUID-type value to ensure uniqueness within
-	// the specified repository association.
-	//
 	// Amazon CodeGuru Reviewer uses this value to prevent the accidental creation
 	// of duplicate repository associations if there are failures and retries.
 	ClientRequestToken *string `min:"1" type:"string" idempotencyToken:"true"`
+
+	// A KMSKeyDetails object that contains:
+	//
+	//    * The encryption option for this repository association. It is either
+	//    owned by Amazon Web Services Key Management Service (KMS) (AWS_OWNED_CMK)
+	//    or customer managed (CUSTOMER_MANAGED_CMK).
+	//
+	//    * The ID of the Amazon Web Services KMS key that is associated with this
+	//    respository association.
+	KMSKeyDetails *KMSKeyDetails `type:"structure"`
 
 	// The repository to associate.
 	//
 	// Repository is a required field
 	Repository *Repository `type:"structure" required:"true"`
+
+	// An array of key-value pairs used to tag an associated repository. A tag is
+	// a custom attribute label with two parts:
+	//
+	//    * A tag key (for example, CostCenter, Environment, Project, or Secret).
+	//    Tag keys are case sensitive.
+	//
+	//    * An optional field known as a tag value (for example, 111122223333, Production,
+	//    or a team name). Omitting the tag value is the same as using an empty
+	//    string. Like tag keys, tag values are case sensitive.
+	Tags map[string]*string `min:"1" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateRepositoryInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateRepositoryInput) GoString() string {
 	return s.String()
 }
@@ -1288,6 +1664,14 @@ func (s *AssociateRepositoryInput) Validate() error {
 	}
 	if s.Repository == nil {
 		invalidParams.Add(request.NewErrParamRequired("Repository"))
+	}
+	if s.Tags != nil && len(s.Tags) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Tags", 1))
+	}
+	if s.KMSKeyDetails != nil {
+		if err := s.KMSKeyDetails.Validate(); err != nil {
+			invalidParams.AddNested("KMSKeyDetails", err.(request.ErrInvalidParams))
+		}
 	}
 	if s.Repository != nil {
 		if err := s.Repository.Validate(); err != nil {
@@ -1307,9 +1691,21 @@ func (s *AssociateRepositoryInput) SetClientRequestToken(v string) *AssociateRep
 	return s
 }
 
+// SetKMSKeyDetails sets the KMSKeyDetails field's value.
+func (s *AssociateRepositoryInput) SetKMSKeyDetails(v *KMSKeyDetails) *AssociateRepositoryInput {
+	s.KMSKeyDetails = v
+	return s
+}
+
 // SetRepository sets the Repository field's value.
 func (s *AssociateRepositoryInput) SetRepository(v *Repository) *AssociateRepositoryInput {
 	s.Repository = v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *AssociateRepositoryInput) SetTags(v map[string]*string) *AssociateRepositoryInput {
+	s.Tags = v
 	return s
 }
 
@@ -1318,14 +1714,33 @@ type AssociateRepositoryOutput struct {
 
 	// Information about the repository association.
 	RepositoryAssociation *RepositoryAssociation `type:"structure"`
+
+	// An array of key-value pairs used to tag an associated repository. A tag is
+	// a custom attribute label with two parts:
+	//
+	//    * A tag key (for example, CostCenter, Environment, Project, or Secret).
+	//    Tag keys are case sensitive.
+	//
+	//    * An optional field known as a tag value (for example, 111122223333, Production,
+	//    or a team name). Omitting the tag value is the same as using an empty
+	//    string. Like tag keys, tag values are case sensitive.
+	Tags map[string]*string `min:"1" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateRepositoryOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s AssociateRepositoryOutput) GoString() string {
 	return s.String()
 }
@@ -1336,26 +1751,182 @@ func (s *AssociateRepositoryOutput) SetRepositoryAssociation(v *RepositoryAssoci
 	return s
 }
 
-// Information about an AWS CodeCommit repository. The CodeCommit repository
-// must be in the same AWS Region and AWS account where its CodeGuru Reviewer
-// code reviews are configured.
+// SetTags sets the Tags field's value.
+func (s *AssociateRepositoryOutput) SetTags(v map[string]*string) *AssociateRepositoryOutput {
+	s.Tags = v
+	return s
+}
+
+// A type of SourceCodeType (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_SourceCodeType)
+// that specifies a code diff between a source and destination branch in an
+// associated repository.
+type BranchDiffSourceCodeType struct {
+	_ struct{} `type:"structure"`
+
+	// The destination branch for a diff in an associated repository.
+	//
+	// DestinationBranchName is a required field
+	DestinationBranchName *string `min:"1" type:"string" required:"true"`
+
+	// The source branch for a diff in an associated repository.
+	//
+	// SourceBranchName is a required field
+	SourceBranchName *string `min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s BranchDiffSourceCodeType) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s BranchDiffSourceCodeType) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *BranchDiffSourceCodeType) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "BranchDiffSourceCodeType"}
+	if s.DestinationBranchName == nil {
+		invalidParams.Add(request.NewErrParamRequired("DestinationBranchName"))
+	}
+	if s.DestinationBranchName != nil && len(*s.DestinationBranchName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DestinationBranchName", 1))
+	}
+	if s.SourceBranchName == nil {
+		invalidParams.Add(request.NewErrParamRequired("SourceBranchName"))
+	}
+	if s.SourceBranchName != nil && len(*s.SourceBranchName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("SourceBranchName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDestinationBranchName sets the DestinationBranchName field's value.
+func (s *BranchDiffSourceCodeType) SetDestinationBranchName(v string) *BranchDiffSourceCodeType {
+	s.DestinationBranchName = &v
+	return s
+}
+
+// SetSourceBranchName sets the SourceBranchName field's value.
+func (s *BranchDiffSourceCodeType) SetSourceBranchName(v string) *BranchDiffSourceCodeType {
+	s.SourceBranchName = &v
+	return s
+}
+
+// Code artifacts are source code artifacts and build artifacts used in a repository
+// analysis or a pull request review.
+//
+//    * Source code artifacts are source code files in a Git repository that
+//    are compressed into a .zip file.
+//
+//    * Build artifacts are .jar or .class files that are compressed in a .zip
+//    file.
+type CodeArtifacts struct {
+	_ struct{} `type:"structure"`
+
+	// The S3 object key for a build artifacts .zip file that contains .jar or .class
+	// files. This is required for a code review with security analysis. For more
+	// information, see Create code reviews with security analysis (https://docs.aws.amazon.com/codeguru/latest/reviewer-ug/code-review-security.html)
+	// in the Amazon CodeGuru Reviewer User Guide.
+	BuildArtifactsObjectKey *string `min:"1" type:"string"`
+
+	// The S3 object key for a source code .zip file. This is required for all code
+	// reviews.
+	//
+	// SourceCodeArtifactsObjectKey is a required field
+	SourceCodeArtifactsObjectKey *string `min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CodeArtifacts) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CodeArtifacts) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CodeArtifacts) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CodeArtifacts"}
+	if s.BuildArtifactsObjectKey != nil && len(*s.BuildArtifactsObjectKey) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("BuildArtifactsObjectKey", 1))
+	}
+	if s.SourceCodeArtifactsObjectKey == nil {
+		invalidParams.Add(request.NewErrParamRequired("SourceCodeArtifactsObjectKey"))
+	}
+	if s.SourceCodeArtifactsObjectKey != nil && len(*s.SourceCodeArtifactsObjectKey) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("SourceCodeArtifactsObjectKey", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetBuildArtifactsObjectKey sets the BuildArtifactsObjectKey field's value.
+func (s *CodeArtifacts) SetBuildArtifactsObjectKey(v string) *CodeArtifacts {
+	s.BuildArtifactsObjectKey = &v
+	return s
+}
+
+// SetSourceCodeArtifactsObjectKey sets the SourceCodeArtifactsObjectKey field's value.
+func (s *CodeArtifacts) SetSourceCodeArtifactsObjectKey(v string) *CodeArtifacts {
+	s.SourceCodeArtifactsObjectKey = &v
+	return s
+}
+
+// Information about an Amazon Web Services CodeCommit repository. The CodeCommit
+// repository must be in the same Amazon Web Services Region and Amazon Web
+// Services account where its CodeGuru Reviewer code reviews are configured.
 type CodeCommitRepository struct {
 	_ struct{} `type:"structure"`
 
-	// The name of the AWS CodeCommit repository. For more information, see repositoryName
-	// (https://docs.aws.amazon.com/codecommit/latest/APIReference/API_GetRepository.html#CodeCommit-GetRepository-request-repositoryName)
-	// in the AWS CodeCommit API Reference.
+	// The name of the Amazon Web Services CodeCommit repository. For more information,
+	// see repositoryName (https://docs.aws.amazon.com/codecommit/latest/APIReference/API_GetRepository.html#CodeCommit-GetRepository-request-repositoryName)
+	// in the Amazon Web Services CodeCommit API Reference.
 	//
 	// Name is a required field
 	Name *string `min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CodeCommitRepository) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CodeCommitRepository) GoString() string {
 	return s.String()
 }
@@ -1382,9 +1953,19 @@ func (s *CodeCommitRepository) SetName(v string) *CodeCommitRepository {
 	return s
 }
 
-// Information about a code review.
+// Information about a code review. A code review belongs to the associated
+// repository that contains the reviewed code.
 type CodeReview struct {
 	_ struct{} `type:"structure"`
+
+	// They types of analysis performed during a repository analysis or a pull request
+	// review. You can specify either Security, CodeQuality, or both.
+	AnalysisTypes []*string `type:"list"`
+
+	// The Amazon Resource Name (ARN) of the RepositoryAssociation (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_RepositoryAssociation.html)
+	// that contains the reviewed source code. You can retrieve associated repository
+	// ARNs by calling ListRepositoryAssociations (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_ListRepositoryAssociations.html).
+	AssociationArn *string `min:"1" type:"string"`
 
 	// The Amazon Resource Name (ARN) of the CodeReview (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_CodeReview.html)
 	// object.
@@ -1403,9 +1984,11 @@ type CodeReview struct {
 	// The name of the code review.
 	Name *string `min:"1" type:"string"`
 
-	// The owner of the repository. For an AWS CodeCommit repository, this is the
-	// AWS account ID of the account that owns the repository. For a GitHub or Bitbucket
-	// repository, this is the username for the account that owns the repository.
+	// The owner of the repository. For an Amazon Web Services CodeCommit repository,
+	// this is the Amazon Web Services account ID of the account that owns the repository.
+	// For a GitHub, GitHub Enterprise Server, or Bitbucket repository, this is
+	// the username for the account that owns the repository. For an S3 repository,
+	// it can be the username or Amazon Web Services account ID.
 	Owner *string `min:"1" type:"string"`
 
 	// The type of repository that contains the reviewed code (for example, GitHub
@@ -1439,14 +2022,34 @@ type CodeReview struct {
 	Type *string `type:"string" enum:"Type"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CodeReview) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CodeReview) GoString() string {
 	return s.String()
+}
+
+// SetAnalysisTypes sets the AnalysisTypes field's value.
+func (s *CodeReview) SetAnalysisTypes(v []*string) *CodeReview {
+	s.AnalysisTypes = v
+	return s
+}
+
+// SetAssociationArn sets the AssociationArn field's value.
+func (s *CodeReview) SetAssociationArn(v string) *CodeReview {
+	s.AssociationArn = &v
+	return s
 }
 
 // SetCodeReviewArn sets the CodeReviewArn field's value.
@@ -1548,9 +2151,11 @@ type CodeReviewSummary struct {
 	// The name of the code review.
 	Name *string `min:"1" type:"string"`
 
-	// The owner of the repository. For an AWS CodeCommit repository, this is the
-	// AWS account ID of the account that owns the repository. For a GitHub or Bitbucket
-	// repository, this is the username for the account that owns the repository.
+	// The owner of the repository. For an Amazon Web Services CodeCommit repository,
+	// this is the Amazon Web Services account ID of the account that owns the repository.
+	// For a GitHub, GitHub Enterprise Server, or Bitbucket repository, this is
+	// the username for the account that owns the repository. For an S3 repository,
+	// it can be the username or Amazon Web Services account ID.
 	Owner *string `min:"1" type:"string"`
 
 	// The provider type of the repository association.
@@ -1561,6 +2166,9 @@ type CodeReviewSummary struct {
 
 	// The name of the repository.
 	RepositoryName *string `min:"1" type:"string"`
+
+	// Specifies the source code that is analyzed in a code review.
+	SourceCodeType *SourceCodeType `type:"structure"`
 
 	// The state of the code review.
 	//
@@ -1579,12 +2187,20 @@ type CodeReviewSummary struct {
 	Type *string `type:"string" enum:"Type"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CodeReviewSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CodeReviewSummary) GoString() string {
 	return s.String()
 }
@@ -1643,6 +2259,12 @@ func (s *CodeReviewSummary) SetRepositoryName(v string) *CodeReviewSummary {
 	return s
 }
 
+// SetSourceCodeType sets the SourceCodeType field's value.
+func (s *CodeReviewSummary) SetSourceCodeType(v *SourceCodeType) *CodeReviewSummary {
+	s.SourceCodeType = v
+	return s
+}
+
 // SetState sets the State field's value.
 func (s *CodeReviewSummary) SetState(v string) *CodeReviewSummary {
 	s.State = &v
@@ -1655,30 +2277,142 @@ func (s *CodeReviewSummary) SetType(v string) *CodeReviewSummary {
 	return s
 }
 
-// The commit diff for the pull request.
+// The type of a code review. There are two code review types:
+//
+//    * PullRequest - A code review that is automatically triggered by a pull
+//    request on an associated repository.
+//
+//    * RepositoryAnalysis - A code review that analyzes all code under a specified
+//    branch in an associated repository. The associated repository is specified
+//    using its ARN in CreateCodeReview (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_CreateCodeReview).
+type CodeReviewType struct {
+	_ struct{} `type:"structure"`
+
+	// They types of analysis performed during a repository analysis or a pull request
+	// review. You can specify either Security, CodeQuality, or both.
+	AnalysisTypes []*string `type:"list"`
+
+	// A code review that analyzes all code under a specified branch in an associated
+	// repository. The associated repository is specified using its ARN in CreateCodeReview
+	// (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_CreateCodeReview).
+	//
+	// RepositoryAnalysis is a required field
+	RepositoryAnalysis *RepositoryAnalysis `type:"structure" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CodeReviewType) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CodeReviewType) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CodeReviewType) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CodeReviewType"}
+	if s.RepositoryAnalysis == nil {
+		invalidParams.Add(request.NewErrParamRequired("RepositoryAnalysis"))
+	}
+	if s.RepositoryAnalysis != nil {
+		if err := s.RepositoryAnalysis.Validate(); err != nil {
+			invalidParams.AddNested("RepositoryAnalysis", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAnalysisTypes sets the AnalysisTypes field's value.
+func (s *CodeReviewType) SetAnalysisTypes(v []*string) *CodeReviewType {
+	s.AnalysisTypes = v
+	return s
+}
+
+// SetRepositoryAnalysis sets the RepositoryAnalysis field's value.
+func (s *CodeReviewType) SetRepositoryAnalysis(v *RepositoryAnalysis) *CodeReviewType {
+	s.RepositoryAnalysis = v
+	return s
+}
+
+// A type of SourceCodeType (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_SourceCodeType)
+// that specifies the commit diff for a pull request on an associated repository.
+// The SourceCommit and DestinationCommit fields are required to do a pull request
+// code review.
 type CommitDiffSourceCodeType struct {
 	_ struct{} `type:"structure"`
 
-	// The SHA of the destination commit.
+	// The SHA of the destination commit used to generate a commit diff. This field
+	// is required for a pull request code review.
 	DestinationCommit *string `min:"6" type:"string"`
 
-	// The SHA of the source commit.
+	// The SHA of the merge base of a commit.
+	MergeBaseCommit *string `min:"6" type:"string"`
+
+	// The SHA of the source commit used to generate a commit diff. This field is
+	// required for a pull request code review.
 	SourceCommit *string `min:"6" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CommitDiffSourceCodeType) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CommitDiffSourceCodeType) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CommitDiffSourceCodeType) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CommitDiffSourceCodeType"}
+	if s.DestinationCommit != nil && len(*s.DestinationCommit) < 6 {
+		invalidParams.Add(request.NewErrParamMinLen("DestinationCommit", 6))
+	}
+	if s.MergeBaseCommit != nil && len(*s.MergeBaseCommit) < 6 {
+		invalidParams.Add(request.NewErrParamMinLen("MergeBaseCommit", 6))
+	}
+	if s.SourceCommit != nil && len(*s.SourceCommit) < 6 {
+		invalidParams.Add(request.NewErrParamMinLen("SourceCommit", 6))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // SetDestinationCommit sets the DestinationCommit field's value.
 func (s *CommitDiffSourceCodeType) SetDestinationCommit(v string) *CommitDiffSourceCodeType {
 	s.DestinationCommit = &v
+	return s
+}
+
+// SetMergeBaseCommit sets the MergeBaseCommit field's value.
+func (s *CommitDiffSourceCodeType) SetMergeBaseCommit(v string) *CommitDiffSourceCodeType {
+	s.MergeBaseCommit = &v
 	return s
 }
 
@@ -1698,12 +2432,20 @@ type ConflictException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ConflictException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ConflictException) GoString() string {
 	return s.String()
 }
@@ -1746,8 +2488,145 @@ func (s *ConflictException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
-type DescribeCodeReviewInput struct {
+type CreateCodeReviewInput struct {
 	_ struct{} `type:"structure"`
+
+	// Amazon CodeGuru Reviewer uses this value to prevent the accidental creation
+	// of duplicate code reviews if there are failures and retries.
+	ClientRequestToken *string `min:"1" type:"string" idempotencyToken:"true"`
+
+	// The name of the code review. The name of each code review in your Amazon
+	// Web Services account must be unique.
+	//
+	// Name is a required field
+	Name *string `min:"1" type:"string" required:"true"`
+
+	// The Amazon Resource Name (ARN) of the RepositoryAssociation (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_RepositoryAssociation.html)
+	// object. You can retrieve this ARN by calling ListRepositoryAssociations (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_ListRepositoryAssociations.html).
+	//
+	// A code review can only be created on an associated repository. This is the
+	// ARN of the associated repository.
+	//
+	// RepositoryAssociationArn is a required field
+	RepositoryAssociationArn *string `min:"1" type:"string" required:"true"`
+
+	// The type of code review to create. This is specified using a CodeReviewType
+	// (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_CodeReviewType.html)
+	// object. You can create a code review only of type RepositoryAnalysis.
+	//
+	// Type is a required field
+	Type *CodeReviewType `type:"structure" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateCodeReviewInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateCodeReviewInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateCodeReviewInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateCodeReviewInput"}
+	if s.ClientRequestToken != nil && len(*s.ClientRequestToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ClientRequestToken", 1))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.RepositoryAssociationArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("RepositoryAssociationArn"))
+	}
+	if s.RepositoryAssociationArn != nil && len(*s.RepositoryAssociationArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RepositoryAssociationArn", 1))
+	}
+	if s.Type == nil {
+		invalidParams.Add(request.NewErrParamRequired("Type"))
+	}
+	if s.Type != nil {
+		if err := s.Type.Validate(); err != nil {
+			invalidParams.AddNested("Type", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetClientRequestToken sets the ClientRequestToken field's value.
+func (s *CreateCodeReviewInput) SetClientRequestToken(v string) *CreateCodeReviewInput {
+	s.ClientRequestToken = &v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *CreateCodeReviewInput) SetName(v string) *CreateCodeReviewInput {
+	s.Name = &v
+	return s
+}
+
+// SetRepositoryAssociationArn sets the RepositoryAssociationArn field's value.
+func (s *CreateCodeReviewInput) SetRepositoryAssociationArn(v string) *CreateCodeReviewInput {
+	s.RepositoryAssociationArn = &v
+	return s
+}
+
+// SetType sets the Type field's value.
+func (s *CreateCodeReviewInput) SetType(v *CodeReviewType) *CreateCodeReviewInput {
+	s.Type = v
+	return s
+}
+
+type CreateCodeReviewOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Information about a code review. A code review belongs to the associated
+	// repository that contains the reviewed code.
+	CodeReview *CodeReview `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateCodeReviewOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateCodeReviewOutput) GoString() string {
+	return s.String()
+}
+
+// SetCodeReview sets the CodeReview field's value.
+func (s *CreateCodeReviewOutput) SetCodeReview(v *CodeReview) *CreateCodeReviewOutput {
+	s.CodeReview = v
+	return s
+}
+
+type DescribeCodeReviewInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The Amazon Resource Name (ARN) of the CodeReview (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_CodeReview.html)
 	// object.
@@ -1756,12 +2635,20 @@ type DescribeCodeReviewInput struct {
 	CodeReviewArn *string `location:"uri" locationName:"CodeReviewArn" min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCodeReviewInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCodeReviewInput) GoString() string {
 	return s.String()
 }
@@ -1795,12 +2682,20 @@ type DescribeCodeReviewOutput struct {
 	CodeReview *CodeReview `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCodeReviewOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeCodeReviewOutput) GoString() string {
 	return s.String()
 }
@@ -1812,7 +2707,7 @@ func (s *DescribeCodeReviewOutput) SetCodeReview(v *CodeReview) *DescribeCodeRev
 }
 
 type DescribeRecommendationFeedbackInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The Amazon Resource Name (ARN) of the CodeReview (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_CodeReview.html)
 	// object.
@@ -1829,19 +2724,27 @@ type DescribeRecommendationFeedbackInput struct {
 	// Optional parameter to describe the feedback for a given user. If this is
 	// not supplied, it defaults to the user making the request.
 	//
-	// The UserId is an IAM principal that can be specified as an AWS account ID
-	// or an Amazon Resource Name (ARN). For more information, see Specifying a
-	// Principal (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#Principal_specifying)
-	// in the AWS Identity and Access Management User Guide.
+	// The UserId is an IAM principal that can be specified as an Amazon Web Services
+	// account ID or an Amazon Resource Name (ARN). For more information, see Specifying
+	// a Principal (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#Principal_specifying)
+	// in the Amazon Web Services Identity and Access Management User Guide.
 	UserId *string `location:"querystring" locationName:"UserId" min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRecommendationFeedbackInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRecommendationFeedbackInput) GoString() string {
 	return s.String()
 }
@@ -1896,12 +2799,20 @@ type DescribeRecommendationFeedbackOutput struct {
 	RecommendationFeedback *RecommendationFeedback `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRecommendationFeedbackOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRecommendationFeedbackOutput) GoString() string {
 	return s.String()
 }
@@ -1913,21 +2824,29 @@ func (s *DescribeRecommendationFeedbackOutput) SetRecommendationFeedback(v *Reco
 }
 
 type DescribeRepositoryAssociationInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The Amazon Resource Name (ARN) of the RepositoryAssociation (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_RepositoryAssociation.html)
-	// object. You can retrieve this ARN by calling ListRepositories.
+	// object. You can retrieve this ARN by calling ListRepositoryAssociations (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_ListRepositoryAssociations.html).
 	//
 	// AssociationArn is a required field
 	AssociationArn *string `location:"uri" locationName:"AssociationArn" min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRepositoryAssociationInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRepositoryAssociationInput) GoString() string {
 	return s.String()
 }
@@ -1959,14 +2878,33 @@ type DescribeRepositoryAssociationOutput struct {
 
 	// Information about the repository association.
 	RepositoryAssociation *RepositoryAssociation `type:"structure"`
+
+	// An array of key-value pairs used to tag an associated repository. A tag is
+	// a custom attribute label with two parts:
+	//
+	//    * A tag key (for example, CostCenter, Environment, Project, or Secret).
+	//    Tag keys are case sensitive.
+	//
+	//    * An optional field known as a tag value (for example, 111122223333, Production,
+	//    or a team name). Omitting the tag value is the same as using an empty
+	//    string. Like tag keys, tag values are case sensitive.
+	Tags map[string]*string `min:"1" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRepositoryAssociationOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeRepositoryAssociationOutput) GoString() string {
 	return s.String()
 }
@@ -1977,22 +2915,36 @@ func (s *DescribeRepositoryAssociationOutput) SetRepositoryAssociation(v *Reposi
 	return s
 }
 
+// SetTags sets the Tags field's value.
+func (s *DescribeRepositoryAssociationOutput) SetTags(v map[string]*string) *DescribeRepositoryAssociationOutput {
+	s.Tags = v
+	return s
+}
+
 type DisassociateRepositoryInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The Amazon Resource Name (ARN) of the RepositoryAssociation (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_RepositoryAssociation.html)
-	// object.
+	// object. You can retrieve this ARN by calling ListRepositoryAssociations (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_ListRepositoryAssociations.html).
 	//
 	// AssociationArn is a required field
 	AssociationArn *string `location:"uri" locationName:"AssociationArn" min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateRepositoryInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateRepositoryInput) GoString() string {
 	return s.String()
 }
@@ -2024,14 +2976,33 @@ type DisassociateRepositoryOutput struct {
 
 	// Information about the disassociated repository.
 	RepositoryAssociation *RepositoryAssociation `type:"structure"`
+
+	// An array of key-value pairs used to tag an associated repository. A tag is
+	// a custom attribute label with two parts:
+	//
+	//    * A tag key (for example, CostCenter, Environment, Project, or Secret).
+	//    Tag keys are case sensitive.
+	//
+	//    * An optional field known as a tag value (for example, 111122223333, Production,
+	//    or a team name). Omitting the tag value is the same as using an empty
+	//    string. Like tag keys, tag values are case sensitive.
+	Tags map[string]*string `min:"1" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateRepositoryOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DisassociateRepositoryOutput) GoString() string {
 	return s.String()
 }
@@ -2039,6 +3010,71 @@ func (s DisassociateRepositoryOutput) GoString() string {
 // SetRepositoryAssociation sets the RepositoryAssociation field's value.
 func (s *DisassociateRepositoryOutput) SetRepositoryAssociation(v *RepositoryAssociation) *DisassociateRepositoryOutput {
 	s.RepositoryAssociation = v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *DisassociateRepositoryOutput) SetTags(v map[string]*string) *DisassociateRepositoryOutput {
+	s.Tags = v
+	return s
+}
+
+// Information about an event. The event might be a push, pull request, scheduled
+// request, or another type of event.
+type EventInfo struct {
+	_ struct{} `type:"structure"`
+
+	// The name of the event. The possible names are pull_request, workflow_dispatch,
+	// schedule, and push
+	Name *string `min:"1" type:"string"`
+
+	// The state of an event. The state might be open, closed, or another state.
+	State *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EventInfo) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s EventInfo) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *EventInfo) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "EventInfo"}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.State != nil && len(*s.State) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("State", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetName sets the Name field's value.
+func (s *EventInfo) SetName(v string) *EventInfo {
+	s.Name = &v
+	return s
+}
+
+// SetState sets the State field's value.
+func (s *EventInfo) SetState(v string) *EventInfo {
+	s.State = &v
 	return s
 }
 
@@ -2050,12 +3086,20 @@ type InternalServerException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalServerException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InternalServerException) GoString() string {
 	return s.String()
 }
@@ -2098,8 +3142,72 @@ func (s *InternalServerException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
-type ListCodeReviewsInput struct {
+// An object that contains:
+//
+//    * The encryption option for a repository association. It is either owned
+//    by Amazon Web Services Key Management Service (KMS) (AWS_OWNED_CMK) or
+//    customer managed (CUSTOMER_MANAGED_CMK).
+//
+//    * The ID of the Amazon Web Services KMS key that is associated with a
+//    respository association.
+type KMSKeyDetails struct {
 	_ struct{} `type:"structure"`
+
+	// The encryption option for a repository association. It is either owned by
+	// Amazon Web Services Key Management Service (KMS) (AWS_OWNED_CMK) or customer
+	// managed (CUSTOMER_MANAGED_CMK).
+	EncryptionOption *string `type:"string" enum:"EncryptionOption"`
+
+	// The ID of the Amazon Web Services KMS key that is associated with a respository
+	// association.
+	KMSKeyId *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KMSKeyDetails) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s KMSKeyDetails) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *KMSKeyDetails) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "KMSKeyDetails"}
+	if s.KMSKeyId != nil && len(*s.KMSKeyId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("KMSKeyId", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetEncryptionOption sets the EncryptionOption field's value.
+func (s *KMSKeyDetails) SetEncryptionOption(v string) *KMSKeyDetails {
+	s.EncryptionOption = &v
+	return s
+}
+
+// SetKMSKeyId sets the KMSKeyId field's value.
+func (s *KMSKeyDetails) SetKMSKeyId(v string) *KMSKeyDetails {
+	s.KMSKeyId = &v
+	return s
+}
+
+type ListCodeReviewsInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The maximum number of results that are returned per call. The default is
 	// 100.
@@ -2139,12 +3247,20 @@ type ListCodeReviewsInput struct {
 	Type *string `location:"querystring" locationName:"Type" type:"string" required:"true" enum:"Type"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCodeReviewsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCodeReviewsInput) GoString() string {
 	return s.String()
 }
@@ -2223,12 +3339,20 @@ type ListCodeReviewsOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCodeReviewsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCodeReviewsOutput) GoString() string {
 	return s.String()
 }
@@ -2246,7 +3370,7 @@ func (s *ListCodeReviewsOutput) SetNextToken(v string) *ListCodeReviewsOutput {
 }
 
 type ListRecommendationFeedbackInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The Amazon Resource Name (ARN) of the CodeReview (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_CodeReview.html)
 	// object.
@@ -2267,22 +3391,31 @@ type ListRecommendationFeedbackInput struct {
 	// Used to query the recommendation feedback for a given recommendation.
 	RecommendationIds []*string `location:"querystring" locationName:"RecommendationIds" min:"1" type:"list"`
 
-	// An AWS user's account ID or Amazon Resource Name (ARN). Use this ID to query
-	// the recommendation feedback for a code review from that user.
+	// An Amazon Web Services user's account ID or Amazon Resource Name (ARN). Use
+	// this ID to query the recommendation feedback for a code review from that
+	// user.
 	//
-	// The UserId is an IAM principal that can be specified as an AWS account ID
-	// or an Amazon Resource Name (ARN). For more information, see Specifying a
-	// Principal (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#Principal_specifying)
-	// in the AWS Identity and Access Management User Guide.
+	// The UserId is an IAM principal that can be specified as an Amazon Web Services
+	// account ID or an Amazon Resource Name (ARN). For more information, see Specifying
+	// a Principal (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#Principal_specifying)
+	// in the Amazon Web Services Identity and Access Management User Guide.
 	UserIds []*string `location:"querystring" locationName:"UserIds" min:"1" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRecommendationFeedbackInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRecommendationFeedbackInput) GoString() string {
 	return s.String()
 }
@@ -2358,12 +3491,20 @@ type ListRecommendationFeedbackOutput struct {
 	RecommendationFeedbackSummaries []*RecommendationFeedbackSummary `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRecommendationFeedbackOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRecommendationFeedbackOutput) GoString() string {
 	return s.String()
 }
@@ -2381,7 +3522,7 @@ func (s *ListRecommendationFeedbackOutput) SetRecommendationFeedbackSummaries(v 
 }
 
 type ListRecommendationsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The Amazon Resource Name (ARN) of the CodeReview (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_CodeReview.html)
 	// object.
@@ -2397,12 +3538,20 @@ type ListRecommendationsInput struct {
 	NextToken *string `location:"querystring" locationName:"NextToken" min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRecommendationsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRecommendationsInput) GoString() string {
 	return s.String()
 }
@@ -2457,12 +3606,20 @@ type ListRecommendationsOutput struct {
 	RecommendationSummaries []*RecommendationSummary `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRecommendationsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRecommendationsOutput) GoString() string {
 	return s.String()
 }
@@ -2480,7 +3637,7 @@ func (s *ListRecommendationsOutput) SetRecommendationSummaries(v []*Recommendati
 }
 
 type ListRepositoryAssociationsInput struct {
-	_ struct{} `type:"structure"`
+	_ struct{} `type:"structure" nopayload:"true"`
 
 	// The maximum number of repository association results returned by ListRepositoryAssociations
 	// in paginated output. When this parameter is used, ListRepositoryAssociations
@@ -2503,10 +3660,10 @@ type ListRepositoryAssociationsInput struct {
 	// next items in a list and not for other programmatic purposes.
 	NextToken *string `location:"querystring" locationName:"NextToken" min:"1" type:"string"`
 
-	// List of owners to use as a filter. For AWS CodeCommit, it is the name of
-	// the CodeCommit account that was used to associate the repository. For other
-	// repository source providers, such as Bitbucket, this is name of the account
-	// that was used to associate the repository.
+	// List of owners to use as a filter. For Amazon Web Services CodeCommit, it
+	// is the name of the CodeCommit account that was used to associate the repository.
+	// For other repository source providers, such as Bitbucket and GitHub Enterprise
+	// Server, this is name of the account that was used to associate the repository.
 	Owners []*string `location:"querystring" locationName:"Owner" min:"1" type:"list"`
 
 	// List of provider types to use as a filter.
@@ -2520,25 +3677,42 @@ type ListRepositoryAssociationsInput struct {
 	//
 	//    * Associating: CodeGuru Reviewer is: Setting up pull request notifications.
 	//    This is required for pull requests to trigger a CodeGuru Reviewer review.
-	//    If your repository ProviderType is GitHub or Bitbucket, CodeGuru Reviewer
-	//    creates webhooks in your repository to trigger CodeGuru Reviewer reviews.
-	//    If you delete these webhooks, reviews of code in your repository cannot
-	//    be triggered. Setting up source code access. This is required for CodeGuru
-	//    Reviewer to securely clone code in your repository.
+	//    If your repository ProviderType is GitHub, GitHub Enterprise Server, or
+	//    Bitbucket, CodeGuru Reviewer creates webhooks in your repository to trigger
+	//    CodeGuru Reviewer reviews. If you delete these webhooks, reviews of code
+	//    in your repository cannot be triggered. Setting up source code access.
+	//    This is required for CodeGuru Reviewer to securely clone code in your
+	//    repository.
 	//
 	//    * Failed: The repository failed to associate or disassociate.
 	//
 	//    * Disassociating: CodeGuru Reviewer is removing the repository's pull
 	//    request notifications and source code access.
+	//
+	//    * Disassociated: CodeGuru Reviewer successfully disassociated the repository.
+	//    You can create a new association with this repository if you want to review
+	//    source code in it later. You can control access to code reviews created
+	//    in an associated repository with tags after it has been disassociated.
+	//    For more information, see Using tags to control access to associated repositories
+	//    (https://docs.aws.amazon.com/codeguru/latest/reviewer-ug/auth-and-access-control-using-tags.html)
+	//    in the Amazon CodeGuru Reviewer User Guide.
 	States []*string `location:"querystring" locationName:"State" min:"1" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRepositoryAssociationsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRepositoryAssociationsInput) GoString() string {
 	return s.String()
 }
@@ -2620,12 +3794,20 @@ type ListRepositoryAssociationsOutput struct {
 	RepositoryAssociationSummaries []*RepositoryAssociationSummary `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRepositoryAssociationsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListRepositoryAssociationsOutput) GoString() string {
 	return s.String()
 }
@@ -2642,6 +3824,95 @@ func (s *ListRepositoryAssociationsOutput) SetRepositoryAssociationSummaries(v [
 	return s
 }
 
+type ListTagsForResourceInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The Amazon Resource Name (ARN) of the RepositoryAssociation (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_RepositoryAssociation.html)
+	// object. You can retrieve this ARN by calling ListRepositoryAssociations (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_ListRepositoryAssociations.html).
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `location:"uri" locationName:"resourceArn" min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListTagsForResourceInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListTagsForResourceInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListTagsForResourceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListTagsForResourceInput"}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+	if s.ResourceArn != nil && len(*s.ResourceArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ResourceArn", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *ListTagsForResourceInput) SetResourceArn(v string) *ListTagsForResourceInput {
+	s.ResourceArn = &v
+	return s
+}
+
+type ListTagsForResourceOutput struct {
+	_ struct{} `type:"structure"`
+
+	// An array of key-value pairs used to tag an associated repository. A tag is
+	// a custom attribute label with two parts:
+	//
+	//    * A tag key (for example, CostCenter, Environment, Project, or Secret).
+	//    Tag keys are case sensitive.
+	//
+	//    * An optional field known as a tag value (for example, 111122223333, Production,
+	//    or a team name). Omitting the tag value is the same as using an empty
+	//    string. Like tag keys, tag values are case sensitive.
+	Tags map[string]*string `min:"1" type:"map"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListTagsForResourceOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListTagsForResourceOutput) GoString() string {
+	return s.String()
+}
+
+// SetTags sets the Tags field's value.
+func (s *ListTagsForResourceOutput) SetTags(v map[string]*string) *ListTagsForResourceOutput {
+	s.Tags = v
+	return s
+}
+
 // Information about the statistics from the code review.
 type Metrics struct {
 	_ struct{} `type:"structure"`
@@ -2649,26 +3920,26 @@ type Metrics struct {
 	// Total number of recommendations found in the code review.
 	FindingsCount *int64 `type:"long"`
 
-	// Lines of code metered in the code review. For the initial code review pull
-	// request and all subsequent revisions, this includes all lines of code in
-	// the files added to the pull request. In subsequent revisions, for files that
-	// already existed in the pull request, this includes only the changed lines
-	// of code. In both cases, this does not include non-code lines such as comments
-	// and import statements. For example, if you submit a pull request containing
-	// 5 files, each with 500 lines of code, and in a subsequent revision you added
-	// a new file with 200 lines of code, and also modified a total of 25 lines
-	// across the initial 5 files, MeteredLinesOfCodeCount includes the first 5
-	// files (5 * 500 = 2,500 lines), the new file (200 lines) and the 25 changed
-	// lines of code for a total of 2,725 lines of code.
+	// MeteredLinesOfCode is the number of lines of code in the repository where
+	// the code review happened. This does not include non-code lines such as comments
+	// and blank lines.
 	MeteredLinesOfCodeCount *int64 `type:"long"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Metrics) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Metrics) GoString() string {
 	return s.String()
 }
@@ -2706,12 +3977,20 @@ type MetricsSummary struct {
 	MeteredLinesOfCodeCount *int64 `type:"long"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s MetricsSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s MetricsSummary) GoString() string {
 	return s.String()
 }
@@ -2736,12 +4015,20 @@ type NotFoundException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NotFoundException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s NotFoundException) GoString() string {
 	return s.String()
 }
@@ -2806,12 +4093,20 @@ type PutRecommendationFeedbackInput struct {
 	RecommendationId *string `min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PutRecommendationFeedbackInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PutRecommendationFeedbackInput) GoString() string {
 	return s.String()
 }
@@ -2863,12 +4158,20 @@ type PutRecommendationFeedbackOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PutRecommendationFeedbackOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PutRecommendationFeedbackOutput) GoString() string {
 	return s.String()
 }
@@ -2897,19 +4200,27 @@ type RecommendationFeedback struct {
 
 	// The ID of the user that made the API call.
 	//
-	// The UserId is an IAM principal that can be specified as an AWS account ID
-	// or an Amazon Resource Name (ARN). For more information, see Specifying a
-	// Principal (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#Principal_specifying)
-	// in the AWS Identity and Access Management User Guide.
+	// The UserId is an IAM principal that can be specified as an Amazon Web Services
+	// account ID or an Amazon Resource Name (ARN). For more information, see Specifying
+	// a Principal (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#Principal_specifying)
+	// in the Amazon Web Services Identity and Access Management User Guide.
 	UserId *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RecommendationFeedback) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RecommendationFeedback) GoString() string {
 	return s.String()
 }
@@ -2963,19 +4274,27 @@ type RecommendationFeedbackSummary struct {
 
 	// The ID of the user that gave the feedback.
 	//
-	// The UserId is an IAM principal that can be specified as an AWS account ID
-	// or an Amazon Resource Name (ARN). For more information, see Specifying a
-	// Principal (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#Principal_specifying)
-	// in the AWS Identity and Access Management User Guide.
+	// The UserId is an IAM principal that can be specified as an Amazon Web Services
+	// account ID or an Amazon Resource Name (ARN). For more information, see Specifying
+	// a Principal (https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_policies_elements_principal.html#Principal_specifying)
+	// in the Amazon Web Services Identity and Access Management User Guide.
 	UserId *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RecommendationFeedbackSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RecommendationFeedbackSummary) GoString() string {
 	return s.String()
 }
@@ -3014,21 +4333,41 @@ type RecommendationSummary struct {
 	// Name of the file on which a recommendation is provided.
 	FilePath *string `min:"1" type:"string"`
 
+	// The type of a recommendation.
+	RecommendationCategory *string `type:"string" enum:"RecommendationCategory"`
+
 	// The recommendation ID that can be used to track the provided recommendations.
 	// Later on it can be used to collect the feedback.
 	RecommendationId *string `min:"1" type:"string"`
+
+	// Metadata about a rule. Rule metadata includes an ID, a name, a list of tags,
+	// and a short and long description. CodeGuru Reviewer uses rules to analyze
+	// code. A rule's recommendation is included in analysis results if code is
+	// detected that violates the rule.
+	RuleMetadata *RuleMetadata `type:"structure"`
+
+	// The severity of the issue in the code that generated this recommendation.
+	Severity *string `type:"string" enum:"Severity"`
 
 	// Start line from where the recommendation is applicable in the source commit
 	// or source branch.
 	StartLine *int64 `type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RecommendationSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RecommendationSummary) GoString() string {
 	return s.String()
 }
@@ -3051,9 +4390,27 @@ func (s *RecommendationSummary) SetFilePath(v string) *RecommendationSummary {
 	return s
 }
 
+// SetRecommendationCategory sets the RecommendationCategory field's value.
+func (s *RecommendationSummary) SetRecommendationCategory(v string) *RecommendationSummary {
+	s.RecommendationCategory = &v
+	return s
+}
+
 // SetRecommendationId sets the RecommendationId field's value.
 func (s *RecommendationSummary) SetRecommendationId(v string) *RecommendationSummary {
 	s.RecommendationId = &v
+	return s
+}
+
+// SetRuleMetadata sets the RuleMetadata field's value.
+func (s *RecommendationSummary) SetRuleMetadata(v *RuleMetadata) *RecommendationSummary {
+	s.RuleMetadata = v
+	return s
+}
+
+// SetSeverity sets the Severity field's value.
+func (s *RecommendationSummary) SetSeverity(v string) *RecommendationSummary {
+	s.Severity = &v
 	return s
 }
 
@@ -3063,29 +4420,40 @@ func (s *RecommendationSummary) SetStartLine(v int64) *RecommendationSummary {
 	return s
 }
 
-// Information about an associated AWS CodeCommit repository or an associated
-// repository that is managed by AWS CodeStar Connections (for example, Bitbucket).
-// This Repository object is not used if your source code is in an associated
-// GitHub repository.
+// Information about an associated Amazon Web Services CodeCommit repository
+// or an associated repository that is managed by Amazon Web Services CodeStar
+// Connections (for example, Bitbucket). This Repository object is not used
+// if your source code is in an associated GitHub repository.
 type Repository struct {
 	_ struct{} `type:"structure"`
 
 	// Information about a Bitbucket repository.
 	Bitbucket *ThirdPartySourceRepository `type:"structure"`
 
-	// Information about an AWS CodeCommit repository.
+	// Information about an Amazon Web Services CodeCommit repository.
 	CodeCommit *CodeCommitRepository `type:"structure"`
 
 	// Information about a GitHub Enterprise Server repository.
 	GitHubEnterpriseServer *ThirdPartySourceRepository `type:"structure"`
+
+	// Information about a repository in an S3 bucket.
+	S3Bucket *S3Repository `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Repository) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Repository) GoString() string {
 	return s.String()
 }
@@ -3106,6 +4474,11 @@ func (s *Repository) Validate() error {
 	if s.GitHubEnterpriseServer != nil {
 		if err := s.GitHubEnterpriseServer.Validate(); err != nil {
 			invalidParams.AddNested("GitHubEnterpriseServer", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.S3Bucket != nil {
+		if err := s.S3Bucket.Validate(); err != nil {
+			invalidParams.AddNested("S3Bucket", err.(request.ErrInvalidParams))
 		}
 	}
 
@@ -3133,6 +4506,76 @@ func (s *Repository) SetGitHubEnterpriseServer(v *ThirdPartySourceRepository) *R
 	return s
 }
 
+// SetS3Bucket sets the S3Bucket field's value.
+func (s *Repository) SetS3Bucket(v *S3Repository) *Repository {
+	s.S3Bucket = v
+	return s
+}
+
+// A code review type that analyzes all code under a specified branch in an
+// associated repository. The associated repository is specified using its ARN
+// when you call CreateCodeReview (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_CreateCodeReview).
+type RepositoryAnalysis struct {
+	_ struct{} `type:"structure"`
+
+	// A SourceCodeType (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_SourceCodeType)
+	// that specifies the tip of a branch in an associated repository.
+	RepositoryHead *RepositoryHeadSourceCodeType `type:"structure"`
+
+	// Specifies the source code that is analyzed in a code review.
+	SourceCodeType *SourceCodeType `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RepositoryAnalysis) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RepositoryAnalysis) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RepositoryAnalysis) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RepositoryAnalysis"}
+	if s.RepositoryHead != nil {
+		if err := s.RepositoryHead.Validate(); err != nil {
+			invalidParams.AddNested("RepositoryHead", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.SourceCodeType != nil {
+		if err := s.SourceCodeType.Validate(); err != nil {
+			invalidParams.AddNested("SourceCodeType", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetRepositoryHead sets the RepositoryHead field's value.
+func (s *RepositoryAnalysis) SetRepositoryHead(v *RepositoryHeadSourceCodeType) *RepositoryAnalysis {
+	s.RepositoryHead = v
+	return s
+}
+
+// SetSourceCodeType sets the SourceCodeType field's value.
+func (s *RepositoryAnalysis) SetSourceCodeType(v *SourceCodeType) *RepositoryAnalysis {
+	s.SourceCodeType = v
+	return s
+}
+
 // Information about a repository association. The DescribeRepositoryAssociation
 // (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_DescribeRepositoryAssociation.html)
 // operation returns a RepositoryAssociation object.
@@ -3145,15 +4588,25 @@ type RepositoryAssociation struct {
 	// The ID of the repository association.
 	AssociationId *string `min:"1" type:"string"`
 
-	// The Amazon Resource Name (ARN) of an AWS CodeStar Connections connection.
-	// Its format is arn:aws:codestar-connections:region-id:aws-account_id:connection/connection-id.
+	// The Amazon Resource Name (ARN) of an Amazon Web Services CodeStar Connections
+	// connection. Its format is arn:aws:codestar-connections:region-id:aws-account_id:connection/connection-id.
 	// For more information, see Connection (https://docs.aws.amazon.com/codestar-connections/latest/APIReference/API_Connection.html)
-	// in the AWS CodeStar Connections API Reference.
+	// in the Amazon Web Services CodeStar Connections API Reference.
 	ConnectionArn *string `type:"string"`
 
 	// The time, in milliseconds since the epoch, when the repository association
 	// was created.
 	CreatedTimeStamp *time.Time `type:"timestamp"`
+
+	// A KMSKeyDetails object that contains:
+	//
+	//    * The encryption option for this repository association. It is either
+	//    owned by Amazon Web Services Key Management Service (KMS) (AWS_OWNED_CMK)
+	//    or customer managed (CUSTOMER_MANAGED_CMK).
+	//
+	//    * The ID of the Amazon Web Services KMS key that is associated with this
+	//    respository association.
+	KMSKeyDetails *KMSKeyDetails `type:"structure"`
 
 	// The time, in milliseconds since the epoch, when the repository association
 	// was last updated.
@@ -3162,13 +4615,20 @@ type RepositoryAssociation struct {
 	// The name of the repository.
 	Name *string `min:"1" type:"string"`
 
-	// The owner of the repository. For an AWS CodeCommit repository, this is the
-	// AWS account ID of the account that owns the repository. For a GitHub or Bitbucket
-	// repository, this is the username for the account that owns the repository.
+	// The owner of the repository. For an Amazon Web Services CodeCommit repository,
+	// this is the Amazon Web Services account ID of the account that owns the repository.
+	// For a GitHub, GitHub Enterprise Server, or Bitbucket repository, this is
+	// the username for the account that owns the repository. For an S3 repository,
+	// it can be the username or Amazon Web Services account ID.
 	Owner *string `min:"1" type:"string"`
 
 	// The provider type of the repository association.
 	ProviderType *string `type:"string" enum:"ProviderType"`
+
+	// Specifies the name of an S3 bucket and a CodeArtifacts object that contains
+	// the S3 object keys for a source code .zip file and for a build artifacts
+	// .zip file that contains .jar or .class files.
+	S3RepositoryDetails *S3RepositoryDetails `type:"structure"`
 
 	// The state of the repository association.
 	//
@@ -3178,28 +4638,45 @@ type RepositoryAssociation struct {
 	//
 	//    * Associating: CodeGuru Reviewer is: Setting up pull request notifications.
 	//    This is required for pull requests to trigger a CodeGuru Reviewer review.
-	//    If your repository ProviderType is GitHub or Bitbucket, CodeGuru Reviewer
-	//    creates webhooks in your repository to trigger CodeGuru Reviewer reviews.
-	//    If you delete these webhooks, reviews of code in your repository cannot
-	//    be triggered. Setting up source code access. This is required for CodeGuru
-	//    Reviewer to securely clone code in your repository.
+	//    If your repository ProviderType is GitHub, GitHub Enterprise Server, or
+	//    Bitbucket, CodeGuru Reviewer creates webhooks in your repository to trigger
+	//    CodeGuru Reviewer reviews. If you delete these webhooks, reviews of code
+	//    in your repository cannot be triggered. Setting up source code access.
+	//    This is required for CodeGuru Reviewer to securely clone code in your
+	//    repository.
 	//
 	//    * Failed: The repository failed to associate or disassociate.
 	//
 	//    * Disassociating: CodeGuru Reviewer is removing the repository's pull
 	//    request notifications and source code access.
+	//
+	//    * Disassociated: CodeGuru Reviewer successfully disassociated the repository.
+	//    You can create a new association with this repository if you want to review
+	//    source code in it later. You can control access to code reviews created
+	//    in an associated repository with tags after it has been disassociated.
+	//    For more information, see Using tags to control access to associated repositories
+	//    (https://docs.aws.amazon.com/codeguru/latest/reviewer-ug/auth-and-access-control-using-tags.html)
+	//    in the Amazon CodeGuru Reviewer User Guide.
 	State *string `type:"string" enum:"RepositoryAssociationState"`
 
 	// A description of why the repository association is in the current state.
 	StateReason *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RepositoryAssociation) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RepositoryAssociation) GoString() string {
 	return s.String()
 }
@@ -3228,6 +4705,12 @@ func (s *RepositoryAssociation) SetCreatedTimeStamp(v time.Time) *RepositoryAsso
 	return s
 }
 
+// SetKMSKeyDetails sets the KMSKeyDetails field's value.
+func (s *RepositoryAssociation) SetKMSKeyDetails(v *KMSKeyDetails) *RepositoryAssociation {
+	s.KMSKeyDetails = v
+	return s
+}
+
 // SetLastUpdatedTimeStamp sets the LastUpdatedTimeStamp field's value.
 func (s *RepositoryAssociation) SetLastUpdatedTimeStamp(v time.Time) *RepositoryAssociation {
 	s.LastUpdatedTimeStamp = &v
@@ -3252,6 +4735,12 @@ func (s *RepositoryAssociation) SetProviderType(v string) *RepositoryAssociation
 	return s
 }
 
+// SetS3RepositoryDetails sets the S3RepositoryDetails field's value.
+func (s *RepositoryAssociation) SetS3RepositoryDetails(v *S3RepositoryDetails) *RepositoryAssociation {
+	s.S3RepositoryDetails = v
+	return s
+}
+
 // SetState sets the State field's value.
 func (s *RepositoryAssociation) SetState(v string) *RepositoryAssociation {
 	s.State = &v
@@ -3271,16 +4760,16 @@ type RepositoryAssociationSummary struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) of the RepositoryAssociation (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_RepositoryAssociation.html)
-	// object.
+	// object. You can retrieve this ARN by calling ListRepositoryAssociations (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_ListRepositoryAssociations.html).
 	AssociationArn *string `min:"1" type:"string"`
 
 	// The repository association ID.
 	AssociationId *string `min:"1" type:"string"`
 
-	// The Amazon Resource Name (ARN) of an AWS CodeStar Connections connection.
-	// Its format is arn:aws:codestar-connections:region-id:aws-account_id:connection/connection-id.
+	// The Amazon Resource Name (ARN) of an Amazon Web Services CodeStar Connections
+	// connection. Its format is arn:aws:codestar-connections:region-id:aws-account_id:connection/connection-id.
 	// For more information, see Connection (https://docs.aws.amazon.com/codestar-connections/latest/APIReference/API_Connection.html)
-	// in the AWS CodeStar Connections API Reference.
+	// in the Amazon Web Services CodeStar Connections API Reference.
 	ConnectionArn *string `type:"string"`
 
 	// The time, in milliseconds since the epoch, since the repository association
@@ -3290,9 +4779,11 @@ type RepositoryAssociationSummary struct {
 	// The name of the repository association.
 	Name *string `min:"1" type:"string"`
 
-	// The owner of the repository. For an AWS CodeCommit repository, this is the
-	// AWS account ID of the account that owns the repository. For a GitHub or Bitbucket
-	// repository, this is the username for the account that owns the repository.
+	// The owner of the repository. For an Amazon Web Services CodeCommit repository,
+	// this is the Amazon Web Services account ID of the account that owns the repository.
+	// For a GitHub, GitHub Enterprise Server, or Bitbucket repository, this is
+	// the username for the account that owns the repository. For an S3 repository,
+	// it can be the username or Amazon Web Services account ID.
 	Owner *string `min:"1" type:"string"`
 
 	// The provider type of the repository association.
@@ -3306,25 +4797,42 @@ type RepositoryAssociationSummary struct {
 	//
 	//    * Associating: CodeGuru Reviewer is: Setting up pull request notifications.
 	//    This is required for pull requests to trigger a CodeGuru Reviewer review.
-	//    If your repository ProviderType is GitHub or Bitbucket, CodeGuru Reviewer
-	//    creates webhooks in your repository to trigger CodeGuru Reviewer reviews.
-	//    If you delete these webhooks, reviews of code in your repository cannot
-	//    be triggered. Setting up source code access. This is required for CodeGuru
-	//    Reviewer to securely clone code in your repository.
+	//    If your repository ProviderType is GitHub, GitHub Enterprise Server, or
+	//    Bitbucket, CodeGuru Reviewer creates webhooks in your repository to trigger
+	//    CodeGuru Reviewer reviews. If you delete these webhooks, reviews of code
+	//    in your repository cannot be triggered. Setting up source code access.
+	//    This is required for CodeGuru Reviewer to securely clone code in your
+	//    repository.
 	//
 	//    * Failed: The repository failed to associate or disassociate.
 	//
 	//    * Disassociating: CodeGuru Reviewer is removing the repository's pull
 	//    request notifications and source code access.
+	//
+	//    * Disassociated: CodeGuru Reviewer successfully disassociated the repository.
+	//    You can create a new association with this repository if you want to review
+	//    source code in it later. You can control access to code reviews created
+	//    in an associated repository with tags after it has been disassociated.
+	//    For more information, see Using tags to control access to associated repositories
+	//    (https://docs.aws.amazon.com/codeguru/latest/reviewer-ug/auth-and-access-control-using-tags.html)
+	//    in the Amazon CodeGuru Reviewer User Guide.
 	State *string `type:"string" enum:"RepositoryAssociationState"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RepositoryAssociationSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s RepositoryAssociationSummary) GoString() string {
 	return s.String()
 }
@@ -3377,6 +4885,146 @@ func (s *RepositoryAssociationSummary) SetState(v string) *RepositoryAssociation
 	return s
 }
 
+// A SourceCodeType (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_SourceCodeType)
+// that specifies the tip of a branch in an associated repository.
+type RepositoryHeadSourceCodeType struct {
+	_ struct{} `type:"structure"`
+
+	// The name of the branch in an associated repository. The RepositoryHeadSourceCodeType
+	// specifies the tip of this branch.
+	//
+	// BranchName is a required field
+	BranchName *string `min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RepositoryHeadSourceCodeType) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RepositoryHeadSourceCodeType) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RepositoryHeadSourceCodeType) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RepositoryHeadSourceCodeType"}
+	if s.BranchName == nil {
+		invalidParams.Add(request.NewErrParamRequired("BranchName"))
+	}
+	if s.BranchName != nil && len(*s.BranchName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("BranchName", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetBranchName sets the BranchName field's value.
+func (s *RepositoryHeadSourceCodeType) SetBranchName(v string) *RepositoryHeadSourceCodeType {
+	s.BranchName = &v
+	return s
+}
+
+// Metadata that is associated with a code review. This applies to both pull
+// request and repository analysis code reviews.
+type RequestMetadata struct {
+	_ struct{} `type:"structure"`
+
+	// Information about the event associated with a code review.
+	EventInfo *EventInfo `type:"structure"`
+
+	// The ID of the request. This is required for a pull request code review.
+	RequestId *string `min:"1" type:"string"`
+
+	// An identifier, such as a name or account ID, that is associated with the
+	// requester. The Requester is used to capture the author/actor name of the
+	// event request.
+	Requester *string `min:"1" type:"string"`
+
+	// The name of the repository vendor used to upload code to an S3 bucket for
+	// a CI/CD code review. For example, if code and artifacts are uploaded to an
+	// S3 bucket for a CI/CD code review by GitHub scripts from a GitHub repository,
+	// then the repository association's ProviderType is S3Bucket and the CI/CD
+	// repository vendor name is GitHub. For more information, see the definition
+	// for ProviderType in RepositoryAssociation (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_RepositoryAssociation.html).
+	VendorName *string `type:"string" enum:"VendorName"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RequestMetadata) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RequestMetadata) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *RequestMetadata) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "RequestMetadata"}
+	if s.RequestId != nil && len(*s.RequestId) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("RequestId", 1))
+	}
+	if s.Requester != nil && len(*s.Requester) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Requester", 1))
+	}
+	if s.EventInfo != nil {
+		if err := s.EventInfo.Validate(); err != nil {
+			invalidParams.AddNested("EventInfo", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetEventInfo sets the EventInfo field's value.
+func (s *RequestMetadata) SetEventInfo(v *EventInfo) *RequestMetadata {
+	s.EventInfo = v
+	return s
+}
+
+// SetRequestId sets the RequestId field's value.
+func (s *RequestMetadata) SetRequestId(v string) *RequestMetadata {
+	s.RequestId = &v
+	return s
+}
+
+// SetRequester sets the Requester field's value.
+func (s *RequestMetadata) SetRequester(v string) *RequestMetadata {
+	s.Requester = &v
+	return s
+}
+
+// SetVendorName sets the VendorName field's value.
+func (s *RequestMetadata) SetVendorName(v string) *RequestMetadata {
+	s.VendorName = &v
+	return s
+}
+
 // The resource specified in the request was not found.
 type ResourceNotFoundException struct {
 	_            struct{}                  `type:"structure"`
@@ -3385,12 +5033,20 @@ type ResourceNotFoundException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) GoString() string {
 	return s.String()
 }
@@ -3433,22 +5089,366 @@ func (s *ResourceNotFoundException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
-// Information about the source code type.
+// Metadata about a rule. Rule metadata includes an ID, a name, a list of tags,
+// and a short and long description. CodeGuru Reviewer uses rules to analyze
+// code. A rule's recommendation is included in analysis results if code is
+// detected that violates the rule.
+type RuleMetadata struct {
+	_ struct{} `type:"structure"`
+
+	// A long description of the rule.
+	LongDescription *string `min:"1" type:"string"`
+
+	// The ID of the rule.
+	RuleId *string `min:"1" type:"string"`
+
+	// The name of the rule.
+	RuleName *string `min:"1" type:"string"`
+
+	// Tags that are associated with the rule.
+	RuleTags []*string `min:"1" type:"list"`
+
+	// A short description of the rule.
+	ShortDescription *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RuleMetadata) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s RuleMetadata) GoString() string {
+	return s.String()
+}
+
+// SetLongDescription sets the LongDescription field's value.
+func (s *RuleMetadata) SetLongDescription(v string) *RuleMetadata {
+	s.LongDescription = &v
+	return s
+}
+
+// SetRuleId sets the RuleId field's value.
+func (s *RuleMetadata) SetRuleId(v string) *RuleMetadata {
+	s.RuleId = &v
+	return s
+}
+
+// SetRuleName sets the RuleName field's value.
+func (s *RuleMetadata) SetRuleName(v string) *RuleMetadata {
+	s.RuleName = &v
+	return s
+}
+
+// SetRuleTags sets the RuleTags field's value.
+func (s *RuleMetadata) SetRuleTags(v []*string) *RuleMetadata {
+	s.RuleTags = v
+	return s
+}
+
+// SetShortDescription sets the ShortDescription field's value.
+func (s *RuleMetadata) SetShortDescription(v string) *RuleMetadata {
+	s.ShortDescription = &v
+	return s
+}
+
+// Information about an associated repository in an S3 bucket. The associated
+// repository contains a source code .zip file and a build artifacts .zip file
+// that contains .jar or .class files.
+type S3BucketRepository struct {
+	_ struct{} `type:"structure"`
+
+	// An S3RepositoryDetails object that specifies the name of an S3 bucket and
+	// a CodeArtifacts object. The CodeArtifacts object includes the S3 object keys
+	// for a source code .zip file and for a build artifacts .zip file.
+	Details *S3RepositoryDetails `type:"structure"`
+
+	// The name of the repository when the ProviderType is S3Bucket.
+	//
+	// Name is a required field
+	Name *string `min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s S3BucketRepository) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s S3BucketRepository) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *S3BucketRepository) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "S3BucketRepository"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+	if s.Details != nil {
+		if err := s.Details.Validate(); err != nil {
+			invalidParams.AddNested("Details", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDetails sets the Details field's value.
+func (s *S3BucketRepository) SetDetails(v *S3RepositoryDetails) *S3BucketRepository {
+	s.Details = v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *S3BucketRepository) SetName(v string) *S3BucketRepository {
+	s.Name = &v
+	return s
+}
+
+// Information about a repository in an S3 bucket.
+type S3Repository struct {
+	_ struct{} `type:"structure"`
+
+	// The name of the S3 bucket used for associating a new S3 repository. It must
+	// begin with codeguru-reviewer-.
+	//
+	// BucketName is a required field
+	BucketName *string `min:"3" type:"string" required:"true"`
+
+	// The name of the repository in the S3 bucket.
+	//
+	// Name is a required field
+	Name *string `min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s S3Repository) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s S3Repository) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *S3Repository) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "S3Repository"}
+	if s.BucketName == nil {
+		invalidParams.Add(request.NewErrParamRequired("BucketName"))
+	}
+	if s.BucketName != nil && len(*s.BucketName) < 3 {
+		invalidParams.Add(request.NewErrParamMinLen("BucketName", 3))
+	}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetBucketName sets the BucketName field's value.
+func (s *S3Repository) SetBucketName(v string) *S3Repository {
+	s.BucketName = &v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *S3Repository) SetName(v string) *S3Repository {
+	s.Name = &v
+	return s
+}
+
+// Specifies the name of an S3 bucket and a CodeArtifacts object that contains
+// the S3 object keys for a source code .zip file and for a build artifacts
+// .zip file that contains .jar or .class files.
+type S3RepositoryDetails struct {
+	_ struct{} `type:"structure"`
+
+	// The name of the S3 bucket used for associating a new S3 repository. It must
+	// begin with codeguru-reviewer-.
+	BucketName *string `min:"3" type:"string"`
+
+	// A CodeArtifacts object. The CodeArtifacts object includes the S3 object key
+	// for a source code .zip file and for a build artifacts .zip file that contains
+	// .jar or .class files.
+	CodeArtifacts *CodeArtifacts `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s S3RepositoryDetails) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s S3RepositoryDetails) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *S3RepositoryDetails) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "S3RepositoryDetails"}
+	if s.BucketName != nil && len(*s.BucketName) < 3 {
+		invalidParams.Add(request.NewErrParamMinLen("BucketName", 3))
+	}
+	if s.CodeArtifacts != nil {
+		if err := s.CodeArtifacts.Validate(); err != nil {
+			invalidParams.AddNested("CodeArtifacts", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetBucketName sets the BucketName field's value.
+func (s *S3RepositoryDetails) SetBucketName(v string) *S3RepositoryDetails {
+	s.BucketName = &v
+	return s
+}
+
+// SetCodeArtifacts sets the CodeArtifacts field's value.
+func (s *S3RepositoryDetails) SetCodeArtifacts(v *CodeArtifacts) *S3RepositoryDetails {
+	s.CodeArtifacts = v
+	return s
+}
+
+// Specifies the source code that is analyzed in a code review.
 type SourceCodeType struct {
 	_ struct{} `type:"structure"`
 
-	// The commit diff for the pull request.
+	// A type of SourceCodeType (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_SourceCodeType)
+	// that specifies a source branch name and a destination branch name in an associated
+	// repository.
+	BranchDiff *BranchDiffSourceCodeType `type:"structure"`
+
+	// A SourceCodeType (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_SourceCodeType)
+	// that specifies a commit diff created by a pull request on an associated repository.
 	CommitDiff *CommitDiffSourceCodeType `type:"structure"`
+
+	// A SourceCodeType (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_SourceCodeType)
+	// that specifies the tip of a branch in an associated repository.
+	RepositoryHead *RepositoryHeadSourceCodeType `type:"structure"`
+
+	// Metadata that is associated with a code review. This applies to any type
+	// of code review supported by CodeGuru Reviewer. The RequestMetadaa field captures
+	// any event metadata. For example, it might capture metadata associated with
+	// an event trigger, such as a push or a pull request.
+	RequestMetadata *RequestMetadata `type:"structure"`
+
+	// Information about an associated repository in an S3 bucket that includes
+	// its name and an S3RepositoryDetails object. The S3RepositoryDetails object
+	// includes the name of an S3 bucket, an S3 key for a source code .zip file,
+	// and an S3 key for a build artifacts .zip file. S3BucketRepository is required
+	// in SourceCodeType (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_SourceCodeType)
+	// for S3BucketRepository based code reviews.
+	S3BucketRepository *S3BucketRepository `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SourceCodeType) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SourceCodeType) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *SourceCodeType) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "SourceCodeType"}
+	if s.BranchDiff != nil {
+		if err := s.BranchDiff.Validate(); err != nil {
+			invalidParams.AddNested("BranchDiff", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.CommitDiff != nil {
+		if err := s.CommitDiff.Validate(); err != nil {
+			invalidParams.AddNested("CommitDiff", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.RepositoryHead != nil {
+		if err := s.RepositoryHead.Validate(); err != nil {
+			invalidParams.AddNested("RepositoryHead", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.RequestMetadata != nil {
+		if err := s.RequestMetadata.Validate(); err != nil {
+			invalidParams.AddNested("RequestMetadata", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.S3BucketRepository != nil {
+		if err := s.S3BucketRepository.Validate(); err != nil {
+			invalidParams.AddNested("S3BucketRepository", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetBranchDiff sets the BranchDiff field's value.
+func (s *SourceCodeType) SetBranchDiff(v *BranchDiffSourceCodeType) *SourceCodeType {
+	s.BranchDiff = v
+	return s
 }
 
 // SetCommitDiff sets the CommitDiff field's value.
@@ -3457,14 +5457,129 @@ func (s *SourceCodeType) SetCommitDiff(v *CommitDiffSourceCodeType) *SourceCodeT
 	return s
 }
 
+// SetRepositoryHead sets the RepositoryHead field's value.
+func (s *SourceCodeType) SetRepositoryHead(v *RepositoryHeadSourceCodeType) *SourceCodeType {
+	s.RepositoryHead = v
+	return s
+}
+
+// SetRequestMetadata sets the RequestMetadata field's value.
+func (s *SourceCodeType) SetRequestMetadata(v *RequestMetadata) *SourceCodeType {
+	s.RequestMetadata = v
+	return s
+}
+
+// SetS3BucketRepository sets the S3BucketRepository field's value.
+func (s *SourceCodeType) SetS3BucketRepository(v *S3BucketRepository) *SourceCodeType {
+	s.S3BucketRepository = v
+	return s
+}
+
+type TagResourceInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the RepositoryAssociation (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_RepositoryAssociation.html)
+	// object. You can retrieve this ARN by calling ListRepositoryAssociations (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_ListRepositoryAssociations.html).
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `location:"uri" locationName:"resourceArn" min:"1" type:"string" required:"true"`
+
+	// An array of key-value pairs used to tag an associated repository. A tag is
+	// a custom attribute label with two parts:
+	//
+	//    * A tag key (for example, CostCenter, Environment, Project, or Secret).
+	//    Tag keys are case sensitive.
+	//
+	//    * An optional field known as a tag value (for example, 111122223333, Production,
+	//    or a team name). Omitting the tag value is the same as using an empty
+	//    string. Like tag keys, tag values are case sensitive.
+	//
+	// Tags is a required field
+	Tags map[string]*string `min:"1" type:"map" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TagResourceInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TagResourceInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *TagResourceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "TagResourceInput"}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+	if s.ResourceArn != nil && len(*s.ResourceArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ResourceArn", 1))
+	}
+	if s.Tags == nil {
+		invalidParams.Add(request.NewErrParamRequired("Tags"))
+	}
+	if s.Tags != nil && len(s.Tags) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Tags", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *TagResourceInput) SetResourceArn(v string) *TagResourceInput {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *TagResourceInput) SetTags(v map[string]*string) *TagResourceInput {
+	s.Tags = v
+	return s
+}
+
+type TagResourceOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TagResourceOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TagResourceOutput) GoString() string {
+	return s.String()
+}
+
 // Information about a third-party source repository connected to CodeGuru Reviewer.
 type ThirdPartySourceRepository struct {
 	_ struct{} `type:"structure"`
 
-	// The Amazon Resource Name (ARN) of an AWS CodeStar Connections connection.
-	// Its format is arn:aws:codestar-connections:region-id:aws-account_id:connection/connection-id.
+	// The Amazon Resource Name (ARN) of an Amazon Web Services CodeStar Connections
+	// connection. Its format is arn:aws:codestar-connections:region-id:aws-account_id:connection/connection-id.
 	// For more information, see Connection (https://docs.aws.amazon.com/codestar-connections/latest/APIReference/API_Connection.html)
-	// in the AWS CodeStar Connections API Reference.
+	// in the Amazon Web Services CodeStar Connections API Reference.
 	//
 	// ConnectionArn is a required field
 	ConnectionArn *string `type:"string" required:"true"`
@@ -3476,17 +5591,27 @@ type ThirdPartySourceRepository struct {
 
 	// The owner of the repository. For a GitHub, GitHub Enterprise, or Bitbucket
 	// repository, this is the username for the account that owns the repository.
+	// For an S3 repository, this can be the username or Amazon Web Services account
+	// ID.
 	//
 	// Owner is a required field
 	Owner *string `min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ThirdPartySourceRepository) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ThirdPartySourceRepository) GoString() string {
 	return s.String()
 }
@@ -3542,12 +5667,20 @@ type ThrottlingException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ThrottlingException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ThrottlingException) GoString() string {
 	return s.String()
 }
@@ -3590,6 +5723,95 @@ func (s *ThrottlingException) RequestID() string {
 	return s.RespMetadata.RequestID
 }
 
+type UntagResourceInput struct {
+	_ struct{} `type:"structure" nopayload:"true"`
+
+	// The Amazon Resource Name (ARN) of the RepositoryAssociation (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_RepositoryAssociation.html)
+	// object. You can retrieve this ARN by calling ListRepositoryAssociations (https://docs.aws.amazon.com/codeguru/latest/reviewer-api/API_ListRepositoryAssociations.html).
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `location:"uri" locationName:"resourceArn" min:"1" type:"string" required:"true"`
+
+	// A list of the keys for each tag you want to remove from an associated repository.
+	//
+	// TagKeys is a required field
+	TagKeys []*string `location:"querystring" locationName:"tagKeys" min:"1" type:"list" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UntagResourceInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UntagResourceInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UntagResourceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UntagResourceInput"}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+	if s.ResourceArn != nil && len(*s.ResourceArn) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ResourceArn", 1))
+	}
+	if s.TagKeys == nil {
+		invalidParams.Add(request.NewErrParamRequired("TagKeys"))
+	}
+	if s.TagKeys != nil && len(s.TagKeys) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("TagKeys", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *UntagResourceInput) SetResourceArn(v string) *UntagResourceInput {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetTagKeys sets the TagKeys field's value.
+func (s *UntagResourceInput) SetTagKeys(v []*string) *UntagResourceInput {
+	s.TagKeys = v
+	return s
+}
+
+type UntagResourceOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UntagResourceOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UntagResourceOutput) GoString() string {
+	return s.String()
+}
+
 // The input fails to satisfy the specified constraints.
 type ValidationException struct {
 	_            struct{}                  `type:"structure"`
@@ -3598,12 +5820,20 @@ type ValidationException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ValidationException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ValidationException) GoString() string {
 	return s.String()
 }
@@ -3647,6 +5877,38 @@ func (s *ValidationException) RequestID() string {
 }
 
 const (
+	// AnalysisTypeSecurity is a AnalysisType enum value
+	AnalysisTypeSecurity = "Security"
+
+	// AnalysisTypeCodeQuality is a AnalysisType enum value
+	AnalysisTypeCodeQuality = "CodeQuality"
+)
+
+// AnalysisType_Values returns all elements of the AnalysisType enum
+func AnalysisType_Values() []string {
+	return []string{
+		AnalysisTypeSecurity,
+		AnalysisTypeCodeQuality,
+	}
+}
+
+const (
+	// EncryptionOptionAwsOwnedCmk is a EncryptionOption enum value
+	EncryptionOptionAwsOwnedCmk = "AWS_OWNED_CMK"
+
+	// EncryptionOptionCustomerManagedCmk is a EncryptionOption enum value
+	EncryptionOptionCustomerManagedCmk = "CUSTOMER_MANAGED_CMK"
+)
+
+// EncryptionOption_Values returns all elements of the EncryptionOption enum
+func EncryptionOption_Values() []string {
+	return []string{
+		EncryptionOptionAwsOwnedCmk,
+		EncryptionOptionCustomerManagedCmk,
+	}
+}
+
+const (
 	// JobStateCompleted is a JobState enum value
 	JobStateCompleted = "Completed"
 
@@ -3682,6 +5944,9 @@ const (
 
 	// ProviderTypeGitHubEnterpriseServer is a ProviderType enum value
 	ProviderTypeGitHubEnterpriseServer = "GitHubEnterpriseServer"
+
+	// ProviderTypeS3bucket is a ProviderType enum value
+	ProviderTypeS3bucket = "S3Bucket"
 )
 
 // ProviderType_Values returns all elements of the ProviderType enum
@@ -3691,6 +5956,7 @@ func ProviderType_Values() []string {
 		ProviderTypeGitHub,
 		ProviderTypeBitbucket,
 		ProviderTypeGitHubEnterpriseServer,
+		ProviderTypeS3bucket,
 	}
 }
 
@@ -3711,6 +5977,58 @@ func Reaction_Values() []string {
 }
 
 const (
+	// RecommendationCategoryAwsbestPractices is a RecommendationCategory enum value
+	RecommendationCategoryAwsbestPractices = "AWSBestPractices"
+
+	// RecommendationCategoryAwscloudFormationIssues is a RecommendationCategory enum value
+	RecommendationCategoryAwscloudFormationIssues = "AWSCloudFormationIssues"
+
+	// RecommendationCategoryDuplicateCode is a RecommendationCategory enum value
+	RecommendationCategoryDuplicateCode = "DuplicateCode"
+
+	// RecommendationCategoryCodeMaintenanceIssues is a RecommendationCategory enum value
+	RecommendationCategoryCodeMaintenanceIssues = "CodeMaintenanceIssues"
+
+	// RecommendationCategoryConcurrencyIssues is a RecommendationCategory enum value
+	RecommendationCategoryConcurrencyIssues = "ConcurrencyIssues"
+
+	// RecommendationCategoryInputValidations is a RecommendationCategory enum value
+	RecommendationCategoryInputValidations = "InputValidations"
+
+	// RecommendationCategoryPythonBestPractices is a RecommendationCategory enum value
+	RecommendationCategoryPythonBestPractices = "PythonBestPractices"
+
+	// RecommendationCategoryJavaBestPractices is a RecommendationCategory enum value
+	RecommendationCategoryJavaBestPractices = "JavaBestPractices"
+
+	// RecommendationCategoryResourceLeaks is a RecommendationCategory enum value
+	RecommendationCategoryResourceLeaks = "ResourceLeaks"
+
+	// RecommendationCategorySecurityIssues is a RecommendationCategory enum value
+	RecommendationCategorySecurityIssues = "SecurityIssues"
+
+	// RecommendationCategoryCodeInconsistencies is a RecommendationCategory enum value
+	RecommendationCategoryCodeInconsistencies = "CodeInconsistencies"
+)
+
+// RecommendationCategory_Values returns all elements of the RecommendationCategory enum
+func RecommendationCategory_Values() []string {
+	return []string{
+		RecommendationCategoryAwsbestPractices,
+		RecommendationCategoryAwscloudFormationIssues,
+		RecommendationCategoryDuplicateCode,
+		RecommendationCategoryCodeMaintenanceIssues,
+		RecommendationCategoryConcurrencyIssues,
+		RecommendationCategoryInputValidations,
+		RecommendationCategoryPythonBestPractices,
+		RecommendationCategoryJavaBestPractices,
+		RecommendationCategoryResourceLeaks,
+		RecommendationCategorySecurityIssues,
+		RecommendationCategoryCodeInconsistencies,
+	}
+}
+
+const (
 	// RepositoryAssociationStateAssociated is a RepositoryAssociationState enum value
 	RepositoryAssociationStateAssociated = "Associated"
 
@@ -3722,6 +6040,9 @@ const (
 
 	// RepositoryAssociationStateDisassociating is a RepositoryAssociationState enum value
 	RepositoryAssociationStateDisassociating = "Disassociating"
+
+	// RepositoryAssociationStateDisassociated is a RepositoryAssociationState enum value
+	RepositoryAssociationStateDisassociated = "Disassociated"
 )
 
 // RepositoryAssociationState_Values returns all elements of the RepositoryAssociationState enum
@@ -3731,17 +6052,70 @@ func RepositoryAssociationState_Values() []string {
 		RepositoryAssociationStateAssociating,
 		RepositoryAssociationStateFailed,
 		RepositoryAssociationStateDisassociating,
+		RepositoryAssociationStateDisassociated,
+	}
+}
+
+const (
+	// SeverityInfo is a Severity enum value
+	SeverityInfo = "Info"
+
+	// SeverityLow is a Severity enum value
+	SeverityLow = "Low"
+
+	// SeverityMedium is a Severity enum value
+	SeverityMedium = "Medium"
+
+	// SeverityHigh is a Severity enum value
+	SeverityHigh = "High"
+
+	// SeverityCritical is a Severity enum value
+	SeverityCritical = "Critical"
+)
+
+// Severity_Values returns all elements of the Severity enum
+func Severity_Values() []string {
+	return []string{
+		SeverityInfo,
+		SeverityLow,
+		SeverityMedium,
+		SeverityHigh,
+		SeverityCritical,
 	}
 }
 
 const (
 	// TypePullRequest is a Type enum value
 	TypePullRequest = "PullRequest"
+
+	// TypeRepositoryAnalysis is a Type enum value
+	TypeRepositoryAnalysis = "RepositoryAnalysis"
 )
 
 // Type_Values returns all elements of the Type enum
 func Type_Values() []string {
 	return []string{
 		TypePullRequest,
+		TypeRepositoryAnalysis,
+	}
+}
+
+const (
+	// VendorNameGitHub is a VendorName enum value
+	VendorNameGitHub = "GitHub"
+
+	// VendorNameGitLab is a VendorName enum value
+	VendorNameGitLab = "GitLab"
+
+	// VendorNameNativeS3 is a VendorName enum value
+	VendorNameNativeS3 = "NativeS3"
+)
+
+// VendorName_Values returns all elements of the VendorName enum
+func VendorName_Values() []string {
+	return []string{
+		VendorNameGitHub,
+		VendorNameGitLab,
+		VendorNameNativeS3,
 	}
 }

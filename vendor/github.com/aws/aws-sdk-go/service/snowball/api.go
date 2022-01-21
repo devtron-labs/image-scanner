@@ -71,7 +71,7 @@ func (c *Snowball) CancelClusterRequest(input *CancelClusterInput) (req *request
 //
 // Returned Error Types:
 //   * KMSRequestFailedException
-//   The provided AWS Key Management Service key lacks the permissions to perform
+//   The provided Key Management Service key lacks the permissions to perform
 //   the specified CreateJob or UpdateJob action.
 //
 //   * InvalidJobStateException
@@ -170,7 +170,7 @@ func (c *Snowball) CancelJobRequest(input *CancelJobInput) (req *request.Request
 //   that action to be performed.
 //
 //   * KMSRequestFailedException
-//   The provided AWS Key Management Service key lacks the permissions to perform
+//   The provided Key Management Service key lacks the permissions to perform
 //   the specified CreateJob or UpdateJob action.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/CancelJob
@@ -239,7 +239,7 @@ func (c *Snowball) CreateAddressRequest(input *CreateAddressInput) (req *request
 
 // CreateAddress API operation for Amazon Import/Export Snowball.
 //
-// Creates an address for a Snowball to be shipped to. In most regions, addresses
+// Creates an address for a Snow device to be shipped to. In most regions, addresses
 // are validated at the time of creation. The address you provide must be located
 // within the serviceable area of your region. If the address is invalid or
 // unsupported, then an exception is thrown.
@@ -259,7 +259,7 @@ func (c *Snowball) CreateAddressRequest(input *CreateAddressInput) (req *request
 //   * UnsupportedAddressException
 //   The address is either outside the serviceable area for your region, or an
 //   error occurred. Check the address with your region's carrier and try again.
-//   If the issue persists, contact AWS Support.
+//   If the issue persists, contact Amazon Web Services Support.
 //
 // See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/CreateAddress
 func (c *Snowball) CreateAddress(input *CreateAddressInput) (*CreateAddressOutput, error) {
@@ -344,7 +344,7 @@ func (c *Snowball) CreateClusterRequest(input *CreateClusterInput) (req *request
 //   in your last request, and try again.
 //
 //   * KMSRequestFailedException
-//   The provided AWS Key Management Service key lacks the permissions to perform
+//   The provided Key Management Service key lacks the permissions to perform
 //   the specified CreateJob or UpdateJob action.
 //
 //   * InvalidInputCombinationException
@@ -423,10 +423,45 @@ func (c *Snowball) CreateJobRequest(input *CreateJobInput) (req *request.Request
 // CreateJob API operation for Amazon Import/Export Snowball.
 //
 // Creates a job to import or export data between Amazon S3 and your on-premises
-// data center. Your AWS account must have the right trust policies and permissions
-// in place to create a job for Snowball. If you're creating a job for a node
-// in a cluster, you only need to provide the clusterId value; the other job
-// attributes are inherited from the cluster.
+// data center. Your Amazon Web Services account must have the right trust policies
+// and permissions in place to create a job for a Snow device. If you're creating
+// a job for a node in a cluster, you only need to provide the clusterId value;
+// the other job attributes are inherited from the cluster.
+//
+// Only the Snowball; Edge device type is supported when ordering clustered
+// jobs.
+//
+// The device capacity is optional.
+//
+// Availability of device types differ by Amazon Web Services Region. For more
+// information about Region availability, see Amazon Web Services Regional Services
+// (https://aws.amazon.com/about-aws/global-infrastructure/regional-product-services/?p=ngi&loc=4).
+//
+// Snow Family Devices and their capacities.
+//
+//    * Snow Family device type: SNC1_SSD Capacity: T14 Description: Snowcone
+//
+//    * Snow Family device type: SNC1_HDD Capacity: T8 Description: Snowcone
+//
+//    * Device type: EDGE_S Capacity: T98 Description: Snowball Edge Storage
+//    Optimized for data transfer only
+//
+//    * Device type: EDGE_CG Capacity: T42 Description: Snowball Edge Compute
+//    Optimized with GPU
+//
+//    * Device type: EDGE_C Capacity: T42 Description: Snowball Edge Compute
+//    Optimized without GPU
+//
+//    * Device type: EDGE Capacity: T100 Description: Snowball Edge Storage
+//    Optimized with EC2 Compute
+//
+//    * Device type: STANDARD Capacity: T50 Description: Original Snowball device
+//    This device is only available in the Ningxia, Beijing, and Singapore Amazon
+//    Web Services Region
+//
+//    * Device type: STANDARD Capacity: T80 Description: Original Snowball device
+//    This device is only available in the Ningxia, Beijing, and Singapore Amazon
+//    Web Services Region.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -441,7 +476,7 @@ func (c *Snowball) CreateJobRequest(input *CreateJobInput) (req *request.Request
 //   in your last request, and try again.
 //
 //   * KMSRequestFailedException
-//   The provided AWS Key Management Service key lacks the permissions to perform
+//   The provided Key Management Service key lacks the permissions to perform
 //   the specified CreateJob or UpdateJob action.
 //
 //   * InvalidInputCombinationException
@@ -451,9 +486,9 @@ func (c *Snowball) CreateJobRequest(input *CreateJobInput) (req *request.Request
 //
 //   * ClusterLimitExceededException
 //   Job creation failed. Currently, clusters support five nodes. If you have
-//   less than five nodes for your cluster and you have more nodes to create for
-//   this cluster, try again and create jobs until your cluster has exactly five
-//   notes.
+//   fewer than five nodes for your cluster and you have more nodes to create
+//   for this cluster, try again and create jobs until your cluster has exactly
+//   five nodes.
 //
 //   * Ec2RequestFailedException
 //   Your IAM user lacks the necessary Amazon EC2 permissions to perform the attempted
@@ -476,6 +511,188 @@ func (c *Snowball) CreateJob(input *CreateJobInput) (*CreateJobOutput, error) {
 // for more information on using Contexts.
 func (c *Snowball) CreateJobWithContext(ctx aws.Context, input *CreateJobInput, opts ...request.Option) (*CreateJobOutput, error) {
 	req, out := c.CreateJobRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateLongTermPricing = "CreateLongTermPricing"
+
+// CreateLongTermPricingRequest generates a "aws/request.Request" representing the
+// client's request for the CreateLongTermPricing operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateLongTermPricing for more information on using the CreateLongTermPricing
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateLongTermPricingRequest method.
+//    req, resp := client.CreateLongTermPricingRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/CreateLongTermPricing
+func (c *Snowball) CreateLongTermPricingRequest(input *CreateLongTermPricingInput) (req *request.Request, output *CreateLongTermPricingOutput) {
+	op := &request.Operation{
+		Name:       opCreateLongTermPricing,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &CreateLongTermPricingInput{}
+	}
+
+	output = &CreateLongTermPricingOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateLongTermPricing API operation for Amazon Import/Export Snowball.
+//
+// Creates a job with the long-term usage option for a device. The long-term
+// usage is a 1-year or 3-year long-term pricing type for the device. You are
+// billed upfront, and Amazon Web Services provides discounts for long-term
+// pricing.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Import/Export Snowball's
+// API operation CreateLongTermPricing for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidResourceException
+//   The specified resource can't be found. Check the information you provided
+//   in your last request, and try again.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/CreateLongTermPricing
+func (c *Snowball) CreateLongTermPricing(input *CreateLongTermPricingInput) (*CreateLongTermPricingOutput, error) {
+	req, out := c.CreateLongTermPricingRequest(input)
+	return out, req.Send()
+}
+
+// CreateLongTermPricingWithContext is the same as CreateLongTermPricing with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateLongTermPricing for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Snowball) CreateLongTermPricingWithContext(ctx aws.Context, input *CreateLongTermPricingInput, opts ...request.Option) (*CreateLongTermPricingOutput, error) {
+	req, out := c.CreateLongTermPricingRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateReturnShippingLabel = "CreateReturnShippingLabel"
+
+// CreateReturnShippingLabelRequest generates a "aws/request.Request" representing the
+// client's request for the CreateReturnShippingLabel operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateReturnShippingLabel for more information on using the CreateReturnShippingLabel
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateReturnShippingLabelRequest method.
+//    req, resp := client.CreateReturnShippingLabelRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/CreateReturnShippingLabel
+func (c *Snowball) CreateReturnShippingLabelRequest(input *CreateReturnShippingLabelInput) (req *request.Request, output *CreateReturnShippingLabelOutput) {
+	op := &request.Operation{
+		Name:       opCreateReturnShippingLabel,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &CreateReturnShippingLabelInput{}
+	}
+
+	output = &CreateReturnShippingLabelOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateReturnShippingLabel API operation for Amazon Import/Export Snowball.
+//
+// Creates a shipping label that will be used to return the Snow device to Amazon
+// Web Services.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Import/Export Snowball's
+// API operation CreateReturnShippingLabel for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidResourceException
+//   The specified resource can't be found. Check the information you provided
+//   in your last request, and try again.
+//
+//   * InvalidJobStateException
+//   The action can't be performed because the job's current state doesn't allow
+//   that action to be performed.
+//
+//   * InvalidInputCombinationException
+//   Job or cluster creation failed. One or more inputs were invalid. Confirm
+//   that the CreateClusterRequest$SnowballType value supports your CreateJobRequest$JobType,
+//   and try again.
+//
+//   * ConflictException
+//   You get this exception when you call CreateReturnShippingLabel more than
+//   once when other requests are not completed.
+//
+//   * ReturnShippingLabelAlreadyExistsException
+//   You get this exception if you call CreateReturnShippingLabel and a valid
+//   return shipping label already exists. In this case, use DescribeReturnShippingLabel
+//   to get the URL.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/CreateReturnShippingLabel
+func (c *Snowball) CreateReturnShippingLabel(input *CreateReturnShippingLabelInput) (*CreateReturnShippingLabelOutput, error) {
+	req, out := c.CreateReturnShippingLabelRequest(input)
+	return out, req.Send()
+}
+
+// CreateReturnShippingLabelWithContext is the same as CreateReturnShippingLabel with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateReturnShippingLabel for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Snowball) CreateReturnShippingLabelWithContext(ctx aws.Context, input *CreateReturnShippingLabelInput, opts ...request.Option) (*CreateReturnShippingLabelOutput, error) {
+	req, out := c.CreateReturnShippingLabelRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -868,6 +1085,95 @@ func (c *Snowball) DescribeJobWithContext(ctx aws.Context, input *DescribeJobInp
 	return out, req.Send()
 }
 
+const opDescribeReturnShippingLabel = "DescribeReturnShippingLabel"
+
+// DescribeReturnShippingLabelRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeReturnShippingLabel operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DescribeReturnShippingLabel for more information on using the DescribeReturnShippingLabel
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DescribeReturnShippingLabelRequest method.
+//    req, resp := client.DescribeReturnShippingLabelRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/DescribeReturnShippingLabel
+func (c *Snowball) DescribeReturnShippingLabelRequest(input *DescribeReturnShippingLabelInput) (req *request.Request, output *DescribeReturnShippingLabelOutput) {
+	op := &request.Operation{
+		Name:       opDescribeReturnShippingLabel,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DescribeReturnShippingLabelInput{}
+	}
+
+	output = &DescribeReturnShippingLabelOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DescribeReturnShippingLabel API operation for Amazon Import/Export Snowball.
+//
+// Information on the shipping label of a Snow device that is being returned
+// to Amazon Web Services.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Import/Export Snowball's
+// API operation DescribeReturnShippingLabel for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidResourceException
+//   The specified resource can't be found. Check the information you provided
+//   in your last request, and try again.
+//
+//   * InvalidJobStateException
+//   The action can't be performed because the job's current state doesn't allow
+//   that action to be performed.
+//
+//   * ConflictException
+//   You get this exception when you call CreateReturnShippingLabel more than
+//   once when other requests are not completed.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/DescribeReturnShippingLabel
+func (c *Snowball) DescribeReturnShippingLabel(input *DescribeReturnShippingLabelInput) (*DescribeReturnShippingLabelOutput, error) {
+	req, out := c.DescribeReturnShippingLabelRequest(input)
+	return out, req.Send()
+}
+
+// DescribeReturnShippingLabelWithContext is the same as DescribeReturnShippingLabel with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DescribeReturnShippingLabel for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Snowball) DescribeReturnShippingLabelWithContext(ctx aws.Context, input *DescribeReturnShippingLabelInput, opts ...request.Option) (*DescribeReturnShippingLabelOutput, error) {
+	req, out := c.DescribeReturnShippingLabelRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opGetJobManifest = "GetJobManifest"
 
 // GetJobManifestRequest generates a "aws/request.Request" representing the
@@ -920,16 +1226,16 @@ func (c *Snowball) GetJobManifestRequest(input *GetJobManifestInput) (req *reque
 //
 // The manifest is an encrypted file that you can download after your job enters
 // the WithCustomer status. The manifest is decrypted by using the UnlockCode
-// code value, when you pass both values to the Snowball through the Snowball
+// code value, when you pass both values to the Snow device through the Snowball
 // client when the client is started for the first time.
 //
 // As a best practice, we recommend that you don't save a copy of an UnlockCode
 // value in the same location as the manifest file for that job. Saving these
 // separately helps prevent unauthorized parties from gaining access to the
-// Snowball associated with that job.
+// Snow device associated with that job.
 //
 // The credentials of a given job, including its manifest file and unlock code,
-// expire 90 days after the job is created.
+// expire 360 days after the job is created.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1014,18 +1320,18 @@ func (c *Snowball) GetJobUnlockCodeRequest(input *GetJobUnlockCodeInput) (req *r
 // GetJobUnlockCode API operation for Amazon Import/Export Snowball.
 //
 // Returns the UnlockCode code value for the specified job. A particular UnlockCode
-// value can be accessed for up to 90 days after the associated job has been
+// value can be accessed for up to 360 days after the associated job has been
 // created.
 //
 // The UnlockCode value is a 29-character code with 25 alphanumeric characters
 // and 4 hyphens. This code is used to decrypt the manifest file when it is
-// passed along with the manifest to the Snowball through the Snowball client
+// passed along with the manifest to the Snow device through the Snowball client
 // when the client is started for the first time.
 //
 // As a best practice, we recommend that you don't save a copy of the UnlockCode
 // in the same location as the manifest file for that job. Saving these separately
-// helps prevent unauthorized parties from gaining access to the Snowball associated
-// with that job.
+// helps prevent unauthorized parties from gaining access to the Snow device
+// associated with that job.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1109,11 +1415,12 @@ func (c *Snowball) GetSnowballUsageRequest(input *GetSnowballUsageInput) (req *r
 
 // GetSnowballUsage API operation for Amazon Import/Export Snowball.
 //
-// Returns information about the Snowball service limit for your account, and
-// also the number of Snowballs your account has in use.
+// Returns information about the Snow Family service limit for your account,
+// and also the number of Snow devices your account has in use.
 //
-// The default service limit for the number of Snowballs that you can have at
-// one time is 1. If you want to increase your service limit, contact AWS Support.
+// The default service limit for the number of Snow devices that you can have
+// at one time is 1. If you want to increase your service limit, contact Amazon
+// Web Services Support.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1441,10 +1748,10 @@ func (c *Snowball) ListCompatibleImagesRequest(input *ListCompatibleImagesInput)
 // ListCompatibleImages API operation for Amazon Import/Export Snowball.
 //
 // This action returns a list of the different Amazon EC2 Amazon Machine Images
-// (AMIs) that are owned by your AWS account that would be supported for use
-// on a Snowball Edge device. Currently, supported AMIs are based on the CentOS
+// (AMIs) that are owned by your Amazon Web Services accountthat would be supported
+// for use on a Snow device. Currently, supported AMIs are based on the CentOS
 // 7 (x86_64) - with Updates HVM, Ubuntu Server 14.04 LTS (HVM), and Ubuntu
-// 16.04 LTS - Xenial (HVM) images, available on the AWS Marketplace.
+// 16.04 LTS - Xenial (HVM) images, available on the Amazon Web Services Marketplace.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1626,6 +1933,90 @@ func (c *Snowball) ListJobsPagesWithContext(ctx aws.Context, input *ListJobsInpu
 	return p.Err()
 }
 
+const opListLongTermPricing = "ListLongTermPricing"
+
+// ListLongTermPricingRequest generates a "aws/request.Request" representing the
+// client's request for the ListLongTermPricing operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListLongTermPricing for more information on using the ListLongTermPricing
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListLongTermPricingRequest method.
+//    req, resp := client.ListLongTermPricingRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/ListLongTermPricing
+func (c *Snowball) ListLongTermPricingRequest(input *ListLongTermPricingInput) (req *request.Request, output *ListLongTermPricingOutput) {
+	op := &request.Operation{
+		Name:       opListLongTermPricing,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &ListLongTermPricingInput{}
+	}
+
+	output = &ListLongTermPricingOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListLongTermPricing API operation for Amazon Import/Export Snowball.
+//
+// Lists all long-term pricing types.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Import/Export Snowball's
+// API operation ListLongTermPricing for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidResourceException
+//   The specified resource can't be found. Check the information you provided
+//   in your last request, and try again.
+//
+//   * InvalidNextTokenException
+//   The NextToken string was altered unexpectedly, and the operation has stopped.
+//   Run the operation without changing the NextToken string, and try again.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/ListLongTermPricing
+func (c *Snowball) ListLongTermPricing(input *ListLongTermPricingInput) (*ListLongTermPricingOutput, error) {
+	req, out := c.ListLongTermPricingRequest(input)
+	return out, req.Send()
+}
+
+// ListLongTermPricingWithContext is the same as ListLongTermPricing with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListLongTermPricing for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Snowball) ListLongTermPricingWithContext(ctx aws.Context, input *ListLongTermPricingInput, opts ...request.Option) (*ListLongTermPricingOutput, error) {
+	req, out := c.ListLongTermPricingRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opUpdateCluster = "UpdateCluster"
 
 // UpdateClusterRequest generates a "aws/request.Request" representing the
@@ -1693,7 +2084,7 @@ func (c *Snowball) UpdateClusterRequest(input *UpdateClusterInput) (req *request
 //   that action to be performed.
 //
 //   * KMSRequestFailedException
-//   The provided AWS Key Management Service key lacks the permissions to perform
+//   The provided Key Management Service key lacks the permissions to perform
 //   the specified CreateJob or UpdateJob action.
 //
 //   * InvalidInputCombinationException
@@ -1793,7 +2184,7 @@ func (c *Snowball) UpdateJobRequest(input *UpdateJobInput) (req *request.Request
 //   that action to be performed.
 //
 //   * KMSRequestFailedException
-//   The provided AWS Key Management Service key lacks the permissions to perform
+//   The provided Key Management Service key lacks the permissions to perform
 //   the specified CreateJob or UpdateJob action.
 //
 //   * InvalidInputCombinationException
@@ -1803,9 +2194,9 @@ func (c *Snowball) UpdateJobRequest(input *UpdateJobInput) (req *request.Request
 //
 //   * ClusterLimitExceededException
 //   Job creation failed. Currently, clusters support five nodes. If you have
-//   less than five nodes for your cluster and you have more nodes to create for
-//   this cluster, try again and create jobs until your cluster has exactly five
-//   notes.
+//   fewer than five nodes for your cluster and you have more nodes to create
+//   for this cluster, try again and create jobs until your cluster has exactly
+//   five nodes.
 //
 //   * Ec2RequestFailedException
 //   Your IAM user lacks the necessary Amazon EC2 permissions to perform the attempted
@@ -1833,24 +2224,190 @@ func (c *Snowball) UpdateJobWithContext(ctx aws.Context, input *UpdateJobInput, 
 	return out, req.Send()
 }
 
-// The address that you want the Snowball or Snowballs associated with a specific
-// job to be shipped to. Addresses are validated at the time of creation. The
-// address you provide must be located within the serviceable area of your region.
-// Although no individual elements of the Address are required, if the address
-// is invalid or unsupported, then an exception is thrown.
+const opUpdateJobShipmentState = "UpdateJobShipmentState"
+
+// UpdateJobShipmentStateRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateJobShipmentState operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateJobShipmentState for more information on using the UpdateJobShipmentState
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateJobShipmentStateRequest method.
+//    req, resp := client.UpdateJobShipmentStateRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/UpdateJobShipmentState
+func (c *Snowball) UpdateJobShipmentStateRequest(input *UpdateJobShipmentStateInput) (req *request.Request, output *UpdateJobShipmentStateOutput) {
+	op := &request.Operation{
+		Name:       opUpdateJobShipmentState,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &UpdateJobShipmentStateInput{}
+	}
+
+	output = &UpdateJobShipmentStateOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(jsonrpc.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// UpdateJobShipmentState API operation for Amazon Import/Export Snowball.
+//
+// Updates the state when a shipment state changes to a different state.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Import/Export Snowball's
+// API operation UpdateJobShipmentState for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidResourceException
+//   The specified resource can't be found. Check the information you provided
+//   in your last request, and try again.
+//
+//   * InvalidJobStateException
+//   The action can't be performed because the job's current state doesn't allow
+//   that action to be performed.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/UpdateJobShipmentState
+func (c *Snowball) UpdateJobShipmentState(input *UpdateJobShipmentStateInput) (*UpdateJobShipmentStateOutput, error) {
+	req, out := c.UpdateJobShipmentStateRequest(input)
+	return out, req.Send()
+}
+
+// UpdateJobShipmentStateWithContext is the same as UpdateJobShipmentState with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateJobShipmentState for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Snowball) UpdateJobShipmentStateWithContext(ctx aws.Context, input *UpdateJobShipmentStateInput, opts ...request.Option) (*UpdateJobShipmentStateOutput, error) {
+	req, out := c.UpdateJobShipmentStateRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opUpdateLongTermPricing = "UpdateLongTermPricing"
+
+// UpdateLongTermPricingRequest generates a "aws/request.Request" representing the
+// client's request for the UpdateLongTermPricing operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See UpdateLongTermPricing for more information on using the UpdateLongTermPricing
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the UpdateLongTermPricingRequest method.
+//    req, resp := client.UpdateLongTermPricingRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/UpdateLongTermPricing
+func (c *Snowball) UpdateLongTermPricingRequest(input *UpdateLongTermPricingInput) (req *request.Request, output *UpdateLongTermPricingOutput) {
+	op := &request.Operation{
+		Name:       opUpdateLongTermPricing,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &UpdateLongTermPricingInput{}
+	}
+
+	output = &UpdateLongTermPricingOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(jsonrpc.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// UpdateLongTermPricing API operation for Amazon Import/Export Snowball.
+//
+// Updates the long-term pricing type.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Import/Export Snowball's
+// API operation UpdateLongTermPricing for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidResourceException
+//   The specified resource can't be found. Check the information you provided
+//   in your last request, and try again.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/snowball-2016-06-30/UpdateLongTermPricing
+func (c *Snowball) UpdateLongTermPricing(input *UpdateLongTermPricingInput) (*UpdateLongTermPricingOutput, error) {
+	req, out := c.UpdateLongTermPricingRequest(input)
+	return out, req.Send()
+}
+
+// UpdateLongTermPricingWithContext is the same as UpdateLongTermPricing with the addition of
+// the ability to pass a context and additional request options.
+//
+// See UpdateLongTermPricing for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *Snowball) UpdateLongTermPricingWithContext(ctx aws.Context, input *UpdateLongTermPricingInput, opts ...request.Option) (*UpdateLongTermPricingOutput, error) {
+	req, out := c.UpdateLongTermPricingRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// The address that you want the Snow device(s) associated with a specific job
+// to be shipped to. Addresses are validated at the time of creation. The address
+// you provide must be located within the serviceable area of your region. Although
+// no individual elements of the Address are required, if the address is invalid
+// or unsupported, then an exception is thrown.
 type Address struct {
 	_ struct{} `type:"structure"`
 
 	// The unique ID for an address.
 	AddressId *string `min:"40" type:"string"`
 
-	// The city in an address that a Snowball is to be delivered to.
+	// The city in an address that a Snow device is to be delivered to.
 	City *string `min:"1" type:"string"`
 
-	// The name of the company to receive a Snowball at an address.
+	// The name of the company to receive a Snow device at an address.
 	Company *string `min:"1" type:"string"`
 
-	// The country in an address that a Snowball is to be delivered to.
+	// The country in an address that a Snow device is to be delivered to.
 	Country *string `min:"1" type:"string"`
 
 	// If the address you are creating is a primary address, then set this option
@@ -1860,38 +2417,50 @@ type Address struct {
 	// This field is no longer used and the value is ignored.
 	Landmark *string `min:"1" type:"string"`
 
-	// The name of a person to receive a Snowball at an address.
+	// The name of a person to receive a Snow device at an address.
 	Name *string `min:"1" type:"string"`
 
-	// The phone number associated with an address that a Snowball is to be delivered
+	// The phone number associated with an address that a Snow device is to be delivered
 	// to.
 	PhoneNumber *string `min:"1" type:"string"`
 
-	// The postal code in an address that a Snowball is to be delivered to.
+	// The postal code in an address that a Snow device is to be delivered to.
 	PostalCode *string `min:"1" type:"string"`
 
 	// This field is no longer used and the value is ignored.
 	PrefectureOrDistrict *string `min:"1" type:"string"`
 
-	// The state or province in an address that a Snowball is to be delivered to.
+	// The state or province in an address that a Snow device is to be delivered
+	// to.
 	StateOrProvince *string `min:"1" type:"string"`
 
-	// The first line in a street address that a Snowball is to be delivered to.
+	// The first line in a street address that a Snow device is to be delivered
+	// to.
 	Street1 *string `min:"1" type:"string"`
 
-	// The second line in a street address that a Snowball is to be delivered to.
+	// The second line in a street address that a Snow device is to be delivered
+	// to.
 	Street2 *string `min:"1" type:"string"`
 
-	// The third line in a street address that a Snowball is to be delivered to.
+	// The third line in a street address that a Snow device is to be delivered
+	// to.
 	Street3 *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Address) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Address) GoString() string {
 	return s.String()
 }
@@ -2039,12 +2608,20 @@ type CancelClusterInput struct {
 	ClusterId *string `min:"39" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelClusterInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelClusterInput) GoString() string {
 	return s.String()
 }
@@ -2075,12 +2652,20 @@ type CancelClusterOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelClusterOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelClusterOutput) GoString() string {
 	return s.String()
 }
@@ -2095,12 +2680,20 @@ type CancelJobInput struct {
 	JobId *string `min:"39" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelJobInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelJobInput) GoString() string {
 	return s.String()
 }
@@ -2131,20 +2724,28 @@ type CancelJobOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelJobOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CancelJobOutput) GoString() string {
 	return s.String()
 }
 
 // Job creation failed. Currently, clusters support five nodes. If you have
-// less than five nodes for your cluster and you have more nodes to create for
-// this cluster, try again and create jobs until your cluster has exactly five
-// notes.
+// fewer than five nodes for your cluster and you have more nodes to create
+// for this cluster, try again and create jobs until your cluster has exactly
+// five nodes.
 type ClusterLimitExceededException struct {
 	_            struct{}                  `type:"structure"`
 	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
@@ -2152,12 +2753,20 @@ type ClusterLimitExceededException struct {
 	Message_ *string `locationName:"Message" min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ClusterLimitExceededException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ClusterLimitExceededException) GoString() string {
 	return s.String()
 }
@@ -2219,12 +2828,20 @@ type ClusterListEntry struct {
 	Description *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ClusterListEntry) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ClusterListEntry) GoString() string {
 	return s.String()
 }
@@ -2282,12 +2899,16 @@ type ClusterMetadata struct {
 
 	// The KmsKeyARN Amazon Resource Name (ARN) associated with this cluster. This
 	// ARN was created using the CreateKey (https://docs.aws.amazon.com/kms/latest/APIReference/API_CreateKey.html)
-	// API action in AWS Key Management Service (AWS KMS).
+	// API action in Key Management Service (KMS.
 	KmsKeyARN *string `type:"string"`
 
 	// The Amazon Simple Notification Service (Amazon SNS) notification settings
 	// for this cluster.
 	Notification *Notification `type:"structure"`
+
+	// Represents metadata and configuration settings for services on an Amazon
+	// Web Services Snow Family device.
+	OnDeviceServiceConfiguration *OnDeviceServiceConfiguration `type:"structure"`
 
 	// The arrays of JobResource objects that can include updated S3Resource objects
 	// or LambdaResource objects.
@@ -2295,42 +2916,51 @@ type ClusterMetadata struct {
 
 	// The role ARN associated with this cluster. This ARN was created using the
 	// CreateRole (https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateRole.html)
-	// API action in AWS Identity and Access Management (IAM).
+	// API action in Identity and Access Management (IAM).
 	RoleARN *string `type:"string"`
 
 	// The shipping speed for each node in this cluster. This speed doesn't dictate
-	// how soon you'll get each Snowball Edge device, rather it represents how quickly
-	// each device moves to its destination while in transit. Regional shipping
-	// speeds are as follows:
+	// how soon you'll get each device, rather it represents how quickly each device
+	// moves to its destination while in transit. Regional shipping speeds are as
+	// follows:
 	//
 	//    * In Australia, you have access to express shipping. Typically, devices
 	//    shipped express are delivered in about a day.
 	//
 	//    * In the European Union (EU), you have access to express shipping. Typically,
-	//    Snowball Edges shipped express are delivered in about a day. In addition,
+	//    Snow devices shipped express are delivered in about a day. In addition,
 	//    most countries in the EU have access to standard shipping, which typically
 	//    takes less than a week, one way.
 	//
-	//    * In India, Snowball Edges are delivered in one to seven days.
+	//    * In India, Snow devices are delivered in one to seven days.
 	//
 	//    * In the US, you have access to one-day shipping and two-day shipping.
 	ShippingOption *string `type:"string" enum:"ShippingOption"`
 
-	// The type of AWS Snowball device to use for this cluster.
+	// The type of Snowcone device to use for this cluster.
 	//
-	// For cluster jobs, AWS Snowball currently supports only the EDGE device type.
+	// For cluster jobs, Amazon Web Services Snow Family currently supports only
+	// the EDGE device type.
 	SnowballType *string `type:"string" enum:"Type"`
 
-	// The tax documents required in your AWS Region.
+	// The tax documents required in your Amazon Web Services Region.
 	TaxDocuments *TaxDocuments `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ClusterMetadata) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ClusterMetadata) GoString() string {
 	return s.String()
 }
@@ -2389,6 +3019,12 @@ func (s *ClusterMetadata) SetNotification(v *Notification) *ClusterMetadata {
 	return s
 }
 
+// SetOnDeviceServiceConfiguration sets the OnDeviceServiceConfiguration field's value.
+func (s *ClusterMetadata) SetOnDeviceServiceConfiguration(v *OnDeviceServiceConfiguration) *ClusterMetadata {
+	s.OnDeviceServiceConfiguration = v
+	return s
+}
+
 // SetResources sets the Resources field's value.
 func (s *ClusterMetadata) SetResources(v *JobResource) *ClusterMetadata {
 	s.Resources = v
@@ -2420,25 +3056,33 @@ func (s *ClusterMetadata) SetTaxDocuments(v *TaxDocuments) *ClusterMetadata {
 }
 
 // A JSON-formatted object that describes a compatible Amazon Machine Image
-// (AMI), including the ID and name for a Snowball Edge AMI. This AMI is compatible
+// (AMI), including the ID and name for a Snow device AMI. This AMI is compatible
 // with the device's physical hardware requirements, and it should be able to
 // be run in an SBE1 instance on the device.
 type CompatibleImage struct {
 	_ struct{} `type:"structure"`
 
-	// The unique identifier for an individual Snowball Edge AMI.
+	// The unique identifier for an individual Snow device AMI.
 	AmiId *string `min:"1" type:"string"`
 
 	// The optional name of a compatible image.
 	Name *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CompatibleImage) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CompatibleImage) GoString() string {
 	return s.String()
 }
@@ -2455,21 +3099,98 @@ func (s *CompatibleImage) SetName(v string) *CompatibleImage {
 	return s
 }
 
+// You get this exception when you call CreateReturnShippingLabel more than
+// once when other requests are not completed.
+type ConflictException struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	// You get this resource when you call CreateReturnShippingLabel more than once
+	// when other requests are not completed. .
+	ConflictResource *string `min:"1" type:"string"`
+
+	Message_ *string `locationName:"Message" min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConflictException) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ConflictException) GoString() string {
+	return s.String()
+}
+
+func newErrorConflictException(v protocol.ResponseMetadata) error {
+	return &ConflictException{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *ConflictException) Code() string {
+	return "ConflictException"
+}
+
+// Message returns the exception's message.
+func (s *ConflictException) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *ConflictException) OrigErr() error {
+	return nil
+}
+
+func (s *ConflictException) Error() string {
+	return fmt.Sprintf("%s: %s\n%s", s.Code(), s.Message(), s.String())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *ConflictException) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *ConflictException) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
 type CreateAddressInput struct {
 	_ struct{} `type:"structure"`
 
-	// The address that you want the Snowball shipped to.
+	// The address that you want the Snow device shipped to.
 	//
 	// Address is a required field
 	Address *Address `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateAddressInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateAddressInput) GoString() string {
 	return s.String()
 }
@@ -2502,17 +3223,25 @@ type CreateAddressOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The automatically generated ID for a specific address. You'll use this ID
-	// when you create a job to specify which address you want the Snowball for
+	// when you create a job to specify which address you want the Snow device for
 	// that job shipped to.
 	AddressId *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateAddressOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateAddressOutput) GoString() string {
 	return s.String()
 }
@@ -2542,27 +3271,42 @@ type CreateClusterInput struct {
 	// The type of job for this cluster. Currently, the only job type supported
 	// for clusters is LOCAL_USE.
 	//
+	// For more information, see "https://docs.aws.amazon.com/snowball/latest/snowcone-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide or "https://docs.aws.amazon.com/snowball/latest/developer-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide.
+	//
 	// JobType is a required field
 	JobType *string `type:"string" required:"true" enum:"JobType"`
 
 	// The KmsKeyARN value that you want to associate with this cluster. KmsKeyARN
 	// values are created by using the CreateKey (https://docs.aws.amazon.com/kms/latest/APIReference/API_CreateKey.html)
-	// API action in AWS Key Management Service (AWS KMS).
+	// API action in Key Management Service (KMS).
 	KmsKeyARN *string `type:"string"`
 
 	// The Amazon Simple Notification Service (Amazon SNS) notification settings
 	// for this cluster.
 	Notification *Notification `type:"structure"`
 
+	// Specifies the service or services on the Snow Family device that your transferred
+	// data will be exported from or imported into. Amazon Web Services Snow Family
+	// device clusters support Amazon S3 and NFS (Network File System).
+	OnDeviceServiceConfiguration *OnDeviceServiceConfiguration `type:"structure"`
+
+	// Allows you to securely operate and manage Snow devices in a cluster remotely
+	// from outside of your internal network. When set to INSTALLED_AUTOSTART, remote
+	// management will automatically be available when the device arrives at your
+	// location. Otherwise, you need to use the Snowball Client to manage the device.
+	RemoteManagement *string `type:"string" enum:"RemoteManagement"`
+
 	// The resources associated with the cluster job. These resources include Amazon
-	// S3 buckets and optional AWS Lambda functions written in the Python language.
+	// S3 buckets and optional Lambda functions written in the Python language.
 	//
 	// Resources is a required field
 	Resources *JobResource `type:"structure" required:"true"`
 
 	// The RoleARN that you want to associate with this cluster. RoleArn values
 	// are created by using the CreateRole (https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateRole.html)
-	// API action in AWS Identity and Access Management (IAM).
+	// API action in Identity and Access Management (IAM).
 	//
 	// RoleARN is a required field
 	RoleARN *string `type:"string" required:"true"`
@@ -2572,15 +3316,15 @@ type CreateClusterInput struct {
 	// each device moves to its destination while in transit. Regional shipping
 	// speeds are as follows:
 	//
-	//    * In Australia, you have access to express shipping. Typically, Snowballs
+	//    * In Australia, you have access to express shipping. Typically, Snow devices
 	//    shipped express are delivered in about a day.
 	//
 	//    * In the European Union (EU), you have access to express shipping. Typically,
-	//    Snowballs shipped express are delivered in about a day. In addition, most
-	//    countries in the EU have access to standard shipping, which typically
+	//    Snow devices shipped express are delivered in about a day. In addition,
+	//    most countries in the EU have access to standard shipping, which typically
 	//    takes less than a week, one way.
 	//
-	//    * In India, Snowballs are delivered in one to seven days.
+	//    * In India, Snow devices are delivered in one to seven days.
 	//
 	//    * In the United States of America (US), you have access to one-day shipping
 	//    and two-day shipping.
@@ -2589,32 +3333,47 @@ type CreateClusterInput struct {
 	//    shipped express are delivered in about a day.
 	//
 	//    * In the European Union (EU), you have access to express shipping. Typically,
-	//    Snowball Edges shipped express are delivered in about a day. In addition,
+	//    Snow devices shipped express are delivered in about a day. In addition,
 	//    most countries in the EU have access to standard shipping, which typically
 	//    takes less than a week, one way.
 	//
-	//    * In India, Snowball Edges are delivered in one to seven days.
+	//    * In India, Snow devices are delivered in one to seven days.
 	//
 	//    * In the US, you have access to one-day shipping and two-day shipping.
 	//
 	// ShippingOption is a required field
 	ShippingOption *string `type:"string" required:"true" enum:"ShippingOption"`
 
-	// The type of AWS Snowball device to use for this cluster.
+	// The type of Snow Family Devices to use for this cluster.
 	//
-	// For cluster jobs, AWS Snowball currently supports only the EDGE device type.
-	SnowballType *string `type:"string" enum:"Type"`
+	// For cluster jobs, Amazon Web Services Snow Family currently supports only
+	// the EDGE device type.
+	//
+	// For more information, see "https://docs.aws.amazon.com/snowball/latest/snowcone-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide or "https://docs.aws.amazon.com/snowball/latest/developer-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide.
+	//
+	// SnowballType is a required field
+	SnowballType *string `type:"string" required:"true" enum:"Type"`
 
-	// The tax documents required in your AWS Region.
+	// The tax documents required in your Amazon Web Services Region.
 	TaxDocuments *TaxDocuments `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateClusterInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateClusterInput) GoString() string {
 	return s.String()
 }
@@ -2646,9 +3405,17 @@ func (s *CreateClusterInput) Validate() error {
 	if s.ShippingOption == nil {
 		invalidParams.Add(request.NewErrParamRequired("ShippingOption"))
 	}
+	if s.SnowballType == nil {
+		invalidParams.Add(request.NewErrParamRequired("SnowballType"))
+	}
 	if s.Resources != nil {
 		if err := s.Resources.Validate(); err != nil {
 			invalidParams.AddNested("Resources", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TaxDocuments != nil {
+		if err := s.TaxDocuments.Validate(); err != nil {
+			invalidParams.AddNested("TaxDocuments", err.(request.ErrInvalidParams))
 		}
 	}
 
@@ -2694,6 +3461,18 @@ func (s *CreateClusterInput) SetNotification(v *Notification) *CreateClusterInpu
 	return s
 }
 
+// SetOnDeviceServiceConfiguration sets the OnDeviceServiceConfiguration field's value.
+func (s *CreateClusterInput) SetOnDeviceServiceConfiguration(v *OnDeviceServiceConfiguration) *CreateClusterInput {
+	s.OnDeviceServiceConfiguration = v
+	return s
+}
+
+// SetRemoteManagement sets the RemoteManagement field's value.
+func (s *CreateClusterInput) SetRemoteManagement(v string) *CreateClusterInput {
+	s.RemoteManagement = &v
+	return s
+}
+
 // SetResources sets the Resources field's value.
 func (s *CreateClusterInput) SetResources(v *JobResource) *CreateClusterInput {
 	s.Resources = v
@@ -2731,12 +3510,20 @@ type CreateClusterOutput struct {
 	ClusterId *string `min:"39" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateClusterOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateClusterOutput) GoString() string {
 	return s.String()
 }
@@ -2750,7 +3537,7 @@ func (s *CreateClusterOutput) SetClusterId(v string) *CreateClusterOutput {
 type CreateJobInput struct {
 	_ struct{} `type:"structure"`
 
-	// The ID for the address that you want the Snowball shipped to.
+	// The ID for the address that you want the Snow device shipped to.
 	AddressId *string `min:"40" type:"string"`
 
 	// The ID of a cluster. If you're creating a job for a node in a cluster, you
@@ -2762,11 +3549,15 @@ type CreateJobInput struct {
 	// Photos 2016-08-11.
 	Description *string `min:"1" type:"string"`
 
-	// Defines the device configuration for an AWS Snowcone job.
+	// Defines the device configuration for an Snowcone job.
+	//
+	// For more information, see "https://docs.aws.amazon.com/snowball/latest/snowcone-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide or "https://docs.aws.amazon.com/snowball/latest/developer-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide.
 	DeviceConfiguration *DeviceConfiguration `type:"structure"`
 
 	// The forwarding address ID for a job. This field is not supported in most
-	// regions.
+	// Regions.
 	ForwardingAddressId *string `min:"40" type:"string"`
 
 	// Defines the type of job that you're creating.
@@ -2774,12 +3565,27 @@ type CreateJobInput struct {
 
 	// The KmsKeyARN that you want to associate with this job. KmsKeyARNs are created
 	// using the CreateKey (https://docs.aws.amazon.com/kms/latest/APIReference/API_CreateKey.html)
-	// AWS Key Management Service (KMS) API action.
+	// Key Management Service (KMS) API action.
 	KmsKeyARN *string `type:"string"`
+
+	// The ID of the long-term pricing type for the device.
+	LongTermPricingId *string `min:"41" type:"string"`
 
 	// Defines the Amazon Simple Notification Service (Amazon SNS) notification
 	// settings for this job.
 	Notification *Notification `type:"structure"`
+
+	// Specifies the service or services on the Snow Family device that your transferred
+	// data will be exported from or imported into. Amazon Web Services Snow Family
+	// supports Amazon S3 and NFS (Network File System) and the Amazon Web Services
+	// Storage Gateway service Tape Gateway type.
+	OnDeviceServiceConfiguration *OnDeviceServiceConfiguration `type:"structure"`
+
+	// Allows you to securely operate and manage Snowcone devices remotely from
+	// outside of your internal network. When set to INSTALLED_AUTOSTART, remote
+	// management will automatically be available when the device arrives at your
+	// location. Otherwise, you need to use the Snowball Client to manage the device.
+	RemoteManagement *string `type:"string" enum:"RemoteManagement"`
 
 	// Defines the Amazon S3 buckets associated with this job.
 	//
@@ -2795,52 +3601,69 @@ type CreateJobInput struct {
 
 	// The RoleARN that you want to associate with this job. RoleArns are created
 	// using the CreateRole (https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateRole.html)
-	// AWS Identity and Access Management (IAM) API action.
+	// Identity and Access Management (IAM) API action.
 	RoleARN *string `type:"string"`
 
 	// The shipping speed for this job. This speed doesn't dictate how soon you'll
-	// get the Snowball, rather it represents how quickly the Snowball moves to
-	// its destination while in transit. Regional shipping speeds are as follows:
+	// get the Snow device, rather it represents how quickly the Snow device moves
+	// to its destination while in transit. Regional shipping speeds are as follows:
 	//
-	//    * In Australia, you have access to express shipping. Typically, Snowballs
+	//    * In Australia, you have access to express shipping. Typically, Snow devices
 	//    shipped express are delivered in about a day.
 	//
 	//    * In the European Union (EU), you have access to express shipping. Typically,
-	//    Snowballs shipped express are delivered in about a day. In addition, most
-	//    countries in the EU have access to standard shipping, which typically
+	//    Snow devices shipped express are delivered in about a day. In addition,
+	//    most countries in the EU have access to standard shipping, which typically
 	//    takes less than a week, one way.
 	//
-	//    * In India, Snowballs are delivered in one to seven days.
+	//    * In India, Snow devices are delivered in one to seven days.
 	//
 	//    * In the US, you have access to one-day shipping and two-day shipping.
 	ShippingOption *string `type:"string" enum:"ShippingOption"`
 
 	// If your job is being created in one of the US regions, you have the option
-	// of specifying what size Snowball you'd like for this job. In all other regions,
-	// Snowballs come with 80 TB in storage capacity.
+	// of specifying what size Snow device you'd like for this job. In all other
+	// regions, Snowballs come with 80 TB in storage capacity.
+	//
+	// For more information, see "https://docs.aws.amazon.com/snowball/latest/snowcone-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide or "https://docs.aws.amazon.com/snowball/latest/developer-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide.
 	SnowballCapacityPreference *string `type:"string" enum:"Capacity"`
 
-	// The type of AWS Snowball device to use for this job.
+	// The type of Snow Family Devices to use for this job.
 	//
-	// For cluster jobs, AWS Snowball currently supports only the EDGE device type.
+	// For cluster jobs, Amazon Web Services Snow Family currently supports only
+	// the EDGE device type.
 	//
-	// The type of AWS Snowball device to use for this job. Currently, the only
-	// supported device type for cluster jobs is EDGE.
+	// The type of Amazon Web Services Snow device to use for this job. Currently,
+	// the only supported device type for cluster jobs is EDGE.
 	//
 	// For more information, see Snowball Edge Device Options (https://docs.aws.amazon.com/snowball/latest/developer-guide/device-differences.html)
 	// in the Snowball Edge Developer Guide.
+	//
+	// For more information, see "https://docs.aws.amazon.com/snowball/latest/snowcone-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide or "https://docs.aws.amazon.com/snowball/latest/developer-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide.
 	SnowballType *string `type:"string" enum:"Type"`
 
-	// The tax documents required in your AWS Region.
+	// The tax documents required in your Amazon Web Services Region.
 	TaxDocuments *TaxDocuments `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateJobInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateJobInput) GoString() string {
 	return s.String()
 }
@@ -2860,9 +3683,17 @@ func (s *CreateJobInput) Validate() error {
 	if s.ForwardingAddressId != nil && len(*s.ForwardingAddressId) < 40 {
 		invalidParams.Add(request.NewErrParamMinLen("ForwardingAddressId", 40))
 	}
+	if s.LongTermPricingId != nil && len(*s.LongTermPricingId) < 41 {
+		invalidParams.Add(request.NewErrParamMinLen("LongTermPricingId", 41))
+	}
 	if s.Resources != nil {
 		if err := s.Resources.Validate(); err != nil {
 			invalidParams.AddNested("Resources", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.TaxDocuments != nil {
+		if err := s.TaxDocuments.Validate(); err != nil {
+			invalidParams.AddNested("TaxDocuments", err.(request.ErrInvalidParams))
 		}
 	}
 
@@ -2914,9 +3745,27 @@ func (s *CreateJobInput) SetKmsKeyARN(v string) *CreateJobInput {
 	return s
 }
 
+// SetLongTermPricingId sets the LongTermPricingId field's value.
+func (s *CreateJobInput) SetLongTermPricingId(v string) *CreateJobInput {
+	s.LongTermPricingId = &v
+	return s
+}
+
 // SetNotification sets the Notification field's value.
 func (s *CreateJobInput) SetNotification(v *Notification) *CreateJobInput {
 	s.Notification = v
+	return s
+}
+
+// SetOnDeviceServiceConfiguration sets the OnDeviceServiceConfiguration field's value.
+func (s *CreateJobInput) SetOnDeviceServiceConfiguration(v *OnDeviceServiceConfiguration) *CreateJobInput {
+	s.OnDeviceServiceConfiguration = v
+	return s
+}
+
+// SetRemoteManagement sets the RemoteManagement field's value.
+func (s *CreateJobInput) SetRemoteManagement(v string) *CreateJobInput {
+	s.RemoteManagement = &v
 	return s
 }
 
@@ -2963,12 +3812,20 @@ type CreateJobOutput struct {
 	JobId *string `min:"39" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateJobOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateJobOutput) GoString() string {
 	return s.String()
 }
@@ -2979,35 +3836,234 @@ func (s *CreateJobOutput) SetJobId(v string) *CreateJobOutput {
 	return s
 }
 
-// Defines the real-time status of a Snowball's data transfer while the device
-// is at AWS. This data is only available while a job has a JobState value of
-// InProgress, for both import and export jobs.
+type CreateLongTermPricingInput struct {
+	_ struct{} `type:"structure"`
+
+	// Specifies whether the current long-term pricing type for the device should
+	// be renewed.
+	IsLongTermPricingAutoRenew *bool `type:"boolean"`
+
+	// The type of long-term pricing option you want for the device, either 1-year
+	// or 3-year long-term pricing.
+	//
+	// LongTermPricingType is a required field
+	LongTermPricingType *string `type:"string" required:"true" enum:"LongTermPricingType"`
+
+	// The type of Snow Family Devices to use for the long-term pricing job.
+	SnowballType *string `type:"string" enum:"Type"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateLongTermPricingInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateLongTermPricingInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateLongTermPricingInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateLongTermPricingInput"}
+	if s.LongTermPricingType == nil {
+		invalidParams.Add(request.NewErrParamRequired("LongTermPricingType"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetIsLongTermPricingAutoRenew sets the IsLongTermPricingAutoRenew field's value.
+func (s *CreateLongTermPricingInput) SetIsLongTermPricingAutoRenew(v bool) *CreateLongTermPricingInput {
+	s.IsLongTermPricingAutoRenew = &v
+	return s
+}
+
+// SetLongTermPricingType sets the LongTermPricingType field's value.
+func (s *CreateLongTermPricingInput) SetLongTermPricingType(v string) *CreateLongTermPricingInput {
+	s.LongTermPricingType = &v
+	return s
+}
+
+// SetSnowballType sets the SnowballType field's value.
+func (s *CreateLongTermPricingInput) SetSnowballType(v string) *CreateLongTermPricingInput {
+	s.SnowballType = &v
+	return s
+}
+
+type CreateLongTermPricingOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The ID of the long-term pricing type for the device.
+	LongTermPricingId *string `min:"41" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateLongTermPricingOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateLongTermPricingOutput) GoString() string {
+	return s.String()
+}
+
+// SetLongTermPricingId sets the LongTermPricingId field's value.
+func (s *CreateLongTermPricingOutput) SetLongTermPricingId(v string) *CreateLongTermPricingOutput {
+	s.LongTermPricingId = &v
+	return s
+}
+
+type CreateReturnShippingLabelInput struct {
+	_ struct{} `type:"structure"`
+
+	// The ID for a job that you want to create the return shipping label for; for
+	// example, JID123e4567-e89b-12d3-a456-426655440000.
+	//
+	// JobId is a required field
+	JobId *string `min:"39" type:"string" required:"true"`
+
+	// The shipping speed for a particular job. This speed doesn't dictate how soon
+	// the device is returned to Amazon Web Services. This speed represents how
+	// quickly it moves to its destination while in transit. Regional shipping speeds
+	// are as follows:
+	ShippingOption *string `type:"string" enum:"ShippingOption"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateReturnShippingLabelInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateReturnShippingLabelInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateReturnShippingLabelInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateReturnShippingLabelInput"}
+	if s.JobId == nil {
+		invalidParams.Add(request.NewErrParamRequired("JobId"))
+	}
+	if s.JobId != nil && len(*s.JobId) < 39 {
+		invalidParams.Add(request.NewErrParamMinLen("JobId", 39))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetJobId sets the JobId field's value.
+func (s *CreateReturnShippingLabelInput) SetJobId(v string) *CreateReturnShippingLabelInput {
+	s.JobId = &v
+	return s
+}
+
+// SetShippingOption sets the ShippingOption field's value.
+func (s *CreateReturnShippingLabelInput) SetShippingOption(v string) *CreateReturnShippingLabelInput {
+	s.ShippingOption = &v
+	return s
+}
+
+type CreateReturnShippingLabelOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The status information of the task on a Snow device that is being returned
+	// to Amazon Web Services.
+	Status *string `type:"string" enum:"ShippingLabelStatus"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateReturnShippingLabelOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateReturnShippingLabelOutput) GoString() string {
+	return s.String()
+}
+
+// SetStatus sets the Status field's value.
+func (s *CreateReturnShippingLabelOutput) SetStatus(v string) *CreateReturnShippingLabelOutput {
+	s.Status = &v
+	return s
+}
+
+// Defines the real-time status of a Snow device's data transfer while the device
+// is at Amazon Web Services. This data is only available while a job has a
+// JobState value of InProgress, for both import and export jobs.
 type DataTransfer struct {
 	_ struct{} `type:"structure"`
 
-	// The number of bytes transferred between a Snowball and Amazon S3.
+	// The number of bytes transferred between a Snow device and Amazon S3.
 	BytesTransferred *int64 `type:"long"`
 
-	// The number of objects transferred between a Snowball and Amazon S3.
+	// The number of objects transferred between a Snow device and Amazon S3.
 	ObjectsTransferred *int64 `type:"long"`
 
-	// The total bytes of data for a transfer between a Snowball and Amazon S3.
+	// The total bytes of data for a transfer between a Snow device and Amazon S3.
 	// This value is set to 0 (zero) until all the keys that will be transferred
 	// have been listed.
 	TotalBytes *int64 `type:"long"`
 
-	// The total number of objects for a transfer between a Snowball and Amazon
+	// The total number of objects for a transfer between a Snow device and Amazon
 	// S3. This value is set to 0 (zero) until all the keys that will be transferred
 	// have been listed.
 	TotalObjects *int64 `type:"long"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DataTransfer) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DataTransfer) GoString() string {
 	return s.String()
 }
@@ -3045,12 +4101,20 @@ type DescribeAddressInput struct {
 	AddressId *string `min:"40" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAddressInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAddressInput) GoString() string {
 	return s.String()
 }
@@ -3080,17 +4144,25 @@ func (s *DescribeAddressInput) SetAddressId(v string) *DescribeAddressInput {
 type DescribeAddressOutput struct {
 	_ struct{} `type:"structure"`
 
-	// The address that you want the Snowball or Snowballs associated with a specific
-	// job to be shipped to.
+	// The address that you want the Snow device(s) associated with a specific job
+	// to be shipped to.
 	Address *Address `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAddressOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAddressOutput) GoString() string {
 	return s.String()
 }
@@ -3113,12 +4185,20 @@ type DescribeAddressesInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAddressesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAddressesInput) GoString() string {
 	return s.String()
 }
@@ -3151,7 +4231,7 @@ func (s *DescribeAddressesInput) SetNextToken(v string) *DescribeAddressesInput 
 type DescribeAddressesOutput struct {
 	_ struct{} `type:"structure"`
 
-	// The Snowball shipping addresses that were created for this account.
+	// The Snow device shipping addresses that were created for this account.
 	Addresses []*Address `type:"list"`
 
 	// HTTP requests are stateless. If you use the automatically generated NextToken
@@ -3160,12 +4240,20 @@ type DescribeAddressesOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAddressesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeAddressesOutput) GoString() string {
 	return s.String()
 }
@@ -3191,12 +4279,20 @@ type DescribeClusterInput struct {
 	ClusterId *string `min:"39" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeClusterInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeClusterInput) GoString() string {
 	return s.String()
 }
@@ -3231,12 +4327,20 @@ type DescribeClusterOutput struct {
 	ClusterMetadata *ClusterMetadata `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeClusterOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeClusterOutput) GoString() string {
 	return s.String()
 }
@@ -3256,12 +4360,20 @@ type DescribeJobInput struct {
 	JobId *string `min:"39" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeJobInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeJobInput) GoString() string {
 	return s.String()
 }
@@ -3300,12 +4412,20 @@ type DescribeJobOutput struct {
 	SubJobMetadata []*JobMetadata `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeJobOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeJobOutput) GoString() string {
 	return s.String()
 }
@@ -3322,20 +4442,127 @@ func (s *DescribeJobOutput) SetSubJobMetadata(v []*JobMetadata) *DescribeJobOutp
 	return s
 }
 
+type DescribeReturnShippingLabelInput struct {
+	_ struct{} `type:"structure"`
+
+	// The automatically generated ID for a job, for example JID123e4567-e89b-12d3-a456-426655440000.
+	//
+	// JobId is a required field
+	JobId *string `min:"39" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeReturnShippingLabelInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeReturnShippingLabelInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeReturnShippingLabelInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeReturnShippingLabelInput"}
+	if s.JobId == nil {
+		invalidParams.Add(request.NewErrParamRequired("JobId"))
+	}
+	if s.JobId != nil && len(*s.JobId) < 39 {
+		invalidParams.Add(request.NewErrParamMinLen("JobId", 39))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetJobId sets the JobId field's value.
+func (s *DescribeReturnShippingLabelInput) SetJobId(v string) *DescribeReturnShippingLabelInput {
+	s.JobId = &v
+	return s
+}
+
+type DescribeReturnShippingLabelOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The expiration date of the current return shipping label.
+	ExpirationDate *time.Time `type:"timestamp"`
+
+	// The pre-signed Amazon S3 URI used to download the return shipping label.
+	ReturnShippingLabelURI *string `min:"1" type:"string"`
+
+	// The status information of the task on a Snow device that is being returned
+	// to Amazon Web Services.
+	Status *string `type:"string" enum:"ShippingLabelStatus"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeReturnShippingLabelOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeReturnShippingLabelOutput) GoString() string {
+	return s.String()
+}
+
+// SetExpirationDate sets the ExpirationDate field's value.
+func (s *DescribeReturnShippingLabelOutput) SetExpirationDate(v time.Time) *DescribeReturnShippingLabelOutput {
+	s.ExpirationDate = &v
+	return s
+}
+
+// SetReturnShippingLabelURI sets the ReturnShippingLabelURI field's value.
+func (s *DescribeReturnShippingLabelOutput) SetReturnShippingLabelURI(v string) *DescribeReturnShippingLabelOutput {
+	s.ReturnShippingLabelURI = &v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *DescribeReturnShippingLabelOutput) SetStatus(v string) *DescribeReturnShippingLabelOutput {
+	s.Status = &v
+	return s
+}
+
 // The container for SnowconeDeviceConfiguration.
 type DeviceConfiguration struct {
 	_ struct{} `type:"structure"`
 
-	// Returns information about the device configuration for an AWS Snowcone job.
+	// Returns information about the device configuration for an Snowcone job.
 	SnowconeDeviceConfiguration *SnowconeDeviceConfiguration `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeviceConfiguration) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeviceConfiguration) GoString() string {
 	return s.String()
 }
@@ -3347,9 +4574,9 @@ func (s *DeviceConfiguration) SetSnowconeDeviceConfiguration(v *SnowconeDeviceCo
 }
 
 // A JSON-formatted object that contains the IDs for an Amazon Machine Image
-// (AMI), including the Amazon EC2 AMI ID and the Snowball Edge AMI ID. Each
-// AMI has these two IDs to simplify identifying the AMI in both the AWS Cloud
-// and on the device.
+// (AMI), including the Amazon EC2 AMI ID and the Snow device AMI ID. Each AMI
+// has these two IDs to simplify identifying the AMI in both the Amazon Web
+// Services Cloud and on the device.
 type Ec2AmiResource struct {
 	_ struct{} `type:"structure"`
 
@@ -3358,16 +4585,24 @@ type Ec2AmiResource struct {
 	// AmiId is a required field
 	AmiId *string `min:"12" type:"string" required:"true"`
 
-	// The ID of the AMI on the Snowball Edge device.
+	// The ID of the AMI on the Snow device.
 	SnowballAmiId *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Ec2AmiResource) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Ec2AmiResource) GoString() string {
 	return s.String()
 }
@@ -3412,12 +4647,20 @@ type Ec2RequestFailedException struct {
 	Message_ *string `locationName:"Message" min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Ec2RequestFailedException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Ec2RequestFailedException) GoString() string {
 	return s.String()
 }
@@ -3465,16 +4708,24 @@ type EventTriggerDefinition struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) for any local Amazon S3 resource that is an
-	// AWS Lambda function's event trigger associated with this job.
+	// Lambda function's event trigger associated with this job.
 	EventResourceARN *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EventTriggerDefinition) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EventTriggerDefinition) GoString() string {
 	return s.String()
 }
@@ -3495,12 +4746,20 @@ type GetJobManifestInput struct {
 	JobId *string `min:"39" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetJobManifestInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetJobManifestInput) GoString() string {
 	return s.String()
 }
@@ -3535,12 +4794,20 @@ type GetJobManifestOutput struct {
 	ManifestURI *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetJobManifestOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetJobManifestOutput) GoString() string {
 	return s.String()
 }
@@ -3561,12 +4828,20 @@ type GetJobUnlockCodeInput struct {
 	JobId *string `min:"39" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetJobUnlockCodeInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetJobUnlockCodeInput) GoString() string {
 	return s.String()
 }
@@ -3597,16 +4872,24 @@ type GetJobUnlockCodeOutput struct {
 	_ struct{} `type:"structure"`
 
 	// The UnlockCode value for the specified job. The UnlockCode value can be accessed
-	// for up to 90 days after the job has been created.
+	// for up to 360 days after the job has been created.
 	UnlockCode *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetJobUnlockCodeOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetJobUnlockCodeOutput) GoString() string {
 	return s.String()
 }
@@ -3621,12 +4904,20 @@ type GetSnowballUsageInput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSnowballUsageInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSnowballUsageInput) GoString() string {
 	return s.String()
 }
@@ -3634,20 +4925,28 @@ func (s GetSnowballUsageInput) GoString() string {
 type GetSnowballUsageOutput struct {
 	_ struct{} `type:"structure"`
 
-	// The service limit for number of Snowballs this account can have at once.
+	// The service limit for number of Snow devices this account can have at once.
 	// The default service limit is 1 (one).
 	SnowballLimit *int64 `type:"integer"`
 
-	// The number of Snowballs that this account is currently using.
+	// The number of Snow devices that this account is currently using.
 	SnowballsInUse *int64 `type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSnowballUsageOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSnowballUsageOutput) GoString() string {
 	return s.String()
 }
@@ -3674,12 +4973,20 @@ type GetSoftwareUpdatesInput struct {
 	JobId *string `min:"39" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSoftwareUpdatesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSoftwareUpdatesInput) GoString() string {
 	return s.String()
 }
@@ -3716,12 +5023,20 @@ type GetSoftwareUpdatesOutput struct {
 	UpdatesURI *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSoftwareUpdatesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetSoftwareUpdatesOutput) GoString() string {
 	return s.String()
 }
@@ -3732,22 +5047,44 @@ func (s *GetSoftwareUpdatesOutput) SetUpdatesURI(v string) *GetSoftwareUpdatesOu
 	return s
 }
 
-// The tax documents required in AWS Regions in India.
+// The tax documents required in Amazon Web Services Region in India.
 type INDTaxDocuments struct {
 	_ struct{} `type:"structure"`
 
-	// The Goods and Services Tax (GST) documents required in AWS Regions in India.
-	GSTIN *string `type:"string"`
+	// The Goods and Services Tax (GST) documents required in Amazon Web Services
+	// Region in India.
+	GSTIN *string `min:"15" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s INDTaxDocuments) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s INDTaxDocuments) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *INDTaxDocuments) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "INDTaxDocuments"}
+	if s.GSTIN != nil && len(*s.GSTIN) < 15 {
+		invalidParams.Add(request.NewErrParamMinLen("GSTIN", 15))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // SetGSTIN sets the GSTIN field's value.
@@ -3765,12 +5102,20 @@ type InvalidAddressException struct {
 	Message_ *string `locationName:"Message" min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidAddressException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidAddressException) GoString() string {
 	return s.String()
 }
@@ -3823,12 +5168,20 @@ type InvalidInputCombinationException struct {
 	Message_ *string `locationName:"Message" min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidInputCombinationException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidInputCombinationException) GoString() string {
 	return s.String()
 }
@@ -3880,12 +5233,20 @@ type InvalidJobStateException struct {
 	Message_ *string `locationName:"Message" min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidJobStateException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidJobStateException) GoString() string {
 	return s.String()
 }
@@ -3937,12 +5298,20 @@ type InvalidNextTokenException struct {
 	Message_ *string `locationName:"Message" min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidNextTokenException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidNextTokenException) GoString() string {
 	return s.String()
 }
@@ -3997,12 +5366,20 @@ type InvalidResourceException struct {
 	ResourceType *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidResourceException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidResourceException) GoString() string {
 	return s.String()
 }
@@ -4057,12 +5434,12 @@ type JobListEntry struct {
 	// 2016-08-11.
 	Description *string `min:"1" type:"string"`
 
-	// A value that indicates that this job is a master job. A master job represents
-	// a successful request to create an export job. Master jobs aren't associated
-	// with any Snowballs. Instead, each master job will have at least one job part,
+	// A value that indicates that this job is a main job. A main job represents
+	// a successful request to create an export job. Main jobs aren't associated
+	// with any Snowballs. Instead, each main job will have at least one job part,
 	// and each job part is associated with a Snowball. It might take some time
-	// before the job parts associated with a particular master job are listed,
-	// because they are created after the master job is created.
+	// before the job parts associated with a particular main job are listed, because
+	// they are created after the main job is created.
 	IsMaster *bool `type:"boolean"`
 
 	// The automatically generated ID for a job, for example JID123e4567-e89b-12d3-a456-426655440000.
@@ -4078,12 +5455,20 @@ type JobListEntry struct {
 	SnowballType *string `type:"string" enum:"Type"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JobListEntry) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JobListEntry) GoString() string {
 	return s.String()
 }
@@ -4130,17 +5515,17 @@ func (s *JobListEntry) SetSnowballType(v string) *JobListEntry {
 	return s
 }
 
-// Contains job logs. Whenever Snowball is used to import data into or export
-// data out of Amazon S3, you'll have the option of downloading a PDF job report.
-// Job logs are returned as a part of the response syntax of the DescribeJob
-// action in the JobMetadata data type. The job logs can be accessed for up
-// to 60 minutes after this request has been made. To access any of the job
-// logs after 60 minutes have passed, you'll have to make another call to the
-// DescribeJob action.
+// Contains job logs. Whenever a Snow device is used to import data into or
+// export data out of Amazon S3, you'll have the option of downloading a PDF
+// job report. Job logs are returned as a part of the response syntax of the
+// DescribeJob action in the JobMetadata data type. The job logs can be accessed
+// for up to 60 minutes after this request has been made. To access any of the
+// job logs after 60 minutes have passed, you'll have to make another call to
+// the DescribeJob action.
 //
 // For import jobs, the PDF job report becomes available at the end of the import
 // process. For export jobs, your job report typically becomes available while
-// the Snowball for your job part is being delivered to you.
+// the Snow device for your job part is being delivered to you.
 //
 // The job report provides you insight into the state of your Amazon S3 data
 // transfer. The report includes details about your job or job part for your
@@ -4163,12 +5548,20 @@ type JobLogs struct {
 	JobSuccessLogURI *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JobLogs) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JobLogs) GoString() string {
 	return s.String()
 }
@@ -4197,7 +5590,7 @@ func (s *JobLogs) SetJobSuccessLogURI(v string) *JobLogs {
 type JobMetadata struct {
 	_ struct{} `type:"structure"`
 
-	// The ID for the address that you want the Snowball shipped to.
+	// The ID for the address that you want the Snow device shipped to.
 	AddressId *string `min:"40" type:"string"`
 
 	// The 39-character ID for the cluster, for example CID123e4567-e89b-12d3-a456-426655440000.
@@ -4206,9 +5599,9 @@ type JobMetadata struct {
 	// The creation date for this job.
 	CreationDate *time.Time `type:"timestamp"`
 
-	// A value that defines the real-time status of a Snowball's data transfer while
-	// the device is at AWS. This data is only available while a job has a JobState
-	// value of InProgress, for both import and export jobs.
+	// A value that defines the real-time status of a Snow device's data transfer
+	// while the device is at Amazon Web Services. This data is only available while
+	// a job has a JobState value of InProgress, for both import and export jobs.
 	DataTransferProgress *DataTransfer `type:"structure"`
 
 	// The description of the job, provided at job creation.
@@ -4226,8 +5619,8 @@ type JobMetadata struct {
 
 	// Links to Amazon S3 presigned URLs for the job report and logs. For import
 	// jobs, the PDF job report becomes available at the end of the import process.
-	// For export jobs, your job report typically becomes available while the Snowball
-	// for your job part is being delivered to you.
+	// For export jobs, your job report typically becomes available while the Snow
+	// device for your job part is being delivered to you.
 	JobLogInfo *JobLogs `type:"structure"`
 
 	// The current status of the jobs.
@@ -4236,10 +5629,13 @@ type JobMetadata struct {
 	// The type of job.
 	JobType *string `type:"string" enum:"JobType"`
 
-	// The Amazon Resource Name (ARN) for the AWS Key Management Service (AWS KMS)
-	// key associated with this job. This ARN was created using the CreateKey (https://docs.aws.amazon.com/kms/latest/APIReference/API_CreateKey.html)
-	// API action in AWS KMS.
+	// The Amazon Resource Name (ARN) for the Key Management Service (KMS) key associated
+	// with this job. This ARN was created using the CreateKey (https://docs.aws.amazon.com/kms/latest/APIReference/API_CreateKey.html)
+	// API action in KMS.
 	KmsKeyARN *string `type:"string"`
+
+	// The ID of the long-term pricing type for the device.
+	LongTermPricingId *string `min:"41" type:"string"`
 
 	// The Amazon Simple Notification Service (Amazon SNS) notification settings
 	// associated with a specific job. The Notification object is returned as a
@@ -4247,37 +5643,60 @@ type JobMetadata struct {
 	// data type.
 	Notification *Notification `type:"structure"`
 
+	// Represents metadata and configuration settings for services on an Amazon
+	// Web Services Snow Family device.
+	OnDeviceServiceConfiguration *OnDeviceServiceConfiguration `type:"structure"`
+
+	// Allows you to securely operate and manage Snowcone devices remotely from
+	// outside of your internal network. When set to INSTALLED_AUTOSTART, remote
+	// management will automatically be available when the device arrives at your
+	// location. Otherwise, you need to use the Snowball Client to manage the device.
+	RemoteManagement *string `type:"string" enum:"RemoteManagement"`
+
 	// An array of S3Resource objects. Each S3Resource object represents an Amazon
 	// S3 bucket that your transferred data will be exported from or imported into.
 	Resources *JobResource `type:"structure"`
 
 	// The role ARN associated with this job. This ARN was created using the CreateRole
 	// (https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateRole.html)
-	// API action in AWS Identity and Access Management (IAM).
+	// API action in Identity and Access Management.
 	RoleARN *string `type:"string"`
 
 	// A job's shipping information, including inbound and outbound tracking numbers
 	// and shipping speed options.
 	ShippingDetails *ShippingDetails `type:"structure"`
 
-	// The Snowball capacity preference for this job, specified at job creation.
+	// The Snow device capacity preference for this job, specified at job creation.
 	// In US regions, you can choose between 50 TB and 80 TB Snowballs. All other
 	// regions use 80 TB capacity Snowballs.
+	//
+	// For more information, see "https://docs.aws.amazon.com/snowball/latest/snowcone-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide or "https://docs.aws.amazon.com/snowball/latest/developer-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide.
 	SnowballCapacityPreference *string `type:"string" enum:"Capacity"`
 
 	// The type of device used with this job.
 	SnowballType *string `type:"string" enum:"Type"`
 
-	// The metadata associated with the tax documents required in your AWS Region.
+	// The metadata associated with the tax documents required in your Amazon Web
+	// Services Region.
 	TaxDocuments *TaxDocuments `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JobMetadata) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JobMetadata) GoString() string {
 	return s.String()
 }
@@ -4354,9 +5773,27 @@ func (s *JobMetadata) SetKmsKeyARN(v string) *JobMetadata {
 	return s
 }
 
+// SetLongTermPricingId sets the LongTermPricingId field's value.
+func (s *JobMetadata) SetLongTermPricingId(v string) *JobMetadata {
+	s.LongTermPricingId = &v
+	return s
+}
+
 // SetNotification sets the Notification field's value.
 func (s *JobMetadata) SetNotification(v *Notification) *JobMetadata {
 	s.Notification = v
+	return s
+}
+
+// SetOnDeviceServiceConfiguration sets the OnDeviceServiceConfiguration field's value.
+func (s *JobMetadata) SetOnDeviceServiceConfiguration(v *OnDeviceServiceConfiguration) *JobMetadata {
+	s.OnDeviceServiceConfiguration = v
+	return s
+}
+
+// SetRemoteManagement sets the RemoteManagement field's value.
+func (s *JobMetadata) SetRemoteManagement(v string) *JobMetadata {
+	s.RemoteManagement = &v
 	return s
 }
 
@@ -4396,9 +5833,9 @@ func (s *JobMetadata) SetTaxDocuments(v *TaxDocuments) *JobMetadata {
 	return s
 }
 
-// Contains an array of AWS resource objects. Each object represents an Amazon
-// S3 bucket, an AWS Lambda function, or an Amazon Machine Image (AMI) based
-// on Amazon EC2 that is associated with a particular job.
+// Contains an array of Amazon Web Services resource objects. Each object represents
+// an Amazon S3 bucket, an Lambda function, or an Amazon Machine Image (AMI)
+// based on Amazon EC2 that is associated with a particular job.
 type JobResource struct {
 	_ struct{} `type:"structure"`
 
@@ -4412,12 +5849,20 @@ type JobResource struct {
 	S3Resources []*S3Resource `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JobResource) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s JobResource) GoString() string {
 	return s.String()
 }
@@ -4470,7 +5915,7 @@ func (s *JobResource) SetS3Resources(v []*S3Resource) *JobResource {
 	return s
 }
 
-// The provided AWS Key Management Service key lacks the permissions to perform
+// The provided Key Management Service key lacks the permissions to perform
 // the specified CreateJob or UpdateJob action.
 type KMSRequestFailedException struct {
 	_            struct{}                  `type:"structure"`
@@ -4479,12 +5924,20 @@ type KMSRequestFailedException struct {
 	Message_ *string `locationName:"Message" min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s KMSRequestFailedException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s KMSRequestFailedException) GoString() string {
 	return s.String()
 }
@@ -4543,12 +5996,20 @@ type KeyRange struct {
 	EndMarker *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s KeyRange) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s KeyRange) GoString() string {
 	return s.String()
 }
@@ -4589,17 +6050,25 @@ type LambdaResource struct {
 	// associated with this job.
 	EventTriggers []*EventTriggerDefinition `type:"list"`
 
-	// An Amazon Resource Name (ARN) that represents an AWS Lambda function to be
-	// triggered by PUT object actions on the associated local Amazon S3 resource.
+	// An Amazon Resource Name (ARN) that represents an Lambda function to be triggered
+	// by PUT object actions on the associated local Amazon S3 resource.
 	LambdaArn *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LambdaResource) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LambdaResource) GoString() string {
 	return s.String()
 }
@@ -4633,12 +6102,20 @@ type ListClusterJobsInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListClusterJobsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListClusterJobsInput) GoString() string {
 	return s.String()
 }
@@ -4693,12 +6170,20 @@ type ListClusterJobsOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListClusterJobsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListClusterJobsOutput) GoString() string {
 	return s.String()
 }
@@ -4727,12 +6212,20 @@ type ListClustersInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListClustersInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListClustersInput) GoString() string {
 	return s.String()
 }
@@ -4775,12 +6268,20 @@ type ListClustersOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListClustersOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListClustersOutput) GoString() string {
 	return s.String()
 }
@@ -4810,12 +6311,20 @@ type ListCompatibleImagesInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCompatibleImagesInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCompatibleImagesInput) GoString() string {
 	return s.String()
 }
@@ -4849,7 +6358,7 @@ type ListCompatibleImagesOutput struct {
 	_ struct{} `type:"structure"`
 
 	// A JSON-formatted object that describes a compatible AMI, including the ID
-	// and name for a Snowball Edge AMI.
+	// and name for a Snow device AMI.
 	CompatibleImages []*CompatibleImage `type:"list"`
 
 	// Because HTTP requests are stateless, this is the starting point for your
@@ -4857,12 +6366,20 @@ type ListCompatibleImagesOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCompatibleImagesOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListCompatibleImagesOutput) GoString() string {
 	return s.String()
 }
@@ -4891,12 +6408,20 @@ type ListJobsInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListJobsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListJobsInput) GoString() string {
 	return s.String()
 }
@@ -4939,12 +6464,20 @@ type ListJobsOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListJobsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListJobsOutput) GoString() string {
 	return s.String()
 }
@@ -4958,6 +6491,262 @@ func (s *ListJobsOutput) SetJobListEntries(v []*JobListEntry) *ListJobsOutput {
 // SetNextToken sets the NextToken field's value.
 func (s *ListJobsOutput) SetNextToken(v string) *ListJobsOutput {
 	s.NextToken = &v
+	return s
+}
+
+type ListLongTermPricingInput struct {
+	_ struct{} `type:"structure"`
+
+	// The maximum number of ListLongTermPricing objects to return.
+	MaxResults *int64 `type:"integer"`
+
+	// Because HTTP requests are stateless, this is the starting point for your
+	// next list of ListLongTermPricing to return.
+	NextToken *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListLongTermPricingInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListLongTermPricingInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListLongTermPricingInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListLongTermPricingInput"}
+	if s.NextToken != nil && len(*s.NextToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("NextToken", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *ListLongTermPricingInput) SetMaxResults(v int64) *ListLongTermPricingInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListLongTermPricingInput) SetNextToken(v string) *ListLongTermPricingInput {
+	s.NextToken = &v
+	return s
+}
+
+type ListLongTermPricingOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Each LongTermPricingEntry object contains a status, ID, and other information
+	// about the LongTermPricing type.
+	LongTermPricingEntries []*LongTermPricingListEntry `type:"list"`
+
+	// Because HTTP requests are stateless, this is the starting point for your
+	// next list of returned ListLongTermPricing list.
+	NextToken *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListLongTermPricingOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListLongTermPricingOutput) GoString() string {
+	return s.String()
+}
+
+// SetLongTermPricingEntries sets the LongTermPricingEntries field's value.
+func (s *ListLongTermPricingOutput) SetLongTermPricingEntries(v []*LongTermPricingListEntry) *ListLongTermPricingOutput {
+	s.LongTermPricingEntries = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListLongTermPricingOutput) SetNextToken(v string) *ListLongTermPricingOutput {
+	s.NextToken = &v
+	return s
+}
+
+// Each LongTermPricingListEntry object contains information about a long-term
+// pricing type.
+type LongTermPricingListEntry struct {
+	_ struct{} `type:"structure"`
+
+	// The current active jobs on the device the long-term pricing type.
+	CurrentActiveJob *string `min:"39" type:"string"`
+
+	// If set to true, specifies that the current long-term pricing type for the
+	// device should be automatically renewed before the long-term pricing contract
+	// expires.
+	IsLongTermPricingAutoRenew *bool `type:"boolean"`
+
+	// The IDs of the jobs that are associated with a long-term pricing type.
+	JobIds []*string `type:"list"`
+
+	// The end date the long-term pricing contract.
+	LongTermPricingEndDate *time.Time `type:"timestamp"`
+
+	// The ID of the long-term pricing type for the device.
+	LongTermPricingId *string `min:"41" type:"string"`
+
+	// The start date of the long-term pricing contract.
+	LongTermPricingStartDate *time.Time `type:"timestamp"`
+
+	// The status of the long-term pricing type.
+	LongTermPricingStatus *string `min:"1" type:"string"`
+
+	// The type of long-term pricing that was selected for the device.
+	LongTermPricingType *string `type:"string" enum:"LongTermPricingType"`
+
+	// A new device that replaces a device that is ordered with long-term pricing.
+	ReplacementJob *string `min:"39" type:"string"`
+
+	// The type of Snow Family Devices associated with this long-term pricing job.
+	SnowballType *string `type:"string" enum:"Type"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s LongTermPricingListEntry) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s LongTermPricingListEntry) GoString() string {
+	return s.String()
+}
+
+// SetCurrentActiveJob sets the CurrentActiveJob field's value.
+func (s *LongTermPricingListEntry) SetCurrentActiveJob(v string) *LongTermPricingListEntry {
+	s.CurrentActiveJob = &v
+	return s
+}
+
+// SetIsLongTermPricingAutoRenew sets the IsLongTermPricingAutoRenew field's value.
+func (s *LongTermPricingListEntry) SetIsLongTermPricingAutoRenew(v bool) *LongTermPricingListEntry {
+	s.IsLongTermPricingAutoRenew = &v
+	return s
+}
+
+// SetJobIds sets the JobIds field's value.
+func (s *LongTermPricingListEntry) SetJobIds(v []*string) *LongTermPricingListEntry {
+	s.JobIds = v
+	return s
+}
+
+// SetLongTermPricingEndDate sets the LongTermPricingEndDate field's value.
+func (s *LongTermPricingListEntry) SetLongTermPricingEndDate(v time.Time) *LongTermPricingListEntry {
+	s.LongTermPricingEndDate = &v
+	return s
+}
+
+// SetLongTermPricingId sets the LongTermPricingId field's value.
+func (s *LongTermPricingListEntry) SetLongTermPricingId(v string) *LongTermPricingListEntry {
+	s.LongTermPricingId = &v
+	return s
+}
+
+// SetLongTermPricingStartDate sets the LongTermPricingStartDate field's value.
+func (s *LongTermPricingListEntry) SetLongTermPricingStartDate(v time.Time) *LongTermPricingListEntry {
+	s.LongTermPricingStartDate = &v
+	return s
+}
+
+// SetLongTermPricingStatus sets the LongTermPricingStatus field's value.
+func (s *LongTermPricingListEntry) SetLongTermPricingStatus(v string) *LongTermPricingListEntry {
+	s.LongTermPricingStatus = &v
+	return s
+}
+
+// SetLongTermPricingType sets the LongTermPricingType field's value.
+func (s *LongTermPricingListEntry) SetLongTermPricingType(v string) *LongTermPricingListEntry {
+	s.LongTermPricingType = &v
+	return s
+}
+
+// SetReplacementJob sets the ReplacementJob field's value.
+func (s *LongTermPricingListEntry) SetReplacementJob(v string) *LongTermPricingListEntry {
+	s.ReplacementJob = &v
+	return s
+}
+
+// SetSnowballType sets the SnowballType field's value.
+func (s *LongTermPricingListEntry) SetSnowballType(v string) *LongTermPricingListEntry {
+	s.SnowballType = &v
+	return s
+}
+
+// An object that represents the metadata and configuration settings for the
+// NFS (Network File System) service on an Amazon Web Services Snow Family device.
+type NFSOnDeviceServiceConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// The maximum NFS storage for one Snow Family device.
+	StorageLimit *int64 `type:"integer"`
+
+	// The scale unit of the NFS storage on the device.
+	//
+	// Valid values: TB.
+	StorageUnit *string `type:"string" enum:"StorageUnit"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NFSOnDeviceServiceConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s NFSOnDeviceServiceConfiguration) GoString() string {
+	return s.String()
+}
+
+// SetStorageLimit sets the StorageLimit field's value.
+func (s *NFSOnDeviceServiceConfiguration) SetStorageLimit(v int64) *NFSOnDeviceServiceConfiguration {
+	s.StorageLimit = &v
+	return s
+}
+
+// SetStorageUnit sets the StorageUnit field's value.
+func (s *NFSOnDeviceServiceConfiguration) SetStorageUnit(v string) *NFSOnDeviceServiceConfiguration {
+	s.StorageUnit = &v
 	return s
 }
 
@@ -4983,18 +6772,26 @@ type Notification struct {
 	// Amazon Resource Names (ARNs) for topics by using the CreateTopic (https://docs.aws.amazon.com/sns/latest/api/API_CreateTopic.html)
 	// Amazon SNS API action.
 	//
-	// You can subscribe email addresses to an Amazon SNS topic through the AWS
-	// Management Console, or by using the Subscribe (https://docs.aws.amazon.com/sns/latest/api/API_Subscribe.html)
-	// AWS Simple Notification Service (SNS) API action.
+	// You can subscribe email addresses to an Amazon SNS topic through the Amazon
+	// Web Services Management Console, or by using the Subscribe (https://docs.aws.amazon.com/sns/latest/api/API_Subscribe.html)
+	// Amazon Simple Notification Service (Amazon SNS) API action.
 	SnsTopicARN *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Notification) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Notification) GoString() string {
 	return s.String()
 }
@@ -5017,6 +6814,115 @@ func (s *Notification) SetSnsTopicARN(v string) *Notification {
 	return s
 }
 
+// An object that represents the metadata and configuration settings for services
+// on an Amazon Web Services Snow Family device.
+type OnDeviceServiceConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// Represents the NFS (Network File System) service on a Snow Family device.
+	NFSOnDeviceService *NFSOnDeviceServiceConfiguration `type:"structure"`
+
+	// Represents the Storage Gateway service Tape Gateway type on a Snow Family
+	// device.
+	TGWOnDeviceService *TGWOnDeviceServiceConfiguration `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s OnDeviceServiceConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s OnDeviceServiceConfiguration) GoString() string {
+	return s.String()
+}
+
+// SetNFSOnDeviceService sets the NFSOnDeviceService field's value.
+func (s *OnDeviceServiceConfiguration) SetNFSOnDeviceService(v *NFSOnDeviceServiceConfiguration) *OnDeviceServiceConfiguration {
+	s.NFSOnDeviceService = v
+	return s
+}
+
+// SetTGWOnDeviceService sets the TGWOnDeviceService field's value.
+func (s *OnDeviceServiceConfiguration) SetTGWOnDeviceService(v *TGWOnDeviceServiceConfiguration) *OnDeviceServiceConfiguration {
+	s.TGWOnDeviceService = v
+	return s
+}
+
+// You get this exception if you call CreateReturnShippingLabel and a valid
+// return shipping label already exists. In this case, use DescribeReturnShippingLabel
+// to get the URL.
+type ReturnShippingLabelAlreadyExistsException struct {
+	_            struct{}                  `type:"structure"`
+	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
+
+	Message_ *string `locationName:"Message" min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ReturnShippingLabelAlreadyExistsException) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ReturnShippingLabelAlreadyExistsException) GoString() string {
+	return s.String()
+}
+
+func newErrorReturnShippingLabelAlreadyExistsException(v protocol.ResponseMetadata) error {
+	return &ReturnShippingLabelAlreadyExistsException{
+		RespMetadata: v,
+	}
+}
+
+// Code returns the exception type name.
+func (s *ReturnShippingLabelAlreadyExistsException) Code() string {
+	return "ReturnShippingLabelAlreadyExistsException"
+}
+
+// Message returns the exception's message.
+func (s *ReturnShippingLabelAlreadyExistsException) Message() string {
+	if s.Message_ != nil {
+		return *s.Message_
+	}
+	return ""
+}
+
+// OrigErr always returns nil, satisfies awserr.Error interface.
+func (s *ReturnShippingLabelAlreadyExistsException) OrigErr() error {
+	return nil
+}
+
+func (s *ReturnShippingLabelAlreadyExistsException) Error() string {
+	return fmt.Sprintf("%s: %s", s.Code(), s.Message())
+}
+
+// Status code returns the HTTP status code for the request's response error.
+func (s *ReturnShippingLabelAlreadyExistsException) StatusCode() int {
+	return s.RespMetadata.StatusCode
+}
+
+// RequestID returns the service's response RequestID for request.
+func (s *ReturnShippingLabelAlreadyExistsException) RequestID() string {
+	return s.RespMetadata.RequestID
+}
+
 // Each S3Resource object represents an Amazon S3 bucket that your transferred
 // data will be exported from or imported into. For export jobs, this object
 // can have an optional KeyRange value. The length of the range is defined at
@@ -5033,14 +6939,27 @@ type S3Resource struct {
 	// an inclusive BeginMarker, an inclusive EndMarker, or both. Ranges are UTF-8
 	// binary sorted.
 	KeyRange *KeyRange `type:"structure"`
+
+	// Specifies the service or services on the Snow Family device that your transferred
+	// data will be exported from or imported into. Amazon Web Services Snow Family
+	// supports Amazon S3 and NFS (Network File System).
+	TargetOnDeviceServices []*TargetOnDeviceService `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s S3Resource) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s S3Resource) GoString() string {
 	return s.String()
 }
@@ -5072,6 +6991,12 @@ func (s *S3Resource) SetKeyRange(v *KeyRange) *S3Resource {
 	return s
 }
 
+// SetTargetOnDeviceServices sets the TargetOnDeviceServices field's value.
+func (s *S3Resource) SetTargetOnDeviceServices(v []*TargetOnDeviceService) *S3Resource {
+	s.TargetOnDeviceServices = v
+	return s
+}
+
 // The Status and TrackingNumber information for an inbound or outbound shipment.
 type Shipment struct {
 	_ struct{} `type:"structure"`
@@ -5080,19 +7005,28 @@ type Shipment struct {
 	Status *string `min:"1" type:"string"`
 
 	// The tracking number for this job. Using this tracking number with your region's
-	// carrier's website, you can track a Snowball as the carrier transports it.
+	// carrier's website, you can track a Snow device as the carrier transports
+	// it.
 	//
 	// For India, the carrier is Amazon Logistics. For all other regions, UPS is
 	// the carrier.
 	TrackingNumber *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Shipment) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Shipment) GoString() string {
 	return s.String()
 }
@@ -5114,40 +7048,48 @@ func (s *Shipment) SetTrackingNumber(v string) *Shipment {
 type ShippingDetails struct {
 	_ struct{} `type:"structure"`
 
-	// The Status and TrackingNumber values for a Snowball being returned to AWS
-	// for a particular job.
+	// The Status and TrackingNumber values for a Snow device being returned to
+	// Amazon Web Services for a particular job.
 	InboundShipment *Shipment `type:"structure"`
 
-	// The Status and TrackingNumber values for a Snowball being delivered to the
-	// address that you specified for a particular job.
+	// The Status and TrackingNumber values for a Snow device being delivered to
+	// the address that you specified for a particular job.
 	OutboundShipment *Shipment `type:"structure"`
 
 	// The shipping speed for a particular job. This speed doesn't dictate how soon
-	// you'll get the Snowball from the job's creation date. This speed represents
+	// you'll get the Snow device from the job's creation date. This speed represents
 	// how quickly it moves to its destination while in transit. Regional shipping
 	// speeds are as follows:
 	//
-	//    * In Australia, you have access to express shipping. Typically, Snowballs
+	//    * In Australia, you have access to express shipping. Typically, Snow devices
 	//    shipped express are delivered in about a day.
 	//
 	//    * In the European Union (EU), you have access to express shipping. Typically,
-	//    Snowballs shipped express are delivered in about a day. In addition, most
-	//    countries in the EU have access to standard shipping, which typically
+	//    Snow devices shipped express are delivered in about a day. In addition,
+	//    most countries in the EU have access to standard shipping, which typically
 	//    takes less than a week, one way.
 	//
-	//    * In India, Snowballs are delivered in one to seven days.
+	//    * In India, Snow devices are delivered in one to seven days.
 	//
 	//    * In the United States of America (US), you have access to one-day shipping
 	//    and two-day shipping.
 	ShippingOption *string `type:"string" enum:"ShippingOption"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ShippingDetails) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ShippingDetails) GoString() string {
 	return s.String()
 }
@@ -5170,20 +7112,28 @@ func (s *ShippingDetails) SetShippingOption(v string) *ShippingDetails {
 	return s
 }
 
-// Specifies the device configuration for an AWS Snowcone job.
+// Specifies the device configuration for an Snowcone job.
 type SnowconeDeviceConfiguration struct {
 	_ struct{} `type:"structure"`
 
-	// Configures the wireless connection for the AWS Snowcone device.
+	// Configures the wireless connection for the Snowcone device.
 	WirelessConnection *WirelessConnection `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SnowconeDeviceConfiguration) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SnowconeDeviceConfiguration) GoString() string {
 	return s.String()
 }
@@ -5194,22 +7144,135 @@ func (s *SnowconeDeviceConfiguration) SetWirelessConnection(v *WirelessConnectio
 	return s
 }
 
-// The tax documents required in your AWS Region.
+// An object that represents the metadata and configuration settings for the
+// Storage Gateway service Tape Gateway type on an Amazon Web Services Snow
+// Family device.
+type TGWOnDeviceServiceConfiguration struct {
+	_ struct{} `type:"structure"`
+
+	// The maximum number of virtual tapes to store on one Snow Family device. Due
+	// to physical resource limitations, this value must be set to 80 for Snowball
+	// Edge.
+	StorageLimit *int64 `type:"integer"`
+
+	// The scale unit of the virtual tapes on the device.
+	StorageUnit *string `type:"string" enum:"StorageUnit"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TGWOnDeviceServiceConfiguration) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TGWOnDeviceServiceConfiguration) GoString() string {
+	return s.String()
+}
+
+// SetStorageLimit sets the StorageLimit field's value.
+func (s *TGWOnDeviceServiceConfiguration) SetStorageLimit(v int64) *TGWOnDeviceServiceConfiguration {
+	s.StorageLimit = &v
+	return s
+}
+
+// SetStorageUnit sets the StorageUnit field's value.
+func (s *TGWOnDeviceServiceConfiguration) SetStorageUnit(v string) *TGWOnDeviceServiceConfiguration {
+	s.StorageUnit = &v
+	return s
+}
+
+// An object that represents the service or services on the Snow Family device
+// that your transferred data will be exported from or imported into. Amazon
+// Web Services Snow Family supports Amazon S3 and NFS (Network File System).
+type TargetOnDeviceService struct {
+	_ struct{} `type:"structure"`
+
+	// Specifies the name of the service on the Snow Family device that your transferred
+	// data will be exported from or imported into.
+	ServiceName *string `type:"string" enum:"DeviceServiceName"`
+
+	// Specifies whether the data is being imported or exported. You can import
+	// or export the data, or use it locally on the device.
+	TransferOption *string `type:"string" enum:"TransferOption"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TargetOnDeviceService) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s TargetOnDeviceService) GoString() string {
+	return s.String()
+}
+
+// SetServiceName sets the ServiceName field's value.
+func (s *TargetOnDeviceService) SetServiceName(v string) *TargetOnDeviceService {
+	s.ServiceName = &v
+	return s
+}
+
+// SetTransferOption sets the TransferOption field's value.
+func (s *TargetOnDeviceService) SetTransferOption(v string) *TargetOnDeviceService {
+	s.TransferOption = &v
+	return s
+}
+
+// The tax documents required in your Amazon Web Services Region.
 type TaxDocuments struct {
 	_ struct{} `type:"structure"`
 
-	// The tax documents required in AWS Regions in India.
+	// The tax documents required in Amazon Web Services Region in India.
 	IND *INDTaxDocuments `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TaxDocuments) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TaxDocuments) GoString() string {
 	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *TaxDocuments) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "TaxDocuments"}
+	if s.IND != nil {
+		if err := s.IND.Validate(); err != nil {
+			invalidParams.AddNested("IND", err.(request.ErrInvalidParams))
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
 }
 
 // SetIND sets the IND field's value.
@@ -5220,7 +7283,7 @@ func (s *TaxDocuments) SetIND(v *INDTaxDocuments) *TaxDocuments {
 
 // The address is either outside the serviceable area for your region, or an
 // error occurred. Check the address with your region's carrier and try again.
-// If the issue persists, contact AWS Support.
+// If the issue persists, contact Amazon Web Services Support.
 type UnsupportedAddressException struct {
 	_            struct{}                  `type:"structure"`
 	RespMetadata protocol.ResponseMetadata `json:"-" xml:"-"`
@@ -5228,12 +7291,20 @@ type UnsupportedAddressException struct {
 	Message_ *string `locationName:"Message" min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UnsupportedAddressException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UnsupportedAddressException) GoString() string {
 	return s.String()
 }
@@ -5297,25 +7368,38 @@ type UpdateClusterInput struct {
 	// The new or updated Notification object.
 	Notification *Notification `type:"structure"`
 
+	// Specifies the service or services on the Snow Family device that your transferred
+	// data will be exported from or imported into. Amazon Web Services Snow Family
+	// device clusters support Amazon S3 and NFS (Network File System).
+	OnDeviceServiceConfiguration *OnDeviceServiceConfiguration `type:"structure"`
+
 	// The updated arrays of JobResource objects that can include updated S3Resource
 	// objects or LambdaResource objects.
 	Resources *JobResource `type:"structure"`
 
 	// The new role Amazon Resource Name (ARN) that you want to associate with this
 	// cluster. To create a role ARN, use the CreateRole (https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateRole.html)
-	// API action in AWS Identity and Access Management (IAM).
+	// API action in Identity and Access Management (IAM).
 	RoleARN *string `type:"string"`
 
 	// The updated shipping option value of this cluster's ShippingDetails object.
 	ShippingOption *string `type:"string" enum:"ShippingOption"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateClusterInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateClusterInput) GoString() string {
 	return s.String()
 }
@@ -5380,6 +7464,12 @@ func (s *UpdateClusterInput) SetNotification(v *Notification) *UpdateClusterInpu
 	return s
 }
 
+// SetOnDeviceServiceConfiguration sets the OnDeviceServiceConfiguration field's value.
+func (s *UpdateClusterInput) SetOnDeviceServiceConfiguration(v *OnDeviceServiceConfiguration) *UpdateClusterInput {
+	s.OnDeviceServiceConfiguration = v
+	return s
+}
+
 // SetResources sets the Resources field's value.
 func (s *UpdateClusterInput) SetResources(v *JobResource) *UpdateClusterInput {
 	s.Resources = v
@@ -5402,12 +7492,20 @@ type UpdateClusterOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateClusterOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateClusterOutput) GoString() string {
 	return s.String()
 }
@@ -5433,12 +7531,18 @@ type UpdateJobInput struct {
 	// The new or updated Notification object.
 	Notification *Notification `type:"structure"`
 
+	// Specifies the service or services on the Snow Family device that your transferred
+	// data will be exported from or imported into. Amazon Web Services Snow Family
+	// supports Amazon S3 and NFS (Network File System) and the Amazon Web Services
+	// Storage Gateway service Tape Gateway type.
+	OnDeviceServiceConfiguration *OnDeviceServiceConfiguration `type:"structure"`
+
 	// The updated JobResource object, or the updated JobResource object.
 	Resources *JobResource `type:"structure"`
 
 	// The new role Amazon Resource Name (ARN) that you want to associate with this
-	// job. To create a role ARN, use the CreateRole (https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateRole.html)AWS
-	// Identity and Access Management (IAM) API action.
+	// job. To create a role ARN, use the CreateRole (https://docs.aws.amazon.com/IAM/latest/APIReference/API_CreateRole.html)Identity
+	// and Access Management (IAM) API action.
 	RoleARN *string `type:"string"`
 
 	// The updated shipping option value of this job's ShippingDetails object.
@@ -5446,15 +7550,27 @@ type UpdateJobInput struct {
 
 	// The updated SnowballCapacityPreference of this job's JobMetadata object.
 	// The 50 TB Snowballs are only available in the US regions.
+	//
+	// For more information, see "https://docs.aws.amazon.com/snowball/latest/snowcone-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide or "https://docs.aws.amazon.com/snowball/latest/developer-guide/snow-device-types.html"
+	// (Snow Family Devices and Capacity) in the Snowcone User Guide.
 	SnowballCapacityPreference *string `type:"string" enum:"Capacity"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateJobInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateJobInput) GoString() string {
 	return s.String()
 }
@@ -5519,6 +7635,12 @@ func (s *UpdateJobInput) SetNotification(v *Notification) *UpdateJobInput {
 	return s
 }
 
+// SetOnDeviceServiceConfiguration sets the OnDeviceServiceConfiguration field's value.
+func (s *UpdateJobInput) SetOnDeviceServiceConfiguration(v *OnDeviceServiceConfiguration) *UpdateJobInput {
+	s.OnDeviceServiceConfiguration = v
+	return s
+}
+
 // SetResources sets the Resources field's value.
 func (s *UpdateJobInput) SetResources(v *JobResource) *UpdateJobInput {
 	s.Resources = v
@@ -5547,30 +7669,231 @@ type UpdateJobOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateJobOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateJobOutput) GoString() string {
 	return s.String()
 }
 
-// Configures the wireless connection on an AWS Snowcone device.
+type UpdateJobShipmentStateInput struct {
+	_ struct{} `type:"structure"`
+
+	// The job ID of the job whose shipment date you want to update, for example
+	// JID123e4567-e89b-12d3-a456-426655440000.
+	//
+	// JobId is a required field
+	JobId *string `min:"39" type:"string" required:"true"`
+
+	// The state of a device when it is being shipped.
+	//
+	// Set to RECEIVED when the device arrives at your location.
+	//
+	// Set to RETURNED when you have returned the device to Amazon Web Services.
+	//
+	// ShipmentState is a required field
+	ShipmentState *string `type:"string" required:"true" enum:"ShipmentState"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateJobShipmentStateInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateJobShipmentStateInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateJobShipmentStateInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateJobShipmentStateInput"}
+	if s.JobId == nil {
+		invalidParams.Add(request.NewErrParamRequired("JobId"))
+	}
+	if s.JobId != nil && len(*s.JobId) < 39 {
+		invalidParams.Add(request.NewErrParamMinLen("JobId", 39))
+	}
+	if s.ShipmentState == nil {
+		invalidParams.Add(request.NewErrParamRequired("ShipmentState"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetJobId sets the JobId field's value.
+func (s *UpdateJobShipmentStateInput) SetJobId(v string) *UpdateJobShipmentStateInput {
+	s.JobId = &v
+	return s
+}
+
+// SetShipmentState sets the ShipmentState field's value.
+func (s *UpdateJobShipmentStateInput) SetShipmentState(v string) *UpdateJobShipmentStateInput {
+	s.ShipmentState = &v
+	return s
+}
+
+type UpdateJobShipmentStateOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateJobShipmentStateOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateJobShipmentStateOutput) GoString() string {
+	return s.String()
+}
+
+type UpdateLongTermPricingInput struct {
+	_ struct{} `type:"structure"`
+
+	// If set to true, specifies that the current long-term pricing type for the
+	// device should be automatically renewed before the long-term pricing contract
+	// expires.
+	IsLongTermPricingAutoRenew *bool `type:"boolean"`
+
+	// The ID of the long-term pricing type for the device.
+	//
+	// LongTermPricingId is a required field
+	LongTermPricingId *string `min:"41" type:"string" required:"true"`
+
+	// Specifies that a device that is ordered with long-term pricing should be
+	// replaced with a new device.
+	ReplacementJob *string `min:"39" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateLongTermPricingInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateLongTermPricingInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *UpdateLongTermPricingInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "UpdateLongTermPricingInput"}
+	if s.LongTermPricingId == nil {
+		invalidParams.Add(request.NewErrParamRequired("LongTermPricingId"))
+	}
+	if s.LongTermPricingId != nil && len(*s.LongTermPricingId) < 41 {
+		invalidParams.Add(request.NewErrParamMinLen("LongTermPricingId", 41))
+	}
+	if s.ReplacementJob != nil && len(*s.ReplacementJob) < 39 {
+		invalidParams.Add(request.NewErrParamMinLen("ReplacementJob", 39))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetIsLongTermPricingAutoRenew sets the IsLongTermPricingAutoRenew field's value.
+func (s *UpdateLongTermPricingInput) SetIsLongTermPricingAutoRenew(v bool) *UpdateLongTermPricingInput {
+	s.IsLongTermPricingAutoRenew = &v
+	return s
+}
+
+// SetLongTermPricingId sets the LongTermPricingId field's value.
+func (s *UpdateLongTermPricingInput) SetLongTermPricingId(v string) *UpdateLongTermPricingInput {
+	s.LongTermPricingId = &v
+	return s
+}
+
+// SetReplacementJob sets the ReplacementJob field's value.
+func (s *UpdateLongTermPricingInput) SetReplacementJob(v string) *UpdateLongTermPricingInput {
+	s.ReplacementJob = &v
+	return s
+}
+
+type UpdateLongTermPricingOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateLongTermPricingOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s UpdateLongTermPricingOutput) GoString() string {
+	return s.String()
+}
+
+// Configures the wireless connection on an Snowcone device.
 type WirelessConnection struct {
 	_ struct{} `type:"structure"`
 
-	// Enables the Wi-Fi adapter on an AWS Snowcone device.
+	// Enables the Wi-Fi adapter on an Snowcone device.
 	IsWifiEnabled *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s WirelessConnection) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s WirelessConnection) GoString() string {
 	return s.String()
 }
@@ -5600,6 +7923,9 @@ const (
 	// CapacityT8 is a Capacity enum value
 	CapacityT8 = "T8"
 
+	// CapacityT14 is a Capacity enum value
+	CapacityT14 = "T14"
+
 	// CapacityNoPreference is a Capacity enum value
 	CapacityNoPreference = "NoPreference"
 )
@@ -5613,6 +7939,7 @@ func Capacity_Values() []string {
 		CapacityT42,
 		CapacityT98,
 		CapacityT8,
+		CapacityT14,
 		CapacityNoPreference,
 	}
 }
@@ -5642,6 +7969,22 @@ func ClusterState_Values() []string {
 		ClusterStateInUse,
 		ClusterStateComplete,
 		ClusterStateCancelled,
+	}
+}
+
+const (
+	// DeviceServiceNameNfsOnDeviceService is a DeviceServiceName enum value
+	DeviceServiceNameNfsOnDeviceService = "NFS_ON_DEVICE_SERVICE"
+
+	// DeviceServiceNameS3OnDeviceService is a DeviceServiceName enum value
+	DeviceServiceNameS3OnDeviceService = "S3_ON_DEVICE_SERVICE"
+)
+
+// DeviceServiceName_Values returns all elements of the DeviceServiceName enum
+func DeviceServiceName_Values() []string {
+	return []string{
+		DeviceServiceNameNfsOnDeviceService,
+		DeviceServiceNameS3OnDeviceService,
 	}
 }
 
@@ -5726,6 +8069,78 @@ func JobType_Values() []string {
 }
 
 const (
+	// LongTermPricingTypeOneYear is a LongTermPricingType enum value
+	LongTermPricingTypeOneYear = "OneYear"
+
+	// LongTermPricingTypeThreeYear is a LongTermPricingType enum value
+	LongTermPricingTypeThreeYear = "ThreeYear"
+)
+
+// LongTermPricingType_Values returns all elements of the LongTermPricingType enum
+func LongTermPricingType_Values() []string {
+	return []string{
+		LongTermPricingTypeOneYear,
+		LongTermPricingTypeThreeYear,
+	}
+}
+
+const (
+	// RemoteManagementInstalledOnly is a RemoteManagement enum value
+	RemoteManagementInstalledOnly = "INSTALLED_ONLY"
+
+	// RemoteManagementInstalledAutostart is a RemoteManagement enum value
+	RemoteManagementInstalledAutostart = "INSTALLED_AUTOSTART"
+)
+
+// RemoteManagement_Values returns all elements of the RemoteManagement enum
+func RemoteManagement_Values() []string {
+	return []string{
+		RemoteManagementInstalledOnly,
+		RemoteManagementInstalledAutostart,
+	}
+}
+
+const (
+	// ShipmentStateReceived is a ShipmentState enum value
+	ShipmentStateReceived = "RECEIVED"
+
+	// ShipmentStateReturned is a ShipmentState enum value
+	ShipmentStateReturned = "RETURNED"
+)
+
+// ShipmentState_Values returns all elements of the ShipmentState enum
+func ShipmentState_Values() []string {
+	return []string{
+		ShipmentStateReceived,
+		ShipmentStateReturned,
+	}
+}
+
+const (
+	// ShippingLabelStatusInProgress is a ShippingLabelStatus enum value
+	ShippingLabelStatusInProgress = "InProgress"
+
+	// ShippingLabelStatusTimedOut is a ShippingLabelStatus enum value
+	ShippingLabelStatusTimedOut = "TimedOut"
+
+	// ShippingLabelStatusSucceeded is a ShippingLabelStatus enum value
+	ShippingLabelStatusSucceeded = "Succeeded"
+
+	// ShippingLabelStatusFailed is a ShippingLabelStatus enum value
+	ShippingLabelStatusFailed = "Failed"
+)
+
+// ShippingLabelStatus_Values returns all elements of the ShippingLabelStatus enum
+func ShippingLabelStatus_Values() []string {
+	return []string{
+		ShippingLabelStatusInProgress,
+		ShippingLabelStatusTimedOut,
+		ShippingLabelStatusSucceeded,
+		ShippingLabelStatusFailed,
+	}
+}
+
+const (
 	// ShippingOptionSecondDay is a ShippingOption enum value
 	ShippingOptionSecondDay = "SECOND_DAY"
 
@@ -5750,6 +8165,38 @@ func ShippingOption_Values() []string {
 }
 
 const (
+	// StorageUnitTb is a StorageUnit enum value
+	StorageUnitTb = "TB"
+)
+
+// StorageUnit_Values returns all elements of the StorageUnit enum
+func StorageUnit_Values() []string {
+	return []string{
+		StorageUnitTb,
+	}
+}
+
+const (
+	// TransferOptionImport is a TransferOption enum value
+	TransferOptionImport = "IMPORT"
+
+	// TransferOptionExport is a TransferOption enum value
+	TransferOptionExport = "EXPORT"
+
+	// TransferOptionLocalUse is a TransferOption enum value
+	TransferOptionLocalUse = "LOCAL_USE"
+)
+
+// TransferOption_Values returns all elements of the TransferOption enum
+func TransferOption_Values() []string {
+	return []string{
+		TransferOptionImport,
+		TransferOptionExport,
+		TransferOptionLocalUse,
+	}
+}
+
+const (
 	// TypeStandard is a Type enum value
 	TypeStandard = "STANDARD"
 
@@ -5767,6 +8214,9 @@ const (
 
 	// TypeSnc1Hdd is a Type enum value
 	TypeSnc1Hdd = "SNC1_HDD"
+
+	// TypeSnc1Ssd is a Type enum value
+	TypeSnc1Ssd = "SNC1_SSD"
 )
 
 // Type_Values returns all elements of the Type enum
@@ -5778,5 +8228,6 @@ func Type_Values() []string {
 		TypeEdgeCg,
 		TypeEdgeS,
 		TypeSnc1Hdd,
+		TypeSnc1Ssd,
 	}
 }

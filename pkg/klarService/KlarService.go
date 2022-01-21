@@ -18,6 +18,7 @@ import (
 	"github.com/optiopay/klar/clair"
 	"github.com/optiopay/klar/docker"
 	"go.uber.org/zap"
+	"golang.org/x/oauth2/google"
 	"time"
 )
 
@@ -108,7 +109,6 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		fmt.Println(string(decoded))*/
 	} else if dockerRegistry.Username == "_json_key" {
 		// this is the case of GCR, where password is json key of service account
-		/*
 		jwtToken, err := google.JWTAccessTokenSourceWithScope([]byte(dockerRegistry.Password),"")
 		if err!=nil{
 			impl.logger.Errorw("error in getting token from json key file-gcr","err",err)
@@ -120,8 +120,6 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 			return nil, err
 		}
 		tokens = &token.AccessToken
-		*/
-
 		//cleaning username and password
 		dockerRegistry.Username = ""
 		dockerRegistry.Password = ""

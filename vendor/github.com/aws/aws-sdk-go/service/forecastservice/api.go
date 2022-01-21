@@ -13,6 +13,130 @@ import (
 	"github.com/aws/aws-sdk-go/private/protocol/jsonrpc"
 )
 
+const opCreateAutoPredictor = "CreateAutoPredictor"
+
+// CreateAutoPredictorRequest generates a "aws/request.Request" representing the
+// client's request for the CreateAutoPredictor operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateAutoPredictor for more information on using the CreateAutoPredictor
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateAutoPredictorRequest method.
+//    req, resp := client.CreateAutoPredictorRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/CreateAutoPredictor
+func (c *ForecastService) CreateAutoPredictorRequest(input *CreateAutoPredictorInput) (req *request.Request, output *CreateAutoPredictorOutput) {
+	op := &request.Operation{
+		Name:       opCreateAutoPredictor,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &CreateAutoPredictorInput{}
+	}
+
+	output = &CreateAutoPredictorOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateAutoPredictor API operation for Amazon Forecast Service.
+//
+// Creates an Amazon Forecast predictor.
+//
+// Amazon Forecast creates predictors with AutoPredictor, which involves applying
+// the optimal combination of algorithms to each time series in your datasets.
+// You can use CreateAutoPredictor to create new predictors or upgrade/retrain
+// existing predictors.
+//
+// Creating new predictors
+//
+// The following parameters are required when creating a new predictor:
+//
+//    * PredictorName - A unique name for the predictor.
+//
+//    * DatasetGroupArn - The ARN of the dataset group used to train the predictor.
+//
+//    * ForecastFrequency - The granularity of your forecasts (hourly, daily,
+//    weekly, etc).
+//
+//    * ForecastHorizon - The number of time steps being forecasted.
+//
+// When creating a new predictor, do not specify a value for ReferencePredictorArn.
+//
+// Upgrading and retraining predictors
+//
+// The following parameters are required when retraining or upgrading a predictor:
+//
+//    * PredictorName - A unique name for the predictor.
+//
+//    * ReferencePredictorArn - The ARN of the predictor to retrain or upgrade.
+//
+// When upgrading or retraining a predictor, only specify values for the ReferencePredictorArn
+// and PredictorName.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation CreateAutoPredictor for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceAlreadyExistsException
+//   There is already a resource with this name. Try again with a different name.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+//   * ResourceInUseException
+//   The specified resource is in use.
+//
+//   * LimitExceededException
+//   The limit on the number of resources per account has been exceeded.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/CreateAutoPredictor
+func (c *ForecastService) CreateAutoPredictor(input *CreateAutoPredictorInput) (*CreateAutoPredictorOutput, error) {
+	req, out := c.CreateAutoPredictorRequest(input)
+	return out, req.Send()
+}
+
+// CreateAutoPredictorWithContext is the same as CreateAutoPredictor with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateAutoPredictor for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) CreateAutoPredictorWithContext(ctx aws.Context, input *CreateAutoPredictorInput, opts ...request.Option) (*CreateAutoPredictorOutput, error) {
+	req, out := c.CreateAutoPredictorRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opCreateDataset = "CreateDataset"
 
 // CreateDatasetRequest generates a "aws/request.Request" representing the
@@ -177,8 +301,8 @@ func (c *ForecastService) CreateDatasetGroupRequest(input *CreateDatasetGroupInp
 //
 // To get a list of all your datasets groups, use the ListDatasetGroups operation.
 //
-// The Status of a dataset group must be ACTIVE before you can create use the
-// dataset group to create a predictor. To get the status, use the DescribeDatasetGroup
+// The Status of a dataset group must be ACTIVE before you can use the dataset
+// group to create a predictor. To get the status, use the DescribeDatasetGroup
 // operation.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -339,6 +463,275 @@ func (c *ForecastService) CreateDatasetImportJob(input *CreateDatasetImportJobIn
 // for more information on using Contexts.
 func (c *ForecastService) CreateDatasetImportJobWithContext(ctx aws.Context, input *CreateDatasetImportJobInput, opts ...request.Option) (*CreateDatasetImportJobOutput, error) {
 	req, out := c.CreateDatasetImportJobRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateExplainability = "CreateExplainability"
+
+// CreateExplainabilityRequest generates a "aws/request.Request" representing the
+// client's request for the CreateExplainability operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateExplainability for more information on using the CreateExplainability
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateExplainabilityRequest method.
+//    req, resp := client.CreateExplainabilityRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/CreateExplainability
+func (c *ForecastService) CreateExplainabilityRequest(input *CreateExplainabilityInput) (req *request.Request, output *CreateExplainabilityOutput) {
+	op := &request.Operation{
+		Name:       opCreateExplainability,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &CreateExplainabilityInput{}
+	}
+
+	output = &CreateExplainabilityOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateExplainability API operation for Amazon Forecast Service.
+//
+//
+// Explainability is only available for Forecasts and Predictors generated from
+// an AutoPredictor (CreateAutoPredictor)
+//
+// Creates an Amazon Forecast Explainability.
+//
+// Explainability helps you better understand how the attributes in your datasets
+// impact forecast. Amazon Forecast uses a metric called Impact scores to quantify
+// the relative impact of each attribute and determine whether they increase
+// or decrease forecast values.
+//
+// To enable Forecast Explainability, your predictor must include at least one
+// of the following: related time series, item metadata, or additional datasets
+// like Holidays and the Weather Index.
+//
+// CreateExplainability accepts either a Predictor ARN or Forecast ARN. To receive
+// aggregated Impact scores for all time series and time points in your datasets,
+// provide a Predictor ARN. To receive Impact scores for specific time series
+// and time points, provide a Forecast ARN.
+//
+// CreateExplainability with a Predictor ARN
+//
+// You can only have one Explainability resource per predictor. If you already
+// enabled ExplainPredictor in CreateAutoPredictor, that predictor already has
+// an Explainability resource.
+//
+// The following parameters are required when providing a Predictor ARN:
+//
+//    * ExplainabilityName - A unique name for the Explainability.
+//
+//    * ResourceArn - The Arn of the predictor.
+//
+//    * TimePointGranularity - Must be set to “ALL”.
+//
+//    * TimeSeriesGranularity - Must be set to “ALL”.
+//
+// Do not specify a value for the following parameters:
+//
+//    * DataSource - Only valid when TimeSeriesGranularity is “SPECIFIC”.
+//
+//    * Schema - Only valid when TimeSeriesGranularity is “SPECIFIC”.
+//
+//    * StartDateTime - Only valid when TimePointGranularity is “SPECIFIC”.
+//
+//    * EndDateTime - Only valid when TimePointGranularity is “SPECIFIC”.
+//
+// CreateExplainability with a Forecast ARN
+//
+// You can specify a maximum of 50 time series and 500 time points.
+//
+// The following parameters are required when providing a Predictor ARN:
+//
+//    * ExplainabilityName - A unique name for the Explainability.
+//
+//    * ResourceArn - The Arn of the forecast.
+//
+//    * TimePointGranularity - Either “ALL” or “SPECIFIC”.
+//
+//    * TimeSeriesGranularity - Either “ALL” or “SPECIFIC”.
+//
+// If you set TimeSeriesGranularity to “SPECIFIC”, you must also provide
+// the following:
+//
+//    * DataSource - The S3 location of the CSV file specifying your time series.
+//
+//    * Schema - The Schema defines the attributes and attribute types listed
+//    in the Data Source.
+//
+// If you set TimePointGranularity to “SPECIFIC”, you must also provide
+// the following:
+//
+//    * StartDateTime - The first timestamp in the range of time points.
+//
+//    * EndDateTime - The last timestamp in the range of time points.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation CreateExplainability for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceAlreadyExistsException
+//   There is already a resource with this name. Try again with a different name.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+//   * ResourceInUseException
+//   The specified resource is in use.
+//
+//   * LimitExceededException
+//   The limit on the number of resources per account has been exceeded.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/CreateExplainability
+func (c *ForecastService) CreateExplainability(input *CreateExplainabilityInput) (*CreateExplainabilityOutput, error) {
+	req, out := c.CreateExplainabilityRequest(input)
+	return out, req.Send()
+}
+
+// CreateExplainabilityWithContext is the same as CreateExplainability with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateExplainability for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) CreateExplainabilityWithContext(ctx aws.Context, input *CreateExplainabilityInput, opts ...request.Option) (*CreateExplainabilityOutput, error) {
+	req, out := c.CreateExplainabilityRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreateExplainabilityExport = "CreateExplainabilityExport"
+
+// CreateExplainabilityExportRequest generates a "aws/request.Request" representing the
+// client's request for the CreateExplainabilityExport operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreateExplainabilityExport for more information on using the CreateExplainabilityExport
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreateExplainabilityExportRequest method.
+//    req, resp := client.CreateExplainabilityExportRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/CreateExplainabilityExport
+func (c *ForecastService) CreateExplainabilityExportRequest(input *CreateExplainabilityExportInput) (req *request.Request, output *CreateExplainabilityExportOutput) {
+	op := &request.Operation{
+		Name:       opCreateExplainabilityExport,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &CreateExplainabilityExportInput{}
+	}
+
+	output = &CreateExplainabilityExportOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreateExplainabilityExport API operation for Amazon Forecast Service.
+//
+// Exports an Explainability resource created by the CreateExplainability operation.
+// Exported files are exported to an Amazon Simple Storage Service (Amazon S3)
+// bucket.
+//
+// You must specify a DataDestination object that includes an Amazon S3 bucket
+// and an AWS Identity and Access Management (IAM) role that Amazon Forecast
+// can assume to access the Amazon S3 bucket. For more information, see aws-forecast-iam-roles.
+//
+// The Status of the export job must be ACTIVE before you can access the export
+// in your Amazon S3 bucket. To get the status, use the DescribeExplainabilityExport
+// operation.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation CreateExplainabilityExport for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceAlreadyExistsException
+//   There is already a resource with this name. Try again with a different name.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+//   * ResourceInUseException
+//   The specified resource is in use.
+//
+//   * LimitExceededException
+//   The limit on the number of resources per account has been exceeded.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/CreateExplainabilityExport
+func (c *ForecastService) CreateExplainabilityExport(input *CreateExplainabilityExportInput) (*CreateExplainabilityExportOutput, error) {
+	req, out := c.CreateExplainabilityExportRequest(input)
+	return out, req.Send()
+}
+
+// CreateExplainabilityExportWithContext is the same as CreateExplainabilityExport with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreateExplainabilityExport for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) CreateExplainabilityExportWithContext(ctx aws.Context, input *CreateExplainabilityExportInput, opts ...request.Option) (*CreateExplainabilityExportOutput, error) {
+	req, out := c.CreateExplainabilityExportRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -611,36 +1004,43 @@ func (c *ForecastService) CreatePredictorRequest(input *CreatePredictorInput) (r
 
 // CreatePredictor API operation for Amazon Forecast Service.
 //
+//
+// This operation creates a legacy predictor that does not include all the predictor
+// functionalities provided by Amazon Forecast. To create a predictor that is
+// compatible with all aspects of Forecast, use CreateAutoPredictor.
+//
 // Creates an Amazon Forecast predictor.
 //
-// In the request, you provide a dataset group and either specify an algorithm
-// or let Amazon Forecast choose the algorithm for you using AutoML. If you
-// specify an algorithm, you also can override algorithm-specific hyperparameters.
+// In the request, provide a dataset group and either specify an algorithm or
+// let Amazon Forecast choose an algorithm for you using AutoML. If you specify
+// an algorithm, you also can override algorithm-specific hyperparameters.
 //
-// Amazon Forecast uses the chosen algorithm to train a model using the latest
-// version of the datasets in the specified dataset group. The result is called
-// a predictor. You then generate a forecast using the CreateForecast operation.
+// Amazon Forecast uses the algorithm to train a predictor using the latest
+// version of the datasets in the specified dataset group. You can then generate
+// a forecast using the CreateForecast operation.
 //
-// After training a model, the CreatePredictor operation also evaluates it.
-// To see the evaluation metrics, use the GetAccuracyMetrics operation. Always
-// review the evaluation metrics before deciding to use the predictor to generate
-// a forecast.
+// To see the evaluation metrics, use the GetAccuracyMetrics operation.
 //
-// Optionally, you can specify a featurization configuration to fill and aggregate
-// the data fields in the TARGET_TIME_SERIES dataset to improve model training.
-// For more information, see FeaturizationConfig.
+// You can specify a featurization configuration to fill and aggregate the data
+// fields in the TARGET_TIME_SERIES dataset to improve model training. For more
+// information, see FeaturizationConfig.
 //
 // For RELATED_TIME_SERIES datasets, CreatePredictor verifies that the DataFrequency
 // specified when the dataset was created matches the ForecastFrequency. TARGET_TIME_SERIES
 // datasets don't have this restriction. Amazon Forecast also verifies the delimiter
 // and timestamp format. For more information, see howitworks-datasets-groups.
 //
+// By default, predictors are trained and evaluated at the 0.1 (P10), 0.5 (P50),
+// and 0.9 (P90) quantiles. You can choose custom forecast types to train and
+// evaluate your predictor by setting the ForecastTypes.
+//
 // AutoML
 //
 // If you want Amazon Forecast to evaluate each algorithm and choose the one
 // that minimizes the objective function, set PerformAutoML to true. The objective
-// function is defined as the mean of the weighted p10, p50, and p90 quantile
-// losses. For more information, see EvaluationResult.
+// function is defined as the mean of the weighted losses over the forecast
+// types. By default, these are the p10, p50, and p90 quantile losses. For more
+// information, see EvaluationResult.
 //
 // When AutoML is enabled, the following properties are disallowed:
 //
@@ -700,6 +1100,115 @@ func (c *ForecastService) CreatePredictor(input *CreatePredictorInput) (*CreateP
 // for more information on using Contexts.
 func (c *ForecastService) CreatePredictorWithContext(ctx aws.Context, input *CreatePredictorInput, opts ...request.Option) (*CreatePredictorOutput, error) {
 	req, out := c.CreatePredictorRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opCreatePredictorBacktestExportJob = "CreatePredictorBacktestExportJob"
+
+// CreatePredictorBacktestExportJobRequest generates a "aws/request.Request" representing the
+// client's request for the CreatePredictorBacktestExportJob operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See CreatePredictorBacktestExportJob for more information on using the CreatePredictorBacktestExportJob
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the CreatePredictorBacktestExportJobRequest method.
+//    req, resp := client.CreatePredictorBacktestExportJobRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/CreatePredictorBacktestExportJob
+func (c *ForecastService) CreatePredictorBacktestExportJobRequest(input *CreatePredictorBacktestExportJobInput) (req *request.Request, output *CreatePredictorBacktestExportJobOutput) {
+	op := &request.Operation{
+		Name:       opCreatePredictorBacktestExportJob,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &CreatePredictorBacktestExportJobInput{}
+	}
+
+	output = &CreatePredictorBacktestExportJobOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// CreatePredictorBacktestExportJob API operation for Amazon Forecast Service.
+//
+// Exports backtest forecasts and accuracy metrics generated by the CreateAutoPredictor
+// or CreatePredictor operations. Two folders containing CSV files are exported
+// to your specified S3 bucket.
+//
+// The export file names will match the following conventions:
+//
+// <ExportJobName>_<ExportTimestamp>_<PartNumber>.csv
+//
+// The <ExportTimestamp> component is in Java SimpleDate format (yyyy-MM-ddTHH-mm-ssZ).
+//
+// You must specify a DataDestination object that includes an Amazon S3 bucket
+// and an AWS Identity and Access Management (IAM) role that Amazon Forecast
+// can assume to access the Amazon S3 bucket. For more information, see aws-forecast-iam-roles.
+//
+// The Status of the export job must be ACTIVE before you can access the export
+// in your Amazon S3 bucket. To get the status, use the DescribePredictorBacktestExportJob
+// operation.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation CreatePredictorBacktestExportJob for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceAlreadyExistsException
+//   There is already a resource with this name. Try again with a different name.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+//   * ResourceInUseException
+//   The specified resource is in use.
+//
+//   * LimitExceededException
+//   The limit on the number of resources per account has been exceeded.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/CreatePredictorBacktestExportJob
+func (c *ForecastService) CreatePredictorBacktestExportJob(input *CreatePredictorBacktestExportJobInput) (*CreatePredictorBacktestExportJobOutput, error) {
+	req, out := c.CreatePredictorBacktestExportJobRequest(input)
+	return out, req.Send()
+}
+
+// CreatePredictorBacktestExportJobWithContext is the same as CreatePredictorBacktestExportJob with the addition of
+// the ability to pass a context and additional request options.
+//
+// See CreatePredictorBacktestExportJob for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) CreatePredictorBacktestExportJobWithContext(ctx aws.Context, input *CreatePredictorBacktestExportJobInput, opts ...request.Option) (*CreatePredictorBacktestExportJobOutput, error) {
+	req, out := c.CreatePredictorBacktestExportJobRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -981,6 +1490,185 @@ func (c *ForecastService) DeleteDatasetImportJobWithContext(ctx aws.Context, inp
 	return out, req.Send()
 }
 
+const opDeleteExplainability = "DeleteExplainability"
+
+// DeleteExplainabilityRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteExplainability operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteExplainability for more information on using the DeleteExplainability
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteExplainabilityRequest method.
+//    req, resp := client.DeleteExplainabilityRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DeleteExplainability
+func (c *ForecastService) DeleteExplainabilityRequest(input *DeleteExplainabilityInput) (req *request.Request, output *DeleteExplainabilityOutput) {
+	op := &request.Operation{
+		Name:       opDeleteExplainability,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DeleteExplainabilityInput{}
+	}
+
+	output = &DeleteExplainabilityOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(jsonrpc.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// DeleteExplainability API operation for Amazon Forecast Service.
+//
+// Deletes an Explainability resource.
+//
+// You can delete only predictor that have a status of ACTIVE or CREATE_FAILED.
+// To get the status, use the DescribeExplainability operation.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation DeleteExplainability for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+//   * ResourceInUseException
+//   The specified resource is in use.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DeleteExplainability
+func (c *ForecastService) DeleteExplainability(input *DeleteExplainabilityInput) (*DeleteExplainabilityOutput, error) {
+	req, out := c.DeleteExplainabilityRequest(input)
+	return out, req.Send()
+}
+
+// DeleteExplainabilityWithContext is the same as DeleteExplainability with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteExplainability for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) DeleteExplainabilityWithContext(ctx aws.Context, input *DeleteExplainabilityInput, opts ...request.Option) (*DeleteExplainabilityOutput, error) {
+	req, out := c.DeleteExplainabilityRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteExplainabilityExport = "DeleteExplainabilityExport"
+
+// DeleteExplainabilityExportRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteExplainabilityExport operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteExplainabilityExport for more information on using the DeleteExplainabilityExport
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteExplainabilityExportRequest method.
+//    req, resp := client.DeleteExplainabilityExportRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DeleteExplainabilityExport
+func (c *ForecastService) DeleteExplainabilityExportRequest(input *DeleteExplainabilityExportInput) (req *request.Request, output *DeleteExplainabilityExportOutput) {
+	op := &request.Operation{
+		Name:       opDeleteExplainabilityExport,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DeleteExplainabilityExportInput{}
+	}
+
+	output = &DeleteExplainabilityExportOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(jsonrpc.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// DeleteExplainabilityExport API operation for Amazon Forecast Service.
+//
+// Deletes an Explainability export.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation DeleteExplainabilityExport for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+//   * ResourceInUseException
+//   The specified resource is in use.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DeleteExplainabilityExport
+func (c *ForecastService) DeleteExplainabilityExport(input *DeleteExplainabilityExportInput) (*DeleteExplainabilityExportOutput, error) {
+	req, out := c.DeleteExplainabilityExportRequest(input)
+	return out, req.Send()
+}
+
+// DeleteExplainabilityExportWithContext is the same as DeleteExplainabilityExport with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteExplainabilityExport for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) DeleteExplainabilityExportWithContext(ctx aws.Context, input *DeleteExplainabilityExportInput, opts ...request.Option) (*DeleteExplainabilityExportOutput, error) {
+	req, out := c.DeleteExplainabilityExportRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opDeleteForecast = "DeleteForecast"
 
 // DeleteForecastRequest generates a "aws/request.Request" representing the
@@ -1209,9 +1897,9 @@ func (c *ForecastService) DeletePredictorRequest(input *DeletePredictorInput) (r
 
 // DeletePredictor API operation for Amazon Forecast Service.
 //
-// Deletes a predictor created using the CreatePredictor operation. You can
-// delete only predictor that have a status of ACTIVE or CREATE_FAILED. To get
-// the status, use the DescribePredictor operation.
+// Deletes a predictor created using the DescribePredictor or CreatePredictor
+// operations. You can delete only predictor that have a status of ACTIVE or
+// CREATE_FAILED. To get the status, use the DescribePredictor operation.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
 // with awserr.Error's Code and Message methods to get detailed information about
@@ -1249,6 +1937,286 @@ func (c *ForecastService) DeletePredictor(input *DeletePredictorInput) (*DeleteP
 // for more information on using Contexts.
 func (c *ForecastService) DeletePredictorWithContext(ctx aws.Context, input *DeletePredictorInput, opts ...request.Option) (*DeletePredictorOutput, error) {
 	req, out := c.DeletePredictorRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeletePredictorBacktestExportJob = "DeletePredictorBacktestExportJob"
+
+// DeletePredictorBacktestExportJobRequest generates a "aws/request.Request" representing the
+// client's request for the DeletePredictorBacktestExportJob operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeletePredictorBacktestExportJob for more information on using the DeletePredictorBacktestExportJob
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeletePredictorBacktestExportJobRequest method.
+//    req, resp := client.DeletePredictorBacktestExportJobRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DeletePredictorBacktestExportJob
+func (c *ForecastService) DeletePredictorBacktestExportJobRequest(input *DeletePredictorBacktestExportJobInput) (req *request.Request, output *DeletePredictorBacktestExportJobOutput) {
+	op := &request.Operation{
+		Name:       opDeletePredictorBacktestExportJob,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DeletePredictorBacktestExportJobInput{}
+	}
+
+	output = &DeletePredictorBacktestExportJobOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(jsonrpc.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// DeletePredictorBacktestExportJob API operation for Amazon Forecast Service.
+//
+// Deletes a predictor backtest export job.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation DeletePredictorBacktestExportJob for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+//   * ResourceInUseException
+//   The specified resource is in use.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DeletePredictorBacktestExportJob
+func (c *ForecastService) DeletePredictorBacktestExportJob(input *DeletePredictorBacktestExportJobInput) (*DeletePredictorBacktestExportJobOutput, error) {
+	req, out := c.DeletePredictorBacktestExportJobRequest(input)
+	return out, req.Send()
+}
+
+// DeletePredictorBacktestExportJobWithContext is the same as DeletePredictorBacktestExportJob with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeletePredictorBacktestExportJob for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) DeletePredictorBacktestExportJobWithContext(ctx aws.Context, input *DeletePredictorBacktestExportJobInput, opts ...request.Option) (*DeletePredictorBacktestExportJobOutput, error) {
+	req, out := c.DeletePredictorBacktestExportJobRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDeleteResourceTree = "DeleteResourceTree"
+
+// DeleteResourceTreeRequest generates a "aws/request.Request" representing the
+// client's request for the DeleteResourceTree operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DeleteResourceTree for more information on using the DeleteResourceTree
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DeleteResourceTreeRequest method.
+//    req, resp := client.DeleteResourceTreeRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DeleteResourceTree
+func (c *ForecastService) DeleteResourceTreeRequest(input *DeleteResourceTreeInput) (req *request.Request, output *DeleteResourceTreeOutput) {
+	op := &request.Operation{
+		Name:       opDeleteResourceTree,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DeleteResourceTreeInput{}
+	}
+
+	output = &DeleteResourceTreeOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(jsonrpc.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// DeleteResourceTree API operation for Amazon Forecast Service.
+//
+// Deletes an entire resource tree. This operation will delete the parent resource
+// and its child resources.
+//
+// Child resources are resources that were created from another resource. For
+// example, when a forecast is generated from a predictor, the forecast is the
+// child resource and the predictor is the parent resource.
+//
+// Amazon Forecast resources possess the following parent-child resource hierarchies:
+//
+//    * Dataset: dataset import jobs
+//
+//    * Dataset Group: predictors, predictor backtest export jobs, forecasts,
+//    forecast export jobs
+//
+//    * Predictor: predictor backtest export jobs, forecasts, forecast export
+//    jobs
+//
+//    * Forecast: forecast export jobs
+//
+// DeleteResourceTree will only delete Amazon Forecast resources, and will not
+// delete datasets or exported files stored in Amazon S3.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation DeleteResourceTree for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+//   * ResourceInUseException
+//   The specified resource is in use.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DeleteResourceTree
+func (c *ForecastService) DeleteResourceTree(input *DeleteResourceTreeInput) (*DeleteResourceTreeOutput, error) {
+	req, out := c.DeleteResourceTreeRequest(input)
+	return out, req.Send()
+}
+
+// DeleteResourceTreeWithContext is the same as DeleteResourceTree with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DeleteResourceTree for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) DeleteResourceTreeWithContext(ctx aws.Context, input *DeleteResourceTreeInput, opts ...request.Option) (*DeleteResourceTreeOutput, error) {
+	req, out := c.DeleteResourceTreeRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDescribeAutoPredictor = "DescribeAutoPredictor"
+
+// DescribeAutoPredictorRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeAutoPredictor operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DescribeAutoPredictor for more information on using the DescribeAutoPredictor
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DescribeAutoPredictorRequest method.
+//    req, resp := client.DescribeAutoPredictorRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DescribeAutoPredictor
+func (c *ForecastService) DescribeAutoPredictorRequest(input *DescribeAutoPredictorInput) (req *request.Request, output *DescribeAutoPredictorOutput) {
+	op := &request.Operation{
+		Name:       opDescribeAutoPredictor,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DescribeAutoPredictorInput{}
+	}
+
+	output = &DescribeAutoPredictorOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DescribeAutoPredictor API operation for Amazon Forecast Service.
+//
+// Describes a predictor created using the CreateAutoPredictor operation.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation DescribeAutoPredictor for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DescribeAutoPredictor
+func (c *ForecastService) DescribeAutoPredictor(input *DescribeAutoPredictorInput) (*DescribeAutoPredictorOutput, error) {
+	req, out := c.DescribeAutoPredictorRequest(input)
+	return out, req.Send()
+}
+
+// DescribeAutoPredictorWithContext is the same as DescribeAutoPredictor with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DescribeAutoPredictor for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) DescribeAutoPredictorWithContext(ctx aws.Context, input *DescribeAutoPredictorInput, opts ...request.Option) (*DescribeAutoPredictorOutput, error) {
+	req, out := c.DescribeAutoPredictorRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -1541,6 +2509,176 @@ func (c *ForecastService) DescribeDatasetImportJobWithContext(ctx aws.Context, i
 	return out, req.Send()
 }
 
+const opDescribeExplainability = "DescribeExplainability"
+
+// DescribeExplainabilityRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeExplainability operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DescribeExplainability for more information on using the DescribeExplainability
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DescribeExplainabilityRequest method.
+//    req, resp := client.DescribeExplainabilityRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DescribeExplainability
+func (c *ForecastService) DescribeExplainabilityRequest(input *DescribeExplainabilityInput) (req *request.Request, output *DescribeExplainabilityOutput) {
+	op := &request.Operation{
+		Name:       opDescribeExplainability,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DescribeExplainabilityInput{}
+	}
+
+	output = &DescribeExplainabilityOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DescribeExplainability API operation for Amazon Forecast Service.
+//
+// Describes an Explainability resource created using the CreateExplainability
+// operation.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation DescribeExplainability for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DescribeExplainability
+func (c *ForecastService) DescribeExplainability(input *DescribeExplainabilityInput) (*DescribeExplainabilityOutput, error) {
+	req, out := c.DescribeExplainabilityRequest(input)
+	return out, req.Send()
+}
+
+// DescribeExplainabilityWithContext is the same as DescribeExplainability with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DescribeExplainability for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) DescribeExplainabilityWithContext(ctx aws.Context, input *DescribeExplainabilityInput, opts ...request.Option) (*DescribeExplainabilityOutput, error) {
+	req, out := c.DescribeExplainabilityRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opDescribeExplainabilityExport = "DescribeExplainabilityExport"
+
+// DescribeExplainabilityExportRequest generates a "aws/request.Request" representing the
+// client's request for the DescribeExplainabilityExport operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DescribeExplainabilityExport for more information on using the DescribeExplainabilityExport
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DescribeExplainabilityExportRequest method.
+//    req, resp := client.DescribeExplainabilityExportRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DescribeExplainabilityExport
+func (c *ForecastService) DescribeExplainabilityExportRequest(input *DescribeExplainabilityExportInput) (req *request.Request, output *DescribeExplainabilityExportOutput) {
+	op := &request.Operation{
+		Name:       opDescribeExplainabilityExport,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DescribeExplainabilityExportInput{}
+	}
+
+	output = &DescribeExplainabilityExportOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DescribeExplainabilityExport API operation for Amazon Forecast Service.
+//
+// Describes an Explainability export created using the CreateExplainabilityExport
+// operation.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation DescribeExplainabilityExport for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DescribeExplainabilityExport
+func (c *ForecastService) DescribeExplainabilityExport(input *DescribeExplainabilityExportInput) (*DescribeExplainabilityExportOutput, error) {
+	req, out := c.DescribeExplainabilityExportRequest(input)
+	return out, req.Send()
+}
+
+// DescribeExplainabilityExportWithContext is the same as DescribeExplainabilityExport with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DescribeExplainabilityExport for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) DescribeExplainabilityExportWithContext(ctx aws.Context, input *DescribeExplainabilityExportInput, opts ...request.Option) (*DescribeExplainabilityExportOutput, error) {
+	req, out := c.DescribeExplainabilityExportRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opDescribeForecast = "DescribeForecast"
 
 // DescribeForecastRequest generates a "aws/request.Request" representing the
@@ -1778,6 +2916,10 @@ func (c *ForecastService) DescribePredictorRequest(input *DescribePredictorInput
 
 // DescribePredictor API operation for Amazon Forecast Service.
 //
+//
+// This operation is only valid for legacy predictors created with CreatePredictor.
+// If you are not using a legacy predictor, use DescribeAutoPredictor.
+//
 // Describes a predictor created using the CreatePredictor operation.
 //
 // In addition to listing the properties provided in the CreatePredictor request,
@@ -1835,6 +2977,102 @@ func (c *ForecastService) DescribePredictorWithContext(ctx aws.Context, input *D
 	return out, req.Send()
 }
 
+const opDescribePredictorBacktestExportJob = "DescribePredictorBacktestExportJob"
+
+// DescribePredictorBacktestExportJobRequest generates a "aws/request.Request" representing the
+// client's request for the DescribePredictorBacktestExportJob operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See DescribePredictorBacktestExportJob for more information on using the DescribePredictorBacktestExportJob
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the DescribePredictorBacktestExportJobRequest method.
+//    req, resp := client.DescribePredictorBacktestExportJobRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DescribePredictorBacktestExportJob
+func (c *ForecastService) DescribePredictorBacktestExportJobRequest(input *DescribePredictorBacktestExportJobInput) (req *request.Request, output *DescribePredictorBacktestExportJobOutput) {
+	op := &request.Operation{
+		Name:       opDescribePredictorBacktestExportJob,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &DescribePredictorBacktestExportJobInput{}
+	}
+
+	output = &DescribePredictorBacktestExportJobOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// DescribePredictorBacktestExportJob API operation for Amazon Forecast Service.
+//
+// Describes a predictor backtest export job created using the CreatePredictorBacktestExportJob
+// operation.
+//
+// In addition to listing the properties provided by the user in the CreatePredictorBacktestExportJob
+// request, this operation lists the following properties:
+//
+//    * CreationTime
+//
+//    * LastModificationTime
+//
+//    * Status
+//
+//    * Message (if an error occurred)
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation DescribePredictorBacktestExportJob for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/DescribePredictorBacktestExportJob
+func (c *ForecastService) DescribePredictorBacktestExportJob(input *DescribePredictorBacktestExportJobInput) (*DescribePredictorBacktestExportJobOutput, error) {
+	req, out := c.DescribePredictorBacktestExportJobRequest(input)
+	return out, req.Send()
+}
+
+// DescribePredictorBacktestExportJobWithContext is the same as DescribePredictorBacktestExportJob with the addition of
+// the ability to pass a context and additional request options.
+//
+// See DescribePredictorBacktestExportJob for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) DescribePredictorBacktestExportJobWithContext(ctx aws.Context, input *DescribePredictorBacktestExportJobInput, opts ...request.Option) (*DescribePredictorBacktestExportJobOutput, error) {
+	req, out := c.DescribePredictorBacktestExportJobRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opGetAccuracyMetrics = "GetAccuracyMetrics"
 
 // GetAccuracyMetricsRequest generates a "aws/request.Request" representing the
@@ -1882,7 +3120,7 @@ func (c *ForecastService) GetAccuracyMetricsRequest(input *GetAccuracyMetricsInp
 // Provides metrics on the accuracy of the models that were trained by the CreatePredictor
 // operation. Use metrics to see how well the model performed and to decide
 // whether to use the predictor to generate a forecast. For more information,
-// see metrics.
+// see Predictor Metrics (https://docs.aws.amazon.com/forecast/latest/dg/metrics.html).
 //
 // This operation generates metrics for each backtest window that was evaluated.
 // The number of backtest windows (NumberOfBacktestWindows) is specified using
@@ -2366,6 +3604,182 @@ func (c *ForecastService) ListDatasetsPagesWithContext(ctx aws.Context, input *L
 	return p.Err()
 }
 
+const opListExplainabilities = "ListExplainabilities"
+
+// ListExplainabilitiesRequest generates a "aws/request.Request" representing the
+// client's request for the ListExplainabilities operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListExplainabilities for more information on using the ListExplainabilities
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListExplainabilitiesRequest method.
+//    req, resp := client.ListExplainabilitiesRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/ListExplainabilities
+func (c *ForecastService) ListExplainabilitiesRequest(input *ListExplainabilitiesInput) (req *request.Request, output *ListExplainabilitiesOutput) {
+	op := &request.Operation{
+		Name:       opListExplainabilities,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &ListExplainabilitiesInput{}
+	}
+
+	output = &ListExplainabilitiesOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListExplainabilities API operation for Amazon Forecast Service.
+//
+// Returns a list of Explainability resources created using the CreateExplainability
+// operation. This operation returns a summary for each Explainability. You
+// can filter the list using an array of Filter objects.
+//
+// To retrieve the complete set of properties for a particular Explainability
+// resource, use the ARN with the DescribeExplainability operation.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation ListExplainabilities for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidNextTokenException
+//   The token is not valid. Tokens expire after 24 hours.
+//
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/ListExplainabilities
+func (c *ForecastService) ListExplainabilities(input *ListExplainabilitiesInput) (*ListExplainabilitiesOutput, error) {
+	req, out := c.ListExplainabilitiesRequest(input)
+	return out, req.Send()
+}
+
+// ListExplainabilitiesWithContext is the same as ListExplainabilities with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListExplainabilities for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) ListExplainabilitiesWithContext(ctx aws.Context, input *ListExplainabilitiesInput, opts ...request.Option) (*ListExplainabilitiesOutput, error) {
+	req, out := c.ListExplainabilitiesRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opListExplainabilityExports = "ListExplainabilityExports"
+
+// ListExplainabilityExportsRequest generates a "aws/request.Request" representing the
+// client's request for the ListExplainabilityExports operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListExplainabilityExports for more information on using the ListExplainabilityExports
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListExplainabilityExportsRequest method.
+//    req, resp := client.ListExplainabilityExportsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/ListExplainabilityExports
+func (c *ForecastService) ListExplainabilityExportsRequest(input *ListExplainabilityExportsInput) (req *request.Request, output *ListExplainabilityExportsOutput) {
+	op := &request.Operation{
+		Name:       opListExplainabilityExports,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &ListExplainabilityExportsInput{}
+	}
+
+	output = &ListExplainabilityExportsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListExplainabilityExports API operation for Amazon Forecast Service.
+//
+// Returns a list of Explainability exports created using the CreateExplainabilityExport
+// operation. This operation returns a summary for each Explainability export.
+// You can filter the list using an array of Filter objects.
+//
+// To retrieve the complete set of properties for a particular Explainability
+// export, use the ARN with the DescribeExplainability operation.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation ListExplainabilityExports for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidNextTokenException
+//   The token is not valid. Tokens expire after 24 hours.
+//
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/ListExplainabilityExports
+func (c *ForecastService) ListExplainabilityExports(input *ListExplainabilityExportsInput) (*ListExplainabilityExportsOutput, error) {
+	req, out := c.ListExplainabilityExportsRequest(input)
+	return out, req.Send()
+}
+
+// ListExplainabilityExportsWithContext is the same as ListExplainabilityExports with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListExplainabilityExports for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) ListExplainabilityExportsWithContext(ctx aws.Context, input *ListExplainabilityExportsInput, opts ...request.Option) (*ListExplainabilityExportsOutput, error) {
+	req, out := c.ListExplainabilityExportsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
 const opListForecastExportJobs = "ListForecastExportJobs"
 
 // ListForecastExportJobsRequest generates a "aws/request.Request" representing the
@@ -2656,6 +4070,152 @@ func (c *ForecastService) ListForecastsPagesWithContext(ctx aws.Context, input *
 	return p.Err()
 }
 
+const opListPredictorBacktestExportJobs = "ListPredictorBacktestExportJobs"
+
+// ListPredictorBacktestExportJobsRequest generates a "aws/request.Request" representing the
+// client's request for the ListPredictorBacktestExportJobs operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See ListPredictorBacktestExportJobs for more information on using the ListPredictorBacktestExportJobs
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the ListPredictorBacktestExportJobsRequest method.
+//    req, resp := client.ListPredictorBacktestExportJobsRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/ListPredictorBacktestExportJobs
+func (c *ForecastService) ListPredictorBacktestExportJobsRequest(input *ListPredictorBacktestExportJobsInput) (req *request.Request, output *ListPredictorBacktestExportJobsOutput) {
+	op := &request.Operation{
+		Name:       opListPredictorBacktestExportJobs,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+		Paginator: &request.Paginator{
+			InputTokens:     []string{"NextToken"},
+			OutputTokens:    []string{"NextToken"},
+			LimitToken:      "MaxResults",
+			TruncationToken: "",
+		},
+	}
+
+	if input == nil {
+		input = &ListPredictorBacktestExportJobsInput{}
+	}
+
+	output = &ListPredictorBacktestExportJobsOutput{}
+	req = c.newRequest(op, input, output)
+	return
+}
+
+// ListPredictorBacktestExportJobs API operation for Amazon Forecast Service.
+//
+// Returns a list of predictor backtest export jobs created using the CreatePredictorBacktestExportJob
+// operation. This operation returns a summary for each backtest export job.
+// You can filter the list using an array of Filter objects.
+//
+// To retrieve the complete set of properties for a particular backtest export
+// job, use the ARN with the DescribePredictorBacktestExportJob operation.
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation ListPredictorBacktestExportJobs for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidNextTokenException
+//   The token is not valid. Tokens expire after 24 hours.
+//
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/ListPredictorBacktestExportJobs
+func (c *ForecastService) ListPredictorBacktestExportJobs(input *ListPredictorBacktestExportJobsInput) (*ListPredictorBacktestExportJobsOutput, error) {
+	req, out := c.ListPredictorBacktestExportJobsRequest(input)
+	return out, req.Send()
+}
+
+// ListPredictorBacktestExportJobsWithContext is the same as ListPredictorBacktestExportJobs with the addition of
+// the ability to pass a context and additional request options.
+//
+// See ListPredictorBacktestExportJobs for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) ListPredictorBacktestExportJobsWithContext(ctx aws.Context, input *ListPredictorBacktestExportJobsInput, opts ...request.Option) (*ListPredictorBacktestExportJobsOutput, error) {
+	req, out := c.ListPredictorBacktestExportJobsRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+// ListPredictorBacktestExportJobsPages iterates over the pages of a ListPredictorBacktestExportJobs operation,
+// calling the "fn" function with the response data for each page. To stop
+// iterating, return false from the fn function.
+//
+// See ListPredictorBacktestExportJobs method for more information on how to use this operation.
+//
+// Note: This operation can generate multiple requests to a service.
+//
+//    // Example iterating over at most 3 pages of a ListPredictorBacktestExportJobs operation.
+//    pageNum := 0
+//    err := client.ListPredictorBacktestExportJobsPages(params,
+//        func(page *forecastservice.ListPredictorBacktestExportJobsOutput, lastPage bool) bool {
+//            pageNum++
+//            fmt.Println(page)
+//            return pageNum <= 3
+//        })
+//
+func (c *ForecastService) ListPredictorBacktestExportJobsPages(input *ListPredictorBacktestExportJobsInput, fn func(*ListPredictorBacktestExportJobsOutput, bool) bool) error {
+	return c.ListPredictorBacktestExportJobsPagesWithContext(aws.BackgroundContext(), input, fn)
+}
+
+// ListPredictorBacktestExportJobsPagesWithContext same as ListPredictorBacktestExportJobsPages except
+// it takes a Context and allows setting request options on the pages.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) ListPredictorBacktestExportJobsPagesWithContext(ctx aws.Context, input *ListPredictorBacktestExportJobsInput, fn func(*ListPredictorBacktestExportJobsOutput, bool) bool, opts ...request.Option) error {
+	p := request.Pagination{
+		NewRequest: func() (*request.Request, error) {
+			var inCpy *ListPredictorBacktestExportJobsInput
+			if input != nil {
+				tmp := *input
+				inCpy = &tmp
+			}
+			req, _ := c.ListPredictorBacktestExportJobsRequest(inCpy)
+			req.SetContext(ctx)
+			req.ApplyOptions(opts...)
+			return req, nil
+		},
+	}
+
+	for p.Next() {
+		if !fn(p.Page().(*ListPredictorBacktestExportJobsOutput), !p.HasNextPage()) {
+			break
+		}
+	}
+
+	return p.Err()
+}
+
 const opListPredictors = "ListPredictors"
 
 // ListPredictorsRequest generates a "aws/request.Request" representing the
@@ -2706,10 +4266,12 @@ func (c *ForecastService) ListPredictorsRequest(input *ListPredictorsInput) (req
 
 // ListPredictors API operation for Amazon Forecast Service.
 //
-// Returns a list of predictors created using the CreatePredictor operation.
-// For each predictor, this operation returns a summary of its properties, including
-// its Amazon Resource Name (ARN). You can retrieve the complete set of properties
-// by using the ARN with the DescribePredictor operation. You can filter the
+// Returns a list of predictors created using the CreateAutoPredictor or CreatePredictor
+// operations. For each predictor, this operation returns a summary of its properties,
+// including its Amazon Resource Name (ARN).
+//
+// You can retrieve the complete set of properties by using the ARN with the
+// DescribeAutoPredictor and DescribePredictor operations. You can filter the
 // list using an array of Filter objects.
 //
 // Returns awserr.Error for service API and SDK errors. Use runtime type assertions
@@ -2880,6 +4442,114 @@ func (c *ForecastService) ListTagsForResource(input *ListTagsForResourceInput) (
 // for more information on using Contexts.
 func (c *ForecastService) ListTagsForResourceWithContext(ctx aws.Context, input *ListTagsForResourceInput, opts ...request.Option) (*ListTagsForResourceOutput, error) {
 	req, out := c.ListTagsForResourceRequest(input)
+	req.SetContext(ctx)
+	req.ApplyOptions(opts...)
+	return out, req.Send()
+}
+
+const opStopResource = "StopResource"
+
+// StopResourceRequest generates a "aws/request.Request" representing the
+// client's request for the StopResource operation. The "output" return
+// value will be populated with the request's response once the request completes
+// successfully.
+//
+// Use "Send" method on the returned Request to send the API call to the service.
+// the "output" return value is not valid until after Send returns without error.
+//
+// See StopResource for more information on using the StopResource
+// API call, and error handling.
+//
+// This method is useful when you want to inject custom logic or configuration
+// into the SDK's request lifecycle. Such as custom headers, or retry logic.
+//
+//
+//    // Example sending a request using the StopResourceRequest method.
+//    req, resp := client.StopResourceRequest(params)
+//
+//    err := req.Send()
+//    if err == nil { // resp is now filled
+//        fmt.Println(resp)
+//    }
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/StopResource
+func (c *ForecastService) StopResourceRequest(input *StopResourceInput) (req *request.Request, output *StopResourceOutput) {
+	op := &request.Operation{
+		Name:       opStopResource,
+		HTTPMethod: "POST",
+		HTTPPath:   "/",
+	}
+
+	if input == nil {
+		input = &StopResourceInput{}
+	}
+
+	output = &StopResourceOutput{}
+	req = c.newRequest(op, input, output)
+	req.Handlers.Unmarshal.Swap(jsonrpc.UnmarshalHandler.Name, protocol.UnmarshalDiscardBodyHandler)
+	return
+}
+
+// StopResource API operation for Amazon Forecast Service.
+//
+// Stops a resource.
+//
+// The resource undergoes the following states: CREATE_STOPPING and CREATE_STOPPED.
+// You cannot resume a resource once it has been stopped.
+//
+// This operation can be applied to the following resources (and their corresponding
+// child resources):
+//
+//    * Dataset Import Job
+//
+//    * Predictor Job
+//
+//    * Forecast Job
+//
+//    * Forecast Export Job
+//
+//    * Predictor Backtest Export Job
+//
+//    * Explainability Job
+//
+//    * Explainability Export Job
+//
+// Returns awserr.Error for service API and SDK errors. Use runtime type assertions
+// with awserr.Error's Code and Message methods to get detailed information about
+// the error.
+//
+// See the AWS API reference guide for Amazon Forecast Service's
+// API operation StopResource for usage and error information.
+//
+// Returned Error Types:
+//   * InvalidInputException
+//   We can't process the request because it includes an invalid value or a value
+//   that exceeds the valid range.
+//
+//   * LimitExceededException
+//   The limit on the number of resources per account has been exceeded.
+//
+//   * ResourceNotFoundException
+//   We can't find a resource with that Amazon Resource Name (ARN). Check the
+//   ARN and try again.
+//
+// See also, https://docs.aws.amazon.com/goto/WebAPI/forecast-2018-06-26/StopResource
+func (c *ForecastService) StopResource(input *StopResourceInput) (*StopResourceOutput, error) {
+	req, out := c.StopResourceRequest(input)
+	return out, req.Send()
+}
+
+// StopResourceWithContext is the same as StopResource with the addition of
+// the ability to pass a context and additional request options.
+//
+// See StopResource for details on how to use this API operation.
+//
+// The context must be non-nil and will be used for request cancellation. If
+// the context is nil a panic will occur. In the future the SDK may create
+// sub-contexts for http.Requests. See https://golang.org/pkg/context/
+// for more information on using Contexts.
+func (c *ForecastService) StopResourceWithContext(ctx aws.Context, input *StopResourceInput, opts ...request.Option) (*StopResourceOutput, error) {
+	req, out := c.StopResourceRequest(input)
 	req.SetContext(ctx)
 	req.ApplyOptions(opts...)
 	return out, req.Send()
@@ -3153,6 +4823,328 @@ func (c *ForecastService) UpdateDatasetGroupWithContext(ctx aws.Context, input *
 	return out, req.Send()
 }
 
+// Describes an additional dataset. This object is part of the DataConfig object.
+// Forecast supports the Weather Index and Holidays additional datasets.
+//
+// Weather Index
+//
+// The Amazon Forecast Weather Index is a built-in dataset that incorporates
+// historical and projected weather information into your model. The Weather
+// Index supplements your datasets with over two years of historical weather
+// data and up to 14 days of projected weather data. For more information, see
+// Amazon Forecast Weather Index (https://docs.aws.amazon.com/forecast/latest/dg/weather.html).
+//
+// Holidays
+//
+// Holidays is a built-in dataset that incorporates national holiday information
+// into your model. It provides native support for the holiday calendars of
+// 66 countries. To view the holiday calendars, refer to the Jollyday (http://jollyday.sourceforge.net/data.html)
+// library. For more information, see Holidays Featurization (https://docs.aws.amazon.com/forecast/latest/dg/holidays.html).
+type AdditionalDataset struct {
+	_ struct{} `type:"structure"`
+
+	// Weather Index
+	//
+	// To enable the Weather Index, do not specify a value for Configuration.
+	//
+	// Holidays
+	//
+	// To enable Holidays, set CountryCode to one of the following two-letter country
+	// codes:
+	//
+	//    * "AL" - ALBANIA
+	//
+	//    * "AR" - ARGENTINA
+	//
+	//    * "AT" - AUSTRIA
+	//
+	//    * "AU" - AUSTRALIA
+	//
+	//    * "BA" - BOSNIA HERZEGOVINA
+	//
+	//    * "BE" - BELGIUM
+	//
+	//    * "BG" - BULGARIA
+	//
+	//    * "BO" - BOLIVIA
+	//
+	//    * "BR" - BRAZIL
+	//
+	//    * "BY" - BELARUS
+	//
+	//    * "CA" - CANADA
+	//
+	//    * "CL" - CHILE
+	//
+	//    * "CO" - COLOMBIA
+	//
+	//    * "CR" - COSTA RICA
+	//
+	//    * "HR" - CROATIA
+	//
+	//    * "CZ" - CZECH REPUBLIC
+	//
+	//    * "DK" - DENMARK
+	//
+	//    * "EC" - ECUADOR
+	//
+	//    * "EE" - ESTONIA
+	//
+	//    * "ET" - ETHIOPIA
+	//
+	//    * "FI" - FINLAND
+	//
+	//    * "FR" - FRANCE
+	//
+	//    * "DE" - GERMANY
+	//
+	//    * "GR" - GREECE
+	//
+	//    * "HU" - HUNGARY
+	//
+	//    * "IS" - ICELAND
+	//
+	//    * "IN" - INDIA
+	//
+	//    * "IE" - IRELAND
+	//
+	//    * "IT" - ITALY
+	//
+	//    * "JP" - JAPAN
+	//
+	//    * "KZ" - KAZAKHSTAN
+	//
+	//    * "KR" - KOREA
+	//
+	//    * "LV" - LATVIA
+	//
+	//    * "LI" - LIECHTENSTEIN
+	//
+	//    * "LT" - LITHUANIA
+	//
+	//    * "LU" - LUXEMBOURG
+	//
+	//    * "MK" - MACEDONIA
+	//
+	//    * "MT" - MALTA
+	//
+	//    * "MX" - MEXICO
+	//
+	//    * "MD" - MOLDOVA
+	//
+	//    * "ME" - MONTENEGRO
+	//
+	//    * "NL" - NETHERLANDS
+	//
+	//    * "NZ" - NEW ZEALAND
+	//
+	//    * "NI" - NICARAGUA
+	//
+	//    * "NG" - NIGERIA
+	//
+	//    * "NO" - NORWAY
+	//
+	//    * "PA" - PANAMA
+	//
+	//    * "PY" - PARAGUAY
+	//
+	//    * "PE" - PERU
+	//
+	//    * "PL" - POLAND
+	//
+	//    * "PT" - PORTUGAL
+	//
+	//    * "RO" - ROMANIA
+	//
+	//    * "RU" - RUSSIA
+	//
+	//    * "RS" - SERBIA
+	//
+	//    * "SK" - SLOVAKIA
+	//
+	//    * "SI" - SLOVENIA
+	//
+	//    * "ZA" - SOUTH AFRICA
+	//
+	//    * "ES" - SPAIN
+	//
+	//    * "SE" - SWEDEN
+	//
+	//    * "CH" - SWITZERLAND
+	//
+	//    * "UA" - UKRAINE
+	//
+	//    * "AE" - UNITED ARAB EMIRATES
+	//
+	//    * "US" - UNITED STATES
+	//
+	//    * "UK" - UNITED KINGDOM
+	//
+	//    * "UY" - URUGUAY
+	//
+	//    * "VE" - VENEZUELA
+	Configuration map[string][]*string `type:"map"`
+
+	// The name of the additional dataset. Valid names: "holiday" and "weather".
+	//
+	// Name is a required field
+	Name *string `min:"1" type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AdditionalDataset) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AdditionalDataset) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AdditionalDataset) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AdditionalDataset"}
+	if s.Name == nil {
+		invalidParams.Add(request.NewErrParamRequired("Name"))
+	}
+	if s.Name != nil && len(*s.Name) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Name", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetConfiguration sets the Configuration field's value.
+func (s *AdditionalDataset) SetConfiguration(v map[string][]*string) *AdditionalDataset {
+	s.Configuration = v
+	return s
+}
+
+// SetName sets the Name field's value.
+func (s *AdditionalDataset) SetName(v string) *AdditionalDataset {
+	s.Name = &v
+	return s
+}
+
+// Provides information about the method used to transform attributes.
+//
+// The following is an example using the RETAIL domain:
+//
+// {
+//
+// "AttributeName": "demand",
+//
+// "Transformations": {"aggregation": "sum", "middlefill": "zero", "backfill":
+// "zero"}
+//
+// }
+type AttributeConfig struct {
+	_ struct{} `type:"structure"`
+
+	// The name of the attribute as specified in the schema. Amazon Forecast supports
+	// the target field of the target time series and the related time series datasets.
+	// For example, for the RETAIL domain, the target is demand.
+	//
+	// AttributeName is a required field
+	AttributeName *string `min:"1" type:"string" required:"true"`
+
+	// The method parameters (key-value pairs), which are a map of override parameters.
+	// Specify these parameters to override the default values. Related Time Series
+	// attributes do not accept aggregation parameters.
+	//
+	// The following list shows the parameters and their valid values for the "filling"
+	// featurization method for a Target Time Series dataset. Default values are
+	// bolded.
+	//
+	//    * aggregation: sum, avg, first, min, max
+	//
+	//    * frontfill: none
+	//
+	//    * middlefill: zero, nan (not a number), value, median, mean, min, max
+	//
+	//    * backfill: zero, nan, value, median, mean, min, max
+	//
+	// The following list shows the parameters and their valid values for a Related
+	// Time Series featurization method (there are no defaults):
+	//
+	//    * middlefill: zero, value, median, mean, min, max
+	//
+	//    * backfill: zero, value, median, mean, min, max
+	//
+	//    * futurefill: zero, value, median, mean, min, max
+	//
+	// To set a filling method to a specific value, set the fill parameter to value
+	// and define the value in a corresponding _value parameter. For example, to
+	// set backfilling to a value of 2, include the following: "backfill": "value"
+	// and "backfill_value":"2".
+	//
+	// Transformations is a required field
+	Transformations map[string]*string `min:"1" type:"map" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttributeConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s AttributeConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *AttributeConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "AttributeConfig"}
+	if s.AttributeName == nil {
+		invalidParams.Add(request.NewErrParamRequired("AttributeName"))
+	}
+	if s.AttributeName != nil && len(*s.AttributeName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AttributeName", 1))
+	}
+	if s.Transformations == nil {
+		invalidParams.Add(request.NewErrParamRequired("Transformations"))
+	}
+	if s.Transformations != nil && len(s.Transformations) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("Transformations", 1))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAttributeName sets the AttributeName field's value.
+func (s *AttributeConfig) SetAttributeName(v string) *AttributeConfig {
+	s.AttributeName = &v
+	return s
+}
+
+// SetTransformations sets the Transformations field's value.
+func (s *AttributeConfig) SetTransformations(v map[string]*string) *AttributeConfig {
+	s.Transformations = v
+	return s
+}
+
 // Specifies a categorical hyperparameter and it's range of tunable values.
 // This object is part of the ParameterRanges object.
 type CategoricalParameterRange struct {
@@ -3169,12 +5161,20 @@ type CategoricalParameterRange struct {
 	Values []*string `min:"1" type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CategoricalParameterRange) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CategoricalParameterRange) GoString() string {
 	return s.String()
 }
@@ -3266,12 +5266,20 @@ type ContinuousParameterRange struct {
 	ScalingType *string `type:"string" enum:"ScalingType"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ContinuousParameterRange) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ContinuousParameterRange) GoString() string {
 	return s.String()
 }
@@ -3319,6 +5327,257 @@ func (s *ContinuousParameterRange) SetName(v string) *ContinuousParameterRange {
 // SetScalingType sets the ScalingType field's value.
 func (s *ContinuousParameterRange) SetScalingType(v string) *ContinuousParameterRange {
 	s.ScalingType = &v
+	return s
+}
+
+type CreateAutoPredictorInput struct {
+	_ struct{} `type:"structure"`
+
+	// The data configuration for your dataset group and any additional datasets.
+	DataConfig *DataConfig `type:"structure"`
+
+	// An AWS Key Management Service (KMS) key and an AWS Identity and Access Management
+	// (IAM) role that Amazon Forecast can assume to access the key. You can specify
+	// this optional object in the CreateDataset and CreatePredictor requests.
+	EncryptionConfig *EncryptionConfig `type:"structure"`
+
+	// Create an Explainability resource for the predictor.
+	ExplainPredictor *bool `type:"boolean"`
+
+	// An array of dimension (field) names that specify how to group the generated
+	// forecast.
+	//
+	// For example, if you are generating forecasts for item sales across all your
+	// stores, and your dataset contains a store_id field, you would specify store_id
+	// as a dimension to group sales forecasts for each store.
+	ForecastDimensions []*string `min:"1" type:"list"`
+
+	// The frequency of predictions in a forecast.
+	//
+	// Valid intervals are Y (Year), M (Month), W (Week), D (Day), H (Hour), 30min
+	// (30 minutes), 15min (15 minutes), 10min (10 minutes), 5min (5 minutes), and
+	// 1min (1 minute). For example, "Y" indicates every year and "5min" indicates
+	// every five minutes.
+	//
+	// The frequency must be greater than or equal to the TARGET_TIME_SERIES dataset
+	// frequency.
+	//
+	// When a RELATED_TIME_SERIES dataset is provided, the frequency must be equal
+	// to the RELATED_TIME_SERIES dataset frequency.
+	ForecastFrequency *string `min:"1" type:"string"`
+
+	// The number of time-steps that the model predicts. The forecast horizon is
+	// also called the prediction length.
+	ForecastHorizon *int64 `type:"integer"`
+
+	// The forecast types used to train a predictor. You can specify up to five
+	// forecast types. Forecast types can be quantiles from 0.01 to 0.99, by increments
+	// of 0.01 or higher. You can also specify the mean forecast with mean.
+	ForecastTypes []*string `min:"1" type:"list"`
+
+	// The accuracy metric used to optimize the predictor.
+	OptimizationMetric *string `type:"string" enum:"OptimizationMetric"`
+
+	// A unique name for the predictor
+	//
+	// PredictorName is a required field
+	PredictorName *string `min:"1" type:"string" required:"true"`
+
+	// The ARN of the predictor to retrain or upgrade. This parameter is only used
+	// when retraining or upgrading a predictor. When creating a new predictor,
+	// do not specify a value for this parameter.
+	//
+	// When upgrading or retraining a predictor, only specify values for the ReferencePredictorArn
+	// and PredictorName. The value for PredictorName must be a unique predictor
+	// name.
+	ReferencePredictorArn *string `type:"string"`
+
+	// Optional metadata to help you categorize and organize your predictors. Each
+	// tag consists of a key and an optional value, both of which you define. Tag
+	// keys and values are case sensitive.
+	//
+	// The following restrictions apply to tags:
+	//
+	//    * For each resource, each tag key must be unique and each tag key must
+	//    have one value.
+	//
+	//    * Maximum number of tags per resource: 50.
+	//
+	//    * Maximum key length: 128 Unicode characters in UTF-8.
+	//
+	//    * Maximum value length: 256 Unicode characters in UTF-8.
+	//
+	//    * Accepted characters: all letters and numbers, spaces representable in
+	//    UTF-8, and + - = . _ : / @. If your tagging schema is used across other
+	//    services and resources, the character restrictions of those services also
+	//    apply.
+	//
+	//    * Key prefixes cannot include any upper or lowercase combination of aws:
+	//    or AWS:. Values can have this prefix. If a tag value has aws as its prefix
+	//    but the key does not, Forecast considers it to be a user tag and will
+	//    count against the limit of 50 tags. Tags with only the key prefix of aws
+	//    do not count against your tags per resource limit. You cannot edit or
+	//    delete tag keys with this prefix.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateAutoPredictorInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateAutoPredictorInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateAutoPredictorInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateAutoPredictorInput"}
+	if s.ForecastDimensions != nil && len(s.ForecastDimensions) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ForecastDimensions", 1))
+	}
+	if s.ForecastFrequency != nil && len(*s.ForecastFrequency) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ForecastFrequency", 1))
+	}
+	if s.ForecastTypes != nil && len(s.ForecastTypes) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ForecastTypes", 1))
+	}
+	if s.PredictorName == nil {
+		invalidParams.Add(request.NewErrParamRequired("PredictorName"))
+	}
+	if s.PredictorName != nil && len(*s.PredictorName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PredictorName", 1))
+	}
+	if s.DataConfig != nil {
+		if err := s.DataConfig.Validate(); err != nil {
+			invalidParams.AddNested("DataConfig", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.EncryptionConfig != nil {
+		if err := s.EncryptionConfig.Validate(); err != nil {
+			invalidParams.AddNested("EncryptionConfig", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Tags != nil {
+		for i, v := range s.Tags {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Tags", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDataConfig sets the DataConfig field's value.
+func (s *CreateAutoPredictorInput) SetDataConfig(v *DataConfig) *CreateAutoPredictorInput {
+	s.DataConfig = v
+	return s
+}
+
+// SetEncryptionConfig sets the EncryptionConfig field's value.
+func (s *CreateAutoPredictorInput) SetEncryptionConfig(v *EncryptionConfig) *CreateAutoPredictorInput {
+	s.EncryptionConfig = v
+	return s
+}
+
+// SetExplainPredictor sets the ExplainPredictor field's value.
+func (s *CreateAutoPredictorInput) SetExplainPredictor(v bool) *CreateAutoPredictorInput {
+	s.ExplainPredictor = &v
+	return s
+}
+
+// SetForecastDimensions sets the ForecastDimensions field's value.
+func (s *CreateAutoPredictorInput) SetForecastDimensions(v []*string) *CreateAutoPredictorInput {
+	s.ForecastDimensions = v
+	return s
+}
+
+// SetForecastFrequency sets the ForecastFrequency field's value.
+func (s *CreateAutoPredictorInput) SetForecastFrequency(v string) *CreateAutoPredictorInput {
+	s.ForecastFrequency = &v
+	return s
+}
+
+// SetForecastHorizon sets the ForecastHorizon field's value.
+func (s *CreateAutoPredictorInput) SetForecastHorizon(v int64) *CreateAutoPredictorInput {
+	s.ForecastHorizon = &v
+	return s
+}
+
+// SetForecastTypes sets the ForecastTypes field's value.
+func (s *CreateAutoPredictorInput) SetForecastTypes(v []*string) *CreateAutoPredictorInput {
+	s.ForecastTypes = v
+	return s
+}
+
+// SetOptimizationMetric sets the OptimizationMetric field's value.
+func (s *CreateAutoPredictorInput) SetOptimizationMetric(v string) *CreateAutoPredictorInput {
+	s.OptimizationMetric = &v
+	return s
+}
+
+// SetPredictorName sets the PredictorName field's value.
+func (s *CreateAutoPredictorInput) SetPredictorName(v string) *CreateAutoPredictorInput {
+	s.PredictorName = &v
+	return s
+}
+
+// SetReferencePredictorArn sets the ReferencePredictorArn field's value.
+func (s *CreateAutoPredictorInput) SetReferencePredictorArn(v string) *CreateAutoPredictorInput {
+	s.ReferencePredictorArn = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CreateAutoPredictorInput) SetTags(v []*Tag) *CreateAutoPredictorInput {
+	s.Tags = v
+	return s
+}
+
+type CreateAutoPredictorOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the predictor.
+	PredictorArn *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateAutoPredictorOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateAutoPredictorOutput) GoString() string {
+	return s.String()
+}
+
+// SetPredictorArn sets the PredictorArn field's value.
+func (s *CreateAutoPredictorOutput) SetPredictorArn(v string) *CreateAutoPredictorOutput {
+	s.PredictorArn = &v
 	return s
 }
 
@@ -3379,12 +5638,20 @@ type CreateDatasetGroupInput struct {
 	Tags []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetGroupInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetGroupInput) GoString() string {
 	return s.String()
 }
@@ -3449,12 +5716,20 @@ type CreateDatasetGroupOutput struct {
 	DatasetGroupArn *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetGroupOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetGroupOutput) GoString() string {
 	return s.String()
 }
@@ -3493,6 +5768,15 @@ type CreateDatasetImportJobInput struct {
 	// DatasetImportJobName is a required field
 	DatasetImportJobName *string `min:"1" type:"string" required:"true"`
 
+	// The format of the geolocation attribute. The geolocation attribute can be
+	// formatted in one of two ways:
+	//
+	//    * LAT_LONG - the latitude and longitude in decimal format (Example: 47.61_-122.33).
+	//
+	//    * CC_POSTALCODE (US Only) - the country code (US), followed by the 5-digit
+	//    ZIP code (Example: US_98121).
+	GeolocationFormat *string `type:"string"`
+
 	// The optional metadata that you apply to the dataset import job to help you
 	// categorize and organize them. Each tag consists of a key and an optional
 	// value, both of which you define.
@@ -3524,6 +5808,14 @@ type CreateDatasetImportJobInput struct {
 	//    limit.
 	Tags []*Tag `type:"list"`
 
+	// A single time zone for every item in your dataset. This option is ideal for
+	// datasets with all timestamps within a single time zone, or if all timestamps
+	// are normalized to a single time zone.
+	//
+	// Refer to the Joda-Time API (http://joda-time.sourceforge.net/timezones.html)
+	// for a complete list of valid time zone names.
+	TimeZone *string `type:"string"`
+
 	// The format of timestamps in the dataset. The format that you specify depends
 	// on the DataFrequency specified when the dataset was created. The following
 	// formats are supported
@@ -3536,14 +5828,27 @@ type CreateDatasetImportJobInput struct {
 	// If the format isn't specified, Amazon Forecast expects the format to be "yyyy-MM-dd
 	// HH:mm:ss".
 	TimestampFormat *string `type:"string"`
+
+	// Automatically derive time zone information from the geolocation attribute.
+	// This option is ideal for datasets that contain timestamps in multiple time
+	// zones and those timestamps are expressed in local time.
+	UseGeolocationForTimeZone *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetImportJobInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetImportJobInput) GoString() string {
 	return s.String()
 }
@@ -3603,15 +5908,33 @@ func (s *CreateDatasetImportJobInput) SetDatasetImportJobName(v string) *CreateD
 	return s
 }
 
+// SetGeolocationFormat sets the GeolocationFormat field's value.
+func (s *CreateDatasetImportJobInput) SetGeolocationFormat(v string) *CreateDatasetImportJobInput {
+	s.GeolocationFormat = &v
+	return s
+}
+
 // SetTags sets the Tags field's value.
 func (s *CreateDatasetImportJobInput) SetTags(v []*Tag) *CreateDatasetImportJobInput {
 	s.Tags = v
 	return s
 }
 
+// SetTimeZone sets the TimeZone field's value.
+func (s *CreateDatasetImportJobInput) SetTimeZone(v string) *CreateDatasetImportJobInput {
+	s.TimeZone = &v
+	return s
+}
+
 // SetTimestampFormat sets the TimestampFormat field's value.
 func (s *CreateDatasetImportJobInput) SetTimestampFormat(v string) *CreateDatasetImportJobInput {
 	s.TimestampFormat = &v
+	return s
+}
+
+// SetUseGeolocationForTimeZone sets the UseGeolocationForTimeZone field's value.
+func (s *CreateDatasetImportJobInput) SetUseGeolocationForTimeZone(v bool) *CreateDatasetImportJobInput {
+	s.UseGeolocationForTimeZone = &v
 	return s
 }
 
@@ -3622,12 +5945,20 @@ type CreateDatasetImportJobOutput struct {
 	DatasetImportJobArn *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetImportJobOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetImportJobOutput) GoString() string {
 	return s.String()
 }
@@ -3648,7 +5979,7 @@ type CreateDatasetInput struct {
 	// (30 minutes), 15min (15 minutes), 10min (10 minutes), 5min (5 minutes), and
 	// 1min (1 minute). For example, "D" indicates every day and "15min" indicates
 	// every 15 minutes.
-	DataFrequency *string `type:"string"`
+	DataFrequency *string `min:"1" type:"string"`
 
 	// A name for the dataset.
 	//
@@ -3717,12 +6048,20 @@ type CreateDatasetInput struct {
 	Tags []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetInput) GoString() string {
 	return s.String()
 }
@@ -3730,6 +6069,9 @@ func (s CreateDatasetInput) GoString() string {
 // Validate inspects the fields of the type to determine if they are valid.
 func (s *CreateDatasetInput) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "CreateDatasetInput"}
+	if s.DataFrequency != nil && len(*s.DataFrequency) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("DataFrequency", 1))
+	}
 	if s.DatasetName == nil {
 		invalidParams.Add(request.NewErrParamRequired("DatasetName"))
 	}
@@ -3821,12 +6163,20 @@ type CreateDatasetOutput struct {
 	DatasetArn *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateDatasetOutput) GoString() string {
 	return s.String()
 }
@@ -3834,6 +6184,387 @@ func (s CreateDatasetOutput) GoString() string {
 // SetDatasetArn sets the DatasetArn field's value.
 func (s *CreateDatasetOutput) SetDatasetArn(v string) *CreateDatasetOutput {
 	s.DatasetArn = &v
+	return s
+}
+
+type CreateExplainabilityExportInput struct {
+	_ struct{} `type:"structure"`
+
+	// The destination for an export job. Provide an S3 path, an AWS Identity and
+	// Access Management (IAM) role that allows Amazon Forecast to access the location,
+	// and an AWS Key Management Service (KMS) key (optional).
+	//
+	// Destination is a required field
+	Destination *DataDestination `type:"structure" required:"true"`
+
+	// The Amazon Resource Name (ARN) of the Explainability to export.
+	//
+	// ExplainabilityArn is a required field
+	ExplainabilityArn *string `type:"string" required:"true"`
+
+	// A unique name for the Explainability export.
+	//
+	// ExplainabilityExportName is a required field
+	ExplainabilityExportName *string `min:"1" type:"string" required:"true"`
+
+	// Optional metadata to help you categorize and organize your resources. Each
+	// tag consists of a key and an optional value, both of which you define. Tag
+	// keys and values are case sensitive.
+	//
+	// The following restrictions apply to tags:
+	//
+	//    * For each resource, each tag key must be unique and each tag key must
+	//    have one value.
+	//
+	//    * Maximum number of tags per resource: 50.
+	//
+	//    * Maximum key length: 128 Unicode characters in UTF-8.
+	//
+	//    * Maximum value length: 256 Unicode characters in UTF-8.
+	//
+	//    * Accepted characters: all letters and numbers, spaces representable in
+	//    UTF-8, and + - = . _ : / @. If your tagging schema is used across other
+	//    services and resources, the character restrictions of those services also
+	//    apply.
+	//
+	//    * Key prefixes cannot include any upper or lowercase combination of aws:
+	//    or AWS:. Values can have this prefix. If a tag value has aws as its prefix
+	//    but the key does not, Forecast considers it to be a user tag and will
+	//    count against the limit of 50 tags. Tags with only the key prefix of aws
+	//    do not count against your tags per resource limit. You cannot edit or
+	//    delete tag keys with this prefix.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateExplainabilityExportInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateExplainabilityExportInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateExplainabilityExportInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateExplainabilityExportInput"}
+	if s.Destination == nil {
+		invalidParams.Add(request.NewErrParamRequired("Destination"))
+	}
+	if s.ExplainabilityArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ExplainabilityArn"))
+	}
+	if s.ExplainabilityExportName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ExplainabilityExportName"))
+	}
+	if s.ExplainabilityExportName != nil && len(*s.ExplainabilityExportName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ExplainabilityExportName", 1))
+	}
+	if s.Destination != nil {
+		if err := s.Destination.Validate(); err != nil {
+			invalidParams.AddNested("Destination", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Tags != nil {
+		for i, v := range s.Tags {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Tags", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDestination sets the Destination field's value.
+func (s *CreateExplainabilityExportInput) SetDestination(v *DataDestination) *CreateExplainabilityExportInput {
+	s.Destination = v
+	return s
+}
+
+// SetExplainabilityArn sets the ExplainabilityArn field's value.
+func (s *CreateExplainabilityExportInput) SetExplainabilityArn(v string) *CreateExplainabilityExportInput {
+	s.ExplainabilityArn = &v
+	return s
+}
+
+// SetExplainabilityExportName sets the ExplainabilityExportName field's value.
+func (s *CreateExplainabilityExportInput) SetExplainabilityExportName(v string) *CreateExplainabilityExportInput {
+	s.ExplainabilityExportName = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CreateExplainabilityExportInput) SetTags(v []*Tag) *CreateExplainabilityExportInput {
+	s.Tags = v
+	return s
+}
+
+type CreateExplainabilityExportOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the export.
+	ExplainabilityExportArn *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateExplainabilityExportOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateExplainabilityExportOutput) GoString() string {
+	return s.String()
+}
+
+// SetExplainabilityExportArn sets the ExplainabilityExportArn field's value.
+func (s *CreateExplainabilityExportOutput) SetExplainabilityExportArn(v string) *CreateExplainabilityExportOutput {
+	s.ExplainabilityExportArn = &v
+	return s
+}
+
+type CreateExplainabilityInput struct {
+	_ struct{} `type:"structure"`
+
+	// The source of your data, an AWS Identity and Access Management (IAM) role
+	// that allows Amazon Forecast to access the data and, optionally, an AWS Key
+	// Management Service (KMS) key.
+	DataSource *DataSource `type:"structure"`
+
+	// Create an Expainability visualization that is viewable within the AWS console.
+	EnableVisualization *bool `type:"boolean"`
+
+	// If TimePointGranularity is set to SPECIFIC, define the last time point for
+	// the Explainability.
+	//
+	// Use the following timestamp format: yyyy-MM-ddTHH:mm:ss (example: 2015-01-01T20:00:00)
+	EndDateTime *string `type:"string"`
+
+	// The configuration settings that define the granularity of time series and
+	// time points for the Explainability.
+	//
+	// ExplainabilityConfig is a required field
+	ExplainabilityConfig *ExplainabilityConfig `type:"structure" required:"true"`
+
+	// A unique name for the Explainability.
+	//
+	// ExplainabilityName is a required field
+	ExplainabilityName *string `min:"1" type:"string" required:"true"`
+
+	// The Amazon Resource Name (ARN) of the Predictor or Forecast used to create
+	// the Explainability.
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `type:"string" required:"true"`
+
+	// Defines the fields of a dataset.
+	Schema *Schema `type:"structure"`
+
+	// If TimePointGranularity is set to SPECIFIC, define the first point for the
+	// Explainability.
+	//
+	// Use the following timestamp format: yyyy-MM-ddTHH:mm:ss (example: 2015-01-01T20:00:00)
+	StartDateTime *string `type:"string"`
+
+	// Optional metadata to help you categorize and organize your resources. Each
+	// tag consists of a key and an optional value, both of which you define. Tag
+	// keys and values are case sensitive.
+	//
+	// The following restrictions apply to tags:
+	//
+	//    * For each resource, each tag key must be unique and each tag key must
+	//    have one value.
+	//
+	//    * Maximum number of tags per resource: 50.
+	//
+	//    * Maximum key length: 128 Unicode characters in UTF-8.
+	//
+	//    * Maximum value length: 256 Unicode characters in UTF-8.
+	//
+	//    * Accepted characters: all letters and numbers, spaces representable in
+	//    UTF-8, and + - = . _ : / @. If your tagging schema is used across other
+	//    services and resources, the character restrictions of those services also
+	//    apply.
+	//
+	//    * Key prefixes cannot include any upper or lowercase combination of aws:
+	//    or AWS:. Values can have this prefix. If a tag value has aws as its prefix
+	//    but the key does not, Forecast considers it to be a user tag and will
+	//    count against the limit of 50 tags. Tags with only the key prefix of aws
+	//    do not count against your tags per resource limit. You cannot edit or
+	//    delete tag keys with this prefix.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateExplainabilityInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateExplainabilityInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreateExplainabilityInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreateExplainabilityInput"}
+	if s.ExplainabilityConfig == nil {
+		invalidParams.Add(request.NewErrParamRequired("ExplainabilityConfig"))
+	}
+	if s.ExplainabilityName == nil {
+		invalidParams.Add(request.NewErrParamRequired("ExplainabilityName"))
+	}
+	if s.ExplainabilityName != nil && len(*s.ExplainabilityName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ExplainabilityName", 1))
+	}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+	if s.DataSource != nil {
+		if err := s.DataSource.Validate(); err != nil {
+			invalidParams.AddNested("DataSource", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.ExplainabilityConfig != nil {
+		if err := s.ExplainabilityConfig.Validate(); err != nil {
+			invalidParams.AddNested("ExplainabilityConfig", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Schema != nil {
+		if err := s.Schema.Validate(); err != nil {
+			invalidParams.AddNested("Schema", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Tags != nil {
+		for i, v := range s.Tags {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Tags", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDataSource sets the DataSource field's value.
+func (s *CreateExplainabilityInput) SetDataSource(v *DataSource) *CreateExplainabilityInput {
+	s.DataSource = v
+	return s
+}
+
+// SetEnableVisualization sets the EnableVisualization field's value.
+func (s *CreateExplainabilityInput) SetEnableVisualization(v bool) *CreateExplainabilityInput {
+	s.EnableVisualization = &v
+	return s
+}
+
+// SetEndDateTime sets the EndDateTime field's value.
+func (s *CreateExplainabilityInput) SetEndDateTime(v string) *CreateExplainabilityInput {
+	s.EndDateTime = &v
+	return s
+}
+
+// SetExplainabilityConfig sets the ExplainabilityConfig field's value.
+func (s *CreateExplainabilityInput) SetExplainabilityConfig(v *ExplainabilityConfig) *CreateExplainabilityInput {
+	s.ExplainabilityConfig = v
+	return s
+}
+
+// SetExplainabilityName sets the ExplainabilityName field's value.
+func (s *CreateExplainabilityInput) SetExplainabilityName(v string) *CreateExplainabilityInput {
+	s.ExplainabilityName = &v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *CreateExplainabilityInput) SetResourceArn(v string) *CreateExplainabilityInput {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetSchema sets the Schema field's value.
+func (s *CreateExplainabilityInput) SetSchema(v *Schema) *CreateExplainabilityInput {
+	s.Schema = v
+	return s
+}
+
+// SetStartDateTime sets the StartDateTime field's value.
+func (s *CreateExplainabilityInput) SetStartDateTime(v string) *CreateExplainabilityInput {
+	s.StartDateTime = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CreateExplainabilityInput) SetTags(v []*Tag) *CreateExplainabilityInput {
+	s.Tags = v
+	return s
+}
+
+type CreateExplainabilityOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the Explainability.
+	ExplainabilityArn *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateExplainabilityOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreateExplainabilityOutput) GoString() string {
+	return s.String()
+}
+
+// SetExplainabilityArn sets the ExplainabilityArn field's value.
+func (s *CreateExplainabilityOutput) SetExplainabilityArn(v string) *CreateExplainabilityOutput {
+	s.ExplainabilityArn = &v
 	return s
 }
 
@@ -3893,12 +6624,20 @@ type CreateForecastExportJobInput struct {
 	Tags []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateForecastExportJobInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateForecastExportJobInput) GoString() string {
 	return s.String()
 }
@@ -3971,12 +6710,20 @@ type CreateForecastExportJobOutput struct {
 	ForecastExportJobArn *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateForecastExportJobOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateForecastExportJobOutput) GoString() string {
 	return s.String()
 }
@@ -4039,12 +6786,20 @@ type CreateForecastInput struct {
 	Tags []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateForecastInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateForecastInput) GoString() string {
 	return s.String()
 }
@@ -4112,12 +6867,20 @@ type CreateForecastOutput struct {
 	ForecastArn *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateForecastOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreateForecastOutput) GoString() string {
 	return s.String()
 }
@@ -4125,6 +6888,166 @@ func (s CreateForecastOutput) GoString() string {
 // SetForecastArn sets the ForecastArn field's value.
 func (s *CreateForecastOutput) SetForecastArn(v string) *CreateForecastOutput {
 	s.ForecastArn = &v
+	return s
+}
+
+type CreatePredictorBacktestExportJobInput struct {
+	_ struct{} `type:"structure"`
+
+	// The destination for an export job. Provide an S3 path, an AWS Identity and
+	// Access Management (IAM) role that allows Amazon Forecast to access the location,
+	// and an AWS Key Management Service (KMS) key (optional).
+	//
+	// Destination is a required field
+	Destination *DataDestination `type:"structure" required:"true"`
+
+	// The Amazon Resource Name (ARN) of the predictor that you want to export.
+	//
+	// PredictorArn is a required field
+	PredictorArn *string `type:"string" required:"true"`
+
+	// The name for the backtest export job.
+	//
+	// PredictorBacktestExportJobName is a required field
+	PredictorBacktestExportJobName *string `min:"1" type:"string" required:"true"`
+
+	// Optional metadata to help you categorize and organize your backtests. Each
+	// tag consists of a key and an optional value, both of which you define. Tag
+	// keys and values are case sensitive.
+	//
+	// The following restrictions apply to tags:
+	//
+	//    * For each resource, each tag key must be unique and each tag key must
+	//    have one value.
+	//
+	//    * Maximum number of tags per resource: 50.
+	//
+	//    * Maximum key length: 128 Unicode characters in UTF-8.
+	//
+	//    * Maximum value length: 256 Unicode characters in UTF-8.
+	//
+	//    * Accepted characters: all letters and numbers, spaces representable in
+	//    UTF-8, and + - = . _ : / @. If your tagging schema is used across other
+	//    services and resources, the character restrictions of those services also
+	//    apply.
+	//
+	//    * Key prefixes cannot include any upper or lowercase combination of aws:
+	//    or AWS:. Values can have this prefix. If a tag value has aws as its prefix
+	//    but the key does not, Forecast considers it to be a user tag and will
+	//    count against the limit of 50 tags. Tags with only the key prefix of aws
+	//    do not count against your tags per resource limit. You cannot edit or
+	//    delete tag keys with this prefix.
+	Tags []*Tag `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreatePredictorBacktestExportJobInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreatePredictorBacktestExportJobInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *CreatePredictorBacktestExportJobInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "CreatePredictorBacktestExportJobInput"}
+	if s.Destination == nil {
+		invalidParams.Add(request.NewErrParamRequired("Destination"))
+	}
+	if s.PredictorArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("PredictorArn"))
+	}
+	if s.PredictorBacktestExportJobName == nil {
+		invalidParams.Add(request.NewErrParamRequired("PredictorBacktestExportJobName"))
+	}
+	if s.PredictorBacktestExportJobName != nil && len(*s.PredictorBacktestExportJobName) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("PredictorBacktestExportJobName", 1))
+	}
+	if s.Destination != nil {
+		if err := s.Destination.Validate(); err != nil {
+			invalidParams.AddNested("Destination", err.(request.ErrInvalidParams))
+		}
+	}
+	if s.Tags != nil {
+		for i, v := range s.Tags {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Tags", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetDestination sets the Destination field's value.
+func (s *CreatePredictorBacktestExportJobInput) SetDestination(v *DataDestination) *CreatePredictorBacktestExportJobInput {
+	s.Destination = v
+	return s
+}
+
+// SetPredictorArn sets the PredictorArn field's value.
+func (s *CreatePredictorBacktestExportJobInput) SetPredictorArn(v string) *CreatePredictorBacktestExportJobInput {
+	s.PredictorArn = &v
+	return s
+}
+
+// SetPredictorBacktestExportJobName sets the PredictorBacktestExportJobName field's value.
+func (s *CreatePredictorBacktestExportJobInput) SetPredictorBacktestExportJobName(v string) *CreatePredictorBacktestExportJobInput {
+	s.PredictorBacktestExportJobName = &v
+	return s
+}
+
+// SetTags sets the Tags field's value.
+func (s *CreatePredictorBacktestExportJobInput) SetTags(v []*Tag) *CreatePredictorBacktestExportJobInput {
+	s.Tags = v
+	return s
+}
+
+type CreatePredictorBacktestExportJobOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the predictor backtest export job that
+	// you want to export.
+	PredictorBacktestExportJobArn *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreatePredictorBacktestExportJobOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s CreatePredictorBacktestExportJobOutput) GoString() string {
+	return s.String()
+}
+
+// SetPredictorBacktestExportJobArn sets the PredictorBacktestExportJobArn field's value.
+func (s *CreatePredictorBacktestExportJobOutput) SetPredictorBacktestExportJobArn(v string) *CreatePredictorBacktestExportJobOutput {
+	s.PredictorBacktestExportJobArn = &v
 	return s
 }
 
@@ -4138,8 +7061,9 @@ type CreatePredictorInput struct {
 	//
 	//    * arn:aws:forecast:::algorithm/ARIMA
 	//
-	//    * arn:aws:forecast:::algorithm/Deep_AR_Plus Supports hyperparameter optimization
-	//    (HPO)
+	//    * arn:aws:forecast:::algorithm/CNN-QR
+	//
+	//    * arn:aws:forecast:::algorithm/Deep_AR_Plus
 	//
 	//    * arn:aws:forecast:::algorithm/ETS
 	//
@@ -4147,6 +7071,17 @@ type CreatePredictorInput struct {
 	//
 	//    * arn:aws:forecast:::algorithm/Prophet
 	AlgorithmArn *string `type:"string"`
+
+	//
+	// The LatencyOptimized AutoML override strategy is only available in private
+	// beta. Contact AWS Support or your account manager to learn more about access
+	// privileges.
+	//
+	// Used to overide the default AutoML strategy, which is to optimize predictor
+	// accuracy. To apply an AutoML strategy that minimizes training time, use LatencyOptimized.
+	//
+	// This parameter is only valid for predictors trained using AutoML.
+	AutoMLOverrideStrategy *string `type:"string" enum:"AutoMLOverrideStrategy"`
 
 	// An AWS Key Management Service (KMS) key and the AWS Identity and Access Management
 	// (IAM) role that Amazon Forecast can assume to access the key.
@@ -4176,6 +7111,14 @@ type CreatePredictorInput struct {
 	// ForecastHorizon is a required field
 	ForecastHorizon *int64 `type:"integer" required:"true"`
 
+	// Specifies the forecast types used to train a predictor. You can specify up
+	// to five forecast types. Forecast types can be quantiles from 0.01 to 0.99,
+	// by increments of 0.01 or higher. You can also specify the mean forecast with
+	// mean.
+	//
+	// The default value is ["0.10", "0.50", "0.9"].
+	ForecastTypes []*string `min:"1" type:"list"`
+
 	// Provides hyperparameter override values for the algorithm. If you don't provide
 	// this parameter, Amazon Forecast uses default values. The individual algorithms
 	// specify which hyperparameters support hyperparameter optimization (HPO).
@@ -4188,6 +7131,9 @@ type CreatePredictorInput struct {
 	//
 	// InputDataConfig is a required field
 	InputDataConfig *InputDataConfig `type:"structure" required:"true"`
+
+	// The accuracy metric used to optimize the predictor.
+	OptimizationMetric *string `type:"string" enum:"OptimizationMetric"`
 
 	// Whether to perform AutoML. When Amazon Forecast performs AutoML, it evaluates
 	// the algorithms it provides and chooses the best algorithm and configuration
@@ -4214,9 +7160,11 @@ type CreatePredictorInput struct {
 	// for each tunable hyperparameter. In this case, you are required to specify
 	// an algorithm and PerformAutoML must be false.
 	//
-	// The following algorithm supports HPO:
+	// The following algorithms support HPO:
 	//
 	//    * DeepAR+
+	//
+	//    * CNN-QR
 	PerformHPO *bool `type:"boolean"`
 
 	// A name for the predictor.
@@ -4261,12 +7209,20 @@ type CreatePredictorInput struct {
 	TrainingParameters map[string]*string `type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePredictorInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePredictorInput) GoString() string {
 	return s.String()
 }
@@ -4279,6 +7235,9 @@ func (s *CreatePredictorInput) Validate() error {
 	}
 	if s.ForecastHorizon == nil {
 		invalidParams.Add(request.NewErrParamRequired("ForecastHorizon"))
+	}
+	if s.ForecastTypes != nil && len(s.ForecastTypes) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ForecastTypes", 1))
 	}
 	if s.InputDataConfig == nil {
 		invalidParams.Add(request.NewErrParamRequired("InputDataConfig"))
@@ -4332,6 +7291,12 @@ func (s *CreatePredictorInput) SetAlgorithmArn(v string) *CreatePredictorInput {
 	return s
 }
 
+// SetAutoMLOverrideStrategy sets the AutoMLOverrideStrategy field's value.
+func (s *CreatePredictorInput) SetAutoMLOverrideStrategy(v string) *CreatePredictorInput {
+	s.AutoMLOverrideStrategy = &v
+	return s
+}
+
 // SetEncryptionConfig sets the EncryptionConfig field's value.
 func (s *CreatePredictorInput) SetEncryptionConfig(v *EncryptionConfig) *CreatePredictorInput {
 	s.EncryptionConfig = v
@@ -4356,6 +7321,12 @@ func (s *CreatePredictorInput) SetForecastHorizon(v int64) *CreatePredictorInput
 	return s
 }
 
+// SetForecastTypes sets the ForecastTypes field's value.
+func (s *CreatePredictorInput) SetForecastTypes(v []*string) *CreatePredictorInput {
+	s.ForecastTypes = v
+	return s
+}
+
 // SetHPOConfig sets the HPOConfig field's value.
 func (s *CreatePredictorInput) SetHPOConfig(v *HyperParameterTuningJobConfig) *CreatePredictorInput {
 	s.HPOConfig = v
@@ -4365,6 +7336,12 @@ func (s *CreatePredictorInput) SetHPOConfig(v *HyperParameterTuningJobConfig) *C
 // SetInputDataConfig sets the InputDataConfig field's value.
 func (s *CreatePredictorInput) SetInputDataConfig(v *InputDataConfig) *CreatePredictorInput {
 	s.InputDataConfig = v
+	return s
+}
+
+// SetOptimizationMetric sets the OptimizationMetric field's value.
+func (s *CreatePredictorInput) SetOptimizationMetric(v string) *CreatePredictorInput {
+	s.OptimizationMetric = &v
 	return s
 }
 
@@ -4405,12 +7382,20 @@ type CreatePredictorOutput struct {
 	PredictorArn *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePredictorOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s CreatePredictorOutput) GoString() string {
 	return s.String()
 }
@@ -4421,10 +7406,100 @@ func (s *CreatePredictorOutput) SetPredictorArn(v string) *CreatePredictorOutput
 	return s
 }
 
-// The destination for an exported forecast, an AWS Identity and Access Management
-// (IAM) role that allows Amazon Forecast to access the location and, optionally,
-// an AWS Key Management Service (KMS) key. This object is submitted in the
-// CreateForecastExportJob request.
+// The data configuration for your dataset group and any additional datasets.
+type DataConfig struct {
+	_ struct{} `type:"structure"`
+
+	// Additional built-in datasets like Holidays and the Weather Index.
+	AdditionalDatasets []*AdditionalDataset `min:"1" type:"list"`
+
+	// Aggregation and filling options for attributes in your dataset group.
+	AttributeConfigs []*AttributeConfig `min:"1" type:"list"`
+
+	// The ARN of the dataset group used to train the predictor.
+	//
+	// DatasetGroupArn is a required field
+	DatasetGroupArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DataConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DataConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DataConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DataConfig"}
+	if s.AdditionalDatasets != nil && len(s.AdditionalDatasets) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AdditionalDatasets", 1))
+	}
+	if s.AttributeConfigs != nil && len(s.AttributeConfigs) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("AttributeConfigs", 1))
+	}
+	if s.DatasetGroupArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("DatasetGroupArn"))
+	}
+	if s.AdditionalDatasets != nil {
+		for i, v := range s.AdditionalDatasets {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "AdditionalDatasets", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+	if s.AttributeConfigs != nil {
+		for i, v := range s.AttributeConfigs {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "AttributeConfigs", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetAdditionalDatasets sets the AdditionalDatasets field's value.
+func (s *DataConfig) SetAdditionalDatasets(v []*AdditionalDataset) *DataConfig {
+	s.AdditionalDatasets = v
+	return s
+}
+
+// SetAttributeConfigs sets the AttributeConfigs field's value.
+func (s *DataConfig) SetAttributeConfigs(v []*AttributeConfig) *DataConfig {
+	s.AttributeConfigs = v
+	return s
+}
+
+// SetDatasetGroupArn sets the DatasetGroupArn field's value.
+func (s *DataConfig) SetDatasetGroupArn(v string) *DataConfig {
+	s.DatasetGroupArn = &v
+	return s
+}
+
+// The destination for an export job. Provide an S3 path, an AWS Identity and
+// Access Management (IAM) role that allows Amazon Forecast to access the location,
+// and an AWS Key Management Service (KMS) key (optional).
 type DataDestination struct {
 	_ struct{} `type:"structure"`
 
@@ -4435,12 +7510,20 @@ type DataDestination struct {
 	S3Config *S3Config `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DataDestination) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DataDestination) GoString() string {
 	return s.String()
 }
@@ -4469,26 +7552,33 @@ func (s *DataDestination) SetS3Config(v *S3Config) *DataDestination {
 	return s
 }
 
-// The source of your training data, an AWS Identity and Access Management (IAM)
-// role that allows Amazon Forecast to access the data and, optionally, an AWS
-// Key Management Service (KMS) key. This object is submitted in the CreateDatasetImportJob
-// request.
+// The source of your data, an AWS Identity and Access Management (IAM) role
+// that allows Amazon Forecast to access the data and, optionally, an AWS Key
+// Management Service (KMS) key.
 type DataSource struct {
 	_ struct{} `type:"structure"`
 
-	// The path to the training data stored in an Amazon Simple Storage Service
-	// (Amazon S3) bucket along with the credentials to access the data.
+	// The path to the data stored in an Amazon Simple Storage Service (Amazon S3)
+	// bucket along with the credentials to access the data.
 	//
 	// S3Config is a required field
 	S3Config *S3Config `type:"structure" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DataSource) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DataSource) GoString() string {
 	return s.String()
 }
@@ -4538,12 +7628,20 @@ type DatasetGroupSummary struct {
 	LastModificationTime *time.Time `type:"timestamp"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DatasetGroupSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DatasetGroupSummary) GoString() string {
 	return s.String()
 }
@@ -4595,12 +7693,16 @@ type DatasetImportJobSummary struct {
 	// The name of the dataset import job.
 	DatasetImportJobName *string `min:"1" type:"string"`
 
-	// The last time that the dataset was modified. The time depends on the status
-	// of the job, as follows:
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
 	//
-	//    * CREATE_PENDING - The same time as CreationTime.
+	//    * CREATE_PENDING - The CreationTime.
 	//
 	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
 	//
 	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
 	LastModificationTime *time.Time `type:"timestamp"`
@@ -4608,24 +7710,32 @@ type DatasetImportJobSummary struct {
 	// If an error occurred, an informational message about the error.
 	Message *string `type:"string"`
 
-	// The status of the dataset import job. The status is reflected in the status
-	// of the dataset. For example, when the import job status is CREATE_IN_PROGRESS,
-	// the status of the dataset is UPDATE_IN_PROGRESS. States include:
+	// The status of the dataset import job. States include:
 	//
 	//    * ACTIVE
 	//
 	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
 	//
 	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
+	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
 	Status *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DatasetImportJobSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DatasetImportJobSummary) GoString() string {
 	return s.String()
 }
@@ -4700,12 +7810,20 @@ type DatasetSummary struct {
 	LastModificationTime *time.Time `type:"timestamp"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DatasetSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DatasetSummary) GoString() string {
 	return s.String()
 }
@@ -4755,12 +7873,20 @@ type DeleteDatasetGroupInput struct {
 	DatasetGroupArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetGroupInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetGroupInput) GoString() string {
 	return s.String()
 }
@@ -4788,12 +7914,20 @@ type DeleteDatasetGroupOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetGroupOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetGroupOutput) GoString() string {
 	return s.String()
 }
@@ -4807,12 +7941,20 @@ type DeleteDatasetImportJobInput struct {
 	DatasetImportJobArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetImportJobInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetImportJobInput) GoString() string {
 	return s.String()
 }
@@ -4840,12 +7982,20 @@ type DeleteDatasetImportJobOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetImportJobOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetImportJobOutput) GoString() string {
 	return s.String()
 }
@@ -4859,12 +8009,20 @@ type DeleteDatasetInput struct {
 	DatasetArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetInput) GoString() string {
 	return s.String()
 }
@@ -4892,13 +8050,157 @@ type DeleteDatasetOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteDatasetOutput) GoString() string {
+	return s.String()
+}
+
+type DeleteExplainabilityExportInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the Explainability export to delete.
+	//
+	// ExplainabilityExportArn is a required field
+	ExplainabilityExportArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteExplainabilityExportInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteExplainabilityExportInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteExplainabilityExportInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteExplainabilityExportInput"}
+	if s.ExplainabilityExportArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ExplainabilityExportArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetExplainabilityExportArn sets the ExplainabilityExportArn field's value.
+func (s *DeleteExplainabilityExportInput) SetExplainabilityExportArn(v string) *DeleteExplainabilityExportInput {
+	s.ExplainabilityExportArn = &v
+	return s
+}
+
+type DeleteExplainabilityExportOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteExplainabilityExportOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteExplainabilityExportOutput) GoString() string {
+	return s.String()
+}
+
+type DeleteExplainabilityInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the Explainability resource to delete.
+	//
+	// ExplainabilityArn is a required field
+	ExplainabilityArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteExplainabilityInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteExplainabilityInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteExplainabilityInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteExplainabilityInput"}
+	if s.ExplainabilityArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ExplainabilityArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetExplainabilityArn sets the ExplainabilityArn field's value.
+func (s *DeleteExplainabilityInput) SetExplainabilityArn(v string) *DeleteExplainabilityInput {
+	s.ExplainabilityArn = &v
+	return s
+}
+
+type DeleteExplainabilityOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteExplainabilityOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteExplainabilityOutput) GoString() string {
 	return s.String()
 }
 
@@ -4911,12 +8213,20 @@ type DeleteForecastExportJobInput struct {
 	ForecastExportJobArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteForecastExportJobInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteForecastExportJobInput) GoString() string {
 	return s.String()
 }
@@ -4944,12 +8254,20 @@ type DeleteForecastExportJobOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteForecastExportJobOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteForecastExportJobOutput) GoString() string {
 	return s.String()
 }
@@ -4963,12 +8281,20 @@ type DeleteForecastInput struct {
 	ForecastArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteForecastInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteForecastInput) GoString() string {
 	return s.String()
 }
@@ -4996,13 +8322,89 @@ type DeleteForecastOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteForecastOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeleteForecastOutput) GoString() string {
+	return s.String()
+}
+
+type DeletePredictorBacktestExportJobInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the predictor backtest export job to delete.
+	//
+	// PredictorBacktestExportJobArn is a required field
+	PredictorBacktestExportJobArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeletePredictorBacktestExportJobInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeletePredictorBacktestExportJobInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeletePredictorBacktestExportJobInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeletePredictorBacktestExportJobInput"}
+	if s.PredictorBacktestExportJobArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("PredictorBacktestExportJobArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetPredictorBacktestExportJobArn sets the PredictorBacktestExportJobArn field's value.
+func (s *DeletePredictorBacktestExportJobInput) SetPredictorBacktestExportJobArn(v string) *DeletePredictorBacktestExportJobInput {
+	s.PredictorBacktestExportJobArn = &v
+	return s
+}
+
+type DeletePredictorBacktestExportJobOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeletePredictorBacktestExportJobOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeletePredictorBacktestExportJobOutput) GoString() string {
 	return s.String()
 }
 
@@ -5015,12 +8417,20 @@ type DeletePredictorInput struct {
 	PredictorArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePredictorInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePredictorInput) GoString() string {
 	return s.String()
 }
@@ -5048,14 +8458,343 @@ type DeletePredictorOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePredictorOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DeletePredictorOutput) GoString() string {
 	return s.String()
+}
+
+type DeleteResourceTreeInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the parent resource to delete. All child
+	// resources of the parent resource will also be deleted.
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResourceTreeInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResourceTreeInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DeleteResourceTreeInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DeleteResourceTreeInput"}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *DeleteResourceTreeInput) SetResourceArn(v string) *DeleteResourceTreeInput {
+	s.ResourceArn = &v
+	return s
+}
+
+type DeleteResourceTreeOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResourceTreeOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DeleteResourceTreeOutput) GoString() string {
+	return s.String()
+}
+
+type DescribeAutoPredictorInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the predictor.
+	//
+	// PredictorArn is a required field
+	PredictorArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeAutoPredictorInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeAutoPredictorInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeAutoPredictorInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeAutoPredictorInput"}
+	if s.PredictorArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("PredictorArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetPredictorArn sets the PredictorArn field's value.
+func (s *DescribeAutoPredictorInput) SetPredictorArn(v string) *DescribeAutoPredictorInput {
+	s.PredictorArn = &v
+	return s
+}
+
+type DescribeAutoPredictorOutput struct {
+	_ struct{} `type:"structure"`
+
+	// The timestamp of the CreateAutoPredictor request.
+	CreationTime *time.Time `type:"timestamp"`
+
+	// The data configuration for your dataset group and any additional datasets.
+	DataConfig *DataConfig `type:"structure"`
+
+	// An array of the ARNs of the dataset import jobs used to import training data
+	// for the predictor.
+	DatasetImportJobArns []*string `type:"list"`
+
+	// An AWS Key Management Service (KMS) key and an AWS Identity and Access Management
+	// (IAM) role that Amazon Forecast can assume to access the key. You can specify
+	// this optional object in the CreateDataset and CreatePredictor requests.
+	EncryptionConfig *EncryptionConfig `type:"structure"`
+
+	// The estimated time remaining in minutes for the predictor training job to
+	// complete.
+	EstimatedTimeRemainingInMinutes *int64 `type:"long"`
+
+	// Provides the status and ARN of the Predictor Explainability.
+	ExplainabilityInfo *ExplainabilityInfo `type:"structure"`
+
+	// An array of dimension (field) names that specify the attributes used to group
+	// your time series.
+	ForecastDimensions []*string `min:"1" type:"list"`
+
+	// The frequency of predictions in a forecast.
+	//
+	// Valid intervals are Y (Year), M (Month), W (Week), D (Day), H (Hour), 30min
+	// (30 minutes), 15min (15 minutes), 10min (10 minutes), 5min (5 minutes), and
+	// 1min (1 minute). For example, "Y" indicates every year and "5min" indicates
+	// every five minutes.
+	ForecastFrequency *string `min:"1" type:"string"`
+
+	// The number of time-steps that the model predicts. The forecast horizon is
+	// also called the prediction length.
+	ForecastHorizon *int64 `type:"integer"`
+
+	// The forecast types used during predictor training. Default value is ["0.1","0.5","0.9"].
+	ForecastTypes []*string `min:"1" type:"list"`
+
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
+	LastModificationTime *time.Time `type:"timestamp"`
+
+	// In the event of an error, a message detailing the cause of the error.
+	Message *string `type:"string"`
+
+	// The accuracy metric used to optimize the predictor.
+	OptimizationMetric *string `type:"string" enum:"OptimizationMetric"`
+
+	// The Amazon Resource Name (ARN) of the predictor
+	PredictorArn *string `type:"string"`
+
+	// The name of the predictor.
+	PredictorName *string `min:"1" type:"string"`
+
+	// The ARN and state of the reference predictor. This parameter is only valid
+	// for retrained or upgraded predictors.
+	ReferencePredictorSummary *ReferencePredictorSummary `type:"structure"`
+
+	// The status of the predictor. States include:
+	//
+	//    * ACTIVE
+	//
+	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
+	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
+	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
+	Status *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeAutoPredictorOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeAutoPredictorOutput) GoString() string {
+	return s.String()
+}
+
+// SetCreationTime sets the CreationTime field's value.
+func (s *DescribeAutoPredictorOutput) SetCreationTime(v time.Time) *DescribeAutoPredictorOutput {
+	s.CreationTime = &v
+	return s
+}
+
+// SetDataConfig sets the DataConfig field's value.
+func (s *DescribeAutoPredictorOutput) SetDataConfig(v *DataConfig) *DescribeAutoPredictorOutput {
+	s.DataConfig = v
+	return s
+}
+
+// SetDatasetImportJobArns sets the DatasetImportJobArns field's value.
+func (s *DescribeAutoPredictorOutput) SetDatasetImportJobArns(v []*string) *DescribeAutoPredictorOutput {
+	s.DatasetImportJobArns = v
+	return s
+}
+
+// SetEncryptionConfig sets the EncryptionConfig field's value.
+func (s *DescribeAutoPredictorOutput) SetEncryptionConfig(v *EncryptionConfig) *DescribeAutoPredictorOutput {
+	s.EncryptionConfig = v
+	return s
+}
+
+// SetEstimatedTimeRemainingInMinutes sets the EstimatedTimeRemainingInMinutes field's value.
+func (s *DescribeAutoPredictorOutput) SetEstimatedTimeRemainingInMinutes(v int64) *DescribeAutoPredictorOutput {
+	s.EstimatedTimeRemainingInMinutes = &v
+	return s
+}
+
+// SetExplainabilityInfo sets the ExplainabilityInfo field's value.
+func (s *DescribeAutoPredictorOutput) SetExplainabilityInfo(v *ExplainabilityInfo) *DescribeAutoPredictorOutput {
+	s.ExplainabilityInfo = v
+	return s
+}
+
+// SetForecastDimensions sets the ForecastDimensions field's value.
+func (s *DescribeAutoPredictorOutput) SetForecastDimensions(v []*string) *DescribeAutoPredictorOutput {
+	s.ForecastDimensions = v
+	return s
+}
+
+// SetForecastFrequency sets the ForecastFrequency field's value.
+func (s *DescribeAutoPredictorOutput) SetForecastFrequency(v string) *DescribeAutoPredictorOutput {
+	s.ForecastFrequency = &v
+	return s
+}
+
+// SetForecastHorizon sets the ForecastHorizon field's value.
+func (s *DescribeAutoPredictorOutput) SetForecastHorizon(v int64) *DescribeAutoPredictorOutput {
+	s.ForecastHorizon = &v
+	return s
+}
+
+// SetForecastTypes sets the ForecastTypes field's value.
+func (s *DescribeAutoPredictorOutput) SetForecastTypes(v []*string) *DescribeAutoPredictorOutput {
+	s.ForecastTypes = v
+	return s
+}
+
+// SetLastModificationTime sets the LastModificationTime field's value.
+func (s *DescribeAutoPredictorOutput) SetLastModificationTime(v time.Time) *DescribeAutoPredictorOutput {
+	s.LastModificationTime = &v
+	return s
+}
+
+// SetMessage sets the Message field's value.
+func (s *DescribeAutoPredictorOutput) SetMessage(v string) *DescribeAutoPredictorOutput {
+	s.Message = &v
+	return s
+}
+
+// SetOptimizationMetric sets the OptimizationMetric field's value.
+func (s *DescribeAutoPredictorOutput) SetOptimizationMetric(v string) *DescribeAutoPredictorOutput {
+	s.OptimizationMetric = &v
+	return s
+}
+
+// SetPredictorArn sets the PredictorArn field's value.
+func (s *DescribeAutoPredictorOutput) SetPredictorArn(v string) *DescribeAutoPredictorOutput {
+	s.PredictorArn = &v
+	return s
+}
+
+// SetPredictorName sets the PredictorName field's value.
+func (s *DescribeAutoPredictorOutput) SetPredictorName(v string) *DescribeAutoPredictorOutput {
+	s.PredictorName = &v
+	return s
+}
+
+// SetReferencePredictorSummary sets the ReferencePredictorSummary field's value.
+func (s *DescribeAutoPredictorOutput) SetReferencePredictorSummary(v *ReferencePredictorSummary) *DescribeAutoPredictorOutput {
+	s.ReferencePredictorSummary = v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *DescribeAutoPredictorOutput) SetStatus(v string) *DescribeAutoPredictorOutput {
+	s.Status = &v
+	return s
 }
 
 type DescribeDatasetGroupInput struct {
@@ -5067,12 +8806,20 @@ type DescribeDatasetGroupInput struct {
 	DatasetGroupArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetGroupInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetGroupInput) GoString() string {
 	return s.String()
 }
@@ -5137,12 +8884,20 @@ type DescribeDatasetGroupOutput struct {
 	Status *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetGroupOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetGroupOutput) GoString() string {
 	return s.String()
 }
@@ -5198,12 +8953,20 @@ type DescribeDatasetImportJobInput struct {
 	DatasetImportJobArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetImportJobInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetImportJobInput) GoString() string {
 	return s.String()
 }
@@ -5253,15 +9016,25 @@ type DescribeDatasetImportJobOutput struct {
 	// The name of the dataset import job.
 	DatasetImportJobName *string `min:"1" type:"string"`
 
+	// The estimated time remaining in minutes for the dataset import job to complete.
+	EstimatedTimeRemainingInMinutes *int64 `type:"long"`
+
 	// Statistical information about each field in the input data.
 	FieldStatistics map[string]*Statistics `type:"map"`
 
-	// The last time that the dataset was modified. The time depends on the status
-	// of the job, as follows:
+	// The format of the geolocation attribute. Valid Values:"LAT_LONG" and "CC_POSTALCODE".
+	GeolocationFormat *string `type:"string"`
+
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
 	//
-	//    * CREATE_PENDING - The same time as CreationTime.
+	//    * CREATE_PENDING - The CreationTime.
 	//
 	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
 	//
 	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
 	LastModificationTime *time.Time `type:"timestamp"`
@@ -5269,16 +9042,19 @@ type DescribeDatasetImportJobOutput struct {
 	// If an error occurred, an informational message about the error.
 	Message *string `type:"string"`
 
-	// The status of the dataset import job. The status is reflected in the status
-	// of the dataset. For example, when the import job status is CREATE_IN_PROGRESS,
-	// the status of the dataset is UPDATE_IN_PROGRESS. States include:
+	// The status of the dataset import job. States include:
 	//
 	//    * ACTIVE
 	//
 	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
 	//
 	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
+	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
 	Status *string `type:"string"`
+
+	// The single time zone applied to every item in the dataset
+	TimeZone *string `type:"string"`
 
 	// The format of timestamps in the dataset. The format that you specify depends
 	// on the DataFrequency specified when the dataset was created. The following
@@ -5289,14 +9065,25 @@ type DescribeDatasetImportJobOutput struct {
 	//    * "yyyy-MM-dd HH:mm:ss" For the following data frequencies: H, 30min,
 	//    15min, and 1min; and optionally, for: Y, M, W, and D
 	TimestampFormat *string `type:"string"`
+
+	// Whether TimeZone is automatically derived from the geolocation attribute.
+	UseGeolocationForTimeZone *bool `type:"boolean"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetImportJobOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetImportJobOutput) GoString() string {
 	return s.String()
 }
@@ -5337,9 +9124,21 @@ func (s *DescribeDatasetImportJobOutput) SetDatasetImportJobName(v string) *Desc
 	return s
 }
 
+// SetEstimatedTimeRemainingInMinutes sets the EstimatedTimeRemainingInMinutes field's value.
+func (s *DescribeDatasetImportJobOutput) SetEstimatedTimeRemainingInMinutes(v int64) *DescribeDatasetImportJobOutput {
+	s.EstimatedTimeRemainingInMinutes = &v
+	return s
+}
+
 // SetFieldStatistics sets the FieldStatistics field's value.
 func (s *DescribeDatasetImportJobOutput) SetFieldStatistics(v map[string]*Statistics) *DescribeDatasetImportJobOutput {
 	s.FieldStatistics = v
+	return s
+}
+
+// SetGeolocationFormat sets the GeolocationFormat field's value.
+func (s *DescribeDatasetImportJobOutput) SetGeolocationFormat(v string) *DescribeDatasetImportJobOutput {
+	s.GeolocationFormat = &v
 	return s
 }
 
@@ -5361,9 +9160,21 @@ func (s *DescribeDatasetImportJobOutput) SetStatus(v string) *DescribeDatasetImp
 	return s
 }
 
+// SetTimeZone sets the TimeZone field's value.
+func (s *DescribeDatasetImportJobOutput) SetTimeZone(v string) *DescribeDatasetImportJobOutput {
+	s.TimeZone = &v
+	return s
+}
+
 // SetTimestampFormat sets the TimestampFormat field's value.
 func (s *DescribeDatasetImportJobOutput) SetTimestampFormat(v string) *DescribeDatasetImportJobOutput {
 	s.TimestampFormat = &v
+	return s
+}
+
+// SetUseGeolocationForTimeZone sets the UseGeolocationForTimeZone field's value.
+func (s *DescribeDatasetImportJobOutput) SetUseGeolocationForTimeZone(v bool) *DescribeDatasetImportJobOutput {
+	s.UseGeolocationForTimeZone = &v
 	return s
 }
 
@@ -5376,12 +9187,20 @@ type DescribeDatasetInput struct {
 	DatasetArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetInput) GoString() string {
 	return s.String()
 }
@@ -5417,7 +9236,7 @@ type DescribeDatasetOutput struct {
 	// (30 minutes), 15min (15 minutes), 10min (10 minutes), 5min (5 minutes), and
 	// 1min (1 minute). For example, "M" indicates every month and "30min" indicates
 	// every 30 minutes.
-	DataFrequency *string `type:"string"`
+	DataFrequency *string `min:"1" type:"string"`
 
 	// The Amazon Resource Name (ARN) of the dataset.
 	DatasetArn *string `type:"string"`
@@ -5465,12 +9284,20 @@ type DescribeDatasetOutput struct {
 	Status *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeDatasetOutput) GoString() string {
 	return s.String()
 }
@@ -5535,6 +9362,385 @@ func (s *DescribeDatasetOutput) SetStatus(v string) *DescribeDatasetOutput {
 	return s
 }
 
+type DescribeExplainabilityExportInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the Explainability export.
+	//
+	// ExplainabilityExportArn is a required field
+	ExplainabilityExportArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeExplainabilityExportInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeExplainabilityExportInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeExplainabilityExportInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeExplainabilityExportInput"}
+	if s.ExplainabilityExportArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ExplainabilityExportArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetExplainabilityExportArn sets the ExplainabilityExportArn field's value.
+func (s *DescribeExplainabilityExportInput) SetExplainabilityExportArn(v string) *DescribeExplainabilityExportInput {
+	s.ExplainabilityExportArn = &v
+	return s
+}
+
+type DescribeExplainabilityExportOutput struct {
+	_ struct{} `type:"structure"`
+
+	// When the Explainability export was created.
+	CreationTime *time.Time `type:"timestamp"`
+
+	// The destination for an export job. Provide an S3 path, an AWS Identity and
+	// Access Management (IAM) role that allows Amazon Forecast to access the location,
+	// and an AWS Key Management Service (KMS) key (optional).
+	Destination *DataDestination `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the Explainability.
+	ExplainabilityArn *string `type:"string"`
+
+	// The Amazon Resource Name (ARN) of the Explainability export.
+	ExplainabilityExportArn *string `type:"string"`
+
+	// The name of the Explainability export.
+	ExplainabilityExportName *string `min:"1" type:"string"`
+
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
+	LastModificationTime *time.Time `type:"timestamp"`
+
+	// Information about any errors that occurred during the export.
+	Message *string `type:"string"`
+
+	// The status of the Explainability export. States include:
+	//
+	//    * ACTIVE
+	//
+	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
+	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
+	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
+	Status *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeExplainabilityExportOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeExplainabilityExportOutput) GoString() string {
+	return s.String()
+}
+
+// SetCreationTime sets the CreationTime field's value.
+func (s *DescribeExplainabilityExportOutput) SetCreationTime(v time.Time) *DescribeExplainabilityExportOutput {
+	s.CreationTime = &v
+	return s
+}
+
+// SetDestination sets the Destination field's value.
+func (s *DescribeExplainabilityExportOutput) SetDestination(v *DataDestination) *DescribeExplainabilityExportOutput {
+	s.Destination = v
+	return s
+}
+
+// SetExplainabilityArn sets the ExplainabilityArn field's value.
+func (s *DescribeExplainabilityExportOutput) SetExplainabilityArn(v string) *DescribeExplainabilityExportOutput {
+	s.ExplainabilityArn = &v
+	return s
+}
+
+// SetExplainabilityExportArn sets the ExplainabilityExportArn field's value.
+func (s *DescribeExplainabilityExportOutput) SetExplainabilityExportArn(v string) *DescribeExplainabilityExportOutput {
+	s.ExplainabilityExportArn = &v
+	return s
+}
+
+// SetExplainabilityExportName sets the ExplainabilityExportName field's value.
+func (s *DescribeExplainabilityExportOutput) SetExplainabilityExportName(v string) *DescribeExplainabilityExportOutput {
+	s.ExplainabilityExportName = &v
+	return s
+}
+
+// SetLastModificationTime sets the LastModificationTime field's value.
+func (s *DescribeExplainabilityExportOutput) SetLastModificationTime(v time.Time) *DescribeExplainabilityExportOutput {
+	s.LastModificationTime = &v
+	return s
+}
+
+// SetMessage sets the Message field's value.
+func (s *DescribeExplainabilityExportOutput) SetMessage(v string) *DescribeExplainabilityExportOutput {
+	s.Message = &v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *DescribeExplainabilityExportOutput) SetStatus(v string) *DescribeExplainabilityExportOutput {
+	s.Status = &v
+	return s
+}
+
+type DescribeExplainabilityInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the Explaianability to describe.
+	//
+	// ExplainabilityArn is a required field
+	ExplainabilityArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeExplainabilityInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeExplainabilityInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribeExplainabilityInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribeExplainabilityInput"}
+	if s.ExplainabilityArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ExplainabilityArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetExplainabilityArn sets the ExplainabilityArn field's value.
+func (s *DescribeExplainabilityInput) SetExplainabilityArn(v string) *DescribeExplainabilityInput {
+	s.ExplainabilityArn = &v
+	return s
+}
+
+type DescribeExplainabilityOutput struct {
+	_ struct{} `type:"structure"`
+
+	// When the Explainability resource was created.
+	CreationTime *time.Time `type:"timestamp"`
+
+	// The source of your data, an AWS Identity and Access Management (IAM) role
+	// that allows Amazon Forecast to access the data and, optionally, an AWS Key
+	// Management Service (KMS) key.
+	DataSource *DataSource `type:"structure"`
+
+	// Whether the visualization was enabled for the Explainability resource.
+	EnableVisualization *bool `type:"boolean"`
+
+	// If TimePointGranularity is set to SPECIFIC, the last time point in the Explainability.
+	EndDateTime *string `type:"string"`
+
+	// The estimated time remaining in minutes for the CreateExplainability job
+	// to complete.
+	EstimatedTimeRemainingInMinutes *int64 `type:"long"`
+
+	// The Amazon Resource Name (ARN) of the Explainability.
+	ExplainabilityArn *string `type:"string"`
+
+	// The configuration settings that define the granularity of time series and
+	// time points for the Explainability.
+	ExplainabilityConfig *ExplainabilityConfig `type:"structure"`
+
+	// The name of the Explainability.
+	ExplainabilityName *string `min:"1" type:"string"`
+
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
+	LastModificationTime *time.Time `type:"timestamp"`
+
+	// If an error occurred, a message about the error.
+	Message *string `type:"string"`
+
+	// The Amazon Resource Name (ARN) of the Predictor or Forecast used to create
+	// the Explainability resource.
+	ResourceArn *string `type:"string"`
+
+	// Defines the fields of a dataset.
+	Schema *Schema `type:"structure"`
+
+	// If TimePointGranularity is set to SPECIFIC, the first time point in the Explainability.
+	StartDateTime *string `type:"string"`
+
+	// The status of the Explainability resource. States include:
+	//
+	//    * ACTIVE
+	//
+	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
+	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
+	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
+	Status *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeExplainabilityOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribeExplainabilityOutput) GoString() string {
+	return s.String()
+}
+
+// SetCreationTime sets the CreationTime field's value.
+func (s *DescribeExplainabilityOutput) SetCreationTime(v time.Time) *DescribeExplainabilityOutput {
+	s.CreationTime = &v
+	return s
+}
+
+// SetDataSource sets the DataSource field's value.
+func (s *DescribeExplainabilityOutput) SetDataSource(v *DataSource) *DescribeExplainabilityOutput {
+	s.DataSource = v
+	return s
+}
+
+// SetEnableVisualization sets the EnableVisualization field's value.
+func (s *DescribeExplainabilityOutput) SetEnableVisualization(v bool) *DescribeExplainabilityOutput {
+	s.EnableVisualization = &v
+	return s
+}
+
+// SetEndDateTime sets the EndDateTime field's value.
+func (s *DescribeExplainabilityOutput) SetEndDateTime(v string) *DescribeExplainabilityOutput {
+	s.EndDateTime = &v
+	return s
+}
+
+// SetEstimatedTimeRemainingInMinutes sets the EstimatedTimeRemainingInMinutes field's value.
+func (s *DescribeExplainabilityOutput) SetEstimatedTimeRemainingInMinutes(v int64) *DescribeExplainabilityOutput {
+	s.EstimatedTimeRemainingInMinutes = &v
+	return s
+}
+
+// SetExplainabilityArn sets the ExplainabilityArn field's value.
+func (s *DescribeExplainabilityOutput) SetExplainabilityArn(v string) *DescribeExplainabilityOutput {
+	s.ExplainabilityArn = &v
+	return s
+}
+
+// SetExplainabilityConfig sets the ExplainabilityConfig field's value.
+func (s *DescribeExplainabilityOutput) SetExplainabilityConfig(v *ExplainabilityConfig) *DescribeExplainabilityOutput {
+	s.ExplainabilityConfig = v
+	return s
+}
+
+// SetExplainabilityName sets the ExplainabilityName field's value.
+func (s *DescribeExplainabilityOutput) SetExplainabilityName(v string) *DescribeExplainabilityOutput {
+	s.ExplainabilityName = &v
+	return s
+}
+
+// SetLastModificationTime sets the LastModificationTime field's value.
+func (s *DescribeExplainabilityOutput) SetLastModificationTime(v time.Time) *DescribeExplainabilityOutput {
+	s.LastModificationTime = &v
+	return s
+}
+
+// SetMessage sets the Message field's value.
+func (s *DescribeExplainabilityOutput) SetMessage(v string) *DescribeExplainabilityOutput {
+	s.Message = &v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *DescribeExplainabilityOutput) SetResourceArn(v string) *DescribeExplainabilityOutput {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetSchema sets the Schema field's value.
+func (s *DescribeExplainabilityOutput) SetSchema(v *Schema) *DescribeExplainabilityOutput {
+	s.Schema = v
+	return s
+}
+
+// SetStartDateTime sets the StartDateTime field's value.
+func (s *DescribeExplainabilityOutput) SetStartDateTime(v string) *DescribeExplainabilityOutput {
+	s.StartDateTime = &v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *DescribeExplainabilityOutput) SetStatus(v string) *DescribeExplainabilityOutput {
+	s.Status = &v
+	return s
+}
+
 type DescribeForecastExportJobInput struct {
 	_ struct{} `type:"structure"`
 
@@ -5544,12 +9750,20 @@ type DescribeForecastExportJobInput struct {
 	ForecastExportJobArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeForecastExportJobInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeForecastExportJobInput) GoString() string {
 	return s.String()
 }
@@ -5592,7 +9806,18 @@ type DescribeForecastExportJobOutput struct {
 	// The name of the forecast export job.
 	ForecastExportJobName *string `min:"1" type:"string"`
 
-	// When the last successful export job finished.
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
 	LastModificationTime *time.Time `type:"timestamp"`
 
 	// If an error occurred, an informational message about the error.
@@ -5604,6 +9829,8 @@ type DescribeForecastExportJobOutput struct {
 	//
 	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
 	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
 	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
 	//
 	// The Status of the forecast export job must be ACTIVE before you can access
@@ -5611,12 +9838,20 @@ type DescribeForecastExportJobOutput struct {
 	Status *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeForecastExportJobOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeForecastExportJobOutput) GoString() string {
 	return s.String()
 }
@@ -5678,12 +9913,20 @@ type DescribeForecastInput struct {
 	ForecastArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeForecastInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeForecastInput) GoString() string {
 	return s.String()
 }
@@ -5716,6 +9959,9 @@ type DescribeForecastOutput struct {
 	// The ARN of the dataset group that provided the data used to train the predictor.
 	DatasetGroupArn *string `type:"string"`
 
+	// The estimated time remaining in minutes for the forecast job to complete.
+	EstimatedTimeRemainingInMinutes *int64 `type:"long"`
+
 	// The forecast ARN as specified in the request.
 	ForecastArn *string `type:"string"`
 
@@ -5725,10 +9971,18 @@ type DescribeForecastOutput struct {
 	// The quantiles at which probabilistic forecasts were generated.
 	ForecastTypes []*string `min:"1" type:"list"`
 
-	// Initially, the same as CreationTime (status is CREATE_PENDING). Updated when
-	// inference (creating the forecast) starts (status changed to CREATE_IN_PROGRESS),
-	// and when inference is complete (status changed to ACTIVE) or fails (status
-	// changed to CREATE_FAILED).
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
 	LastModificationTime *time.Time `type:"timestamp"`
 
 	// If an error occurred, an informational message about the error.
@@ -5743,6 +9997,8 @@ type DescribeForecastOutput struct {
 	//
 	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
 	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
 	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
 	//
 	// The Status of the forecast must be ACTIVE before you can query or export
@@ -5750,12 +10006,20 @@ type DescribeForecastOutput struct {
 	Status *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeForecastOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribeForecastOutput) GoString() string {
 	return s.String()
 }
@@ -5769,6 +10033,12 @@ func (s *DescribeForecastOutput) SetCreationTime(v time.Time) *DescribeForecastO
 // SetDatasetGroupArn sets the DatasetGroupArn field's value.
 func (s *DescribeForecastOutput) SetDatasetGroupArn(v string) *DescribeForecastOutput {
 	s.DatasetGroupArn = &v
+	return s
+}
+
+// SetEstimatedTimeRemainingInMinutes sets the EstimatedTimeRemainingInMinutes field's value.
+func (s *DescribeForecastOutput) SetEstimatedTimeRemainingInMinutes(v int64) *DescribeForecastOutput {
+	s.EstimatedTimeRemainingInMinutes = &v
 	return s
 }
 
@@ -5814,6 +10084,167 @@ func (s *DescribeForecastOutput) SetStatus(v string) *DescribeForecastOutput {
 	return s
 }
 
+type DescribePredictorBacktestExportJobInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the predictor backtest export job.
+	//
+	// PredictorBacktestExportJobArn is a required field
+	PredictorBacktestExportJobArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribePredictorBacktestExportJobInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribePredictorBacktestExportJobInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *DescribePredictorBacktestExportJobInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "DescribePredictorBacktestExportJobInput"}
+	if s.PredictorBacktestExportJobArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("PredictorBacktestExportJobArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetPredictorBacktestExportJobArn sets the PredictorBacktestExportJobArn field's value.
+func (s *DescribePredictorBacktestExportJobInput) SetPredictorBacktestExportJobArn(v string) *DescribePredictorBacktestExportJobInput {
+	s.PredictorBacktestExportJobArn = &v
+	return s
+}
+
+type DescribePredictorBacktestExportJobOutput struct {
+	_ struct{} `type:"structure"`
+
+	// When the predictor backtest export job was created.
+	CreationTime *time.Time `type:"timestamp"`
+
+	// The destination for an export job. Provide an S3 path, an AWS Identity and
+	// Access Management (IAM) role that allows Amazon Forecast to access the location,
+	// and an AWS Key Management Service (KMS) key (optional).
+	Destination *DataDestination `type:"structure"`
+
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
+	LastModificationTime *time.Time `type:"timestamp"`
+
+	// Information about any errors that may have occurred during the backtest export.
+	Message *string `type:"string"`
+
+	// The Amazon Resource Name (ARN) of the predictor.
+	PredictorArn *string `type:"string"`
+
+	// The Amazon Resource Name (ARN) of the predictor backtest export job.
+	PredictorBacktestExportJobArn *string `type:"string"`
+
+	// The name of the predictor backtest export job.
+	PredictorBacktestExportJobName *string `min:"1" type:"string"`
+
+	// The status of the predictor backtest export job. States include:
+	//
+	//    * ACTIVE
+	//
+	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
+	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
+	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
+	Status *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribePredictorBacktestExportJobOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s DescribePredictorBacktestExportJobOutput) GoString() string {
+	return s.String()
+}
+
+// SetCreationTime sets the CreationTime field's value.
+func (s *DescribePredictorBacktestExportJobOutput) SetCreationTime(v time.Time) *DescribePredictorBacktestExportJobOutput {
+	s.CreationTime = &v
+	return s
+}
+
+// SetDestination sets the Destination field's value.
+func (s *DescribePredictorBacktestExportJobOutput) SetDestination(v *DataDestination) *DescribePredictorBacktestExportJobOutput {
+	s.Destination = v
+	return s
+}
+
+// SetLastModificationTime sets the LastModificationTime field's value.
+func (s *DescribePredictorBacktestExportJobOutput) SetLastModificationTime(v time.Time) *DescribePredictorBacktestExportJobOutput {
+	s.LastModificationTime = &v
+	return s
+}
+
+// SetMessage sets the Message field's value.
+func (s *DescribePredictorBacktestExportJobOutput) SetMessage(v string) *DescribePredictorBacktestExportJobOutput {
+	s.Message = &v
+	return s
+}
+
+// SetPredictorArn sets the PredictorArn field's value.
+func (s *DescribePredictorBacktestExportJobOutput) SetPredictorArn(v string) *DescribePredictorBacktestExportJobOutput {
+	s.PredictorArn = &v
+	return s
+}
+
+// SetPredictorBacktestExportJobArn sets the PredictorBacktestExportJobArn field's value.
+func (s *DescribePredictorBacktestExportJobOutput) SetPredictorBacktestExportJobArn(v string) *DescribePredictorBacktestExportJobOutput {
+	s.PredictorBacktestExportJobArn = &v
+	return s
+}
+
+// SetPredictorBacktestExportJobName sets the PredictorBacktestExportJobName field's value.
+func (s *DescribePredictorBacktestExportJobOutput) SetPredictorBacktestExportJobName(v string) *DescribePredictorBacktestExportJobOutput {
+	s.PredictorBacktestExportJobName = &v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *DescribePredictorBacktestExportJobOutput) SetStatus(v string) *DescribePredictorBacktestExportJobOutput {
+	s.Status = &v
+	return s
+}
+
 type DescribePredictorInput struct {
 	_ struct{} `type:"structure"`
 
@@ -5824,12 +10255,20 @@ type DescribePredictorInput struct {
 	PredictorArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribePredictorInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribePredictorInput) GoString() string {
 	return s.String()
 }
@@ -5862,6 +10301,17 @@ type DescribePredictorOutput struct {
 	// When PerformAutoML is specified, the ARN of the chosen algorithm.
 	AutoMLAlgorithmArns []*string `type:"list"`
 
+	//
+	// The LatencyOptimized AutoML override strategy is only available in private
+	// beta. Contact AWS Support or your account manager to learn more about access
+	// privileges.
+	//
+	// The AutoML strategy used to train the predictor. Unless LatencyOptimized
+	// is specified, the AutoML strategy optimizes predictor accuracy.
+	//
+	// This parameter is only valid for predictors trained using AutoML.
+	AutoMLOverrideStrategy *string `type:"string" enum:"AutoMLOverrideStrategy"`
+
 	// When the model training task was created.
 	CreationTime *time.Time `type:"timestamp"`
 
@@ -5872,6 +10322,10 @@ type DescribePredictorOutput struct {
 	// An AWS Key Management Service (KMS) key and the AWS Identity and Access Management
 	// (IAM) role that Amazon Forecast can assume to access the key.
 	EncryptionConfig *EncryptionConfig `type:"structure"`
+
+	// The estimated time remaining in minutes for the predictor training job to
+	// complete.
+	EstimatedTimeRemainingInMinutes *int64 `type:"long"`
 
 	// Used to override the default evaluation parameters of the specified algorithm.
 	// Amazon Forecast evaluates a predictor by splitting a dataset into training
@@ -5886,20 +10340,37 @@ type DescribePredictorOutput struct {
 	// the prediction length.
 	ForecastHorizon *int64 `type:"integer"`
 
+	// The forecast types used during predictor training. Default value is ["0.1","0.5","0.9"]
+	ForecastTypes []*string `min:"1" type:"list"`
+
 	// The hyperparameter override values for the algorithm.
 	HPOConfig *HyperParameterTuningJobConfig `type:"structure"`
 
 	// Describes the dataset group that contains the data to use to train the predictor.
 	InputDataConfig *InputDataConfig `type:"structure"`
 
-	// Initially, the same as CreationTime (when the status is CREATE_PENDING).
-	// This value is updated when training starts (when the status changes to CREATE_IN_PROGRESS),
-	// and when training has completed (when the status changes to ACTIVE) or fails
-	// (when the status changes to CREATE_FAILED).
+	// Whether the predictor was created with CreateAutoPredictor.
+	IsAutoPredictor *bool `type:"boolean"`
+
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
 	LastModificationTime *time.Time `type:"timestamp"`
 
 	// If an error occurred, an informational message about the error.
 	Message *string `type:"string"`
+
+	// The accuracy metric used to optimize the predictor.
+	OptimizationMetric *string `type:"string" enum:"OptimizationMetric"`
 
 	// Whether the predictor is set to perform AutoML.
 	PerformAutoML *bool `type:"boolean"`
@@ -5926,25 +10397,33 @@ type DescribePredictorOutput struct {
 	//
 	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
 	//
-	//    * UPDATE_PENDING, UPDATE_IN_PROGRESS, UPDATE_FAILED
+	//    * CREATE_STOPPING, CREATE_STOPPED
 	//
 	// The Status of the predictor must be ACTIVE before you can use the predictor
 	// to create a forecast.
 	Status *string `type:"string"`
 
 	// The default training parameters or overrides selected during model training.
-	// If using the AutoML algorithm or if HPO is turned on while using the DeepAR+
-	// algorithms, the optimized values for the chosen hyperparameters are returned.
-	// For more information, see aws-forecast-choosing-recipes.
+	// When running AutoML or choosing HPO with CNN-QR or DeepAR+, the optimized
+	// values for the chosen hyperparameters are returned. For more information,
+	// see aws-forecast-choosing-recipes.
 	TrainingParameters map[string]*string `type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribePredictorOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s DescribePredictorOutput) GoString() string {
 	return s.String()
 }
@@ -5958,6 +10437,12 @@ func (s *DescribePredictorOutput) SetAlgorithmArn(v string) *DescribePredictorOu
 // SetAutoMLAlgorithmArns sets the AutoMLAlgorithmArns field's value.
 func (s *DescribePredictorOutput) SetAutoMLAlgorithmArns(v []*string) *DescribePredictorOutput {
 	s.AutoMLAlgorithmArns = v
+	return s
+}
+
+// SetAutoMLOverrideStrategy sets the AutoMLOverrideStrategy field's value.
+func (s *DescribePredictorOutput) SetAutoMLOverrideStrategy(v string) *DescribePredictorOutput {
+	s.AutoMLOverrideStrategy = &v
 	return s
 }
 
@@ -5979,6 +10464,12 @@ func (s *DescribePredictorOutput) SetEncryptionConfig(v *EncryptionConfig) *Desc
 	return s
 }
 
+// SetEstimatedTimeRemainingInMinutes sets the EstimatedTimeRemainingInMinutes field's value.
+func (s *DescribePredictorOutput) SetEstimatedTimeRemainingInMinutes(v int64) *DescribePredictorOutput {
+	s.EstimatedTimeRemainingInMinutes = &v
+	return s
+}
+
 // SetEvaluationParameters sets the EvaluationParameters field's value.
 func (s *DescribePredictorOutput) SetEvaluationParameters(v *EvaluationParameters) *DescribePredictorOutput {
 	s.EvaluationParameters = v
@@ -5997,6 +10488,12 @@ func (s *DescribePredictorOutput) SetForecastHorizon(v int64) *DescribePredictor
 	return s
 }
 
+// SetForecastTypes sets the ForecastTypes field's value.
+func (s *DescribePredictorOutput) SetForecastTypes(v []*string) *DescribePredictorOutput {
+	s.ForecastTypes = v
+	return s
+}
+
 // SetHPOConfig sets the HPOConfig field's value.
 func (s *DescribePredictorOutput) SetHPOConfig(v *HyperParameterTuningJobConfig) *DescribePredictorOutput {
 	s.HPOConfig = v
@@ -6009,6 +10506,12 @@ func (s *DescribePredictorOutput) SetInputDataConfig(v *InputDataConfig) *Descri
 	return s
 }
 
+// SetIsAutoPredictor sets the IsAutoPredictor field's value.
+func (s *DescribePredictorOutput) SetIsAutoPredictor(v bool) *DescribePredictorOutput {
+	s.IsAutoPredictor = &v
+	return s
+}
+
 // SetLastModificationTime sets the LastModificationTime field's value.
 func (s *DescribePredictorOutput) SetLastModificationTime(v time.Time) *DescribePredictorOutput {
 	s.LastModificationTime = &v
@@ -6018,6 +10521,12 @@ func (s *DescribePredictorOutput) SetLastModificationTime(v time.Time) *Describe
 // SetMessage sets the Message field's value.
 func (s *DescribePredictorOutput) SetMessage(v string) *DescribePredictorOutput {
 	s.Message = &v
+	return s
+}
+
+// SetOptimizationMetric sets the OptimizationMetric field's value.
+func (s *DescribePredictorOutput) SetOptimizationMetric(v string) *DescribePredictorOutput {
+	s.OptimizationMetric = &v
 	return s
 }
 
@@ -6084,12 +10593,20 @@ type EncryptionConfig struct {
 	RoleArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EncryptionConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EncryptionConfig) GoString() string {
 	return s.String()
 }
@@ -6122,6 +10639,75 @@ func (s *EncryptionConfig) SetRoleArn(v string) *EncryptionConfig {
 	return s
 }
 
+// Provides detailed error metrics to evaluate the performance of a predictor.
+// This object is part of the Metrics object.
+type ErrorMetric struct {
+	_ struct{} `type:"structure"`
+
+	// The Forecast type used to compute WAPE, MAPE, MASE, and RMSE.
+	ForecastType *string `min:"2" type:"string"`
+
+	// The Mean Absolute Percentage Error (MAPE)
+	MAPE *float64 `type:"double"`
+
+	// The Mean Absolute Scaled Error (MASE)
+	MASE *float64 `type:"double"`
+
+	// The root-mean-square error (RMSE).
+	RMSE *float64 `type:"double"`
+
+	// The weighted absolute percentage error (WAPE).
+	WAPE *float64 `type:"double"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ErrorMetric) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ErrorMetric) GoString() string {
+	return s.String()
+}
+
+// SetForecastType sets the ForecastType field's value.
+func (s *ErrorMetric) SetForecastType(v string) *ErrorMetric {
+	s.ForecastType = &v
+	return s
+}
+
+// SetMAPE sets the MAPE field's value.
+func (s *ErrorMetric) SetMAPE(v float64) *ErrorMetric {
+	s.MAPE = &v
+	return s
+}
+
+// SetMASE sets the MASE field's value.
+func (s *ErrorMetric) SetMASE(v float64) *ErrorMetric {
+	s.MASE = &v
+	return s
+}
+
+// SetRMSE sets the RMSE field's value.
+func (s *ErrorMetric) SetRMSE(v float64) *ErrorMetric {
+	s.RMSE = &v
+	return s
+}
+
+// SetWAPE sets the WAPE field's value.
+func (s *ErrorMetric) SetWAPE(v float64) *ErrorMetric {
+	s.WAPE = &v
+	return s
+}
+
 // Parameters that define how to split a dataset into training data and testing
 // data, and the number of iterations to perform. These parameters are specified
 // in the predefined algorithms but you can override them in the CreatePredictor
@@ -6145,12 +10731,20 @@ type EvaluationParameters struct {
 	NumberOfBacktestWindows *int64 `type:"integer"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EvaluationParameters) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EvaluationParameters) GoString() string {
 	return s.String()
 }
@@ -6181,12 +10775,20 @@ type EvaluationResult struct {
 	TestWindows []*WindowSummary `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EvaluationResult) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s EvaluationResult) GoString() string {
 	return s.String()
 }
@@ -6203,6 +10805,367 @@ func (s *EvaluationResult) SetTestWindows(v []*WindowSummary) *EvaluationResult 
 	return s
 }
 
+// The ExplainabilityConfig data type defines the number of time series and
+// time points included in CreateExplainability.
+//
+// If you provide a predictor ARN for ResourceArn, you must set both TimePointGranularity
+// and TimeSeriesGranularity to “ALL”. When creating Predictor Explainability,
+// Amazon Forecast considers all time series and time points.
+//
+// If you provide a forecast ARN for ResourceArn, you can set TimePointGranularity
+// and TimeSeriesGranularity to either “ALL” or “Specific”.
+type ExplainabilityConfig struct {
+	_ struct{} `type:"structure"`
+
+	// To create an Explainability for all time points in your forecast horizon,
+	// use ALL. To create an Explainability for specific time points in your forecast
+	// horizon, use SPECIFIC.
+	//
+	// Specify time points with the StartDateTime and EndDateTime parameters within
+	// the CreateExplainability operation.
+	//
+	// TimePointGranularity is a required field
+	TimePointGranularity *string `type:"string" required:"true" enum:"TimePointGranularity"`
+
+	// To create an Explainability for all time series in your datasets, use ALL.
+	// To create an Explainability for specific time series in your datasets, use
+	// SPECIFIC.
+	//
+	// Specify time series by uploading a CSV file to an Amazon S3 bucket and set
+	// the location within the DataDestination data type.
+	//
+	// TimeSeriesGranularity is a required field
+	TimeSeriesGranularity *string `type:"string" required:"true" enum:"TimeSeriesGranularity"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExplainabilityConfig) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExplainabilityConfig) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ExplainabilityConfig) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ExplainabilityConfig"}
+	if s.TimePointGranularity == nil {
+		invalidParams.Add(request.NewErrParamRequired("TimePointGranularity"))
+	}
+	if s.TimeSeriesGranularity == nil {
+		invalidParams.Add(request.NewErrParamRequired("TimeSeriesGranularity"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetTimePointGranularity sets the TimePointGranularity field's value.
+func (s *ExplainabilityConfig) SetTimePointGranularity(v string) *ExplainabilityConfig {
+	s.TimePointGranularity = &v
+	return s
+}
+
+// SetTimeSeriesGranularity sets the TimeSeriesGranularity field's value.
+func (s *ExplainabilityConfig) SetTimeSeriesGranularity(v string) *ExplainabilityConfig {
+	s.TimeSeriesGranularity = &v
+	return s
+}
+
+// Provides a summary of the Explainability export properties used in the ListExplainabilityExports
+// operation. To get a complete set of properties, call the DescribeExplainabilityExport
+// operation, and provide the ExplainabilityExportArn.
+type ExplainabilityExportSummary struct {
+	_ struct{} `type:"structure"`
+
+	// When the Explainability was created.
+	CreationTime *time.Time `type:"timestamp"`
+
+	// The destination for an export job. Provide an S3 path, an AWS Identity and
+	// Access Management (IAM) role that allows Amazon Forecast to access the location,
+	// and an AWS Key Management Service (KMS) key (optional).
+	Destination *DataDestination `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the Explainability export.
+	ExplainabilityExportArn *string `type:"string"`
+
+	// The name of the Explainability export
+	ExplainabilityExportName *string `min:"1" type:"string"`
+
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
+	LastModificationTime *time.Time `type:"timestamp"`
+
+	// Information about any errors that may have occurred during the Explainability
+	// export.
+	Message *string `type:"string"`
+
+	// The status of the Explainability export. States include:
+	//
+	//    * ACTIVE
+	//
+	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
+	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
+	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
+	Status *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExplainabilityExportSummary) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExplainabilityExportSummary) GoString() string {
+	return s.String()
+}
+
+// SetCreationTime sets the CreationTime field's value.
+func (s *ExplainabilityExportSummary) SetCreationTime(v time.Time) *ExplainabilityExportSummary {
+	s.CreationTime = &v
+	return s
+}
+
+// SetDestination sets the Destination field's value.
+func (s *ExplainabilityExportSummary) SetDestination(v *DataDestination) *ExplainabilityExportSummary {
+	s.Destination = v
+	return s
+}
+
+// SetExplainabilityExportArn sets the ExplainabilityExportArn field's value.
+func (s *ExplainabilityExportSummary) SetExplainabilityExportArn(v string) *ExplainabilityExportSummary {
+	s.ExplainabilityExportArn = &v
+	return s
+}
+
+// SetExplainabilityExportName sets the ExplainabilityExportName field's value.
+func (s *ExplainabilityExportSummary) SetExplainabilityExportName(v string) *ExplainabilityExportSummary {
+	s.ExplainabilityExportName = &v
+	return s
+}
+
+// SetLastModificationTime sets the LastModificationTime field's value.
+func (s *ExplainabilityExportSummary) SetLastModificationTime(v time.Time) *ExplainabilityExportSummary {
+	s.LastModificationTime = &v
+	return s
+}
+
+// SetMessage sets the Message field's value.
+func (s *ExplainabilityExportSummary) SetMessage(v string) *ExplainabilityExportSummary {
+	s.Message = &v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *ExplainabilityExportSummary) SetStatus(v string) *ExplainabilityExportSummary {
+	s.Status = &v
+	return s
+}
+
+// Provides information about the Explainability resource.
+type ExplainabilityInfo struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) of the Explainability.
+	ExplainabilityArn *string `type:"string"`
+
+	// The status of the Explainability. States include:
+	//
+	//    * ACTIVE
+	//
+	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
+	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
+	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
+	Status *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExplainabilityInfo) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExplainabilityInfo) GoString() string {
+	return s.String()
+}
+
+// SetExplainabilityArn sets the ExplainabilityArn field's value.
+func (s *ExplainabilityInfo) SetExplainabilityArn(v string) *ExplainabilityInfo {
+	s.ExplainabilityArn = &v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *ExplainabilityInfo) SetStatus(v string) *ExplainabilityInfo {
+	s.Status = &v
+	return s
+}
+
+// Provides a summary of the Explainability properties used in the ListExplainabilities
+// operation. To get a complete set of properties, call the DescribeExplainability
+// operation, and provide the listed ExplainabilityArn.
+type ExplainabilitySummary struct {
+	_ struct{} `type:"structure"`
+
+	// When the Explainability was created.
+	CreationTime *time.Time `type:"timestamp"`
+
+	// The Amazon Resource Name (ARN) of the Explainability.
+	ExplainabilityArn *string `type:"string"`
+
+	// The configuration settings that define the granularity of time series and
+	// time points for the Explainability.
+	ExplainabilityConfig *ExplainabilityConfig `type:"structure"`
+
+	// The name of the Explainability.
+	ExplainabilityName *string `min:"1" type:"string"`
+
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
+	LastModificationTime *time.Time `type:"timestamp"`
+
+	// Information about any errors that may have occurred during the Explainability
+	// creation process.
+	Message *string `type:"string"`
+
+	// The Amazon Resource Name (ARN) of the Predictor or Forecast used to create
+	// the Explainability.
+	ResourceArn *string `type:"string"`
+
+	// The status of the Explainability. States include:
+	//
+	//    * ACTIVE
+	//
+	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
+	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
+	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
+	Status *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExplainabilitySummary) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ExplainabilitySummary) GoString() string {
+	return s.String()
+}
+
+// SetCreationTime sets the CreationTime field's value.
+func (s *ExplainabilitySummary) SetCreationTime(v time.Time) *ExplainabilitySummary {
+	s.CreationTime = &v
+	return s
+}
+
+// SetExplainabilityArn sets the ExplainabilityArn field's value.
+func (s *ExplainabilitySummary) SetExplainabilityArn(v string) *ExplainabilitySummary {
+	s.ExplainabilityArn = &v
+	return s
+}
+
+// SetExplainabilityConfig sets the ExplainabilityConfig field's value.
+func (s *ExplainabilitySummary) SetExplainabilityConfig(v *ExplainabilityConfig) *ExplainabilitySummary {
+	s.ExplainabilityConfig = v
+	return s
+}
+
+// SetExplainabilityName sets the ExplainabilityName field's value.
+func (s *ExplainabilitySummary) SetExplainabilityName(v string) *ExplainabilitySummary {
+	s.ExplainabilityName = &v
+	return s
+}
+
+// SetLastModificationTime sets the LastModificationTime field's value.
+func (s *ExplainabilitySummary) SetLastModificationTime(v time.Time) *ExplainabilitySummary {
+	s.LastModificationTime = &v
+	return s
+}
+
+// SetMessage sets the Message field's value.
+func (s *ExplainabilitySummary) SetMessage(v string) *ExplainabilitySummary {
+	s.Message = &v
+	return s
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *ExplainabilitySummary) SetResourceArn(v string) *ExplainabilitySummary {
+	s.ResourceArn = &v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *ExplainabilitySummary) SetStatus(v string) *ExplainabilitySummary {
+	s.Status = &v
+	return s
+}
+
+//
+// This object belongs to the CreatePredictor operation. If you created your
+// predictor with CreateAutoPredictor, see AttributeConfig.
+//
 // Provides featurization (transformation) information for a dataset field.
 // This object is part of the FeaturizationConfig object.
 //
@@ -6238,12 +11201,20 @@ type Featurization struct {
 	FeaturizationPipeline []*FeaturizationMethod `min:"1" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Featurization) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Featurization) GoString() string {
 	return s.String()
 }
@@ -6289,6 +11260,10 @@ func (s *Featurization) SetFeaturizationPipeline(v []*FeaturizationMethod) *Feat
 	return s
 }
 
+//
+// This object belongs to the CreatePredictor operation. If you created your
+// predictor with CreateAutoPredictor, see AttributeConfig.
+//
 // In a CreatePredictor operation, the specified algorithm trains a model using
 // the specified dataset group. You can optionally tell the operation to modify
 // data fields prior to training a model. These modifications are referred to
@@ -6338,15 +11313,23 @@ type FeaturizationConfig struct {
 	// to the RELATED_TIME_SERIES dataset frequency.
 	//
 	// ForecastFrequency is a required field
-	ForecastFrequency *string `type:"string" required:"true"`
+	ForecastFrequency *string `min:"1" type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FeaturizationConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FeaturizationConfig) GoString() string {
 	return s.String()
 }
@@ -6362,6 +11345,9 @@ func (s *FeaturizationConfig) Validate() error {
 	}
 	if s.ForecastFrequency == nil {
 		invalidParams.Add(request.NewErrParamRequired("ForecastFrequency"))
+	}
+	if s.ForecastFrequency != nil && len(*s.ForecastFrequency) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("ForecastFrequency", 1))
 	}
 	if s.Featurizations != nil {
 		for i, v := range s.Featurizations {
@@ -6444,15 +11430,28 @@ type FeaturizationMethod struct {
 	//    * backfill: zero, value, median, mean, min, max
 	//
 	//    * futurefill: zero, value, median, mean, min, max
+	//
+	// To set a filling method to a specific value, set the fill parameter to value
+	// and define the value in a corresponding _value parameter. For example, to
+	// set backfilling to a value of 2, include the following: "backfill": "value"
+	// and "backfill_value":"2".
 	FeaturizationMethodParameters map[string]*string `min:"1" type:"map"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FeaturizationMethod) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s FeaturizationMethod) GoString() string {
 	return s.String()
 }
@@ -6509,12 +11508,20 @@ type Filter struct {
 	Value *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Filter) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Filter) GoString() string {
 	return s.String()
 }
@@ -6575,7 +11582,18 @@ type ForecastExportJobSummary struct {
 	// The name of the forecast export job.
 	ForecastExportJobName *string `min:"1" type:"string"`
 
-	// When the last successful export job finished.
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
 	LastModificationTime *time.Time `type:"timestamp"`
 
 	// If an error occurred, an informational message about the error.
@@ -6587,6 +11605,8 @@ type ForecastExportJobSummary struct {
 	//
 	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
 	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
 	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
 	//
 	// The Status of the forecast export job must be ACTIVE before you can access
@@ -6594,12 +11614,20 @@ type ForecastExportJobSummary struct {
 	Status *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ForecastExportJobSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ForecastExportJobSummary) GoString() string {
 	return s.String()
 }
@@ -6652,6 +11680,9 @@ func (s *ForecastExportJobSummary) SetStatus(v string) *ForecastExportJobSummary
 type ForecastSummary struct {
 	_ struct{} `type:"structure"`
 
+	// Whether the Forecast was created from an AutoPredictor.
+	CreatedUsingAutoPredictor *bool `type:"boolean"`
+
 	// When the forecast creation task was created.
 	CreationTime *time.Time `type:"timestamp"`
 
@@ -6665,10 +11696,18 @@ type ForecastSummary struct {
 	// The name of the forecast.
 	ForecastName *string `min:"1" type:"string"`
 
-	// Initially, the same as CreationTime (status is CREATE_PENDING). Updated when
-	// inference (creating the forecast) starts (status changed to CREATE_IN_PROGRESS),
-	// and when inference is complete (status changed to ACTIVE) or fails (status
-	// changed to CREATE_FAILED).
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
 	LastModificationTime *time.Time `type:"timestamp"`
 
 	// If an error occurred, an informational message about the error.
@@ -6683,6 +11722,8 @@ type ForecastSummary struct {
 	//
 	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
 	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
 	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
 	//
 	// The Status of the forecast must be ACTIVE before you can query or export
@@ -6690,14 +11731,28 @@ type ForecastSummary struct {
 	Status *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ForecastSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ForecastSummary) GoString() string {
 	return s.String()
+}
+
+// SetCreatedUsingAutoPredictor sets the CreatedUsingAutoPredictor field's value.
+func (s *ForecastSummary) SetCreatedUsingAutoPredictor(v bool) *ForecastSummary {
+	s.CreatedUsingAutoPredictor = &v
+	return s
 }
 
 // SetCreationTime sets the CreationTime field's value.
@@ -6757,12 +11812,20 @@ type GetAccuracyMetricsInput struct {
 	PredictorArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAccuracyMetricsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAccuracyMetricsInput) GoString() string {
 	return s.String()
 }
@@ -6789,18 +11852,61 @@ func (s *GetAccuracyMetricsInput) SetPredictorArn(v string) *GetAccuracyMetricsI
 type GetAccuracyMetricsOutput struct {
 	_ struct{} `type:"structure"`
 
+	//
+	// The LatencyOptimized AutoML override strategy is only available in private
+	// beta. Contact AWS Support or your account manager to learn more about access
+	// privileges.
+	//
+	// The AutoML strategy used to train the predictor. Unless LatencyOptimized
+	// is specified, the AutoML strategy optimizes predictor accuracy.
+	//
+	// This parameter is only valid for predictors trained using AutoML.
+	AutoMLOverrideStrategy *string `type:"string" enum:"AutoMLOverrideStrategy"`
+
+	// Whether the predictor was created with CreateAutoPredictor.
+	IsAutoPredictor *bool `type:"boolean"`
+
+	// The accuracy metric used to optimize the predictor.
+	OptimizationMetric *string `type:"string" enum:"OptimizationMetric"`
+
 	// An array of results from evaluating the predictor.
 	PredictorEvaluationResults []*EvaluationResult `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAccuracyMetricsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s GetAccuracyMetricsOutput) GoString() string {
 	return s.String()
+}
+
+// SetAutoMLOverrideStrategy sets the AutoMLOverrideStrategy field's value.
+func (s *GetAccuracyMetricsOutput) SetAutoMLOverrideStrategy(v string) *GetAccuracyMetricsOutput {
+	s.AutoMLOverrideStrategy = &v
+	return s
+}
+
+// SetIsAutoPredictor sets the IsAutoPredictor field's value.
+func (s *GetAccuracyMetricsOutput) SetIsAutoPredictor(v bool) *GetAccuracyMetricsOutput {
+	s.IsAutoPredictor = &v
+	return s
+}
+
+// SetOptimizationMetric sets the OptimizationMetric field's value.
+func (s *GetAccuracyMetricsOutput) SetOptimizationMetric(v string) *GetAccuracyMetricsOutput {
+	s.OptimizationMetric = &v
+	return s
 }
 
 // SetPredictorEvaluationResults sets the PredictorEvaluationResults field's value.
@@ -6829,12 +11935,20 @@ type HyperParameterTuningJobConfig struct {
 	ParameterRanges *ParameterRanges `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s HyperParameterTuningJobConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s HyperParameterTuningJobConfig) GoString() string {
 	return s.String()
 }
@@ -6860,6 +11974,10 @@ func (s *HyperParameterTuningJobConfig) SetParameterRanges(v *ParameterRanges) *
 	return s
 }
 
+//
+// This object belongs to the CreatePredictor operation. If you created your
+// predictor with CreateAutoPredictor, see DataConfig.
+//
 // The data used to train a predictor. The data includes a dataset group and
 // any supplementary features. You specify this object in the CreatePredictor
 // request.
@@ -6876,12 +11994,20 @@ type InputDataConfig struct {
 	SupplementaryFeatures []*SupplementaryFeature `min:"1" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InputDataConfig) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InputDataConfig) GoString() string {
 	return s.String()
 }
@@ -6976,12 +12102,20 @@ type IntegerParameterRange struct {
 	ScalingType *string `type:"string" enum:"ScalingType"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s IntegerParameterRange) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s IntegerParameterRange) GoString() string {
 	return s.String()
 }
@@ -7041,12 +12175,20 @@ type InvalidInputException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidInputException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidInputException) GoString() string {
 	return s.String()
 }
@@ -7097,12 +12239,20 @@ type InvalidNextTokenException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidNextTokenException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s InvalidNextTokenException) GoString() string {
 	return s.String()
 }
@@ -7153,12 +12303,20 @@ type LimitExceededException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LimitExceededException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s LimitExceededException) GoString() string {
 	return s.String()
 }
@@ -7213,12 +12371,20 @@ type ListDatasetGroupsInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetGroupsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetGroupsInput) GoString() string {
 	return s.String()
 }
@@ -7262,12 +12428,20 @@ type ListDatasetGroupsOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetGroupsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetGroupsOutput) GoString() string {
 	return s.String()
 }
@@ -7318,12 +12492,20 @@ type ListDatasetImportJobsInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetImportJobsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetImportJobsInput) GoString() string {
 	return s.String()
 }
@@ -7383,12 +12565,20 @@ type ListDatasetImportJobsOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetImportJobsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetImportJobsOutput) GoString() string {
 	return s.String()
 }
@@ -7417,12 +12607,20 @@ type ListDatasetsInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetsInput) GoString() string {
 	return s.String()
 }
@@ -7466,12 +12664,20 @@ type ListDatasetsOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListDatasetsOutput) GoString() string {
 	return s.String()
 }
@@ -7484,6 +12690,268 @@ func (s *ListDatasetsOutput) SetDatasets(v []*DatasetSummary) *ListDatasetsOutpu
 
 // SetNextToken sets the NextToken field's value.
 func (s *ListDatasetsOutput) SetNextToken(v string) *ListDatasetsOutput {
+	s.NextToken = &v
+	return s
+}
+
+type ListExplainabilitiesInput struct {
+	_ struct{} `type:"structure"`
+
+	// An array of filters. For each filter, provide a condition and a match statement.
+	// The condition is either IS or IS_NOT, which specifies whether to include
+	// or exclude the resources that match the statement from the list. The match
+	// statement consists of a key and a value.
+	//
+	// Filter properties
+	//
+	//    * Condition - The condition to apply. Valid values are IS and IS_NOT.
+	//
+	//    * Key - The name of the parameter to filter on. Valid values are ResourceArn
+	//    and Status.
+	//
+	//    * Value - The value to match.
+	Filters []*Filter `type:"list"`
+
+	// The number of items returned in the response.
+	MaxResults *int64 `min:"1" type:"integer"`
+
+	// If the result of the previous request was truncated, the response includes
+	// a NextToken. To retrieve the next set of results, use the token in the next
+	// request. Tokens expire after 24 hours.
+	NextToken *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListExplainabilitiesInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListExplainabilitiesInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListExplainabilitiesInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListExplainabilitiesInput"}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+	if s.NextToken != nil && len(*s.NextToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("NextToken", 1))
+	}
+	if s.Filters != nil {
+		for i, v := range s.Filters {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Filters", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFilters sets the Filters field's value.
+func (s *ListExplainabilitiesInput) SetFilters(v []*Filter) *ListExplainabilitiesInput {
+	s.Filters = v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *ListExplainabilitiesInput) SetMaxResults(v int64) *ListExplainabilitiesInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListExplainabilitiesInput) SetNextToken(v string) *ListExplainabilitiesInput {
+	s.NextToken = &v
+	return s
+}
+
+type ListExplainabilitiesOutput struct {
+	_ struct{} `type:"structure"`
+
+	// An array of objects that summarize the properties of each Explainability
+	// resource.
+	Explainabilities []*ExplainabilitySummary `type:"list"`
+
+	// Returns this token if the response is truncated. To retrieve the next set
+	// of results, use the token in the next request.
+	NextToken *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListExplainabilitiesOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListExplainabilitiesOutput) GoString() string {
+	return s.String()
+}
+
+// SetExplainabilities sets the Explainabilities field's value.
+func (s *ListExplainabilitiesOutput) SetExplainabilities(v []*ExplainabilitySummary) *ListExplainabilitiesOutput {
+	s.Explainabilities = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListExplainabilitiesOutput) SetNextToken(v string) *ListExplainabilitiesOutput {
+	s.NextToken = &v
+	return s
+}
+
+type ListExplainabilityExportsInput struct {
+	_ struct{} `type:"structure"`
+
+	// An array of filters. For each filter, provide a condition and a match statement.
+	// The condition is either IS or IS_NOT, which specifies whether to include
+	// or exclude resources that match the statement from the list. The match statement
+	// consists of a key and a value.
+	//
+	// Filter properties
+	//
+	//    * Condition - The condition to apply. Valid values are IS and IS_NOT.
+	//
+	//    * Key - The name of the parameter to filter on. Valid values are ResourceArn
+	//    and Status.
+	//
+	//    * Value - The value to match.
+	Filters []*Filter `type:"list"`
+
+	// The number of items to return in the response.
+	MaxResults *int64 `min:"1" type:"integer"`
+
+	// If the result of the previous request was truncated, the response includes
+	// a NextToken. To retrieve the next set of results, use the token in the next
+	// request. Tokens expire after 24 hours.
+	NextToken *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListExplainabilityExportsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListExplainabilityExportsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListExplainabilityExportsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListExplainabilityExportsInput"}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+	if s.NextToken != nil && len(*s.NextToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("NextToken", 1))
+	}
+	if s.Filters != nil {
+		for i, v := range s.Filters {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Filters", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFilters sets the Filters field's value.
+func (s *ListExplainabilityExportsInput) SetFilters(v []*Filter) *ListExplainabilityExportsInput {
+	s.Filters = v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *ListExplainabilityExportsInput) SetMaxResults(v int64) *ListExplainabilityExportsInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListExplainabilityExportsInput) SetNextToken(v string) *ListExplainabilityExportsInput {
+	s.NextToken = &v
+	return s
+}
+
+type ListExplainabilityExportsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// An array of objects that summarize the properties of each Explainability
+	// export.
+	ExplainabilityExports []*ExplainabilityExportSummary `type:"list"`
+
+	// Returns this token if the response is truncated. To retrieve the next set
+	// of results, use the token in the next request.
+	NextToken *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListExplainabilityExportsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListExplainabilityExportsOutput) GoString() string {
+	return s.String()
+}
+
+// SetExplainabilityExports sets the ExplainabilityExports field's value.
+func (s *ListExplainabilityExportsOutput) SetExplainabilityExports(v []*ExplainabilityExportSummary) *ListExplainabilityExportsOutput {
+	s.ExplainabilityExports = v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListExplainabilityExportsOutput) SetNextToken(v string) *ListExplainabilityExportsOutput {
 	s.NextToken = &v
 	return s
 }
@@ -7523,12 +12991,20 @@ type ListForecastExportJobsInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListForecastExportJobsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListForecastExportJobsInput) GoString() string {
 	return s.String()
 }
@@ -7588,12 +13064,20 @@ type ListForecastExportJobsOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListForecastExportJobsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListForecastExportJobsOutput) GoString() string {
 	return s.String()
 }
@@ -7645,12 +13129,20 @@ type ListForecastsInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListForecastsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListForecastsInput) GoString() string {
 	return s.String()
 }
@@ -7710,12 +13202,20 @@ type ListForecastsOutput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListForecastsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListForecastsOutput) GoString() string {
 	return s.String()
 }
@@ -7729,6 +13229,140 @@ func (s *ListForecastsOutput) SetForecasts(v []*ForecastSummary) *ListForecastsO
 // SetNextToken sets the NextToken field's value.
 func (s *ListForecastsOutput) SetNextToken(v string) *ListForecastsOutput {
 	s.NextToken = &v
+	return s
+}
+
+type ListPredictorBacktestExportJobsInput struct {
+	_ struct{} `type:"structure"`
+
+	// An array of filters. For each filter, provide a condition and a match statement.
+	// The condition is either IS or IS_NOT, which specifies whether to include
+	// or exclude the predictor backtest export jobs that match the statement from
+	// the list. The match statement consists of a key and a value.
+	//
+	// Filter properties
+	//
+	//    * Condition - The condition to apply. Valid values are IS and IS_NOT.
+	//    To include the predictor backtest export jobs that match the statement,
+	//    specify IS. To exclude matching predictor backtest export jobs, specify
+	//    IS_NOT.
+	//
+	//    * Key - The name of the parameter to filter on. Valid values are PredictorArn
+	//    and Status.
+	//
+	//    * Value - The value to match.
+	Filters []*Filter `type:"list"`
+
+	// The number of items to return in the response.
+	MaxResults *int64 `min:"1" type:"integer"`
+
+	// If the result of the previous request was truncated, the response includes
+	// a NextToken. To retrieve the next set of results, use the token in the next
+	// request. Tokens expire after 24 hours.
+	NextToken *string `min:"1" type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListPredictorBacktestExportJobsInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListPredictorBacktestExportJobsInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *ListPredictorBacktestExportJobsInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "ListPredictorBacktestExportJobsInput"}
+	if s.MaxResults != nil && *s.MaxResults < 1 {
+		invalidParams.Add(request.NewErrParamMinValue("MaxResults", 1))
+	}
+	if s.NextToken != nil && len(*s.NextToken) < 1 {
+		invalidParams.Add(request.NewErrParamMinLen("NextToken", 1))
+	}
+	if s.Filters != nil {
+		for i, v := range s.Filters {
+			if v == nil {
+				continue
+			}
+			if err := v.Validate(); err != nil {
+				invalidParams.AddNested(fmt.Sprintf("%s[%v]", "Filters", i), err.(request.ErrInvalidParams))
+			}
+		}
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetFilters sets the Filters field's value.
+func (s *ListPredictorBacktestExportJobsInput) SetFilters(v []*Filter) *ListPredictorBacktestExportJobsInput {
+	s.Filters = v
+	return s
+}
+
+// SetMaxResults sets the MaxResults field's value.
+func (s *ListPredictorBacktestExportJobsInput) SetMaxResults(v int64) *ListPredictorBacktestExportJobsInput {
+	s.MaxResults = &v
+	return s
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListPredictorBacktestExportJobsInput) SetNextToken(v string) *ListPredictorBacktestExportJobsInput {
+	s.NextToken = &v
+	return s
+}
+
+type ListPredictorBacktestExportJobsOutput struct {
+	_ struct{} `type:"structure"`
+
+	// Returns this token if the response is truncated. To retrieve the next set
+	// of results, use the token in the next request.
+	NextToken *string `min:"1" type:"string"`
+
+	// An array of objects that summarize the properties of each predictor backtest
+	// export job.
+	PredictorBacktestExportJobs []*PredictorBacktestExportJobSummary `type:"list"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListPredictorBacktestExportJobsOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ListPredictorBacktestExportJobsOutput) GoString() string {
+	return s.String()
+}
+
+// SetNextToken sets the NextToken field's value.
+func (s *ListPredictorBacktestExportJobsOutput) SetNextToken(v string) *ListPredictorBacktestExportJobsOutput {
+	s.NextToken = &v
+	return s
+}
+
+// SetPredictorBacktestExportJobs sets the PredictorBacktestExportJobs field's value.
+func (s *ListPredictorBacktestExportJobsOutput) SetPredictorBacktestExportJobs(v []*PredictorBacktestExportJobSummary) *ListPredictorBacktestExportJobsOutput {
+	s.PredictorBacktestExportJobs = v
 	return s
 }
 
@@ -7765,12 +13399,20 @@ type ListPredictorsInput struct {
 	NextToken *string `min:"1" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPredictorsInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPredictorsInput) GoString() string {
 	return s.String()
 }
@@ -7830,12 +13472,20 @@ type ListPredictorsOutput struct {
 	Predictors []*PredictorSummary `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPredictorsOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListPredictorsOutput) GoString() string {
 	return s.String()
 }
@@ -7856,20 +13506,26 @@ type ListTagsForResourceInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) that identifies the resource for which to
-	// list the tags. Currently, the supported resources are Forecast dataset groups,
-	// datasets, dataset import jobs, predictors, forecasts, and forecast export
-	// jobs.
+	// list the tags.
 	//
 	// ResourceArn is a required field
 	ResourceArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceInput) GoString() string {
 	return s.String()
 }
@@ -7900,12 +13556,20 @@ type ListTagsForResourceOutput struct {
 	Tags []*Tag `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ListTagsForResourceOutput) GoString() string {
 	return s.String()
 }
@@ -7921,8 +13585,18 @@ func (s *ListTagsForResourceOutput) SetTags(v []*Tag) *ListTagsForResourceOutput
 type Metrics struct {
 	_ struct{} `type:"structure"`
 
-	// The root mean square error (RMSE).
-	RMSE *float64 `type:"double"`
+	// The average value of all weighted quantile losses.
+	AverageWeightedQuantileLoss *float64 `type:"double"`
+
+	// Provides detailed error metrics for each forecast type. Metrics include root-mean
+	// square-error (RMSE), mean absolute percentage error (MAPE), mean absolute
+	// scaled error (MASE), and weighted average percentage error (WAPE).
+	ErrorMetrics []*ErrorMetric `type:"list"`
+
+	// The root-mean-square error (RMSE).
+	//
+	// Deprecated: This property is deprecated, please refer to ErrorMetrics for both RMSE and WAPE
+	RMSE *float64 `deprecated:"true" type:"double"`
 
 	// An array of weighted quantile losses. Quantiles divide a probability distribution
 	// into regions of equal probability. The distribution in this case is the loss
@@ -7930,14 +13604,34 @@ type Metrics struct {
 	WeightedQuantileLosses []*WeightedQuantileLoss `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Metrics) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Metrics) GoString() string {
 	return s.String()
+}
+
+// SetAverageWeightedQuantileLoss sets the AverageWeightedQuantileLoss field's value.
+func (s *Metrics) SetAverageWeightedQuantileLoss(v float64) *Metrics {
+	s.AverageWeightedQuantileLoss = &v
+	return s
+}
+
+// SetErrorMetrics sets the ErrorMetrics field's value.
+func (s *Metrics) SetErrorMetrics(v []*ErrorMetric) *Metrics {
+	s.ErrorMetrics = v
+	return s
 }
 
 // SetRMSE sets the RMSE field's value.
@@ -7969,12 +13663,20 @@ type ParameterRanges struct {
 	IntegerParameterRanges []*IntegerParameterRange `min:"1" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ParameterRanges) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ParameterRanges) GoString() string {
 	return s.String()
 }
@@ -8046,6 +13748,116 @@ func (s *ParameterRanges) SetIntegerParameterRanges(v []*IntegerParameterRange) 
 	return s
 }
 
+// Provides a summary of the predictor backtest export job properties used in
+// the ListPredictorBacktestExportJobs operation. To get a complete set of properties,
+// call the DescribePredictorBacktestExportJob operation, and provide the listed
+// PredictorBacktestExportJobArn.
+type PredictorBacktestExportJobSummary struct {
+	_ struct{} `type:"structure"`
+
+	// When the predictor backtest export job was created.
+	CreationTime *time.Time `type:"timestamp"`
+
+	// The destination for an export job. Provide an S3 path, an AWS Identity and
+	// Access Management (IAM) role that allows Amazon Forecast to access the location,
+	// and an AWS Key Management Service (KMS) key (optional).
+	Destination *DataDestination `type:"structure"`
+
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
+	LastModificationTime *time.Time `type:"timestamp"`
+
+	// Information about any errors that may have occurred during the backtest export.
+	Message *string `type:"string"`
+
+	// The Amazon Resource Name (ARN) of the predictor backtest export job.
+	PredictorBacktestExportJobArn *string `type:"string"`
+
+	// The name of the predictor backtest export job.
+	PredictorBacktestExportJobName *string `min:"1" type:"string"`
+
+	// The status of the predictor backtest export job. States include:
+	//
+	//    * ACTIVE
+	//
+	//    * CREATE_PENDING, CREATE_IN_PROGRESS, CREATE_FAILED
+	//
+	//    * CREATE_STOPPING, CREATE_STOPPED
+	//
+	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
+	Status *string `type:"string"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PredictorBacktestExportJobSummary) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s PredictorBacktestExportJobSummary) GoString() string {
+	return s.String()
+}
+
+// SetCreationTime sets the CreationTime field's value.
+func (s *PredictorBacktestExportJobSummary) SetCreationTime(v time.Time) *PredictorBacktestExportJobSummary {
+	s.CreationTime = &v
+	return s
+}
+
+// SetDestination sets the Destination field's value.
+func (s *PredictorBacktestExportJobSummary) SetDestination(v *DataDestination) *PredictorBacktestExportJobSummary {
+	s.Destination = v
+	return s
+}
+
+// SetLastModificationTime sets the LastModificationTime field's value.
+func (s *PredictorBacktestExportJobSummary) SetLastModificationTime(v time.Time) *PredictorBacktestExportJobSummary {
+	s.LastModificationTime = &v
+	return s
+}
+
+// SetMessage sets the Message field's value.
+func (s *PredictorBacktestExportJobSummary) SetMessage(v string) *PredictorBacktestExportJobSummary {
+	s.Message = &v
+	return s
+}
+
+// SetPredictorBacktestExportJobArn sets the PredictorBacktestExportJobArn field's value.
+func (s *PredictorBacktestExportJobSummary) SetPredictorBacktestExportJobArn(v string) *PredictorBacktestExportJobSummary {
+	s.PredictorBacktestExportJobArn = &v
+	return s
+}
+
+// SetPredictorBacktestExportJobName sets the PredictorBacktestExportJobName field's value.
+func (s *PredictorBacktestExportJobSummary) SetPredictorBacktestExportJobName(v string) *PredictorBacktestExportJobSummary {
+	s.PredictorBacktestExportJobName = &v
+	return s
+}
+
+// SetStatus sets the Status field's value.
+func (s *PredictorBacktestExportJobSummary) SetStatus(v string) *PredictorBacktestExportJobSummary {
+	s.Status = &v
+	return s
+}
+
 // The algorithm used to perform a backtest and the status of those tests.
 type PredictorExecution struct {
 	_ struct{} `type:"structure"`
@@ -8058,12 +13870,20 @@ type PredictorExecution struct {
 	TestWindows []*TestWindowSummary `type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PredictorExecution) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PredictorExecution) GoString() string {
 	return s.String()
 }
@@ -8093,12 +13913,20 @@ type PredictorExecutionDetails struct {
 	PredictorExecutions []*PredictorExecution `min:"1" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PredictorExecutionDetails) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PredictorExecutionDetails) GoString() string {
 	return s.String()
 }
@@ -8122,9 +13950,21 @@ type PredictorSummary struct {
 	// used to train the predictor.
 	DatasetGroupArn *string `type:"string"`
 
-	// Initially, the same as CreationTime (status is CREATE_PENDING). Updated when
-	// training starts (status changed to CREATE_IN_PROGRESS), and when training
-	// is complete (status changed to ACTIVE) or fails (status changed to CREATE_FAILED).
+	// Whether AutoPredictor was used to create the predictor.
+	IsAutoPredictor *bool `type:"boolean"`
+
+	// The last time the resource was modified. The timestamp depends on the status
+	// of the job:
+	//
+	//    * CREATE_PENDING - The CreationTime.
+	//
+	//    * CREATE_IN_PROGRESS - The current timestamp.
+	//
+	//    * CREATE_STOPPING - The current timestamp.
+	//
+	//    * CREATE_STOPPED - When the job stopped.
+	//
+	//    * ACTIVE or CREATE_FAILED - When the job finished or failed.
 	LastModificationTime *time.Time `type:"timestamp"`
 
 	// If an error occurred, an informational message about the error.
@@ -8136,6 +13976,10 @@ type PredictorSummary struct {
 	// The name of the predictor.
 	PredictorName *string `min:"1" type:"string"`
 
+	// A summary of the reference predictor used if the predictor was retrained
+	// or upgraded.
+	ReferencePredictorSummary *ReferencePredictorSummary `type:"structure"`
+
 	// The status of the predictor. States include:
 	//
 	//    * ACTIVE
@@ -8144,19 +13988,27 @@ type PredictorSummary struct {
 	//
 	//    * DELETE_PENDING, DELETE_IN_PROGRESS, DELETE_FAILED
 	//
-	//    * UPDATE_PENDING, UPDATE_IN_PROGRESS, UPDATE_FAILED
+	//    * CREATE_STOPPING, CREATE_STOPPED
 	//
 	// The Status of the predictor must be ACTIVE before you can use the predictor
 	// to create a forecast.
 	Status *string `type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PredictorSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s PredictorSummary) GoString() string {
 	return s.String()
 }
@@ -8170,6 +14022,12 @@ func (s *PredictorSummary) SetCreationTime(v time.Time) *PredictorSummary {
 // SetDatasetGroupArn sets the DatasetGroupArn field's value.
 func (s *PredictorSummary) SetDatasetGroupArn(v string) *PredictorSummary {
 	s.DatasetGroupArn = &v
+	return s
+}
+
+// SetIsAutoPredictor sets the IsAutoPredictor field's value.
+func (s *PredictorSummary) SetIsAutoPredictor(v bool) *PredictorSummary {
+	s.IsAutoPredictor = &v
 	return s
 }
 
@@ -8197,9 +14055,57 @@ func (s *PredictorSummary) SetPredictorName(v string) *PredictorSummary {
 	return s
 }
 
+// SetReferencePredictorSummary sets the ReferencePredictorSummary field's value.
+func (s *PredictorSummary) SetReferencePredictorSummary(v *ReferencePredictorSummary) *PredictorSummary {
+	s.ReferencePredictorSummary = v
+	return s
+}
+
 // SetStatus sets the Status field's value.
 func (s *PredictorSummary) SetStatus(v string) *PredictorSummary {
 	s.Status = &v
+	return s
+}
+
+// Provides a summary of the reference predictor used when retraining or upgrading
+// a predictor.
+type ReferencePredictorSummary struct {
+	_ struct{} `type:"structure"`
+
+	// The ARN of the reference predictor.
+	Arn *string `type:"string"`
+
+	// Whether the reference predictor is Active or Deleted.
+	State *string `type:"string" enum:"State"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ReferencePredictorSummary) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s ReferencePredictorSummary) GoString() string {
+	return s.String()
+}
+
+// SetArn sets the Arn field's value.
+func (s *ReferencePredictorSummary) SetArn(v string) *ReferencePredictorSummary {
+	s.Arn = &v
+	return s
+}
+
+// SetState sets the State field's value.
+func (s *ReferencePredictorSummary) SetState(v string) *ReferencePredictorSummary {
+	s.State = &v
 	return s
 }
 
@@ -8211,12 +14117,20 @@ type ResourceAlreadyExistsException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceAlreadyExistsException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceAlreadyExistsException) GoString() string {
 	return s.String()
 }
@@ -8267,12 +14181,20 @@ type ResourceInUseException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceInUseException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceInUseException) GoString() string {
 	return s.String()
 }
@@ -8324,12 +14246,20 @@ type ResourceNotFoundException struct {
 	Message_ *string `locationName:"Message" type:"string"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s ResourceNotFoundException) GoString() string {
 	return s.String()
 }
@@ -8376,8 +14306,7 @@ func (s *ResourceNotFoundException) RequestID() string {
 // and an AWS Identity and Access Management (IAM) role that Amazon Forecast
 // can assume to access the file(s). Optionally, includes an AWS Key Management
 // Service (KMS) key. This object is part of the DataSource object that is submitted
-// in the CreateDatasetImportJob request, and part of the DataDestination object
-// that is submitted in the CreateForecastExportJob request.
+// in the CreateDatasetImportJob request, and part of the DataDestination object.
 type S3Config struct {
 	_ struct{} `type:"structure"`
 
@@ -8388,7 +14317,7 @@ type S3Config struct {
 	// in an Amazon S3 bucket.
 	//
 	// Path is a required field
-	Path *string `type:"string" required:"true"`
+	Path *string `min:"7" type:"string" required:"true"`
 
 	// The ARN of the AWS Identity and Access Management (IAM) role that Amazon
 	// Forecast can assume to access the Amazon S3 bucket or files. If you provide
@@ -8401,12 +14330,20 @@ type S3Config struct {
 	RoleArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s S3Config) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s S3Config) GoString() string {
 	return s.String()
 }
@@ -8416,6 +14353,9 @@ func (s *S3Config) Validate() error {
 	invalidParams := request.ErrInvalidParams{Context: "S3Config"}
 	if s.Path == nil {
 		invalidParams.Add(request.NewErrParamRequired("Path"))
+	}
+	if s.Path != nil && len(*s.Path) < 7 {
+		invalidParams.Add(request.NewErrParamMinLen("Path", 7))
 	}
 	if s.RoleArn == nil {
 		invalidParams.Add(request.NewErrParamRequired("RoleArn"))
@@ -8445,8 +14385,7 @@ func (s *S3Config) SetRoleArn(v string) *S3Config {
 	return s
 }
 
-// Defines the fields of a dataset. You specify this object in the CreateDataset
-// request.
+// Defines the fields of a dataset.
 type Schema struct {
 	_ struct{} `type:"structure"`
 
@@ -8454,12 +14393,20 @@ type Schema struct {
 	Attributes []*SchemaAttribute `min:"1" type:"list"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Schema) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Schema) GoString() string {
 	return s.String()
 }
@@ -8506,12 +14453,20 @@ type SchemaAttribute struct {
 	AttributeType *string `type:"string" enum:"AttributeType"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SchemaAttribute) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SchemaAttribute) GoString() string {
 	return s.String()
 }
@@ -8549,17 +14504,37 @@ type Statistics struct {
 	// For a numeric field, the average value in the field.
 	Avg *float64 `type:"double"`
 
-	// The number of values in the field.
+	// The number of values in the field. If the response value is -1, refer to
+	// CountLong.
 	Count *int64 `type:"integer"`
 
-	// The number of distinct values in the field.
+	// The number of distinct values in the field. If the response value is -1,
+	// refer to CountDistinctLong.
 	CountDistinct *int64 `type:"integer"`
 
-	// The number of NAN (not a number) values in the field.
+	// The number of distinct values in the field. CountDistinctLong is used instead
+	// of CountDistinct if the value is greater than 2,147,483,647.
+	CountDistinctLong *int64 `type:"long"`
+
+	// The number of values in the field. CountLong is used instead of Count if
+	// the value is greater than 2,147,483,647.
+	CountLong *int64 `type:"long"`
+
+	// The number of NAN (not a number) values in the field. If the response value
+	// is -1, refer to CountNanLong.
 	CountNan *int64 `type:"integer"`
 
-	// The number of null values in the field.
+	// The number of NAN (not a number) values in the field. CountNanLong is used
+	// instead of CountNan if the value is greater than 2,147,483,647.
+	CountNanLong *int64 `type:"long"`
+
+	// The number of null values in the field. If the response value is -1, refer
+	// to CountNullLong.
 	CountNull *int64 `type:"integer"`
+
+	// The number of null values in the field. CountNullLong is used instead of
+	// CountNull if the value is greater than 2,147,483,647.
+	CountNullLong *int64 `type:"long"`
 
 	// For a numeric field, the maximum value in the field.
 	Max *string `type:"string"`
@@ -8571,12 +14546,20 @@ type Statistics struct {
 	Stddev *float64 `type:"double"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Statistics) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Statistics) GoString() string {
 	return s.String()
 }
@@ -8599,15 +14582,39 @@ func (s *Statistics) SetCountDistinct(v int64) *Statistics {
 	return s
 }
 
+// SetCountDistinctLong sets the CountDistinctLong field's value.
+func (s *Statistics) SetCountDistinctLong(v int64) *Statistics {
+	s.CountDistinctLong = &v
+	return s
+}
+
+// SetCountLong sets the CountLong field's value.
+func (s *Statistics) SetCountLong(v int64) *Statistics {
+	s.CountLong = &v
+	return s
+}
+
 // SetCountNan sets the CountNan field's value.
 func (s *Statistics) SetCountNan(v int64) *Statistics {
 	s.CountNan = &v
 	return s
 }
 
+// SetCountNanLong sets the CountNanLong field's value.
+func (s *Statistics) SetCountNanLong(v int64) *Statistics {
+	s.CountNanLong = &v
+	return s
+}
+
 // SetCountNull sets the CountNull field's value.
 func (s *Statistics) SetCountNull(v int64) *Statistics {
 	s.CountNull = &v
+	return s
+}
+
+// SetCountNullLong sets the CountNullLong field's value.
+func (s *Statistics) SetCountNullLong(v int64) *Statistics {
+	s.CountNullLong = &v
 	return s
 }
 
@@ -8629,51 +14636,117 @@ func (s *Statistics) SetStddev(v float64) *Statistics {
 	return s
 }
 
+type StopResourceInput struct {
+	_ struct{} `type:"structure"`
+
+	// The Amazon Resource Name (ARN) that identifies the resource to stop. The
+	// supported ARNs are DatasetImportJobArn, PredictorArn, PredictorBacktestExportJobArn,
+	// ForecastArn, ForecastExportJobArn, ExplainabilityArn, and ExplainabilityExportArn.
+	//
+	// ResourceArn is a required field
+	ResourceArn *string `type:"string" required:"true"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StopResourceInput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StopResourceInput) GoString() string {
+	return s.String()
+}
+
+// Validate inspects the fields of the type to determine if they are valid.
+func (s *StopResourceInput) Validate() error {
+	invalidParams := request.ErrInvalidParams{Context: "StopResourceInput"}
+	if s.ResourceArn == nil {
+		invalidParams.Add(request.NewErrParamRequired("ResourceArn"))
+	}
+
+	if invalidParams.Len() > 0 {
+		return invalidParams
+	}
+	return nil
+}
+
+// SetResourceArn sets the ResourceArn field's value.
+func (s *StopResourceInput) SetResourceArn(v string) *StopResourceInput {
+	s.ResourceArn = &v
+	return s
+}
+
+type StopResourceOutput struct {
+	_ struct{} `type:"structure"`
+}
+
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StopResourceOutput) String() string {
+	return awsutil.Prettify(s)
+}
+
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
+func (s StopResourceOutput) GoString() string {
+	return s.String()
+}
+
+//
+// This object belongs to the CreatePredictor operation. If you created your
+// predictor with CreateAutoPredictor, see AdditionalDataset.
+//
 // Describes a supplementary feature of a dataset group. This object is part
-// of the InputDataConfig object.
+// of the InputDataConfig object. Forecast supports the Weather Index and Holidays
+// built-in featurizations.
 //
-// The only supported feature is a holiday calendar. If you use the calendar,
-// all data in the datasets should belong to the same country as the calendar.
-// For the holiday calendar data, see the Jollyday (http://jollyday.sourceforge.net/data.html)
-// web site.
+// Weather Index
 //
-// India and Korea's holidays are not included in the Jollyday library, but
-// both are supported by Amazon Forecast. Their holidays are:
+// The Amazon Forecast Weather Index is a built-in featurization that incorporates
+// historical and projected weather information into your model. The Weather
+// Index supplements your datasets with over two years of historical weather
+// data and up to 14 days of projected weather data. For more information, see
+// Amazon Forecast Weather Index (https://docs.aws.amazon.com/forecast/latest/dg/weather.html).
 //
-// "IN" - INDIA
+// Holidays
 //
-//    * JANUARY 26 - REPUBLIC DAY
-//
-//    * AUGUST 15 - INDEPENDENCE DAY
-//
-//    * OCTOBER 2 GANDHI'S BIRTHDAY
-//
-// "KR" - KOREA
-//
-//    * JANUARY 1 - NEW YEAR
-//
-//    * MARCH 1 - INDEPENDENCE MOVEMENT DAY
-//
-//    * MAY 5 - CHILDREN'S DAY
-//
-//    * JUNE 6 - MEMORIAL DAY
-//
-//    * AUGUST 15 - LIBERATION DAY
-//
-//    * OCTOBER 3 - NATIONAL FOUNDATION DAY
-//
-//    * OCTOBER 9 - HANGEUL DAY
-//
-//    * DECEMBER 25 - CHRISTMAS DAY
+// Holidays is a built-in featurization that incorporates a feature-engineered
+// dataset of national holiday information into your model. It provides native
+// support for the holiday calendars of 66 countries. To view the holiday calendars,
+// refer to the Jollyday (http://jollyday.sourceforge.net/data.html) library.
+// For more information, see Holidays Featurization (https://docs.aws.amazon.com/forecast/latest/dg/holidays.html).
 type SupplementaryFeature struct {
 	_ struct{} `type:"structure"`
 
-	// The name of the feature. This must be "holiday".
+	// The name of the feature. Valid values: "holiday" and "weather".
 	//
 	// Name is a required field
 	Name *string `min:"1" type:"string" required:"true"`
 
-	// One of the following 2 letter country codes:
+	// Weather Index
+	//
+	// To enable the Weather Index, set the value to "true"
+	//
+	// Holidays
+	//
+	// To enable Holidays, specify a country with one of the following two-letter
+	// country codes:
+	//
+	//    * "AL" - ALBANIA
 	//
 	//    * "AR" - ARGENTINA
 	//
@@ -8681,13 +14754,27 @@ type SupplementaryFeature struct {
 	//
 	//    * "AU" - AUSTRALIA
 	//
+	//    * "BA" - BOSNIA HERZEGOVINA
+	//
 	//    * "BE" - BELGIUM
+	//
+	//    * "BG" - BULGARIA
+	//
+	//    * "BO" - BOLIVIA
 	//
 	//    * "BR" - BRAZIL
 	//
+	//    * "BY" - BELARUS
+	//
 	//    * "CA" - CANADA
 	//
-	//    * "CN" - CHINA
+	//    * "CL" - CHILE
+	//
+	//    * "CO" - COLOMBIA
+	//
+	//    * "CR" - COSTA RICA
+	//
+	//    * "HR" - CROATIA
 	//
 	//    * "CZ" - CZECH REPUBLIC
 	//
@@ -8695,37 +14782,81 @@ type SupplementaryFeature struct {
 	//
 	//    * "EC" - ECUADOR
 	//
+	//    * "EE" - ESTONIA
+	//
+	//    * "ET" - ETHIOPIA
+	//
 	//    * "FI" - FINLAND
 	//
 	//    * "FR" - FRANCE
 	//
 	//    * "DE" - GERMANY
 	//
+	//    * "GR" - GREECE
+	//
 	//    * "HU" - HUNGARY
 	//
-	//    * "IE" - IRELAND
+	//    * "IS" - ICELAND
 	//
 	//    * "IN" - INDIA
+	//
+	//    * "IE" - IRELAND
 	//
 	//    * "IT" - ITALY
 	//
 	//    * "JP" - JAPAN
 	//
+	//    * "KZ" - KAZAKHSTAN
+	//
 	//    * "KR" - KOREA
+	//
+	//    * "LV" - LATVIA
+	//
+	//    * "LI" - LIECHTENSTEIN
+	//
+	//    * "LT" - LITHUANIA
 	//
 	//    * "LU" - LUXEMBOURG
 	//
+	//    * "MK" - MACEDONIA
+	//
+	//    * "MT" - MALTA
+	//
 	//    * "MX" - MEXICO
+	//
+	//    * "MD" - MOLDOVA
+	//
+	//    * "ME" - MONTENEGRO
 	//
 	//    * "NL" - NETHERLANDS
 	//
+	//    * "NZ" - NEW ZEALAND
+	//
+	//    * "NI" - NICARAGUA
+	//
+	//    * "NG" - NIGERIA
+	//
 	//    * "NO" - NORWAY
+	//
+	//    * "PA" - PANAMA
+	//
+	//    * "PY" - PARAGUAY
+	//
+	//    * "PE" - PERU
 	//
 	//    * "PL" - POLAND
 	//
 	//    * "PT" - PORTUGAL
 	//
+	//    * "RO" - ROMANIA
+	//
 	//    * "RU" - RUSSIA
+	//
+	//    * "RS" - SERBIA
+	//
+	//    * "SK" - SLOVAKIA
+	//
+	//    * "SI" - SLOVENIA
 	//
 	//    * "ZA" - SOUTH AFRICA
 	//
@@ -8735,20 +14866,36 @@ type SupplementaryFeature struct {
 	//
 	//    * "CH" - SWITZERLAND
 	//
+	//    * "UA" - UKRAINE
+	//
+	//    * "AE" - UNITED ARAB EMIRATES
+	//
 	//    * "US" - UNITED STATES
 	//
 	//    * "UK" - UNITED KINGDOM
+	//
+	//    * "UY" - URUGUAY
+	//
+	//    * "VE" - VENEZUELA
 	//
 	// Value is a required field
 	Value *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SupplementaryFeature) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s SupplementaryFeature) GoString() string {
 	return s.String()
 }
@@ -8819,22 +14966,38 @@ type Tag struct {
 	// One part of a key-value pair that makes up a tag. A key is a general label
 	// that acts like a category for more specific tag values.
 	//
+	// Key is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by Tag's
+	// String and GoString methods.
+	//
 	// Key is a required field
-	Key *string `min:"1" type:"string" required:"true"`
+	Key *string `min:"1" type:"string" required:"true" sensitive:"true"`
 
 	// The optional part of a key-value pair that makes up a tag. A value acts as
 	// a descriptor within a tag category (key).
 	//
+	// Value is a sensitive parameter and its value will be
+	// replaced with "sensitive" in string returned by Tag's
+	// String and GoString methods.
+	//
 	// Value is a required field
-	Value *string `type:"string" required:"true"`
+	Value *string `type:"string" required:"true" sensitive:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s Tag) GoString() string {
 	return s.String()
 }
@@ -8874,9 +15037,7 @@ type TagResourceInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) that identifies the resource for which to
-	// list the tags. Currently, the supported resources are Forecast dataset groups,
-	// datasets, dataset import jobs, predictors, forecasts, and forecast export
-	// jobs.
+	// list the tags.
 	//
 	// ResourceArn is a required field
 	ResourceArn *string `type:"string" required:"true"`
@@ -8913,12 +15074,20 @@ type TagResourceInput struct {
 	Tags []*Tag `type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceInput) GoString() string {
 	return s.String()
 }
@@ -8965,12 +15134,20 @@ type TagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TagResourceOutput) GoString() string {
 	return s.String()
 }
@@ -8999,12 +15176,20 @@ type TestWindowSummary struct {
 	TestWindowStart *time.Time `type:"timestamp"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TestWindowSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s TestWindowSummary) GoString() string {
 	return s.String()
 }
@@ -9037,8 +15222,7 @@ type UntagResourceInput struct {
 	_ struct{} `type:"structure"`
 
 	// The Amazon Resource Name (ARN) that identifies the resource for which to
-	// list the tags. Currently, the supported resources are Forecast dataset groups,
-	// datasets, dataset import jobs, predictors, forecasts, and forecast exports.
+	// list the tags.
 	//
 	// ResourceArn is a required field
 	ResourceArn *string `type:"string" required:"true"`
@@ -9049,12 +15233,20 @@ type UntagResourceInput struct {
 	TagKeys []*string `type:"list" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceInput) GoString() string {
 	return s.String()
 }
@@ -9091,12 +15283,20 @@ type UntagResourceOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UntagResourceOutput) GoString() string {
 	return s.String()
 }
@@ -9116,12 +15316,20 @@ type UpdateDatasetGroupInput struct {
 	DatasetGroupArn *string `type:"string" required:"true"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDatasetGroupInput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDatasetGroupInput) GoString() string {
 	return s.String()
 }
@@ -9158,12 +15366,20 @@ type UpdateDatasetGroupOutput struct {
 	_ struct{} `type:"structure"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDatasetGroupOutput) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s UpdateDatasetGroupOutput) GoString() string {
 	return s.String()
 }
@@ -9183,12 +15399,20 @@ type WeightedQuantileLoss struct {
 	Quantile *float64 `type:"double"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s WeightedQuantileLoss) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s WeightedQuantileLoss) GoString() string {
 	return s.String()
 }
@@ -9233,12 +15457,20 @@ type WindowSummary struct {
 	TestWindowStart *time.Time `type:"timestamp"`
 }
 
-// String returns the string representation
+// String returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s WindowSummary) String() string {
 	return awsutil.Prettify(s)
 }
 
-// GoString returns the string representation
+// GoString returns the string representation.
+//
+// API parameter values that are decorated as "sensitive" in the API will not
+// be included in the string output. The member name will be present, but the
+// value will be replaced with "sensitive".
 func (s WindowSummary) GoString() string {
 	return s.String()
 }
@@ -9285,6 +15517,9 @@ const (
 
 	// AttributeTypeTimestamp is a AttributeType enum value
 	AttributeTypeTimestamp = "timestamp"
+
+	// AttributeTypeGeolocation is a AttributeType enum value
+	AttributeTypeGeolocation = "geolocation"
 )
 
 // AttributeType_Values returns all elements of the AttributeType enum
@@ -9294,6 +15529,23 @@ func AttributeType_Values() []string {
 		AttributeTypeInteger,
 		AttributeTypeFloat,
 		AttributeTypeTimestamp,
+		AttributeTypeGeolocation,
+	}
+}
+
+const (
+	// AutoMLOverrideStrategyLatencyOptimized is a AutoMLOverrideStrategy enum value
+	AutoMLOverrideStrategyLatencyOptimized = "LatencyOptimized"
+
+	// AutoMLOverrideStrategyAccuracyOptimized is a AutoMLOverrideStrategy enum value
+	AutoMLOverrideStrategyAccuracyOptimized = "AccuracyOptimized"
+)
+
+// AutoMLOverrideStrategy_Values returns all elements of the AutoMLOverrideStrategy enum
+func AutoMLOverrideStrategy_Values() []string {
+	return []string{
+		AutoMLOverrideStrategyLatencyOptimized,
+		AutoMLOverrideStrategyAccuracyOptimized,
 	}
 }
 
@@ -9398,6 +15650,34 @@ func FilterConditionString_Values() []string {
 }
 
 const (
+	// OptimizationMetricWape is a OptimizationMetric enum value
+	OptimizationMetricWape = "WAPE"
+
+	// OptimizationMetricRmse is a OptimizationMetric enum value
+	OptimizationMetricRmse = "RMSE"
+
+	// OptimizationMetricAverageWeightedQuantileLoss is a OptimizationMetric enum value
+	OptimizationMetricAverageWeightedQuantileLoss = "AverageWeightedQuantileLoss"
+
+	// OptimizationMetricMase is a OptimizationMetric enum value
+	OptimizationMetricMase = "MASE"
+
+	// OptimizationMetricMape is a OptimizationMetric enum value
+	OptimizationMetricMape = "MAPE"
+)
+
+// OptimizationMetric_Values returns all elements of the OptimizationMetric enum
+func OptimizationMetric_Values() []string {
+	return []string{
+		OptimizationMetricWape,
+		OptimizationMetricRmse,
+		OptimizationMetricAverageWeightedQuantileLoss,
+		OptimizationMetricMase,
+		OptimizationMetricMape,
+	}
+}
+
+const (
 	// ScalingTypeAuto is a ScalingType enum value
 	ScalingTypeAuto = "Auto"
 
@@ -9418,5 +15698,53 @@ func ScalingType_Values() []string {
 		ScalingTypeLinear,
 		ScalingTypeLogarithmic,
 		ScalingTypeReverseLogarithmic,
+	}
+}
+
+const (
+	// StateActive is a State enum value
+	StateActive = "Active"
+
+	// StateDeleted is a State enum value
+	StateDeleted = "Deleted"
+)
+
+// State_Values returns all elements of the State enum
+func State_Values() []string {
+	return []string{
+		StateActive,
+		StateDeleted,
+	}
+}
+
+const (
+	// TimePointGranularityAll is a TimePointGranularity enum value
+	TimePointGranularityAll = "ALL"
+
+	// TimePointGranularitySpecific is a TimePointGranularity enum value
+	TimePointGranularitySpecific = "SPECIFIC"
+)
+
+// TimePointGranularity_Values returns all elements of the TimePointGranularity enum
+func TimePointGranularity_Values() []string {
+	return []string{
+		TimePointGranularityAll,
+		TimePointGranularitySpecific,
+	}
+}
+
+const (
+	// TimeSeriesGranularityAll is a TimeSeriesGranularity enum value
+	TimeSeriesGranularityAll = "ALL"
+
+	// TimeSeriesGranularitySpecific is a TimeSeriesGranularity enum value
+	TimeSeriesGranularitySpecific = "SPECIFIC"
+)
+
+// TimeSeriesGranularity_Values returns all elements of the TimeSeriesGranularity enum
+func TimeSeriesGranularity_Values() []string {
+	return []string{
+		TimeSeriesGranularityAll,
+		TimeSeriesGranularitySpecific,
 	}
 }

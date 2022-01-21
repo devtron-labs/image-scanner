@@ -12,6 +12,22 @@
     "uid":"transcribe-streaming-2017-10-26"
   },
   "operations":{
+    "StartMedicalStreamTranscription":{
+      "name":"StartMedicalStreamTranscription",
+      "http":{
+        "method":"POST",
+        "requestUri":"/medical-stream-transcription"
+      },
+      "input":{"shape":"StartMedicalStreamTranscriptionRequest"},
+      "output":{"shape":"StartMedicalStreamTranscriptionResponse"},
+      "errors":[
+        {"shape":"BadRequestException"},
+        {"shape":"LimitExceededException"},
+        {"shape":"InternalFailureException"},
+        {"shape":"ConflictException"},
+        {"shape":"ServiceUnavailableException"}
+      ]
+    },
     "StartStreamTranscription":{
       "name":"StartStreamTranscription",
       "http":{
@@ -34,7 +50,8 @@
       "type":"structure",
       "members":{
         "Transcript":{"shape":"String"},
-        "Items":{"shape":"ItemList"}
+        "Items":{"shape":"ItemList"},
+        "Entities":{"shape":"EntityList"}
       }
     },
     "AlternativeList":{
@@ -68,6 +85,7 @@
       "exception":true
     },
     "Boolean":{"type":"boolean"},
+    "Confidence":{"type":"double"},
     "ConflictException":{
       "type":"structure",
       "members":{
@@ -76,7 +94,30 @@
       "error":{"httpStatusCode":409},
       "exception":true
     },
+    "ContentIdentificationType":{
+      "type":"string",
+      "enum":["PII"]
+    },
+    "ContentRedactionType":{
+      "type":"string",
+      "enum":["PII"]
+    },
     "Double":{"type":"double"},
+    "Entity":{
+      "type":"structure",
+      "members":{
+        "StartTime":{"shape":"Double"},
+        "EndTime":{"shape":"Double"},
+        "Category":{"shape":"String"},
+        "Type":{"shape":"String"},
+        "Content":{"shape":"String"},
+        "Confidence":{"shape":"Confidence"}
+      }
+    },
+    "EntityList":{
+      "type":"list",
+      "member":{"shape":"Entity"}
+    },
     "InternalFailureException":{
       "type":"structure",
       "members":{
@@ -93,7 +134,10 @@
         "EndTime":{"shape":"Double"},
         "Type":{"shape":"ItemType"},
         "Content":{"shape":"String"},
-        "VocabularyFilterMatch":{"shape":"Boolean"}
+        "VocabularyFilterMatch":{"shape":"Boolean"},
+        "Speaker":{"shape":"String"},
+        "Confidence":{"shape":"Confidence"},
+        "Stable":{"shape":"Stable"}
       }
     },
     "ItemList":{
@@ -115,8 +159,31 @@
         "es-US",
         "fr-CA",
         "fr-FR",
-        "en-AU"
+        "en-AU",
+        "it-IT",
+        "de-DE",
+        "pt-BR",
+        "ja-JP",
+        "ko-KR",
+        "zh-CN"
       ]
+    },
+    "LanguageIdentification":{
+      "type":"list",
+      "member":{"shape":"LanguageWithScore"}
+    },
+    "LanguageOptions":{
+      "type":"string",
+      "max":200,
+      "min":1,
+      "pattern":"^[a-zA-Z-,]+"
+    },
+    "LanguageWithScore":{
+      "type":"structure",
+      "members":{
+        "LanguageCode":{"shape":"LanguageCode"},
+        "Score":{"shape":"Double"}
+      }
     },
     "LimitExceededException":{
       "type":"structure",
@@ -128,12 +195,125 @@
     },
     "MediaEncoding":{
       "type":"string",
-      "enum":["pcm"]
+      "enum":[
+        "pcm",
+        "ogg-opus",
+        "flac"
+      ]
     },
     "MediaSampleRateHertz":{
       "type":"integer",
       "max":48000,
       "min":8000
+    },
+    "MedicalAlternative":{
+      "type":"structure",
+      "members":{
+        "Transcript":{"shape":"String"},
+        "Items":{"shape":"MedicalItemList"},
+        "Entities":{"shape":"MedicalEntityList"}
+      }
+    },
+    "MedicalAlternativeList":{
+      "type":"list",
+      "member":{"shape":"MedicalAlternative"}
+    },
+    "MedicalContentIdentificationType":{
+      "type":"string",
+      "enum":["PHI"]
+    },
+    "MedicalEntity":{
+      "type":"structure",
+      "members":{
+        "StartTime":{"shape":"Double"},
+        "EndTime":{"shape":"Double"},
+        "Category":{"shape":"String"},
+        "Content":{"shape":"String"},
+        "Confidence":{"shape":"Confidence"}
+      }
+    },
+    "MedicalEntityList":{
+      "type":"list",
+      "member":{"shape":"MedicalEntity"}
+    },
+    "MedicalItem":{
+      "type":"structure",
+      "members":{
+        "StartTime":{"shape":"Double"},
+        "EndTime":{"shape":"Double"},
+        "Type":{"shape":"ItemType"},
+        "Content":{"shape":"String"},
+        "Confidence":{"shape":"Confidence"},
+        "Speaker":{"shape":"String"}
+      }
+    },
+    "MedicalItemList":{
+      "type":"list",
+      "member":{"shape":"MedicalItem"}
+    },
+    "MedicalResult":{
+      "type":"structure",
+      "members":{
+        "ResultId":{"shape":"String"},
+        "StartTime":{"shape":"Double"},
+        "EndTime":{"shape":"Double"},
+        "IsPartial":{"shape":"Boolean"},
+        "Alternatives":{"shape":"MedicalAlternativeList"},
+        "ChannelId":{"shape":"String"}
+      }
+    },
+    "MedicalResultList":{
+      "type":"list",
+      "member":{"shape":"MedicalResult"}
+    },
+    "MedicalTranscript":{
+      "type":"structure",
+      "members":{
+        "Results":{"shape":"MedicalResultList"}
+      }
+    },
+    "MedicalTranscriptEvent":{
+      "type":"structure",
+      "members":{
+        "Transcript":{"shape":"MedicalTranscript"}
+      },
+      "event":true
+    },
+    "MedicalTranscriptResultStream":{
+      "type":"structure",
+      "members":{
+        "TranscriptEvent":{"shape":"MedicalTranscriptEvent"},
+        "BadRequestException":{"shape":"BadRequestException"},
+        "LimitExceededException":{"shape":"LimitExceededException"},
+        "InternalFailureException":{"shape":"InternalFailureException"},
+        "ConflictException":{"shape":"ConflictException"},
+        "ServiceUnavailableException":{"shape":"ServiceUnavailableException"}
+      },
+      "eventstream":true
+    },
+    "ModelName":{
+      "type":"string",
+      "max":200,
+      "min":1,
+      "pattern":"^[0-9a-zA-Z._-]+"
+    },
+    "NumberOfChannels":{
+      "type":"integer",
+      "min":2
+    },
+    "PartialResultsStability":{
+      "type":"string",
+      "enum":[
+        "high",
+        "medium",
+        "low"
+      ]
+    },
+    "PiiEntityTypes":{
+      "type":"string",
+      "max":300,
+      "min":1,
+      "pattern":"^[A-Z_, ]+"
     },
     "RequestId":{"type":"string"},
     "Result":{
@@ -143,7 +323,10 @@
         "StartTime":{"shape":"Double"},
         "EndTime":{"shape":"Double"},
         "IsPartial":{"shape":"Boolean"},
-        "Alternatives":{"shape":"AlternativeList"}
+        "Alternatives":{"shape":"AlternativeList"},
+        "ChannelId":{"shape":"String"},
+        "LanguageCode":{"shape":"LanguageCode"},
+        "LanguageIdentification":{"shape":"LanguageIdentification"}
       }
     },
     "ResultList":{
@@ -160,12 +343,162 @@
     },
     "SessionId":{
       "type":"string",
+      "max":36,
+      "min":36,
       "pattern":"[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}"
+    },
+    "Specialty":{
+      "type":"string",
+      "enum":[
+        "PRIMARYCARE",
+        "CARDIOLOGY",
+        "NEUROLOGY",
+        "ONCOLOGY",
+        "RADIOLOGY",
+        "UROLOGY"
+      ]
+    },
+    "Stable":{"type":"boolean"},
+    "StartMedicalStreamTranscriptionRequest":{
+      "type":"structure",
+      "required":[
+        "LanguageCode",
+        "MediaSampleRateHertz",
+        "MediaEncoding",
+        "Specialty",
+        "Type",
+        "AudioStream"
+      ],
+      "members":{
+        "LanguageCode":{
+          "shape":"LanguageCode",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-language-code"
+        },
+        "MediaSampleRateHertz":{
+          "shape":"MediaSampleRateHertz",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-sample-rate"
+        },
+        "MediaEncoding":{
+          "shape":"MediaEncoding",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-media-encoding"
+        },
+        "VocabularyName":{
+          "shape":"VocabularyName",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-vocabulary-name"
+        },
+        "Specialty":{
+          "shape":"Specialty",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-specialty"
+        },
+        "Type":{
+          "shape":"Type",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-type"
+        },
+        "ShowSpeakerLabel":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-show-speaker-label"
+        },
+        "SessionId":{
+          "shape":"SessionId",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-session-id"
+        },
+        "AudioStream":{"shape":"AudioStream"},
+        "EnableChannelIdentification":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-enable-channel-identification"
+        },
+        "NumberOfChannels":{
+          "shape":"NumberOfChannels",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-number-of-channels"
+        },
+        "ContentIdentificationType":{
+          "shape":"MedicalContentIdentificationType",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-content-identification-type"
+        }
+      },
+      "payload":"AudioStream"
+    },
+    "StartMedicalStreamTranscriptionResponse":{
+      "type":"structure",
+      "members":{
+        "RequestId":{
+          "shape":"RequestId",
+          "location":"header",
+          "locationName":"x-amzn-request-id"
+        },
+        "LanguageCode":{
+          "shape":"LanguageCode",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-language-code"
+        },
+        "MediaSampleRateHertz":{
+          "shape":"MediaSampleRateHertz",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-sample-rate"
+        },
+        "MediaEncoding":{
+          "shape":"MediaEncoding",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-media-encoding"
+        },
+        "VocabularyName":{
+          "shape":"VocabularyName",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-vocabulary-name"
+        },
+        "Specialty":{
+          "shape":"Specialty",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-specialty"
+        },
+        "Type":{
+          "shape":"Type",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-type"
+        },
+        "ShowSpeakerLabel":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-show-speaker-label"
+        },
+        "SessionId":{
+          "shape":"SessionId",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-session-id"
+        },
+        "TranscriptResultStream":{"shape":"MedicalTranscriptResultStream"},
+        "EnableChannelIdentification":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-enable-channel-identification"
+        },
+        "NumberOfChannels":{
+          "shape":"NumberOfChannels",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-number-of-channels"
+        },
+        "ContentIdentificationType":{
+          "shape":"MedicalContentIdentificationType",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-content-identification-type"
+        }
+      },
+      "payload":"TranscriptResultStream"
     },
     "StartStreamTranscriptionRequest":{
       "type":"structure",
       "required":[
-        "LanguageCode",
         "MediaSampleRateHertz",
         "MediaEncoding",
         "AudioStream"
@@ -206,6 +539,66 @@
           "shape":"VocabularyFilterMethod",
           "location":"header",
           "locationName":"x-amzn-transcribe-vocabulary-filter-method"
+        },
+        "ShowSpeakerLabel":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-show-speaker-label"
+        },
+        "EnableChannelIdentification":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-enable-channel-identification"
+        },
+        "NumberOfChannels":{
+          "shape":"NumberOfChannels",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-number-of-channels"
+        },
+        "EnablePartialResultsStabilization":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-enable-partial-results-stabilization"
+        },
+        "PartialResultsStability":{
+          "shape":"PartialResultsStability",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-partial-results-stability"
+        },
+        "ContentIdentificationType":{
+          "shape":"ContentIdentificationType",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-content-identification-type"
+        },
+        "ContentRedactionType":{
+          "shape":"ContentRedactionType",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-content-redaction-type"
+        },
+        "PiiEntityTypes":{
+          "shape":"PiiEntityTypes",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-pii-entity-types"
+        },
+        "LanguageModelName":{
+          "shape":"ModelName",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-language-model-name"
+        },
+        "IdentifyLanguage":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-identify-language"
+        },
+        "LanguageOptions":{
+          "shape":"LanguageOptions",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-language-options"
+        },
+        "PreferredLanguage":{
+          "shape":"LanguageCode",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-preferred-language"
         }
       },
       "payload":"AudioStream"
@@ -253,6 +646,66 @@
           "shape":"VocabularyFilterMethod",
           "location":"header",
           "locationName":"x-amzn-transcribe-vocabulary-filter-method"
+        },
+        "ShowSpeakerLabel":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-show-speaker-label"
+        },
+        "EnableChannelIdentification":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-enable-channel-identification"
+        },
+        "NumberOfChannels":{
+          "shape":"NumberOfChannels",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-number-of-channels"
+        },
+        "EnablePartialResultsStabilization":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-enable-partial-results-stabilization"
+        },
+        "PartialResultsStability":{
+          "shape":"PartialResultsStability",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-partial-results-stability"
+        },
+        "ContentIdentificationType":{
+          "shape":"ContentIdentificationType",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-content-identification-type"
+        },
+        "ContentRedactionType":{
+          "shape":"ContentRedactionType",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-content-redaction-type"
+        },
+        "PiiEntityTypes":{
+          "shape":"PiiEntityTypes",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-pii-entity-types"
+        },
+        "LanguageModelName":{
+          "shape":"ModelName",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-language-model-name"
+        },
+        "IdentifyLanguage":{
+          "shape":"Boolean",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-identify-language"
+        },
+        "LanguageOptions":{
+          "shape":"LanguageOptions",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-language-options"
+        },
+        "PreferredLanguage":{
+          "shape":"LanguageCode",
+          "location":"header",
+          "locationName":"x-amzn-transcribe-preferred-language"
         }
       },
       "payload":"TranscriptResultStream"
@@ -282,6 +735,13 @@
         "ServiceUnavailableException":{"shape":"ServiceUnavailableException"}
       },
       "eventstream":true
+    },
+    "Type":{
+      "type":"string",
+      "enum":[
+        "CONVERSATION",
+        "DICTATION"
+      ]
     },
     "VocabularyFilterMethod":{
       "type":"string",

@@ -528,6 +528,7 @@
         {"shape":"ConcurrentModificationException"},
         {"shape":"HandshakeConstraintViolationException"},
         {"shape":"DuplicateHandshakeException"},
+        {"shape":"ConstraintViolationException"},
         {"shape":"InvalidInputException"},
         {"shape":"FinalizingOrganizationException"},
         {"shape":"ServiceException"},
@@ -1210,6 +1211,10 @@
         "INTERNAL_FAILURE",
         "GOVCLOUD_ACCOUNT_ALREADY_EXISTS",
         "MISSING_BUSINESS_VALIDATION",
+        "FAILED_BUSINESS_VALIDATION",
+        "PENDING_BUSINESS_VALIDATION",
+        "INVALID_IDENTITY_FOR_BUSINESS_VALIDATION",
+        "UNKNOWN_BUSINESS_VALIDATION",
         "MISSING_PAYMENT_INSTRUMENT"
       ]
     },
@@ -1223,7 +1228,8 @@
         "Email":{"shape":"Email"},
         "AccountName":{"shape":"AccountName"},
         "RoleName":{"shape":"RoleName"},
-        "IamUserAccessToBilling":{"shape":"IAMUserAccessToBilling"}
+        "IamUserAccessToBilling":{"shape":"IAMUserAccessToBilling"},
+        "Tags":{"shape":"Tags"}
       }
     },
     "CreateAccountRequestId":{
@@ -1283,7 +1289,8 @@
         "Email":{"shape":"Email"},
         "AccountName":{"shape":"AccountName"},
         "RoleName":{"shape":"RoleName"},
-        "IamUserAccessToBilling":{"shape":"IAMUserAccessToBilling"}
+        "IamUserAccessToBilling":{"shape":"IAMUserAccessToBilling"},
+        "Tags":{"shape":"Tags"}
       }
     },
     "CreateGovCloudAccountResponse":{
@@ -1312,7 +1319,8 @@
       ],
       "members":{
         "ParentId":{"shape":"ParentId"},
-        "Name":{"shape":"OrganizationalUnitName"}
+        "Name":{"shape":"OrganizationalUnitName"},
+        "Tags":{"shape":"Tags"}
       }
     },
     "CreateOrganizationalUnitResponse":{
@@ -1333,7 +1341,8 @@
         "Content":{"shape":"PolicyContent"},
         "Description":{"shape":"PolicyDescription"},
         "Name":{"shape":"PolicyName"},
-        "Type":{"shape":"PolicyType"}
+        "Type":{"shape":"PolicyType"},
+        "Tags":{"shape":"Tags"}
       }
     },
     "CreatePolicyResponse":{
@@ -1699,6 +1708,7 @@
         "HANDSHAKE_RATE_LIMIT_EXCEEDED",
         "ALREADY_IN_AN_ORGANIZATION",
         "ORGANIZATION_ALREADY_HAS_ALL_FEATURES",
+        "ORGANIZATION_IS_ALREADY_PENDING_ALL_FEATURES_MIGRATION",
         "INVITE_DISABLED_DURING_ENABLE_ALL_FEATURES",
         "PAYMENT_INSTRUMENT_REQUIRED",
         "ORGANIZATION_FROM_DIFFERENT_SELLER_OF_RECORD",
@@ -1850,7 +1860,9 @@
         "UNRECOGNIZED_SERVICE_PRINCIPAL",
         "INVALID_ROLE_NAME",
         "INVALID_SYSTEM_TAGS_PARAMETER",
-        "TARGET_NOT_SUPPORTED"
+        "DUPLICATE_TAG_KEY",
+        "TARGET_NOT_SUPPORTED",
+        "INVALID_EMAIL_ADDRESS_TARGET"
       ]
     },
     "InviteAccountToOrganizationRequest":{
@@ -1858,7 +1870,8 @@
       "required":["Target"],
       "members":{
         "Target":{"shape":"HandshakeParty"},
-        "Notes":{"shape":"HandshakeNotes"}
+        "Notes":{"shape":"HandshakeNotes"},
+        "Tags":{"shape":"Tags"}
       }
     },
     "InviteAccountToOrganizationResponse":{
@@ -2523,8 +2536,8 @@
     },
     "TaggableResourceId":{
       "type":"string",
-      "max":12,
-      "pattern":"^\\d{12}$"
+      "max":130,
+      "pattern":"^(r-[0-9a-z]{4,32})|(\\d{12})|(ou-[0-9a-z]{4,32}-[a-z0-9]{8,32})|(^p-[0-9a-zA-Z_]{8,128})$"
     },
     "Tags":{
       "type":"list",

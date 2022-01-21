@@ -32,6 +32,7 @@
         "method":"POST",
         "requestUri":"/graph"
       },
+      "input":{"shape":"CreateGraphRequest"},
       "output":{"shape":"CreateGraphResponse"},
       "errors":[
         {"shape":"ConflictException"},
@@ -82,6 +83,32 @@
         {"shape":"ValidationException"}
       ]
     },
+    "DescribeOrganizationConfiguration":{
+      "name":"DescribeOrganizationConfiguration",
+      "http":{
+        "method":"POST",
+        "requestUri":"/orgs/describeOrganizationConfiguration"
+      },
+      "input":{"shape":"DescribeOrganizationConfigurationRequest"},
+      "output":{"shape":"DescribeOrganizationConfigurationResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ValidationException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "DisableOrganizationAdminAccount":{
+      "name":"DisableOrganizationAdminAccount",
+      "http":{
+        "method":"POST",
+        "requestUri":"/orgs/disableAdminAccount"
+      },
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ValidationException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
     "DisassociateMembership":{
       "name":"DisassociateMembership",
       "http":{
@@ -94,6 +121,19 @@
         {"shape":"InternalServerException"},
         {"shape":"ResourceNotFoundException"},
         {"shape":"ValidationException"}
+      ]
+    },
+    "EnableOrganizationAdminAccount":{
+      "name":"EnableOrganizationAdminAccount",
+      "http":{
+        "method":"POST",
+        "requestUri":"/orgs/enableAdminAccount"
+      },
+      "input":{"shape":"EnableOrganizationAdminAccountRequest"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ValidationException"},
+        {"shape":"TooManyRequestsException"}
       ]
     },
     "GetMembers":{
@@ -150,6 +190,35 @@
         {"shape":"ValidationException"}
       ]
     },
+    "ListOrganizationAdminAccounts":{
+      "name":"ListOrganizationAdminAccounts",
+      "http":{
+        "method":"POST",
+        "requestUri":"/orgs/adminAccountslist"
+      },
+      "input":{"shape":"ListOrganizationAdminAccountsRequest"},
+      "output":{"shape":"ListOrganizationAdminAccountsResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ValidationException"},
+        {"shape":"TooManyRequestsException"}
+      ]
+    },
+    "ListTagsForResource":{
+      "name":"ListTagsForResource",
+      "http":{
+        "method":"GET",
+        "requestUri":"/tags/{ResourceArn}",
+        "responseCode":200
+      },
+      "input":{"shape":"ListTagsForResourceRequest"},
+      "output":{"shape":"ListTagsForResourceResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"}
+      ]
+    },
     "RejectInvitation":{
       "name":"RejectInvitation",
       "http":{
@@ -177,6 +246,49 @@
         {"shape":"ResourceNotFoundException"},
         {"shape":"ServiceQuotaExceededException"},
         {"shape":"ValidationException"}
+      ]
+    },
+    "TagResource":{
+      "name":"TagResource",
+      "http":{
+        "method":"POST",
+        "requestUri":"/tags/{ResourceArn}",
+        "responseCode":204
+      },
+      "input":{"shape":"TagResourceRequest"},
+      "output":{"shape":"TagResourceResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"}
+      ]
+    },
+    "UntagResource":{
+      "name":"UntagResource",
+      "http":{
+        "method":"DELETE",
+        "requestUri":"/tags/{ResourceArn}",
+        "responseCode":204
+      },
+      "input":{"shape":"UntagResourceRequest"},
+      "output":{"shape":"UntagResourceResponse"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ValidationException"},
+        {"shape":"ResourceNotFoundException"}
+      ]
+    },
+    "UpdateOrganizationConfiguration":{
+      "name":"UpdateOrganizationConfiguration",
+      "http":{
+        "method":"POST",
+        "requestUri":"/orgs/updateOrganizationConfiguration"
+      },
+      "input":{"shape":"UpdateOrganizationConfigurationRequest"},
+      "errors":[
+        {"shape":"InternalServerException"},
+        {"shape":"ValidationException"},
+        {"shape":"TooManyRequestsException"}
       ]
     }
   },
@@ -217,6 +329,20 @@
       "max":50,
       "min":1
     },
+    "Administrator":{
+      "type":"structure",
+      "members":{
+        "AccountId":{"shape":"AccountId"},
+        "GraphArn":{"shape":"GraphArn"},
+        "DelegationTime":{"shape":"Timestamp"}
+      }
+    },
+    "AdministratorList":{
+      "type":"list",
+      "member":{"shape":"Administrator"}
+    },
+    "Boolean":{"type":"boolean"},
+    "ByteValue":{"type":"long"},
     "ConflictException":{
       "type":"structure",
       "members":{
@@ -224,6 +350,12 @@
       },
       "error":{"httpStatusCode":409},
       "exception":true
+    },
+    "CreateGraphRequest":{
+      "type":"structure",
+      "members":{
+        "Tags":{"shape":"TagMap"}
+      }
     },
     "CreateGraphResponse":{
       "type":"structure",
@@ -240,6 +372,7 @@
       "members":{
         "GraphArn":{"shape":"GraphArn"},
         "Message":{"shape":"EmailMessage"},
+        "DisableEmailNotification":{"shape":"Boolean"},
         "Accounts":{"shape":"AccountList"}
       }
     },
@@ -275,6 +408,19 @@
         "UnprocessedAccounts":{"shape":"UnprocessedAccountList"}
       }
     },
+    "DescribeOrganizationConfigurationRequest":{
+      "type":"structure",
+      "required":["GraphArn"],
+      "members":{
+        "GraphArn":{"shape":"GraphArn"}
+      }
+    },
+    "DescribeOrganizationConfigurationResponse":{
+      "type":"structure",
+      "members":{
+        "AutoEnable":{"shape":"Boolean"}
+      }
+    },
     "DisassociateMembershipRequest":{
       "type":"structure",
       "required":["GraphArn"],
@@ -292,6 +438,13 @@
       "type":"string",
       "max":1000,
       "min":1
+    },
+    "EnableOrganizationAdminAccountRequest":{
+      "type":"structure",
+      "required":["AccountId"],
+      "members":{
+        "AccountId":{"shape":"AccountId"}
+      }
     },
     "ErrorMessage":{"type":"string"},
     "GetMembersRequest":{
@@ -334,6 +487,13 @@
       },
       "error":{"httpStatusCode":500},
       "exception":true
+    },
+    "InvitationType":{
+      "type":"string",
+      "enum":[
+        "INVITATION",
+        "ORGANIZATION"
+      ]
     },
     "ListGraphsRequest":{
       "type":"structure",
@@ -379,19 +539,66 @@
         "NextToken":{"shape":"PaginationToken"}
       }
     },
+    "ListOrganizationAdminAccountsRequest":{
+      "type":"structure",
+      "members":{
+        "NextToken":{"shape":"PaginationToken"},
+        "MaxResults":{"shape":"MemberResultsLimit"}
+      }
+    },
+    "ListOrganizationAdminAccountsResponse":{
+      "type":"structure",
+      "members":{
+        "Administrators":{"shape":"AdministratorList"},
+        "NextToken":{"shape":"PaginationToken"}
+      }
+    },
+    "ListTagsForResourceRequest":{
+      "type":"structure",
+      "required":["ResourceArn"],
+      "members":{
+        "ResourceArn":{
+          "shape":"GraphArn",
+          "location":"uri",
+          "locationName":"ResourceArn"
+        }
+      }
+    },
+    "ListTagsForResourceResponse":{
+      "type":"structure",
+      "members":{
+        "Tags":{"shape":"TagMap"}
+      }
+    },
     "MemberDetail":{
       "type":"structure",
       "members":{
         "AccountId":{"shape":"AccountId"},
         "EmailAddress":{"shape":"EmailAddress"},
         "GraphArn":{"shape":"GraphArn"},
-        "MasterId":{"shape":"AccountId"},
+        "MasterId":{
+          "shape":"AccountId",
+          "deprecated":true,
+          "deprecatedMessage":"This property is deprecated. Use AdministratorId instead."
+        },
+        "AdministratorId":{"shape":"AccountId"},
         "Status":{"shape":"MemberStatus"},
         "DisabledReason":{"shape":"MemberDisabledReason"},
         "InvitedTime":{"shape":"Timestamp"},
         "UpdatedTime":{"shape":"Timestamp"},
-        "PercentOfGraphUtilization":{"shape":"Percentage"},
-        "PercentOfGraphUtilizationUpdatedTime":{"shape":"Timestamp"}
+        "VolumeUsageInBytes":{"shape":"ByteValue"},
+        "VolumeUsageUpdatedTime":{"shape":"Timestamp"},
+        "PercentOfGraphUtilization":{
+          "shape":"Percentage",
+          "deprecated":true,
+          "deprecatedMessage":"This property is deprecated. Use VolumeUsageInBytes instead."
+        },
+        "PercentOfGraphUtilizationUpdatedTime":{
+          "shape":"Timestamp",
+          "deprecated":true,
+          "deprecatedMessage":"This property is deprecated. Use VolumeUsageUpdatedTime instead."
+        },
+        "InvitationType":{"shape":"InvitationType"}
       }
     },
     "MemberDetailList":{
@@ -461,7 +668,61 @@
         "AccountId":{"shape":"AccountId"}
       }
     },
-    "Timestamp":{"type":"timestamp"},
+    "TagKey":{
+      "type":"string",
+      "max":128,
+      "min":1,
+      "pattern":"^(?!aws:)[a-zA-Z+-=._:/]+$"
+    },
+    "TagKeyList":{
+      "type":"list",
+      "member":{"shape":"TagKey"},
+      "max":50,
+      "min":1
+    },
+    "TagMap":{
+      "type":"map",
+      "key":{"shape":"TagKey"},
+      "value":{"shape":"TagValue"},
+      "max":50,
+      "min":1
+    },
+    "TagResourceRequest":{
+      "type":"structure",
+      "required":[
+        "ResourceArn",
+        "Tags"
+      ],
+      "members":{
+        "ResourceArn":{
+          "shape":"GraphArn",
+          "location":"uri",
+          "locationName":"ResourceArn"
+        },
+        "Tags":{"shape":"TagMap"}
+      }
+    },
+    "TagResourceResponse":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "TagValue":{
+      "type":"string",
+      "max":256
+    },
+    "Timestamp":{
+      "type":"timestamp",
+      "timestampFormat":"iso8601"
+    },
+    "TooManyRequestsException":{
+      "type":"structure",
+      "members":{
+        "Message":{"shape":"ErrorMessage"}
+      },
+      "error":{"httpStatusCode":429},
+      "exception":true
+    },
     "UnprocessedAccount":{
       "type":"structure",
       "members":{
@@ -474,6 +735,38 @@
       "member":{"shape":"UnprocessedAccount"}
     },
     "UnprocessedReason":{"type":"string"},
+    "UntagResourceRequest":{
+      "type":"structure",
+      "required":[
+        "ResourceArn",
+        "TagKeys"
+      ],
+      "members":{
+        "ResourceArn":{
+          "shape":"GraphArn",
+          "location":"uri",
+          "locationName":"ResourceArn"
+        },
+        "TagKeys":{
+          "shape":"TagKeyList",
+          "location":"querystring",
+          "locationName":"tagKeys"
+        }
+      }
+    },
+    "UntagResourceResponse":{
+      "type":"structure",
+      "members":{
+      }
+    },
+    "UpdateOrganizationConfigurationRequest":{
+      "type":"structure",
+      "required":["GraphArn"],
+      "members":{
+        "GraphArn":{"shape":"GraphArn"},
+        "AutoEnable":{"shape":"Boolean"}
+      }
+    },
     "ValidationException":{
       "type":"structure",
       "members":{
