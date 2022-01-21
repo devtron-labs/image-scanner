@@ -1,6 +1,7 @@
 package klarService
 
 import (
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
@@ -9,6 +10,7 @@ import (
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
+	"strings"
 
 	"errors"
 	"github.com/caarlos0/env"
@@ -18,8 +20,8 @@ import (
 	"github.com/optiopay/klar/clair"
 	"github.com/optiopay/klar/docker"
 	"go.uber.org/zap"
-	"time"
 	"golang.org/x/oauth2/google"
+	"time"
 )
 
 type KlarConfig struct {
@@ -86,6 +88,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		return scanEventResponse, nil
 	}
 	tokenData := ""
+	tokenGcr := ""
 	tokens := &tokenData
 	if dockerRegistry.RegistryType == repository.REGISTRYTYPE_ECR {
 		var sess *session.Session
@@ -108,7 +111,11 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		}
 		fmt.Println(string(decoded))*/
 	} else if dockerRegistry.Username == "_json_key" {
-		// this is the case of GCR, where password is json key of service account
+		lenPassword := len(dockerRegistry.Password)
+		if lenPassword>1{
+			dockerRegistry.Password = strings.TrimPrefix(dockerRegistry.Password, "'")
+			dockerRegistry.Password = strings.TrimSuffix(dockerRegistry.Password, "'")
+		}
 		jwtToken, err := google.JWTAccessTokenSourceWithScope([]byte(dockerRegistry.Password),"")
 		if err!=nil{
 			impl.logger.Errorw("error in getting token from json key file-gcr","err",err)
@@ -119,10 +126,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 			impl.logger.Errorw("error in getting token from jwt token","err",err)
 			return nil, err
 		}
-		tokens = &token.AccessToken
-		//cleaning username and password
-		dockerRegistry.Username = ""
-		dockerRegistry.Password = ""
+		tokenGcr = fmt.Sprintf(token.TokenType + " " + token.AccessToken)
 	}
 	config := &docker.Config{
 		ImageName: scanEvent.Image,
@@ -139,7 +143,10 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		impl.logger.Errorw("Can't parse name", "err", err)
 		return scanEventResponse, err
 	}
-
+	if tokenGcr != "" {
+		//setting token here because docker.NewImage sets the token as basic and in gcp it's bearer in most of the cases
+		image.Token = tokenGcr
+	}
 	err = image.Pull()
 	if err != nil {
 		impl.logger.Errorw("Can't pull image ", "err", err)
