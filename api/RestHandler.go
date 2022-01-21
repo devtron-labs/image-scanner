@@ -1,6 +1,7 @@
 package api
 
 import (
+	"encoding/json"
 	"github.com/devtron-labs/image-scanner/client"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
@@ -8,7 +9,6 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"github.com/devtron-labs/image-scanner/pubsub"
-	"encoding/json"
 	"go.uber.org/zap"
 	"net/http"
 )
@@ -131,6 +131,7 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
 		return
 	}
+	impl.logger.Infow("klarService process results", "result", result, "err", err)
 	impl.logger.Debugw("save", "status", result)
 	impl.writeJsonResp(w, err, result, 200)
 }

@@ -39,13 +39,16 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistry(vs []*clair.Vulner
 
 	var cveNames []string
 	for _, item := range vs {
+		impl.Logger.Infow("vulnerability data", "vs", item)
 		impl.Logger.Debugw("vulnerability data", "vs", item)
 		cveStore, err := impl.cveStoreRepository.FindByName(item.Name)
+		impl.Logger.Infow("findByName cveStoreRepository results", "name", item.Name, cveStore)
 		if err != nil && err != pg.ErrNoRows {
 			impl.Logger.Errorw("Failed to fetch cve", "err", err)
 			return nil, err
 		}
 		if len(cveStore.Name) == 0 {
+			impl.Logger.Infow("cveStoreName length = 0")
 			cveStore = &repository.CveStore{
 				Name:         item.Name,
 				Package:      item.FeatureName,
@@ -64,6 +67,7 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistry(vs []*clair.Vulner
 			cveStore.UpdatedOn = time.Now()
 			cveStore.UpdatedBy = int32(event.UserId)
 			err := impl.cveStoreRepository.Save(cveStore)
+			impl.Logger.Infow("save cveStoreRepository", "cveStore", cveStore, "err", err)
 			if err != nil {
 				impl.Logger.Errorw("Failed to save cve", "err", err)
 				return nil, err
@@ -80,6 +84,7 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistry(vs []*clair.Vulner
 		ExecutedBy:    event.UserId,
 	}
 	err := impl.scanHistoryRepository.Save(imageScanExecutionHistory)
+	impl.Logger.Infow("save scanHistoryRepository", "imageScanExecutionHistory", imageScanExecutionHistory, "err", err)
 	if err != nil {
 		impl.Logger.Errorw("Failed to save cve", "err", err)
 		return nil, err
@@ -90,6 +95,7 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistry(vs []*clair.Vulner
 			CveStoreName:                cveName,
 		}
 		err := impl.scanResultRepository.Save(imageScanExecutionResult)
+		impl.Logger.Infow("save scanResultHistory", "imageScanExecutionResult", imageScanExecutionResult, "err", err)
 		if err != nil {
 			impl.Logger.Errorw("Failed to save cve", "err", err)
 			return nil, err

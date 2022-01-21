@@ -78,7 +78,9 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", scanEvent.DockerRegistryId)
 		return nil, err
 	}
+	impl.logger.Infow("got docker registry", "dockerRegistry", dockerRegistry)
 	scanned, err := impl.imageScanService.IsImageScanned(scanEvent.Image)
+	impl.logger.Infow("isImageScanned results", "scanned", scanned, "err", err)
 	if err != nil && err != pg.ErrNoRows {
 		impl.logger.Errorw("error in fetching scan history ", "err", err)
 		return nil, err
@@ -112,18 +114,18 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		fmt.Println(string(decoded))*/
 	} else if dockerRegistry.Username == "_json_key" {
 		lenPassword := len(dockerRegistry.Password)
-		if lenPassword>1{
+		if lenPassword > 1 {
 			dockerRegistry.Password = strings.TrimPrefix(dockerRegistry.Password, "'")
 			dockerRegistry.Password = strings.TrimSuffix(dockerRegistry.Password, "'")
 		}
-		jwtToken, err := google.JWTAccessTokenSourceWithScope([]byte(dockerRegistry.Password),"")
-		if err!=nil{
-			impl.logger.Errorw("error in getting token from json key file-gcr","err",err)
+		jwtToken, err := google.JWTAccessTokenSourceWithScope([]byte(dockerRegistry.Password), "")
+		if err != nil {
+			impl.logger.Errorw("error in getting token from json key file-gcr", "err", err)
 			return nil, err
 		}
 		token, err := jwtToken.Token()
-		if err!=nil{
-			impl.logger.Errorw("error in getting token from jwt token","err",err)
+		if err != nil {
+			impl.logger.Errorw("error in getting token from jwt token", "err", err)
 			return nil, err
 		}
 		tokenGcr = fmt.Sprintf(token.TokenType + " " + token.AccessToken)
@@ -137,12 +139,14 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		Token:   *tokens,
 		Timeout: 4 * time.Minute,
 	}
+	impl.logger.Infow("got config for dockerNewImage", "config", config)
 	impl.logger.Debugw("config", "config", config)
 	image, err := docker.NewImage(config)
 	if err != nil {
 		impl.logger.Errorw("Can't parse name", "err", err)
 		return scanEventResponse, err
 	}
+	impl.logger.Infow("got docker image entity", "image", image)
 	if tokenGcr != "" {
 		//setting token here because docker.NewImage sets the token as basic and in gcp it's bearer in most of the cases
 		image.Token = tokenGcr
@@ -152,6 +156,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		impl.logger.Errorw("Can't pull image ", "err", err)
 		return scanEventResponse, err
 	}
+	impl.logger.Infow("pulled image successfully", "image", image)
 	impl.logger.Debugw("image pull", "layers count", len(image.FsLayers))
 	output := jsonOutput{
 		Vulnerabilities: make(map[string][]*clair.Vulnerability),
@@ -161,17 +166,20 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		impl.logger.Error("Can't pull fsLayers")
 		return scanEventResponse, errors.New("can't pull fsLayers")
 	} else {
+		impl.logger.Infow("checking klarConfig.jsonOutput", "klarConfig", impl.klarConfig)
 		if impl.klarConfig.JSONOutput {
 			output.LayerCount = len(image.FsLayers)
 		} else {
 			impl.logger.Debugw("Analysing layers ", "layers", len(image.FsLayers))
 		}
 	}
-
+	impl.logger.Infow("output = jsonOutput", "output", output)
 	var vs []*clair.Vulnerability
 	for _, ver := range []int{1, 3} {
 		c := clair.NewClair(impl.klarConfig.ClairAddr, ver, time.Duration(5*time.Minute))
+		impl.logger.Infow("getting new clair", "clair", c, "ver", ver)
 		vs, err = c.Analyse(image)
+		impl.logger.Infow("anaylyse image results", "vs", vs, "err", err, "ver", ver)
 		if err != nil {
 			impl.logger.Errorw("Failed to analyze using API", "ver", ver, "err", err)
 		} else {
@@ -189,14 +197,14 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 	if err != nil {
 		impl.logger.Errorw("Failed to post save to grafeas", "err", err)
 	}*/
-
+	impl.logger.Infow("createScanExecutionRegistry", "vs", vs, "scanEvent", scanEvent)
 	vulnerabilities, err := impl.imageScanService.CreateScanExecutionRegistry(vs, scanEvent)
 	if err != nil {
 		impl.logger.Errorw("Failed dump scanned data", "err", err)
 		return scanEventResponse, err
 	}
 	scanEventResponse.ResponseData = vulnerabilities
-
+	impl.logger.Infow("returning response", "scanEventResponse", scanEventResponse)
 	return scanEventResponse, nil
 }
 
