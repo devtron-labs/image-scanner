@@ -104,26 +104,20 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 			return nil, err
 		}
 		tokens = token.AuthorizationData[0].AuthorizationToken
-		/*decoded, err := base64.StdEncoding.DecodeString(*tokens)
-		if err != nil {
-			fmt.Println("decode error:", err)
-			return nil, err
-		}
-		fmt.Println(string(decoded))*/
 	} else if dockerRegistry.Username == "_json_key" {
 		lenPassword := len(dockerRegistry.Password)
-		if lenPassword>1{
+		if lenPassword > 1 {
 			dockerRegistry.Password = strings.TrimPrefix(dockerRegistry.Password, "'")
 			dockerRegistry.Password = strings.TrimSuffix(dockerRegistry.Password, "'")
 		}
-		jwtToken, err := google.JWTAccessTokenSourceWithScope([]byte(dockerRegistry.Password),"")
-		if err!=nil{
-			impl.logger.Errorw("error in getting token from json key file-gcr","err",err)
+		jwtToken, err := google.JWTAccessTokenSourceWithScope([]byte(dockerRegistry.Password), "")
+		if err != nil {
+			impl.logger.Errorw("error in getting token from json key file-gcr", "err", err)
 			return nil, err
 		}
 		token, err := jwtToken.Token()
-		if err!=nil{
-			impl.logger.Errorw("error in getting token from jwt token","err",err)
+		if err != nil {
+			impl.logger.Errorw("error in getting token from jwt token", "err", err)
 			return nil, err
 		}
 		tokenGcr = fmt.Sprintf(token.TokenType + " " + token.AccessToken)
