@@ -175,11 +175,12 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 	}
 	impl.logger.Infow("output = jsonOutput", "output", output,"klarConfig",impl.klarConfig)
 	var vs []*clair.Vulnerability
-	for _, ver := range []int{2, 3} {
-		c := clair.NewClair(impl.klarConfig.ClairAddr, ver, time.Duration(5*time.Minute))
+	for _, ver := range []int{1, 3} {
+		c := clair.NewClair(impl.klarConfig.ClairAddr, ver, 5*time.Minute)
+		fmt.Printf("clair client : %v\n", c)
 		impl.logger.Infow("getting new clair", "clair", c, "ver", ver)
 		vs, err = c.Analyse(image)
-		impl.logger.Infow("anaylyse image results", "vs", vs, "err", err, "ver", ver)
+		impl.logger.Infow("analyse image results", "vs", vs, "err", err, "ver", ver)
 		if err != nil {
 			impl.logger.Errorw("Failed to analyze using API", "ver", ver, "err", err)
 		} else {

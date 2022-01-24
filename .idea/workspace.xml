@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/klarService/KlarService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/klarService/KlarService.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -225,7 +226,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/klarService/KlarService.go</url>
-          <line>179</line>
+          <line>180</line>
           <option name="timeStamp" value="74" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
@@ -235,27 +236,27 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/klarService/KlarService.go</url>
-          <line>180</line>
+          <line>181</line>
           <option name="timeStamp" value="76" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/klarService/KlarService.go</url>
-          <line>182</line>
+          <line>183</line>
           <option name="timeStamp" value="77" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/klarService/KlarService.go</url>
-          <line>185</line>
+          <line>186</line>
           <option name="timeStamp" value="78" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/klarService/KlarService.go</url>
-          <line>190</line>
+          <line>191</line>
           <option name="timeStamp" value="79" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/klarService/KlarService.go</url>
-          <line>193</line>
+          <line>194</line>
           <option name="timeStamp" value="80" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
