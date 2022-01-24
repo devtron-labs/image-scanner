@@ -6,9 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/klarService/KlarService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/klarService/KlarService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/github.com/optiopay/klar/clair/api.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/github.com/optiopay/klar/clair/api.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/github.com/optiopay/klar/clair/clair.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/github.com/optiopay/klar/clair/clair.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -193,11 +190,6 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/vendor/github.com/optiopay/klar/clair/api.go</url>
-          <line>44</line>
-          <option name="timeStamp" value="64" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
-          <url>file://$PROJECT_DIR$/vendor/github.com/optiopay/klar/clair/api.go</url>
           <line>45</line>
           <option name="timeStamp" value="66" />
         </line-breakpoint>
@@ -265,6 +257,11 @@
           <url>file://$PROJECT_DIR$/pkg/klarService/KlarService.go</url>
           <line>193</line>
           <option name="timeStamp" value="80" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/vendor/github.com/optiopay/klar/clair/api.go</url>
+          <line>32</line>
+          <option name="timeStamp" value="81" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

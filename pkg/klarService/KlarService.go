@@ -175,7 +175,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 	}
 	impl.logger.Infow("output = jsonOutput", "output", output,"klarConfig",impl.klarConfig)
 	var vs []*clair.Vulnerability
-	for _, ver := range []int{1, 3} {
+	for _, ver := range []int{2, 3} {
 		c := clair.NewClair(impl.klarConfig.ClairAddr, ver, time.Duration(5*time.Minute))
 		impl.logger.Infow("getting new clair", "clair", c, "ver", ver)
 		vs, err = c.Analyse(image)
