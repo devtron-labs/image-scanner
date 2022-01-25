@@ -1,23 +1,26 @@
 package klarService
 
 import (
-	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/internal/sql/repository"
-	"github.com/devtron-labs/image-scanner/pkg/security"
+	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecr"
+	"github.com/devtron-labs/image-scanner/common"
+	"github.com/devtron-labs/image-scanner/internal/sql/repository"
+	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
+	"strings"
 
+	"errors"
+	"github.com/caarlos0/env"
 	/*"github.com/devtron-labs/image-scanner/client"*/
 	/*"github.com/devtron-labs/image-scanner/client"*/
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
-	"errors"
-	"github.com/caarlos0/env"
 	"github.com/optiopay/klar/clair"
 	"github.com/optiopay/klar/docker"
 	"go.uber.org/zap"
+	"golang.org/x/oauth2/google"
 	"time"
 )
 
@@ -45,21 +48,24 @@ type KlarService interface {
 }
 
 type KlarServiceImpl struct {
-	logger           *zap.SugaredLogger
-	klarConfig       *KlarConfig
-	grafeasService   grafeasService.GrafeasService
-	repository       repository.UserRepository
-	imageScanService security.ImageScanService
+	logger                        *zap.SugaredLogger
+	klarConfig                    *KlarConfig
+	grafeasService                grafeasService.GrafeasService
+	userRepository                repository.UserRepository
+	imageScanService              security.ImageScanService
+	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository
 }
 
 func NewKlarServiceImpl(logger *zap.SugaredLogger, klarConfig *KlarConfig, grafeasService grafeasService.GrafeasService,
-	repository repository.UserRepository, imageScanService security.ImageScanService) *KlarServiceImpl {
+	userRepository repository.UserRepository, imageScanService security.ImageScanService,
+	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository) *KlarServiceImpl {
 	return &KlarServiceImpl{
-		logger:           logger,
-		klarConfig:       klarConfig,
-		grafeasService:   grafeasService,
-		repository:       repository,
-		imageScanService: imageScanService,
+		logger:                        logger,
+		klarConfig:                    klarConfig,
+		grafeasService:                grafeasService,
+		userRepository:                userRepository,
+		imageScanService:              imageScanService,
+		dockerArtifactStoreRepository: dockerArtifactStoreRepository,
 	}
 }
 
@@ -67,7 +73,11 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
 	}
-
+	dockerRegistry, err := impl.dockerArtifactStoreRepository.FindById(scanEvent.DockerRegistryId)
+	if err != nil {
+		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", scanEvent.DockerRegistryId)
+		return nil, err
+	}
 	scanned, err := impl.imageScanService.IsImageScanned(scanEvent.Image)
 	if err != nil && err != pg.ErrNoRows {
 		impl.logger.Errorw("error in fetching scan history ", "err", err)
@@ -77,39 +87,49 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		impl.logger.Infow("image already scanned", "image", scanEvent.Image)
 		return scanEventResponse, nil
 	}
-
-	var sess *session.Session
-	if (len(scanEvent.AccessKey) > 0 && len(scanEvent.SecretKey) > 0) || len(scanEvent.Token) > 0 {
-		sess, err = session.NewSession(&aws.Config{
-			Region:      aws.String(scanEvent.AwsRegion),
-			Credentials: credentials.NewStaticCredentials(scanEvent.AccessKey, scanEvent.SecretKey, scanEvent.Token),
-		})
-	}
-
-	// Create a ECR client with additional configuration
+	tokenGcr := ""
 	tokenData := ""
-	tokens := &tokenData
-	if (len(scanEvent.AccessKey) > 0 && len(scanEvent.SecretKey) > 0) || len(scanEvent.Token) > 0 {
-		svc := ecr.New(sess, aws.NewConfig().WithRegion(scanEvent.AwsRegion))
+	tokenAddr := &tokenData
+	if dockerRegistry.RegistryType == repository.REGISTRYTYPE_ECR {
+		var sess *session.Session
+		sess, err = session.NewSession(&aws.Config{
+			Region:      aws.String(dockerRegistry.AWSRegion),
+			Credentials: credentials.NewStaticCredentials(dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey, ""),
+		})
+
+		// Create a ECR client with additional configuration
+		svc := ecr.New(sess, aws.NewConfig().WithRegion(dockerRegistry.AWSRegion))
 		token, err := svc.GetAuthorizationToken(&ecr.GetAuthorizationTokenInput{})
 		if err != nil {
+			impl.logger.Errorw("error in getting auth token from ecr", "err", err)
 			return nil, err
 		}
-		tokens = token.AuthorizationData[0].AuthorizationToken
-		/*decoded, err := base64.StdEncoding.DecodeString(*tokens)
+		tokenAddr = token.AuthorizationData[0].AuthorizationToken
+	} else if dockerRegistry.Username == "_json_key" {
+		lenPassword := len(dockerRegistry.Password)
+		if lenPassword > 1 {
+			dockerRegistry.Password = strings.TrimPrefix(dockerRegistry.Password, "'")
+			dockerRegistry.Password = strings.TrimSuffix(dockerRegistry.Password, "'")
+		}
+		jwtToken, err := google.JWTAccessTokenSourceWithScope([]byte(dockerRegistry.Password), "")
 		if err != nil {
-			fmt.Println("decode error:", err)
+			impl.logger.Errorw("error in getting token from json key file-gcr", "err", err)
 			return nil, err
 		}
-		fmt.Println(string(decoded))*/
+		token, err := jwtToken.Token()
+		if err != nil {
+			impl.logger.Errorw("error in getting token from jwt token", "err", err)
+			return nil, err
+		}
+		tokenGcr = fmt.Sprintf(token.TokenType + " " + token.AccessToken)
 	}
 	config := &docker.Config{
 		ImageName: scanEvent.Image,
-		//User:      "AWS",
-		//Password:  string(decoded),
+		User:      dockerRegistry.Username,
+		Password:  dockerRegistry.Password,
+		Token: *tokenAddr,
 		//InsecureRegistry: true,
 		//InsecureTLS:      true,
-		Token:   *tokens,
 		Timeout: 4 * time.Minute,
 	}
 	impl.logger.Debugw("config", "config", config)
@@ -118,7 +138,10 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		impl.logger.Errorw("Can't parse name", "err", err)
 		return scanEventResponse, err
 	}
-
+	if tokenGcr != "" {
+		//setting token here because docker.NewImage sets the token as basic and in gcp it's bearer in most of the cases
+		image.Token = tokenGcr
+	}
 	err = image.Pull()
 	if err != nil {
 		impl.logger.Errorw("Can't pull image ", "err", err)

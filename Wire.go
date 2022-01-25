@@ -58,6 +58,8 @@ func InitializeApp() (*App, error) {
 		wire.Bind(new(repository.ImageScanDeployInfoRepository), new(*repository.ImageScanDeployInfoRepositoryImpl)),
 		repository.NewCiArtifactRepositoryImpl,
 		wire.Bind(new(repository.CiArtifactRepository), new(*repository.CiArtifactRepositoryImpl)),
+		repository.NewDockerArtifactStoreRepositoryImpl,
+		wire.Bind(new(repository.DockerArtifactStoreRepository), new(*repository.DockerArtifactStoreRepositoryImpl)),
 	)
 	return &App{}, nil
 }
