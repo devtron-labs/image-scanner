@@ -129,6 +129,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 			return nil, err
 		}
 		tokenGcr = fmt.Sprintf(token.TokenType + " " + token.AccessToken)
+		config.Token = ""
 	}
 	image, err := docker.NewImage(config)
 	if err != nil {
