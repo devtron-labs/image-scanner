@@ -88,15 +88,8 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		return scanEventResponse, nil
 	}
 	tokenGcr := ""
-	config := &docker.Config{
-		ImageName: scanEvent.Image,
-		User:      dockerRegistry.Username,
-		Password:  dockerRegistry.Password,
-		//InsecureRegistry: true,
-		//InsecureTLS:      true,
-		Timeout: 4 * time.Minute,
-	}
-	impl.logger.Debugw("config", "config", config)
+	tokenData := ""
+	tokenAddr := &tokenData
 	if dockerRegistry.RegistryType == repository.REGISTRYTYPE_ECR {
 		var sess *session.Session
 		sess, err = session.NewSession(&aws.Config{
@@ -111,7 +104,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 			impl.logger.Errorw("error in getting auth token from ecr", "err", err)
 			return nil, err
 		}
-		config.Token = *token.AuthorizationData[0].AuthorizationToken
+		tokenAddr = token.AuthorizationData[0].AuthorizationToken
 	} else if dockerRegistry.Username == "_json_key" {
 		lenPassword := len(dockerRegistry.Password)
 		if lenPassword > 1 {
@@ -129,8 +122,17 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 			return nil, err
 		}
 		tokenGcr = fmt.Sprintf(token.TokenType + " " + token.AccessToken)
-		config.Token = ""
 	}
+	config := &docker.Config{
+		ImageName: scanEvent.Image,
+		User:      dockerRegistry.Username,
+		Password:  dockerRegistry.Password,
+		Token: *tokenAddr,
+		//InsecureRegistry: true,
+		//InsecureTLS:      true,
+		Timeout: 4 * time.Minute,
+	}
+	impl.logger.Debugw("config", "config", config)
 	image, err := docker.NewImage(config)
 	if err != nil {
 		impl.logger.Errorw("Can't parse name", "err", err)
