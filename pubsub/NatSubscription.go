@@ -31,6 +31,7 @@ func NewNatSubscription(pubSubClient *client.PubSubClient,
 	return ns, ns.Subscribe()
 }
 
+//TODO : adhiran : Need to bind to specific stream. Work with nishant on same.
 func (impl *NatSubscriptionImpl) Subscribe() error {
 	_, err := impl.pubSubClient.JetStrContext.QueueSubscribe(client.TOPIC_CI_SCAN, client.TOPIC_CI_SCAN_GRP, func(msg *nats.Msg) {
 		impl.logger.Debugw("received msg", "msg", msg)

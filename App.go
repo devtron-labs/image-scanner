@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"github.com/devtron-labs/image-scanner/api"
+	"github.com/devtron-labs/image-scanner/client"
 	"github.com/devtron-labs/image-scanner/pubsub"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"
@@ -19,14 +20,16 @@ type App struct {
 	server           *http.Server
 	db               *pg.DB
 	natsSubscription *pubsub.NatSubscriptionImpl
+	pubSubClient     *client.PubSubClient
 }
 
-func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger, db *pg.DB, natsSubscription *pubsub.NatSubscriptionImpl) *App {
+func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger, db *pg.DB, natsSubscription *pubsub.NatSubscriptionImpl, pubSubClient *client.PubSubClient) *App {
 	return &App{
 		MuxRouter:        MuxRouter,
 		Logger:           Logger,
 		db:               db,
 		natsSubscription: natsSubscription,
+		pubSubClient:     pubSubClient,
 	}
 }
 
@@ -43,7 +46,6 @@ func (app *App) Start() {
 	}
 }
 
-//TODO : adhiran : Need to check why nats stopping code was commented out.
 func (app *App) Stop() {
 	app.Logger.Infow("lens shutdown initiating")
 	timeoutContext, _ := context.WithTimeout(context.Background(), 5*time.Second)
@@ -53,7 +55,20 @@ func (app *App) Stop() {
 	if err != nil {
 		app.Logger.Errorw("error in mux router shutdown", "err", err)
 	}
+
+	app.Logger.Infow("Draining nats connection")
+	//Drain nats connection
+	err = app.pubSubClient.Conn.Drain()
+
+	if err != nil {
+		app.Logger.Errorw("Error while draining Nats", "error", err)
+	}
+
 	app.Logger.Infow("closing db connection")
+	err = app.db.Close()
+	if err != nil {
+		app.Logger.Errorw("Error while closing DB", "error", err)
+	}
 
 	app.Logger.Infow("housekeeping done. exiting now")
 }

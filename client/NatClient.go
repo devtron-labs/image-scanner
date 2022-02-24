@@ -17,6 +17,7 @@ const (
 type PubSubClient struct {
 	logger        *zap.SugaredLogger
 	JetStrContext nats.JetStreamContext
+	Conn          *nats.Conn
 }
 
 type PubSubConfig struct {
