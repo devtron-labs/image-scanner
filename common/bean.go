@@ -1,7 +1,7 @@
 package common
 
 import (
-	"github.com/optiopay/klar/clair"
+	"github.com/quay/claircore"
 	"time"
 )
 
@@ -21,8 +21,8 @@ type ScanEvent struct {
 }
 
 type ScanEventResponse struct {
-	RequestData  *ScanEvent             `json:"requestData"`
-	ResponseData []*clair.Vulnerability `json:"responseData"`
+	RequestData  *ScanEvent                 `json:"requestData"`
+	ResponseData []*claircore.Vulnerability `json:"responseData"`
 }
 
 type UserInfo struct {

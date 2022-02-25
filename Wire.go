@@ -37,12 +37,13 @@ func InitializeApp() (*App, error) {
 		pubsub.NewTestPublishImpl,
 		wire.Bind(new(pubsub.TestPublish), new(*pubsub.TestPublishImpl)),
 
+		//clairService.NewClairServiceImpl,
+		//wire.Bind(new(clairService.ClairService), new(*clairService.ClairServiceImpl)),
 
 		user.NewUserServiceImpl,
 		wire.Bind(new(user.UserService), new(*user.UserServiceImpl)),
 		repository.NewUserRepositoryImpl,
 		wire.Bind(new(repository.UserRepository), new(*repository.UserRepositoryImpl)),
-
 
 		security.NewImageScanServiceImpl,
 		wire.Bind(new(security.ImageScanService), new(*security.ImageScanServiceImpl)),

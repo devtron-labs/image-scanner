@@ -4,13 +4,13 @@ import (
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/go-pg/pg"
-	"github.com/optiopay/klar/clair"
+	"github.com/quay/claircore"
 	"go.uber.org/zap"
 	"time"
 )
 
 type ImageScanService interface {
-	CreateScanExecutionRegistry(vs []*clair.Vulnerability, event *common.ScanEvent) ([]*clair.Vulnerability, error)
+	CreateScanExecutionRegistry(vs []*claircore.Vulnerability, event *common.ScanEvent) ([]*claircore.Vulnerability, error)
 	IsImageScanned(image string) (bool, error)
 }
 
@@ -35,10 +35,10 @@ func NewImageScanServiceImpl(Logger *zap.SugaredLogger, scanHistoryRepository re
 	}
 }
 
-func (impl *ImageScanServiceImpl) CreateScanExecutionRegistry(vs []*clair.Vulnerability, event *common.ScanEvent) ([]*clair.Vulnerability, error) {
+func (impl *ImageScanServiceImpl) CreateScanExecutionRegistry(vulnerabilities []*claircore.Vulnerability, event *common.ScanEvent) ([]*claircore.Vulnerability, error) {
 
 	var cveNames []string
-	for _, item := range vs {
+	for _, item := range vulnerabilities {
 		impl.Logger.Debugw("vulnerability data", "vs", item)
 		cveStore, err := impl.cveStoreRepository.FindByName(item.Name)
 		if err != nil && err != pg.ErrNoRows {
@@ -48,9 +48,9 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistry(vs []*clair.Vulner
 		if len(cveStore.Name) == 0 {
 			cveStore = &repository.CveStore{
 				Name:         item.Name,
-				Package:      item.FeatureName,
-				Version:      item.FeatureVersion,
-				FixedVersion: item.FixedBy,
+				Package:      item.Package.Name,
+				Version:      item.Package.Version,
+				FixedVersion: item.FixedInVersion,
 			}
 			if item.Severity == "High" {
 				cveStore.Severity = 2
@@ -109,7 +109,7 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistry(vs []*clair.Vulner
 			impl.Logger.Errorw("Failed to update artifact", "err", err)
 			return nil, err
 		}*/
-	return vs, nil
+	return vulnerabilities, nil
 }
 
 func (impl *ImageScanServiceImpl) IsImageScanned(image string) (bool, error) {
