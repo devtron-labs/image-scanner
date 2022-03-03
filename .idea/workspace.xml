@@ -5,167 +5,163 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/golang/mock/AUTHORS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/golang/mock/CONTRIBUTORS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/golang/mock/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/golang/mock/mockgen/mockgen.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/golang/mock/mockgen/model/model.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/golang/mock/mockgen/parse.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/golang/mock/mockgen/reflect.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/golang/mock/mockgen/version.1.11.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/golang/mock/mockgen/version.1.12.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/CHANGELOG.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/CODEOWNERS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/DCO" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/Makefile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/affectedmanifests.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/archop.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/archop_string.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/book.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/digest.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/distribution.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/doc.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/docker-compose.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/environment.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/go.sum" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/indexreport.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/layer.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/manifest.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/mock_generate.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/package.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/pkg/cpe/attribute_string.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/pkg/cpe/bind.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/pkg/cpe/cpe.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/pkg/cpe/json.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/pkg/cpe/sql.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/pkg/cpe/unbind.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/pkg/cpe/valuekind_string.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/pkg/cpe/wfn.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/repository.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/severity.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/severity_string.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/tools.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/version.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/vulnerability.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/quay/claircore/vulnerabilityreport.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/mod/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/mod/PATENTS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/mod/internal/lazyregexp/lazyre.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/mod/modfile/print.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/mod/modfile/read.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/mod/modfile/rule.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/mod/module/module.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/mod/module/pseudo.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/mod/semver/semver.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/execabs/execabs.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/syscall_linux_alarm.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/AUTHORS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/CONTRIBUTORS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/PATENTS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/cmd/stringer/stringer.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/ast/astutil/enclosing.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/ast/astutil/imports.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/ast/astutil/rewrite.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/ast/astutil/util.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/gcexportdata/gcexportdata.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/gcexportdata/importer.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/internal/gcimporter/bexport.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/internal/gcimporter/bimport.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/internal/gcimporter/exportdata.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/internal/gcimporter/gcimporter.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/internal/gcimporter/iexport.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/internal/gcimporter/iimport.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/internal/gcimporter/newInterface10.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/internal/gcimporter/newInterface11.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/internal/gcimporter/support_go117.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/internal/gcimporter/support_go118.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/internal/packagesdriver/sizes.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/packages/doc.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/packages/external.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/packages/golist.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/packages/golist_overlay.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/packages/loadmode_string.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/packages/packages.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/go/packages/visit.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/imports/forward.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/event/core/event.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/event/core/export.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/event/core/fast.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/event/doc.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/event/event.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/event/keys/keys.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/event/keys/standard.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/event/label/label.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/fastwalk/fastwalk.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/fastwalk/fastwalk_dirent_fileno.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/fastwalk/fastwalk_dirent_ino.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/fastwalk/fastwalk_dirent_namlen_bsd.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/fastwalk/fastwalk_dirent_namlen_linux.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/fastwalk/fastwalk_portable.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/fastwalk/fastwalk_unix.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/gocommand/invoke.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/gocommand/vendor.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/gocommand/version.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/gopathwalk/walk.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/imports/fix.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/imports/imports.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/imports/mod.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/imports/mod_cache.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/imports/sortimports.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/imports/zstdlib.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/packagesinternal/packages.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/typeparams/common.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/typeparams/enabled_go117.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/typeparams/enabled_go118.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/typeparams/normalize.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/typeparams/termlist.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/typeparams/typeparams_go117.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/typeparams/typeparams_go118.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/typeparams/typeterm.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/typesinternal/errorcode.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/typesinternal/errorcode_string.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/tools/internal/typesinternal/types.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/LICENSE" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/PATENTS" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/README" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/adaptor.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/codereview.cfg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/doc.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/errors.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/fmt.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/format.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/frame.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/go.mod" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/internal/internal.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/xerrors/wrap.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/AUTHORS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/NOTICE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/configfile/file.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/configfile/file_unix.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/configfile/file_windows.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/credentials/credentials.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/credentials/default_store.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/credentials/default_store_darwin.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/credentials/default_store_linux.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/credentials/default_store_unsupported.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/credentials/default_store_windows.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/credentials/file_store.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/credentials/native_store.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/cli/cli/config/types/authconfig.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/distribution/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/distribution/registry/client/auth/challenge/addr.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/distribution/registry/client/auth/challenge/authchallenge.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker-credential-helpers/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker-credential-helpers/client/client.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker-credential-helpers/client/command.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker-credential-helpers/credentials/credentials.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker-credential-helpers/credentials/error.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker-credential-helpers/credentials/helper.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker-credential-helpers/credentials/version.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker/AUTHORS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker/NOTICE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker/pkg/homedir/homedir_linux.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker/pkg/homedir/homedir_others.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker/pkg/homedir/homedir_unix.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker/pkg/homedir/homedir_windows.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/internal/and/and_closer.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/internal/gzip/zip.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/internal/redact/redact.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/internal/retry/retry.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/internal/retry/wait/kubernetes_apimachinery_wait.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/internal/verify/verify.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/authn/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/authn/anon.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/authn/auth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/authn/authn.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/authn/basic.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/authn/bearer.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/authn/doc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/authn/keychain.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/authn/multikeychain.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/logs/logs.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/name/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/name/check.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/name/digest.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/name/doc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/name/errors.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/name/options.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/name/ref.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/name/registry.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/name/repository.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/name/tag.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/doc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/hash.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/image.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/index.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/layer.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/manifest.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/match/match.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/partial/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/partial/compressed.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/partial/doc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/partial/image.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/partial/index.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/partial/uncompressed.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/partial/with.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/platform.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/progress.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/catalog.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/check.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/delete.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/descriptor.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/doc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/image.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/index.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/layer.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/list.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/mount.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/multi_write.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/options.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/basic.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/bearer.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/doc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/error.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/logger.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/ping.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/retry.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/schemer.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/scope.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/transport.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/transport/useragent.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/remote/write.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/stream/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/stream/layer.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/types/types.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/zz_deepcopy_generated.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/.mailmap" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/.pullapprove.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/.travis.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/CONTRIBUTING.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/LICENSE.docs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/MAINTAINERS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/algorithm.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/digest.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/digester.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/doc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/go.mod" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/go-digest/verifiers.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/v1/annotations.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/v1/config.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/v1/descriptor.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/v1/index.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/v1/layout.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/v1/manifest.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/v1/mediatype.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/version.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/versioned.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/pkg/errors/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/pkg/errors/.travis.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/pkg/errors/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/pkg/errors/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/pkg/errors/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/pkg/errors/appveyor.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/pkg/errors/errors.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/pkg/errors/go113.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/pkg/errors/stack.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/sync/AUTHORS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/sync/CONTRIBUTORS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/sync/LICENSE" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/sync/PATENTS" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/golang.org/x/sync/errgroup/errgroup.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Wire.go" beforeDir="false" afterPath="$PROJECT_DIR$/Wire.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/bean.go" beforeDir="false" afterPath="$PROJECT_DIR$/common/bean.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/RestHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/RestHandler.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/image-scanner" beforeDir="false" afterPath="$PROJECT_DIR$/image-scanner" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/security/ImageScanService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/security/ImageScanService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/mkerrors.sh" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/mkerrors.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/syscall_linux.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/syscall_linux.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zerrors_linux.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zerrors_linux.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_386.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_386.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_amd64.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_amd64.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_mips.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_mips.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_mips64.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_mips64.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_mipsle.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_mipsle.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_ppc.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_ppc.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_ppc64.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_ppc64.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_ppc64le.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_ppc64le.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_s390x.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_s390x.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_sparc64.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/zsyscall_linux_sparc64.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/ztypes_linux.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/golang.org/x/sys/unix/ztypes_linux.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/image-scanner" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/clairService/ClairService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/clairService/ClairService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/klarService/KlarService.go" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubsub/NatSubscription.go" beforeDir="false" afterPath="$PROJECT_DIR$/pubsub/NatSubscription.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pubsub/TestPublish.go" beforeDir="false" afterPath="$PROJECT_DIR$/pubsub/TestPublish.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/vendor/modules.txt" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/modules.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wire_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/wire_gen.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

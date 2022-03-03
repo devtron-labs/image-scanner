@@ -1,10 +1,9 @@
 package pubsub
 
 import (
-	"github.com/devtron-labs/image-scanner/client"
-	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"encoding/json"
 	"fmt"
+	"github.com/devtron-labs/image-scanner/client"
 	"go.uber.org/zap"
 )
 
@@ -15,15 +14,13 @@ type TestPublish interface {
 type TestPublishImpl struct {
 	pubSubClient *client.PubSubClient
 	logger       *zap.SugaredLogger
-	klarService  klarService.KlarService
 }
 
 func NewTestPublishImpl(pubSubClient *client.PubSubClient,
-	logger *zap.SugaredLogger, klarService klarService.KlarService) *TestPublishImpl {
+	logger *zap.SugaredLogger) *TestPublishImpl {
 	ns := &TestPublishImpl{
 		pubSubClient: pubSubClient,
 		logger:       logger,
-		klarService:  klarService,
 	}
 	return ns
 }

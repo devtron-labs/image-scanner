@@ -1,14 +1,14 @@
 package api
 
 import (
+	"encoding/json"
 	"github.com/devtron-labs/image-scanner/client"
 	"github.com/devtron-labs/image-scanner/common"
+	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
-	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"github.com/devtron-labs/image-scanner/pubsub"
-	"encoding/json"
 	"go.uber.org/zap"
 	"net/http"
 )
@@ -20,26 +20,27 @@ type RestHandler interface {
 }
 
 func NewRestHandlerImpl(logger *zap.SugaredLogger,
-	klarService klarService.KlarService, testPublish pubsub.TestPublish,
+	testPublish pubsub.TestPublish,
 	grafeasService grafeasService.GrafeasService,
-	userService user.UserService, imageScanService security.ImageScanService) *RestHandlerImpl {
+	userService user.UserService, imageScanService security.ImageScanService,
+	clairService clairService.ClairService) *RestHandlerImpl {
 	return &RestHandlerImpl{
 		logger:           logger,
-		klarService:      klarService,
 		testPublish:      testPublish,
 		grafeasService:   grafeasService,
 		userService:      userService,
 		imageScanService: imageScanService,
+		clairService:     clairService,
 	}
 }
 
 type RestHandlerImpl struct {
 	logger           *zap.SugaredLogger
-	klarService      klarService.KlarService
 	testPublish      pubsub.TestPublish
 	grafeasService   grafeasService.GrafeasService
 	userService      user.UserService
 	imageScanService security.ImageScanService
+	clairService     clairService.ClairService
 }
 type Response struct {
 	Code   int         `json:"code,omitempty"`
@@ -125,7 +126,7 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		scanConfig.UserId = 1
 	}
 	impl.logger.Infow("image scan req", "req", scanConfig)
-	result, err := impl.klarService.Process(&scanConfig)
+	result, err := impl.clairService.ScanImage(&scanConfig)
 	if err != nil {
 		impl.logger.Errorw("err in process msg", "err", err)
 		impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
