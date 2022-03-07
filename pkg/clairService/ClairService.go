@@ -23,7 +23,7 @@ import (
 )
 
 type ClairConfig struct {
-	ClairAddress string `env:"CLAIR_ADDRESS" envDefault:"http://localhost:6060"`
+	ClairAddress string `env:"CLAIR_ADDR" envDefault:"http://localhost:6060"`
 }
 
 type ClairService interface {
