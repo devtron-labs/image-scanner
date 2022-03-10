@@ -124,12 +124,12 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ScanEvent) (*common.Sc
 		vulnerabilities = append(vulnerabilities, vulnerability)
 	}
 
-	_, err = impl.imageScanService.CreateScanExecutionRegistry(vulnerabilities, scanEvent)
+	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent)
 	if err != nil {
 		impl.logger.Errorw("error in CreateScanExecutionRegistry", "err", err)
 		return scanEventResponse, err
 	}
-	scanEventResponse.ResponseData = vulnerabilities
+	scanEventResponse.ResponseDataClairV4 = vulnerabilities
 	return scanEventResponse, nil
 }
 

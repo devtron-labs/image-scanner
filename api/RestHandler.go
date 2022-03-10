@@ -2,10 +2,14 @@ package api
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
+	"github.com/caarlos0/env"
 	"github.com/devtron-labs/image-scanner/client"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
+	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"github.com/devtron-labs/image-scanner/pubsub"
@@ -23,6 +27,7 @@ func NewRestHandlerImpl(logger *zap.SugaredLogger,
 	testPublish pubsub.TestPublish,
 	grafeasService grafeasService.GrafeasService,
 	userService user.UserService, imageScanService security.ImageScanService,
+	klarService klarService.KlarService,
 	clairService clairService.ClairService) *RestHandlerImpl {
 	return &RestHandlerImpl{
 		logger:           logger,
@@ -30,6 +35,7 @@ func NewRestHandlerImpl(logger *zap.SugaredLogger,
 		grafeasService:   grafeasService,
 		userService:      userService,
 		imageScanService: imageScanService,
+		klarService:      klarService,
 		clairService:     clairService,
 	}
 }
@@ -40,6 +46,7 @@ type RestHandlerImpl struct {
 	grafeasService   grafeasService.GrafeasService
 	userService      user.UserService
 	imageScanService security.ImageScanService
+	klarService      klarService.KlarService
 	clairService     clairService.ClairService
 }
 type Response struct {
@@ -55,6 +62,18 @@ type ApiError struct {
 	UserMessage       interface{} `json:"userMessage,omitempty"`
 	UserDetailMessage string      `json:"userDetailMessage,omitempty"`
 }
+
+type ScannerConfig struct {
+	ScannerType    string `env:"SCANNER_TYPE"`
+	ScannerVersion string `env:"SCANNER_VERSION"`
+}
+
+const (
+	SCANNER_TYPE_CLAIR = "CLAIR"
+	SCANNER_TYPE_TRIVY = "TRIVY"
+	VERSION_V2         = "V2"
+	VERSION_V4         = "V4"
+)
 
 func (impl RestHandlerImpl) writeJsonResp(w http.ResponseWriter, err error, respBody interface{}, status int) {
 	response := Response{}
@@ -126,12 +145,38 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		scanConfig.UserId = 1
 	}
 	impl.logger.Infow("image scan req", "req", scanConfig)
-	result, err := impl.clairService.ScanImage(&scanConfig)
+
+	scannerConfig, err := GetScannerConfig()
 	if err != nil {
-		impl.logger.Errorw("err in process msg", "err", err)
-		impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
-		return
+		impl.logger.Errorw("error in getting scanner config", "err", err)
+	}
+	var result *common.ScanEventResponse
+
+	if scannerConfig.ScannerType == SCANNER_TYPE_CLAIR {
+		if scannerConfig.ScannerVersion == VERSION_V2 {
+			result, err = impl.klarService.Process(&scanConfig)
+			if err != nil {
+				impl.logger.Errorw("err in process msg", "err", err)
+				impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
+				return
+			}
+		} else if scannerConfig.ScannerVersion == VERSION_V4 {
+			result, err = impl.clairService.ScanImage(&scanConfig)
+			if err != nil {
+				impl.logger.Errorw("err in process msg", "err", err)
+				impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
+				return
+			}
+		}
 	}
 	impl.logger.Debugw("save", "status", result)
 	impl.writeJsonResp(w, err, result, 200)
+}
+func GetScannerConfig() (*ScannerConfig, error) {
+	scannerConfig := &ScannerConfig{}
+	err := env.Parse(scannerConfig)
+	if err != nil {
+		return nil, errors.New(fmt.Sprintf("could not get scanner config from environment :%v", err))
+	}
+	return scannerConfig, err
 }

@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/antihax/optional v1.0.0
+	github.com/aws/aws-sdk-go v1.27.0
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/coreos/clair v2.0.1-0.20171220021131-30bd568d8361+incompatible // indirect
 	github.com/go-pg/pg v6.15.1+incompatible
