@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/RestHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/RestHandler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/clairService/ClairService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/clairService/ClairService.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +65,7 @@
       <module name="image-scanner" />
       <working_directory value="$PROJECT_DIR$" />
       <envs>
-        <env name="PG_PASSWORD" value="dWNQcjhrL3lId0s0cEdodDFHZXJkVGkzZXQwPQo" />
+        <env name="PG_PASSWORD" value="cUQzT09zTnRieWUxMG45cGpiLzluNlhjQnU4PQo" />
         <env name="PG_USER" value="postgres" />
       </envs>
       <kind value="DIRECTORY" />
@@ -95,5 +95,44 @@
   </component>
   <component name="VgoProject">
     <integration-enabled>true</integration-enabled>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/api/RestHandler.go</url>
+          <line>148</line>
+          <option name="timeStamp" value="43" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/api/RestHandler.go</url>
+          <line>149</line>
+          <option name="timeStamp" value="44" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/api/RestHandler.go</url>
+          <line>154</line>
+          <option name="timeStamp" value="45" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
+          <line>65</line>
+          <option name="timeStamp" value="46" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
+          <line>136</line>
+          <option name="timeStamp" value="47" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
+          <line>169</line>
+          <option name="timeStamp" value="48" />
+        </line-breakpoint>
+      </breakpoints>
+      <default-breakpoints>
+        <breakpoint type="DlvErrorBreakpoint" />
+      </default-breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

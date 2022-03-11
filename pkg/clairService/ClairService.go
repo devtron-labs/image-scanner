@@ -139,7 +139,7 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", scanEvent.DockerRegistryId)
 		return nil, err
 	}
-	var manifest *claircore.Manifest
+	manifest := &claircore.Manifest{}
 	reference, err := name.ParseReference(scanEvent.Image, name.WithDefaultRegistry(dockerRegistry.RegistryURL))
 	if err != nil {
 		impl.logger.Errorw("error in parsing reference of image", "err", err, "image", scanEvent.Image, "registryUrl", dockerRegistry.RegistryURL)
