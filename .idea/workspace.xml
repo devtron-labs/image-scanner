@@ -116,17 +116,17 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
-          <line>65</line>
+          <line>68</line>
           <option name="timeStamp" value="46" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
-          <line>136</line>
+          <line>139</line>
           <option name="timeStamp" value="47" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
-          <line>169</line>
+          <line>172</line>
           <option name="timeStamp" value="48" />
         </line-breakpoint>
       </breakpoints>

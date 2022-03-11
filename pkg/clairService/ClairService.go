@@ -59,6 +59,9 @@ func GetClairConfig() (*ClairConfig, error) {
 	if err != nil {
 		return nil, errors.New("could not get clair config from environment")
 	}
+	if !strings.HasPrefix(cfg.ClairAddress, "http://") && !strings.HasPrefix(cfg.ClairAddress, "https://") {
+		cfg.ClairAddress = fmt.Sprintf("http://%s", cfg.ClairAddress)
+	}
 	return cfg, err
 }
 
