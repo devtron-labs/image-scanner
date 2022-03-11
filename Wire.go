@@ -10,6 +10,7 @@ import (
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
+	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"github.com/devtron-labs/image-scanner/pubsub"
@@ -26,8 +27,11 @@ func InitializeApp() (*App, error) {
 		sql.NewDbConnection,
 		api.NewRestHandlerImpl,
 		wire.Bind(new(api.RestHandler), new(*api.RestHandlerImpl)),
+		klarService.GetKlarConfig,
 		grafeasService.GetGrafeasClient,
 		client.NewPubSubClient,
+		klarService.NewKlarServiceImpl,
+		wire.Bind(new(klarService.KlarService), new(*klarService.KlarServiceImpl)),
 		pubsub.NewNatSubscription,
 		grafeasService.NewKlarServiceImpl,
 		wire.Bind(new(grafeasService.GrafeasService), new(*grafeasService.GrafeasServiceImpl)),
