@@ -232,8 +232,13 @@ func (impl *ClairServiceImpl) CheckIfIndexReportExistsForManifestHash(manifestHa
 	impl.logger.Debugw("new request, check if index report exists for manifest hash", "manifestHash", manifestHash)
 
 	//url - base url + "/indexer/api/v1/index_report/{manifest_hash}"
-	checkIndexReportUrl := path.Join(impl.clairConfig.ClairAddress, "/indexer/api/v1/index_report", manifestHash.String())
-	request, err := http.NewRequest(http.MethodGet, checkIndexReportUrl, nil)
+	checkIndexReportUrl, err := url.Parse(impl.clairConfig.ClairAddress)
+	if err != nil {
+		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
+		return false, err
+	}
+	checkIndexReportUrl.Path = path.Join(checkIndexReportUrl.Path, "/indexer/api/v1/index_report", manifestHash.String())
+	request, err := http.NewRequest(http.MethodGet, checkIndexReportUrl.String(), nil)
 	if err != nil {
 		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", checkIndexReportUrl)
 		return false, err
@@ -259,8 +264,13 @@ func (impl *ClairServiceImpl) CreateIndexReportFromManifest(manifest *claircore.
 		impl.logger.Errorw("error while marshaling request manifest", "err", err)
 		return err
 	}
-	getIndexReportUrl := path.Join(impl.clairConfig.ClairAddress, "/indexer/api/v1/index_report")
-	request, err := http.NewRequest(http.MethodPost, getIndexReportUrl, bytes.NewBuffer(requestBody))
+	getIndexReportUrl, err := url.Parse(impl.clairConfig.ClairAddress)
+	if err != nil {
+		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
+		return err
+	}
+	getIndexReportUrl.Path = path.Join(getIndexReportUrl.Path, "/indexer/api/v1/index_report")
+	request, err := http.NewRequest(http.MethodPost, getIndexReportUrl.String(), bytes.NewBuffer(requestBody))
 	if err != nil {
 		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", getIndexReportUrl, "requestBody", requestBody)
 		return err
@@ -279,8 +289,13 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromManifestHash(manifestHas
 	impl.logger.Debugw("new request, get vulnerability report from manifest hash", "manifestHash", manifestHash)
 
 	//url - base url + "/matcher/api/v1/vulnerability_report/{manifest_hash}"
-	getVulnerabilityReportUrl := path.Join(impl.clairConfig.ClairAddress, "/matcher/api/v1/vulnerability_report", manifestHash.String())
-	request, err := http.NewRequest(http.MethodGet, getVulnerabilityReportUrl, nil)
+	getVulnerabilityReportUrl, err := url.Parse(impl.clairConfig.ClairAddress)
+	if err != nil {
+		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
+		return nil, err
+	}
+	getVulnerabilityReportUrl.Path = path.Join(getVulnerabilityReportUrl.Path, "/matcher/api/v1/vulnerability_report", manifestHash.String())
+	request, err := http.NewRequest(http.MethodGet, getVulnerabilityReportUrl.String(), nil)
 	if err != nil {
 		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", getVulnerabilityReportUrl)
 		return nil, err
@@ -317,8 +332,13 @@ func (impl *ClairServiceImpl) DeleteIndexReportFromManifestHash(manifestHash cla
 	impl.logger.Debugw("new request, delete index report from manifest hash", "manifestHash", manifestHash)
 
 	//url - base url + "/indexer/api/v1/index_report/{manifest_hash}"
-	deleteIndexReportUrl := path.Join(impl.clairConfig.ClairAddress, "/indexer/api/v1/index_report", manifestHash.String())
-	request, err := http.NewRequest(http.MethodDelete, deleteIndexReportUrl, nil)
+	deleteIndexReportUrl, err := url.Parse(impl.clairConfig.ClairAddress)
+	if err != nil {
+		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
+		return err
+	}
+	deleteIndexReportUrl.Path = path.Join(deleteIndexReportUrl.Path, "/indexer/api/v1/index_report", manifestHash.String())
+	request, err := http.NewRequest(http.MethodDelete, deleteIndexReportUrl.String(), nil)
 	if err != nil {
 		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", deleteIndexReportUrl)
 		return err

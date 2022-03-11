@@ -67,6 +67,7 @@
       <envs>
         <env name="PG_PASSWORD" value="cUQzT09zTnRieWUxMG45cGpiLzluNlhjQnU4PQo" />
         <env name="PG_USER" value="postgres" />
+        <env name="CLAIR_ADDR" value="clair.devtroncd:6060" />
       </envs>
       <kind value="DIRECTORY" />
       <package value="github.com/devtron-labs/image-scanner" />
@@ -128,6 +129,31 @@
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
           <line>172</line>
           <option name="timeStamp" value="48" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
+          <line>239</line>
+          <option name="timeStamp" value="49" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
+          <line>56</line>
+          <option name="timeStamp" value="50" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
+          <line>57</line>
+          <option name="timeStamp" value="51" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
+          <line>189</line>
+          <option name="timeStamp" value="52" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="DlvLineBreakpoint">
+          <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
+          <line>227</line>
+          <option name="timeStamp" value="53" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
