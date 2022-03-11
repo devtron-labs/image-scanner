@@ -64,8 +64,8 @@ type ApiError struct {
 }
 
 type ScannerConfig struct {
-	ScannerType    string `env:"SCANNER_TYPE"`
-	ScannerVersion string `env:"SCANNER_VERSION"`
+	ScannerType    string `env:"SCANNER_TYPE" envDefault:"CLAIR"`
+	ScannerVersion string `env:"SCANNER_VERSION" envDefault:"V4"`
 }
 
 const (
