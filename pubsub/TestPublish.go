@@ -35,18 +35,18 @@ func (impl *TestPublishImpl) PublishForScan(channel string, payload interface{})
 	if err != nil {
 		return err
 	}
-	streamInfo, err := impl.pubSubClient.JetStrContext.StreamInfo(channel)
+	streamInfo, err := impl.pubSubClient.JetStrContext.StreamInfo(client.IMAGE_SCANNER_STREAM)
 	if err != nil {
-		impl.logger.Errorw("Error while getting stream infor", "topic", channel, "error", err)
+		impl.logger.Errorw("Error while getting stream infor", "stream name", client.IMAGE_SCANNER_STREAM, "error", err)
 	}
 	if streamInfo == nil {
 		//Stream doesn not exist already, create a new stream from jetStreamContext
 		_, err := impl.pubSubClient.JetStrContext.AddStream(&nats.StreamConfig{
-			Name:     channel,
-			Subjects: []string{channel + ".*"},
+			Name:     client.IMAGE_SCANNER_STREAM,
+			Subjects: []string{client.IMAGE_SCANNER_STREAM + ".*"},
 		})
 		if err != nil {
-			impl.logger.Errorw("Error while creating stream", "topic", channel, "error", err)
+			impl.logger.Errorw("Error while creating stream", "stream name", client.IMAGE_SCANNER_STREAM, "error", err)
 		}
 	}
 

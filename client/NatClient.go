@@ -9,9 +9,10 @@ import (
 )
 
 const (
-	TOPIC_CI_SCAN         = "CI-SCAN"
+	TOPIC_CI_SCAN         = "IMAGE-SCANNER.CI-SCAN"
 	TOPIC_CI_SCAN_GRP     = "CI-SCAN-GRP-1"
 	TOPIC_CI_SCAN_DURABLE = "CI-SCAN-DURABLE-1"
+	IMAGE_SCANNER_STREAM  = "IMAGE-SCANNER"
 )
 
 type PubSubClient struct {

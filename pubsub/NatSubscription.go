@@ -49,6 +49,6 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 			impl.logger.Infow("err in process msg", "err", err)
 			return
 		}
-	}, nats.Durable(client.TOPIC_CI_SCAN_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(""))
+	}, nats.Durable(client.TOPIC_CI_SCAN_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(client.IMAGE_SCANNER_STREAM))
 	return err
 }
