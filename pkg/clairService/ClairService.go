@@ -307,7 +307,7 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromManifestHash(manifestHas
 	}
 
 	status := response.StatusCode
-	var vulnerabilityReport *claircore.VulnerabilityReport
+	vulnerabilityReport := &claircore.VulnerabilityReport{}
 	if status >= 200 && status <= 299 {
 		responseBody, err := ioutil.ReadAll(response.Body)
 		if err != nil {
