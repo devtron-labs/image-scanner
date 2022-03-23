@@ -2,6 +2,7 @@ package clairService
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -17,6 +18,7 @@ import (
 	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/google/go-containerregistry/pkg/name"
 	"github.com/google/go-containerregistry/pkg/v1/remote"
+	"github.com/google/go-containerregistry/pkg/v1/remote/transport"
 	"github.com/quay/claircore"
 	"go.uber.org/zap"
 	"io/ioutil"
@@ -24,6 +26,7 @@ import (
 	"net/url"
 	"path"
 	"strings"
+	"sync"
 )
 
 type ClairConfig struct {
@@ -56,6 +59,42 @@ func NewClairServiceImpl(logger *zap.SugaredLogger, clairConfig *ClairConfig,
 		dockerArtifactStoreRepository: dockerArtifactStoreRepository,
 	}
 }
+
+// below code is used from clairctl (changed auth method according to our need) : https://github.com/quay/clair/blob/v4.3.6/cmd/clairctl/client.go#L32
+
+const (
+	userAgent = `clairctl/1`
+)
+
+var (
+	rtMu  sync.Mutex
+	rtMap = map[string]http.RoundTripper{}
+)
+
+func GetRoundTripper(ctx context.Context, ref string, authenticator authn.Authenticator) (http.RoundTripper, error) {
+	r, err := name.ParseReference(ref)
+	if err != nil {
+		return nil, err
+	}
+	repo := r.Context()
+	key := repo.String()
+	rtMu.Lock()
+	defer rtMu.Unlock()
+	if v, ok := rtMap[key]; ok {
+		return v, nil
+	}
+	rt := http.DefaultTransport
+	rt = transport.NewUserAgent(rt, userAgent)
+	rt = transport.NewRetry(rt)
+	rt, err = transport.NewWithContext(ctx, repo.Registry, authenticator, rt, []string{repo.Scope(transport.PullScope)})
+	if err != nil {
+		return nil, err
+	}
+	rtMap[key] = rt
+	return rt, nil
+}
+
+// clairctl code ends
 
 func GetClairConfig() (*ClairConfig, error) {
 	cfg := &ClairConfig{}
@@ -147,7 +186,7 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 		return nil, err
 	}
 	manifest := &claircore.Manifest{}
-	reference, err := name.ParseReference(scanEvent.Image, name.WithDefaultRegistry(dockerRegistry.RegistryURL))
+	reference, err := name.ParseReference(scanEvent.Image)
 	if err != nil {
 		impl.logger.Errorw("error in parsing reference of image", "err", err, "image", scanEvent.Image, "registryUrl", dockerRegistry.RegistryURL)
 		return nil, err
@@ -162,7 +201,6 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 			Region:      aws.String(dockerRegistry.AWSRegion),
 			Credentials: credentials.NewStaticCredentials(dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey, ""),
 		})
-
 		// Create a ECR client with additional configuration
 		svc := ecr.New(sess, aws.NewConfig().WithRegion(dockerRegistry.AWSRegion))
 		token, err := svc.GetAuthorizationToken(&ecr.GetAuthorizationTokenInput{})
@@ -172,7 +210,13 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 		}
 		authConfig.Auth = *token.AuthorizationData[0].AuthorizationToken
 	}
-	descriptor, err := remote.Get(reference, remote.WithAuth(authn.FromConfig(authConfig)))
+	authenticatorFromConfig := authn.FromConfig(authConfig)
+	roundTripper, err := GetRoundTripper(context.Background(), scanEvent.Image, authenticatorFromConfig)
+	if err != nil {
+		impl.logger.Errorw("error in getting round tripper", "err", "image", scanEvent.Image)
+		return nil, err
+	}
+	descriptor, err := remote.Get(reference, remote.WithTransport(roundTripper))
 	if err != nil {
 		impl.logger.Errorw("error in getting image descriptor for given reference", "err", err, "reference", reference)
 		return nil, err
@@ -208,6 +252,9 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 		Scheme: repository.Scheme(),
 		Host:   repository.RegistryStr(),
 	}
+	httpClient := http.Client{
+		Transport: roundTripper,
+	}
 	for _, layer := range layers {
 		layerDigest, err := layer.Digest()
 		if err != nil {
@@ -230,7 +277,7 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 			return nil, err
 		}
 		httpRequest.Header.Add("Range", "bytes=0-0")
-		httpResponse, err := impl.httpClient.Do(httpRequest)
+		httpResponse, err := httpClient.Do(httpRequest)
 		if err != nil {
 			impl.logger.Errorw("error in sending http request", "err", err, "httpRequest", httpRequest)
 			return nil, err
