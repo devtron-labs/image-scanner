@@ -28,7 +28,8 @@ func NewRestHandlerImpl(logger *zap.SugaredLogger,
 	grafeasService grafeasService.GrafeasService,
 	userService user.UserService, imageScanService security.ImageScanService,
 	klarService klarService.KlarService,
-	clairService clairService.ClairService) *RestHandlerImpl {
+	clairService clairService.ClairService,
+	scannerConfig *ScannerConfig) *RestHandlerImpl {
 	return &RestHandlerImpl{
 		logger:           logger,
 		testPublish:      testPublish,
@@ -37,6 +38,7 @@ func NewRestHandlerImpl(logger *zap.SugaredLogger,
 		imageScanService: imageScanService,
 		klarService:      klarService,
 		clairService:     clairService,
+		scannerConfig:    scannerConfig,
 	}
 }
 
@@ -48,6 +50,7 @@ type RestHandlerImpl struct {
 	imageScanService security.ImageScanService
 	klarService      klarService.KlarService
 	clairService     clairService.ClairService
+	scannerConfig    *ScannerConfig
 }
 type Response struct {
 	Code   int         `json:"code,omitempty"`
@@ -145,22 +148,17 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		scanConfig.UserId = 1
 	}
 	impl.logger.Infow("image scan req", "req", scanConfig)
-
-	scannerConfig, err := GetScannerConfig()
-	if err != nil {
-		impl.logger.Errorw("error in getting scanner config", "err", err)
-	}
 	var result *common.ScanEventResponse
 
-	if scannerConfig.ScannerType == SCANNER_TYPE_CLAIR {
-		if scannerConfig.ScannerVersion == VERSION_V2 {
+	if impl.scannerConfig.ScannerType == SCANNER_TYPE_CLAIR {
+		if impl.scannerConfig.ScannerVersion == VERSION_V2 {
 			result, err = impl.klarService.Process(&scanConfig)
 			if err != nil {
 				impl.logger.Errorw("err in process msg", "err", err)
 				impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
 				return
 			}
-		} else if scannerConfig.ScannerVersion == VERSION_V4 {
+		} else if impl.scannerConfig.ScannerVersion == VERSION_V4 {
 			result, err = impl.clairService.ScanImage(&scanConfig)
 			if err != nil {
 				impl.logger.Errorw("err in process msg", "err", err)

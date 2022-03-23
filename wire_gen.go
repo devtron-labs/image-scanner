@@ -59,7 +59,11 @@ func InitializeApp() (*App, error) {
 		return nil, err
 	}
 	clairServiceImpl := clairService.NewClairServiceImpl(sugaredLogger, clairConfig, httpClient, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl)
-	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, testPublishImpl, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl)
+	scannerConfig, err := api.GetScannerConfig()
+	if err != nil {
+		return nil, err
+	}
+	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, testPublishImpl, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl, scannerConfig)
 	muxRouter := api.NewMuxRouter(sugaredLogger, restHandlerImpl)
 	natSubscriptionImpl, err := pubsub.NewNatSubscription(pubSubClient, sugaredLogger, clairServiceImpl)
 	if err != nil {

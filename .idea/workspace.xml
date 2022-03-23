@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/image-scanner" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/clairService/ClairService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/clairService/ClairService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Wire.go" beforeDir="false" afterPath="$PROJECT_DIR$/Wire.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/RestHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/RestHandler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wire_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/wire_gen.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

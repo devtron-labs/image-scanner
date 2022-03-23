@@ -27,6 +27,7 @@ func InitializeApp() (*App, error) {
 		sql.NewDbConnection,
 		api.NewRestHandlerImpl,
 		wire.Bind(new(api.RestHandler), new(*api.RestHandlerImpl)),
+		api.GetScannerConfig,
 		klarService.GetKlarConfig,
 		grafeasService.GetGrafeasClient,
 		client.NewPubSubClient,
