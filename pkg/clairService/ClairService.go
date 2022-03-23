@@ -152,7 +152,7 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 		impl.logger.Errorw("error in parsing reference of image", "err", err, "image", scanEvent.Image, "registryUrl", dockerRegistry.RegistryURL)
 		return nil, err
 	}
-	authConfig := &authn.AuthConfig{
+	authConfig := authn.AuthConfig{
 		Username: dockerRegistry.Username,
 		Password: dockerRegistry.Password,
 	}
@@ -170,9 +170,9 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 			impl.logger.Errorw("error in getting auth token from ecr", "err", err)
 			return nil, err
 		}
-		authConfig.RegistryToken = *token.AuthorizationData[0].AuthorizationToken
+		authConfig.Auth = *token.AuthorizationData[0].AuthorizationToken
 	}
-	descriptor, err := remote.Get(reference, remote.WithAuth(authn.FromConfig(*authConfig)))
+	descriptor, err := remote.Get(reference, remote.WithAuth(authn.FromConfig(authConfig)))
 	if err != nil {
 		impl.logger.Errorw("error in getting image descriptor for given reference", "err", err, "reference", reference)
 		return nil, err
