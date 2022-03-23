@@ -5,6 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/caarlos0/env"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
@@ -148,9 +152,27 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 		impl.logger.Errorw("error in parsing reference of image", "err", err, "image", scanEvent.Image, "registryUrl", dockerRegistry.RegistryURL)
 		return nil, err
 	}
-	//TODO: update auth config fields
-	authConfig := authn.AuthConfig{}
-	descriptor, err := remote.Get(reference, remote.WithAuth(authn.FromConfig(authConfig)))
+	authConfig := &authn.AuthConfig{
+		Username: dockerRegistry.Username,
+		Password: dockerRegistry.Password,
+	}
+	if dockerRegistry.RegistryType == repository.REGISTRYTYPE_ECR {
+		var sess *session.Session
+		sess, err = session.NewSession(&aws.Config{
+			Region:      aws.String(dockerRegistry.AWSRegion),
+			Credentials: credentials.NewStaticCredentials(dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey, ""),
+		})
+
+		// Create a ECR client with additional configuration
+		svc := ecr.New(sess, aws.NewConfig().WithRegion(dockerRegistry.AWSRegion))
+		token, err := svc.GetAuthorizationToken(&ecr.GetAuthorizationTokenInput{})
+		if err != nil {
+			impl.logger.Errorw("error in getting auth token from ecr", "err", err)
+			return nil, err
+		}
+		authConfig.IdentityToken = *token.AuthorizationData[0].AuthorizationToken
+	}
+	descriptor, err := remote.Get(reference, remote.WithAuth(authn.FromConfig(*authConfig)))
 	if err != nil {
 		impl.logger.Errorw("error in getting image descriptor for given reference", "err", err, "reference", reference)
 		return nil, err

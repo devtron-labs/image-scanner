@@ -5,8 +5,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/auth.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/doc.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/keychain.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/list.go" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/options.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/clairService/ClairService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/clairService/ClairService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/vendor/modules.txt" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/modules.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,42 +124,42 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
-          <line>68</line>
+          <line>72</line>
           <option name="timeStamp" value="46" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
-          <line>139</line>
+          <line>143</line>
           <option name="timeStamp" value="47" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
-          <line>172</line>
+          <line>194</line>
           <option name="timeStamp" value="48" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
-          <line>239</line>
+          <line>261</line>
           <option name="timeStamp" value="49" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
-          <line>56</line>
+          <line>60</line>
           <option name="timeStamp" value="50" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
-          <line>57</line>
+          <line>61</line>
           <option name="timeStamp" value="51" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
-          <line>189</line>
+          <line>211</line>
           <option name="timeStamp" value="52" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="DlvLineBreakpoint">
           <url>file://$PROJECT_DIR$/pkg/clairService/ClairService.go</url>
-          <line>227</line>
+          <line>249</line>
           <option name="timeStamp" value="53" />
         </line-breakpoint>
       </breakpoints>
