@@ -170,7 +170,7 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 			impl.logger.Errorw("error in getting auth token from ecr", "err", err)
 			return nil, err
 		}
-		authConfig.Auth = *token.AuthorizationData[0].AuthorizationToken
+		authConfig.RegistryToken = *token.AuthorizationData[0].AuthorizationToken
 	}
 	descriptor, err := remote.Get(reference, remote.WithAuth(authn.FromConfig(*authConfig)))
 	if err != nil {
