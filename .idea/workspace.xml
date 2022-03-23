@@ -5,15 +5,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/auth.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/doc.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/keychain.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/list.go" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/vendor/github.com/google/go-containerregistry/pkg/v1/google/options.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/clairService/ClairService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/clairService/ClairService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/modules.txt" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/modules.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
