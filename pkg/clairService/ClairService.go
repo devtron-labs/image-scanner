@@ -39,6 +39,7 @@ type ClairService interface {
 	CreateIndexReportFromManifest(manifest *claircore.Manifest) error
 	GetVulnerabilityReportFromManifestHash(manifestHash claircore.Digest) (*claircore.VulnerabilityReport, error)
 	DeleteIndexReportFromManifestHash(manifestHash claircore.Digest) error
+	GetRoundTripper(ctx context.Context, ref string, authenticator authn.Authenticator) (http.RoundTripper, error)
 }
 type ClairServiceImpl struct {
 	logger                        *zap.SugaredLogger
@@ -71,9 +72,10 @@ var (
 	rtMap = map[string]http.RoundTripper{}
 )
 
-func GetRoundTripper(ctx context.Context, ref string, authenticator authn.Authenticator) (http.RoundTripper, error) {
+func (impl *ClairServiceImpl) GetRoundTripper(ctx context.Context, ref string, authenticator authn.Authenticator) (http.RoundTripper, error) {
 	r, err := name.ParseReference(ref)
 	if err != nil {
+		impl.logger.Errorw("error in parsing reference", "err", err, "ref", ref)
 		return nil, err
 	}
 	repo := r.Context()
@@ -88,6 +90,7 @@ func GetRoundTripper(ctx context.Context, ref string, authenticator authn.Authen
 	rt = transport.NewRetry(rt)
 	rt, err = transport.NewWithContext(ctx, repo.Registry, authenticator, rt, []string{repo.Scope(transport.PullScope)})
 	if err != nil {
+		impl.logger.Errorw("error in getting roundTripper", "err", err)
 		return nil, err
 	}
 	rtMap[key] = rt
@@ -211,7 +214,7 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 		authConfig.Auth = *token.AuthorizationData[0].AuthorizationToken
 	}
 	authenticatorFromConfig := authn.FromConfig(authConfig)
-	roundTripper, err := GetRoundTripper(context.Background(), scanEvent.Image, authenticatorFromConfig)
+	roundTripper, err := impl.GetRoundTripper(context.Background(), scanEvent.Image, authenticatorFromConfig)
 	if err != nil {
 		impl.logger.Errorw("error in getting round tripper", "err", "image", scanEvent.Image)
 		return nil, err
