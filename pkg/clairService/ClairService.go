@@ -194,6 +194,14 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 		impl.logger.Errorw("error in parsing reference of image", "err", err, "image", scanEvent.Image, "registryUrl", dockerRegistry.RegistryURL)
 		return nil, err
 	}
+	//case for gcr and artifact registry
+	if dockerRegistry.Username == "_json_key" {
+		lenPassword := len(dockerRegistry.Password)
+		if lenPassword > 1 {
+			dockerRegistry.Password = strings.TrimPrefix(dockerRegistry.Password, "'")
+			dockerRegistry.Password = strings.TrimSuffix(dockerRegistry.Password, "'")
+		}
+	}
 	authConfig := authn.AuthConfig{
 		Username: dockerRegistry.Username,
 		Password: dockerRegistry.Password,
