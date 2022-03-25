@@ -17,6 +17,7 @@ import (
 	"github.com/go-pg/pg"
 	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/google/go-containerregistry/pkg/name"
+	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/google/go-containerregistry/pkg/v1/remote"
 	"github.com/google/go-containerregistry/pkg/v1/remote/transport"
 	"github.com/quay/claircore"
@@ -32,6 +33,11 @@ import (
 type ClairConfig struct {
 	ClairAddress string `env:"CLAIR_ADDR" envDefault:"http://localhost:6060"`
 }
+
+const (
+	CLAIR_INDEX_REPORT_URL         = "/indexer/api/v1/index_report"
+	CLAIR_VULNERABILITY_REPORT_URL = "/matcher/api/v1/vulnerability_report"
+)
 
 type ClairService interface {
 	ScanImage(scanEvent *common.ScanEvent) (*common.ScanEventResponse, error)
@@ -68,8 +74,7 @@ const (
 )
 
 var (
-	rtMu  sync.Mutex
-	rtMap = map[string]http.RoundTripper{}
+	rtMu sync.Mutex
 )
 
 func (impl *ClairServiceImpl) GetRoundTripper(ctx context.Context, ref string, authenticator authn.Authenticator) (http.RoundTripper, error) {
@@ -79,12 +84,8 @@ func (impl *ClairServiceImpl) GetRoundTripper(ctx context.Context, ref string, a
 		return nil, err
 	}
 	repo := r.Context()
-	key := repo.String()
 	rtMu.Lock()
 	defer rtMu.Unlock()
-	if v, ok := rtMap[key]; ok {
-		return v, nil
-	}
 	rt := http.DefaultTransport
 	rt = transport.NewUserAgent(rt, userAgent)
 	rt = transport.NewRetry(rt)
@@ -93,7 +94,6 @@ func (impl *ClairServiceImpl) GetRoundTripper(ctx context.Context, ref string, a
 		impl.logger.Errorw("error in getting roundTripper", "err", err)
 		return nil, err
 	}
-	rtMap[key] = rt
 	return rt, nil
 }
 
@@ -126,6 +126,27 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ScanEvent) (*common.Sc
 		return scanEventResponse, nil
 	}
 
+	vulnerabilityReport, err := impl.GetVulnerabilityReportFromClair(scanEvent)
+	if err != nil {
+		impl.logger.Errorw("error in getting vulnerability report from clair", "err", err, "scanEvent", scanEvent)
+		return nil, err
+	}
+
+	var vulnerabilities []*claircore.Vulnerability
+	for _, vulnerability := range vulnerabilityReport.Vulnerabilities {
+		vulnerabilities = append(vulnerabilities, vulnerability)
+	}
+
+	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent)
+	if err != nil {
+		impl.logger.Errorw("error in CreateScanExecutionRegistry", "err", err)
+		return scanEventResponse, err
+	}
+	scanEventResponse.ResponseDataClairV4 = vulnerabilities
+	return scanEventResponse, nil
+}
+
+func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.ScanEvent) (*claircore.VulnerabilityReport, error) {
 	//get manifest from image
 	manifest, err := impl.CreateClairManifest(scanEvent)
 	if err != nil {
@@ -168,30 +189,47 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ScanEvent) (*common.Sc
 	if err != nil {
 		impl.logger.Warnw("error in deleting index report from manifest hash", "err", err, "manifestHash", manifest.Hash)
 	}
-	var vulnerabilities []*claircore.Vulnerability
-	for _, vulnerability := range vulnerabilityReport.Vulnerabilities {
-		vulnerabilities = append(vulnerabilities, vulnerability)
-	}
-
-	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent)
-	if err != nil {
-		impl.logger.Errorw("error in CreateScanExecutionRegistry", "err", err)
-		return scanEventResponse, err
-	}
-	scanEventResponse.ResponseDataClairV4 = vulnerabilities
-	return scanEventResponse, nil
+	return vulnerabilityReport, nil
 }
 
 func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (*claircore.Manifest, error) {
-	dockerRegistry, err := impl.dockerArtifactStoreRepository.FindById(scanEvent.DockerRegistryId)
+	authenticator, err := impl.GetAuthenticatorByDockerRegistryId(scanEvent.DockerRegistryId)
 	if err != nil {
-		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", scanEvent.DockerRegistryId)
+		impl.logger.Errorw("error in getting authenticator by dockerRegistryId", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 		return nil, err
 	}
-	manifest := &claircore.Manifest{}
+	roundTripper, err := impl.GetRoundTripper(context.Background(), scanEvent.Image, authenticator)
+	if err != nil {
+		impl.logger.Errorw("error in getting round tripper", "err", "image", scanEvent.Image)
+		return nil, err
+	}
 	reference, err := name.ParseReference(scanEvent.Image)
 	if err != nil {
-		impl.logger.Errorw("error in parsing reference of image", "err", err, "image", scanEvent.Image, "registryUrl", dockerRegistry.RegistryURL)
+		impl.logger.Errorw("error in parsing reference of image", "err", err, "image", scanEvent.Image)
+		return nil, err
+	}
+	descriptor, err := remote.Get(reference, remote.WithTransport(roundTripper))
+	if err != nil {
+		impl.logger.Errorw("error in getting image descriptor for given reference", "err", err, "reference", reference)
+		return nil, err
+	}
+	image, err := descriptor.Image()
+	if err != nil {
+		impl.logger.Errorw("error in getting image by descriptor", "err", err, "descriptor", descriptor)
+		return nil, err
+	}
+	manifest, err := impl.GenerateClairManifestFromImage(image, reference, roundTripper)
+	if err != nil {
+		impl.logger.Errorw("error in generating clair manifest from image", "err", err, "image", image)
+		return nil, err
+	}
+	return manifest, nil
+}
+
+func (impl *ClairServiceImpl) GetAuthenticatorByDockerRegistryId(dockerRegistryId string) (authn.Authenticator, error) {
+	dockerRegistry, err := impl.dockerArtifactStoreRepository.FindById(dockerRegistryId)
+	if err != nil {
+		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", dockerRegistryId)
 		return nil, err
 	}
 	//case for gcr and artifact registry
@@ -212,7 +250,7 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 			Region:      aws.String(dockerRegistry.AWSRegion),
 			Credentials: credentials.NewStaticCredentials(dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey, ""),
 		})
-		// Create a ECR client with additional configuration
+		// Create an ECR client with additional configuration
 		svc := ecr.New(sess, aws.NewConfig().WithRegion(dockerRegistry.AWSRegion))
 		token, err := svc.GetAuthorizationToken(&ecr.GetAuthorizationTokenInput{})
 		if err != nil {
@@ -222,21 +260,10 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 		authConfig.Auth = *token.AuthorizationData[0].AuthorizationToken
 	}
 	authenticatorFromConfig := authn.FromConfig(authConfig)
-	roundTripper, err := impl.GetRoundTripper(context.Background(), scanEvent.Image, authenticatorFromConfig)
-	if err != nil {
-		impl.logger.Errorw("error in getting round tripper", "err", "image", scanEvent.Image)
-		return nil, err
-	}
-	descriptor, err := remote.Get(reference, remote.WithTransport(roundTripper))
-	if err != nil {
-		impl.logger.Errorw("error in getting image descriptor for given reference", "err", err, "reference", reference)
-		return nil, err
-	}
-	image, err := descriptor.Image()
-	if err != nil {
-		impl.logger.Errorw("error in getting image by descriptor", "err", err, "descriptor", descriptor)
-		return nil, err
-	}
+	return authenticatorFromConfig, nil
+}
+
+func (impl *ClairServiceImpl) GenerateClairManifestFromImage(image v1.Image, reference name.Reference, roundTripper http.RoundTripper) (*claircore.Manifest, error) {
 	imageDigest, err := image.Digest()
 	if err != nil {
 		impl.logger.Errorw("error in getting imageDigest by image", "err", err, "image", image)
@@ -248,7 +275,9 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 		return nil, err
 	}
 	impl.logger.Debugw("got hash for clair manifest", "hash", parsedImageDigest)
-	manifest.Hash = parsedImageDigest
+	manifest := &claircore.Manifest{
+		Hash: parsedImageDigest,
+	}
 
 	layers, err := image.Layers()
 	if err != nil {
@@ -307,7 +336,6 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (
 	}
 	return manifest, nil
 }
-
 func (impl *ClairServiceImpl) CheckIfIndexReportExistsForManifestHash(manifestHash claircore.Digest) (bool, error) {
 	impl.logger.Debugw("new request, check if index report exists for manifest hash", "manifestHash", manifestHash)
 
@@ -317,7 +345,7 @@ func (impl *ClairServiceImpl) CheckIfIndexReportExistsForManifestHash(manifestHa
 		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
 		return false, err
 	}
-	checkIndexReportUrl.Path = path.Join(checkIndexReportUrl.Path, "/indexer/api/v1/index_report", manifestHash.String())
+	checkIndexReportUrl.Path = path.Join(checkIndexReportUrl.Path, CLAIR_INDEX_REPORT_URL, manifestHash.String())
 	request, err := http.NewRequest(http.MethodGet, checkIndexReportUrl.String(), nil)
 	if err != nil {
 		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", checkIndexReportUrl)
@@ -349,7 +377,7 @@ func (impl *ClairServiceImpl) CreateIndexReportFromManifest(manifest *claircore.
 		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
 		return err
 	}
-	getIndexReportUrl.Path = path.Join(getIndexReportUrl.Path, "/indexer/api/v1/index_report")
+	getIndexReportUrl.Path = path.Join(getIndexReportUrl.Path, CLAIR_INDEX_REPORT_URL)
 	request, err := http.NewRequest(http.MethodPost, getIndexReportUrl.String(), bytes.NewBuffer(requestBody))
 	if err != nil {
 		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", getIndexReportUrl, "requestBody", requestBody)
@@ -374,7 +402,7 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromManifestHash(manifestHas
 		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
 		return nil, err
 	}
-	getVulnerabilityReportUrl.Path = path.Join(getVulnerabilityReportUrl.Path, "/matcher/api/v1/vulnerability_report", manifestHash.String())
+	getVulnerabilityReportUrl.Path = path.Join(getVulnerabilityReportUrl.Path, CLAIR_VULNERABILITY_REPORT_URL, manifestHash.String())
 	request, err := http.NewRequest(http.MethodGet, getVulnerabilityReportUrl.String(), nil)
 	if err != nil {
 		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", getVulnerabilityReportUrl)
@@ -417,7 +445,7 @@ func (impl *ClairServiceImpl) DeleteIndexReportFromManifestHash(manifestHash cla
 		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
 		return err
 	}
-	deleteIndexReportUrl.Path = path.Join(deleteIndexReportUrl.Path, "/indexer/api/v1/index_report", manifestHash.String())
+	deleteIndexReportUrl.Path = path.Join(deleteIndexReportUrl.Path, CLAIR_INDEX_REPORT_URL, manifestHash.String())
 	request, err := http.NewRequest(http.MethodDelete, deleteIndexReportUrl.String(), nil)
 	if err != nil {
 		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", deleteIndexReportUrl)
