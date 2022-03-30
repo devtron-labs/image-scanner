@@ -28,12 +28,15 @@ func NewNatSubscription(pubSubClient *client.PubSubClient,
 		logger:       logger,
 		klarService:  klarService,
 	}
+	err := AddStream(ns.pubSubClient.JetStrContext, IMAGE_SCANNER_STREAM)
+	if err != nil {
+		ns.logger.Errorw("Error while adding stream", "error", err)
+	}
 	return ns, ns.Subscribe()
 }
 
-//TODO : adhiran : Need to bind to specific stream. Work with nishant on same.
 func (impl *NatSubscriptionImpl) Subscribe() error {
-	_, err := impl.pubSubClient.JetStrContext.QueueSubscribe(client.TOPIC_CI_SCAN, client.TOPIC_CI_SCAN_GRP, func(msg *nats.Msg) {
+	_, err := impl.pubSubClient.JetStrContext.QueueSubscribe(TOPIC_CI_SCAN, TOPIC_CI_SCAN_GRP, func(msg *nats.Msg) {
 		impl.logger.Debugw("received msg", "msg", msg)
 		defer msg.Ack()
 		scanConfig := &common.ScanEvent{}
@@ -49,6 +52,6 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 			impl.logger.Infow("err in process msg", "err", err)
 			return
 		}
-	}, nats.Durable(client.TOPIC_CI_SCAN_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(client.IMAGE_SCANNER_STREAM))
+	}, nats.Durable(TOPIC_CI_SCAN_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(IMAGE_SCANNER_STREAM))
 	return err
 }
