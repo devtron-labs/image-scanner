@@ -95,12 +95,12 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 	if dockerRegistry.RegistryType == repository.REGISTRYTYPE_ECR {
 
 		accessKey, secretKey := dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey
-		fmt.Printf("accessKey %s, secretKey %s\n", accessKey, secretKey)
+		//fmt.Printf("accessKey %s, secretKey %s\n", accessKey, secretKey)
 
 		var creds *credentials.Credentials
 
 		if len(dockerRegistry.AWSAccessKeyId) == 0 || len(dockerRegistry.AWSSecretAccessKey) == 0 {
-			fmt.Println("empty accessKey or secretKey")
+			//fmt.Println("empty accessKey or secretKey")
 			sess, err := session.NewSession(&aws.Config{
 				Region: &dockerRegistry.AWSRegion,
 			})
