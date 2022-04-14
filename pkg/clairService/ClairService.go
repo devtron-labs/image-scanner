@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/caarlos0/env"
@@ -245,12 +246,30 @@ func (impl *ClairServiceImpl) GetAuthenticatorByDockerRegistryId(dockerRegistryI
 		Password: dockerRegistry.Password,
 	}
 	if dockerRegistry.RegistryType == repository.REGISTRYTYPE_ECR {
-		var sess *session.Session
-		sess, err = session.NewSession(&aws.Config{
-			Region:      aws.String(dockerRegistry.AWSRegion),
-			Credentials: credentials.NewStaticCredentials(dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey, ""),
+		accessKey, secretKey := dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey
+		var creds *credentials.Credentials
+		if len(dockerRegistry.AWSAccessKeyId) == 0 || len(dockerRegistry.AWSSecretAccessKey) == 0 {
+			sess, err := session.NewSession(&aws.Config{
+				Region: &dockerRegistry.AWSRegion,
+			})
+			if err != nil {
+				impl.logger.Errorw("error in starting aws new session", "err", err)
+				return nil, err
+			}
+			creds = ec2rolecreds.NewCredentials(sess)
+		} else {
+			creds = credentials.NewStaticCredentials(accessKey, secretKey, "")
+		}
+		sess, err := session.NewSession(&aws.Config{
+			Region:      &dockerRegistry.AWSRegion,
+			Credentials: creds,
 		})
-		// Create an ECR client with additional configuration
+		if err != nil {
+			impl.logger.Errorw("error in starting aws new session", "err", err)
+			return nil, err
+		}
+
+		// Create a ECR client with additional configuration
 		svc := ecr.New(sess, aws.NewConfig().WithRegion(dockerRegistry.AWSRegion))
 		token, err := svc.GetAuthorizationToken(&ecr.GetAuthorizationTokenInput{})
 		if err != nil {
