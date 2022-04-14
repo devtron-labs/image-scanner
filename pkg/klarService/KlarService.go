@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
+	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
+	"log"
 	"strings"
 
 	"errors"
@@ -91,11 +93,34 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 	tokenData := ""
 	tokenAddr := &tokenData
 	if dockerRegistry.RegistryType == repository.REGISTRYTYPE_ECR {
-		var sess *session.Session
-		sess, err = session.NewSession(&aws.Config{
-			Region:      aws.String(dockerRegistry.AWSRegion),
-			Credentials: credentials.NewStaticCredentials(dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey, ""),
+
+		accessKey, secretKey := dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey
+		//fmt.Printf("accessKey %s, secretKey %s\n", accessKey, secretKey)
+
+		var creds *credentials.Credentials
+
+		if len(dockerRegistry.AWSAccessKeyId) == 0 || len(dockerRegistry.AWSSecretAccessKey) == 0 {
+			//fmt.Println("empty accessKey or secretKey")
+			sess, err := session.NewSession(&aws.Config{
+				Region: &dockerRegistry.AWSRegion,
+			})
+			if err != nil {
+				log.Println(err)
+				return nil, err
+			}
+			creds = ec2rolecreds.NewCredentials(sess)
+		} else {
+			creds = credentials.NewStaticCredentials(accessKey, secretKey, "")
+		}
+
+		sess, err := session.NewSession(&aws.Config{
+			Region:      &dockerRegistry.AWSRegion,
+			Credentials: creds,
 		})
+		if err != nil {
+			log.Println(err)
+			return nil, err
+		}
 
 		// Create a ECR client with additional configuration
 		svc := ecr.New(sess, aws.NewConfig().WithRegion(dockerRegistry.AWSRegion))
