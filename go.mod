@@ -16,7 +16,6 @@ require (
 	github.com/nats-io/nats-server/v2 v2.7.0 // indirect
 	github.com/nats-io/nats-streaming-server v0.23.2 // indirect
 	github.com/nats-io/nats.go v1.13.1-0.20211122170419-d7c1d78a50fc
-	github.com/nats-io/stan.go v0.10.2
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.17.0 // indirect
 	github.com/optiopay/klar v2.4.0+incompatible

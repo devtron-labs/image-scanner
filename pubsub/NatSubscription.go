@@ -5,12 +5,10 @@ import (
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
 
-	/*"github.com/devtron-labs/image-scanner/pkg"*/
-	/*"github.com/devtron-labs/image-scanner/pkg"*/
 	"encoding/json"
-	"github.com/nats-io/stan.go"
+
+	"github.com/nats-io/nats.go"
 	"go.uber.org/zap"
-	"time"
 )
 
 type NatSubscription interface {
@@ -30,11 +28,15 @@ func NewNatSubscription(pubSubClient *client.PubSubClient,
 		logger:       logger,
 		klarService:  klarService,
 	}
+	err := AddStream(ns.pubSubClient.JetStrContext, IMAGE_SCANNER_STREAM)
+	if err != nil {
+		ns.logger.Errorw("Error while adding stream", "error", err)
+	}
 	return ns, ns.Subscribe()
 }
 
 func (impl *NatSubscriptionImpl) Subscribe() error {
-	_, err := impl.pubSubClient.Conn.QueueSubscribe(client.TOPIC_CI_SCAN, client.TOPIC_CI_SCAN_GRP, func(msg *stan.Msg) {
+	_, err := impl.pubSubClient.JetStrContext.QueueSubscribe(TOPIC_CI_SCAN, TOPIC_CI_SCAN_GRP, func(msg *nats.Msg) {
 		impl.logger.Debugw("received msg", "msg", msg)
 		defer msg.Ack()
 		scanConfig := &common.ScanEvent{}
@@ -45,13 +47,11 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 		}
 		impl.logger.Infow("scanConfig unmarshal data", "scanConfig", scanConfig)
 
-		//scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
 		_, err = impl.klarService.Process(scanConfig)
 		if err != nil {
 			impl.logger.Infow("err in process msg", "err", err)
 			return
 		}
-	}, stan.DurableName(client.TOPIC_CI_SCAN_DURABLE), stan.StartWithLastReceived(), stan.AckWait(time.Duration(impl.pubSubClient.AckDuration)*time.Second), stan.SetManualAckMode(), stan.MaxInflight(1))
-	//s.Close()
+	}, nats.Durable(TOPIC_CI_SCAN_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(IMAGE_SCANNER_STREAM))
 	return err
 }
