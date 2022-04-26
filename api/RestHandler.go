@@ -2,10 +2,10 @@ package api
 
 import (
 	"encoding/json"
+	"net/http"
 	"errors"
 	"fmt"
 	"github.com/caarlos0/env"
-	"github.com/devtron-labs/image-scanner/client"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
@@ -14,7 +14,6 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"github.com/devtron-labs/image-scanner/pubsub"
 	"go.uber.org/zap"
-	"net/http"
 )
 
 type RestHandler interface {
@@ -111,7 +110,7 @@ func (impl *RestHandlerImpl) TestApplication(w http.ResponseWriter, r *http.Requ
 	scanConfig := &common.ScanEvent{}
 	scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
 	//err := impl.klarService.Process(scanConfig)
-	err := impl.testPublish.PublishForScan(client.TOPIC_CI_SCAN, scanConfig)
+	err := impl.testPublish.PublishForScan(pubsub.TOPIC_CI_SCAN, scanConfig)
 	if err != nil {
 		impl.logger.Errorw("err in process msg", "err", err)
 		impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)

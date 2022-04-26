@@ -2,8 +2,10 @@ package pubsub
 
 import (
 	"encoding/json"
-	"fmt"
+	"github.com/nats-io/nats.go"
+
 	"github.com/devtron-labs/image-scanner/client"
+	"github.com/devtron-labs/image-scanner/internal/util"
 	"go.uber.org/zap"
 )
 
@@ -30,7 +32,16 @@ func (impl *TestPublishImpl) PublishForScan(channel string, payload interface{})
 	if err != nil {
 		return err
 	}
-	err = impl.pubSubClient.Conn.Publish(channel, body)
-	fmt.Println(body)
+	err = AddStream(impl.pubSubClient.JetStrContext, IMAGE_SCANNER_STREAM)
+	if err != nil {
+		impl.logger.Errorw("Error while adding stream", "error", err)
+	}
+
+	//Generate random string for passing as Header Id in message
+	randString := "MsgHeaderId-" + util.Generate(10)
+	_, err = impl.pubSubClient.JetStrContext.Publish(channel, body, nats.MsgId(randString))
+	if err != nil {
+		impl.logger.Errorw("Error while publishing request", "topic", channel, "error", err)
+	}
 	return err
 }
