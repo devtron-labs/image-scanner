@@ -2,7 +2,6 @@ package api
 
 import (
 	"encoding/json"
-	"net/http"
 	"errors"
 	"fmt"
 	"github.com/caarlos0/env"
@@ -14,6 +13,7 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"github.com/devtron-labs/image-scanner/pubsub"
 	"go.uber.org/zap"
+	"net/http"
 )
 
 type RestHandler interface {
@@ -66,15 +66,13 @@ type ApiError struct {
 }
 
 type ScannerConfig struct {
-	ScannerType    string `env:"SCANNER_TYPE" envDefault:"CLAIR"`
-	ScannerVersion string `env:"SCANNER_VERSION" envDefault:"V4"`
+	ScannerType string `env:"SCANNER_TYPE" envDefault:"CLAIRV4"`
 }
 
 const (
-	SCANNER_TYPE_CLAIR = "CLAIR"
-	SCANNER_TYPE_TRIVY = "TRIVY"
-	VERSION_V2         = "V2"
-	VERSION_V4         = "V4"
+	SCANNER_TYPE_CLAIR_V4 = "CLAIRV4"
+	SCANNER_TYPE_CLAIR_V2 = "CLAIRV2"
+	SCANNER_TYPE_TRIVY    = "TRIVY"
 )
 
 func (impl RestHandlerImpl) writeJsonResp(w http.ResponseWriter, err error, respBody interface{}, status int) {
@@ -149,23 +147,22 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 	impl.logger.Infow("image scan req", "req", scanConfig)
 	var result *common.ScanEventResponse
 
-	if impl.scannerConfig.ScannerType == SCANNER_TYPE_CLAIR {
-		if impl.scannerConfig.ScannerVersion == VERSION_V2 {
-			result, err = impl.klarService.Process(&scanConfig)
-			if err != nil {
-				impl.logger.Errorw("err in process msg", "err", err)
-				impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
-				return
-			}
-		} else if impl.scannerConfig.ScannerVersion == VERSION_V4 {
-			result, err = impl.clairService.ScanImage(&scanConfig)
-			if err != nil {
-				impl.logger.Errorw("err in process msg", "err", err)
-				impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
-				return
-			}
+	if impl.scannerConfig.ScannerType == SCANNER_TYPE_CLAIR_V2 {
+		result, err = impl.klarService.Process(&scanConfig)
+		if err != nil {
+			impl.logger.Errorw("err in process msg", "err", err)
+			impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
+			return
+		}
+	} else if impl.scannerConfig.ScannerType == SCANNER_TYPE_CLAIR_V4 {
+		result, err = impl.clairService.ScanImage(&scanConfig)
+		if err != nil {
+			impl.logger.Errorw("err in process msg", "err", err)
+			impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
+			return
 		}
 	}
+
 	impl.logger.Debugw("save", "status", result)
 	impl.writeJsonResp(w, err, result, 200)
 }
