@@ -1,13 +1,11 @@
 package pubsub
 
 import (
+	"encoding/json"
 	"github.com/devtron-labs/image-scanner/client"
 	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/pkg/klarService"
-
-	"encoding/json"
-
 	"github.com/nats-io/nats.go"
+	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"go.uber.org/zap"
 )
 
@@ -18,15 +16,16 @@ type NatSubscription interface {
 type NatSubscriptionImpl struct {
 	pubSubClient *client.PubSubClient
 	logger       *zap.SugaredLogger
-	klarService  klarService.KlarService
+	clairService clairService.ClairService
 }
 
 func NewNatSubscription(pubSubClient *client.PubSubClient,
-	logger *zap.SugaredLogger, klarService klarService.KlarService) (*NatSubscriptionImpl, error) {
+	logger *zap.SugaredLogger,
+	clairService clairService.ClairService) (*NatSubscriptionImpl, error) {
 	ns := &NatSubscriptionImpl{
 		pubSubClient: pubSubClient,
 		logger:       logger,
-		klarService:  klarService,
+		clairService: clairService,
 	}
 	err := AddStream(ns.pubSubClient.JetStrContext, IMAGE_SCANNER_STREAM)
 	if err != nil {
@@ -47,7 +46,8 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 		}
 		impl.logger.Infow("scanConfig unmarshal data", "scanConfig", scanConfig)
 
-		_, err = impl.klarService.Process(scanConfig)
+		//scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
+		_, err = impl.clairService.ScanImage(scanConfig)
 		if err != nil {
 			impl.logger.Infow("err in process msg", "err", err)
 			return

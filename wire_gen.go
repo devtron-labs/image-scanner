@@ -12,6 +12,7 @@ import (
 	"github.com/devtron-labs/image-scanner/internal/logger"
 	"github.com/devtron-labs/image-scanner/internal/sql"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
+	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"github.com/devtron-labs/image-scanner/pkg/security"
@@ -23,10 +24,11 @@ import (
 
 func InitializeApp() (*App, error) {
 	sugaredLogger := logger.NewSugardLogger()
-	klarConfig, err := klarService.GetKlarConfig()
+	pubSubClient, err := client.NewPubSubClient(sugaredLogger)
 	if err != nil {
 		return nil, err
 	}
+	testPublishImpl := pubsub.NewTestPublishImpl(pubSubClient, sugaredLogger)
 	apiClient := grafeasService.GetGrafeasClient()
 	httpClient := logger.NewHttpClient()
 	grafeasServiceImpl := grafeasService.NewKlarServiceImpl(sugaredLogger, apiClient, httpClient)
@@ -39,6 +41,7 @@ func InitializeApp() (*App, error) {
 		return nil, err
 	}
 	userRepositoryImpl := repository.NewUserRepositoryImpl(db)
+	userServiceImpl := user.NewUserServiceImpl(sugaredLogger, userRepositoryImpl)
 	imageScanHistoryRepositoryImpl := repository.NewImageScanHistoryRepositoryImpl(db, sugaredLogger)
 	imageScanResultRepositoryImpl := repository.NewImageScanResultRepositoryImpl(db, sugaredLogger)
 	imageScanObjectMetaRepositoryImpl := repository.NewImageScanObjectMetaRepositoryImpl(db, sugaredLogger)
@@ -46,17 +49,24 @@ func InitializeApp() (*App, error) {
 	imageScanDeployInfoRepositoryImpl := repository.NewImageScanDeployInfoRepositoryImpl(db, sugaredLogger)
 	ciArtifactRepositoryImpl := repository.NewCiArtifactRepositoryImpl(db, sugaredLogger)
 	imageScanServiceImpl := security.NewImageScanServiceImpl(sugaredLogger, imageScanHistoryRepositoryImpl, imageScanResultRepositoryImpl, imageScanObjectMetaRepositoryImpl, cveStoreRepositoryImpl, imageScanDeployInfoRepositoryImpl, ciArtifactRepositoryImpl)
-	dockerArtifactStoreRepositoryImpl := repository.NewDockerArtifactStoreRepositoryImpl(db, sugaredLogger)
-	klarServiceImpl := klarService.NewKlarServiceImpl(sugaredLogger, klarConfig, grafeasServiceImpl, userRepositoryImpl, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl)
-	pubSubClient, err := client.NewPubSubClient(sugaredLogger)
+	klarConfig, err := klarService.GetKlarConfig()
 	if err != nil {
 		return nil, err
 	}
-	testPublishImpl := pubsub.NewTestPublishImpl(pubSubClient, sugaredLogger, klarServiceImpl)
-	userServiceImpl := user.NewUserServiceImpl(sugaredLogger, userRepositoryImpl)
-	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, klarServiceImpl, testPublishImpl, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl)
+	dockerArtifactStoreRepositoryImpl := repository.NewDockerArtifactStoreRepositoryImpl(db, sugaredLogger)
+	klarServiceImpl := klarService.NewKlarServiceImpl(sugaredLogger, klarConfig, grafeasServiceImpl, userRepositoryImpl, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl)
+	clairConfig, err := clairService.GetClairConfig()
+	if err != nil {
+		return nil, err
+	}
+	clairServiceImpl := clairService.NewClairServiceImpl(sugaredLogger, clairConfig, httpClient, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl)
+	scannerConfig, err := api.GetScannerConfig()
+	if err != nil {
+		return nil, err
+	}
+	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, testPublishImpl, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl, scannerConfig)
 	muxRouter := api.NewMuxRouter(sugaredLogger, restHandlerImpl)
-	natSubscriptionImpl, err := pubsub.NewNatSubscription(pubSubClient, sugaredLogger, klarServiceImpl)
+	natSubscriptionImpl, err := pubsub.NewNatSubscription(pubSubClient, sugaredLogger, clairServiceImpl)
 	if err != nil {
 		return nil, err
 	}

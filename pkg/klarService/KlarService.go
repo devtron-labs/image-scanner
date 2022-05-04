@@ -11,7 +11,6 @@ import (
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
-	"log"
 	"strings"
 
 	"errors"
@@ -93,32 +92,26 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 	tokenData := ""
 	tokenAddr := &tokenData
 	if dockerRegistry.RegistryType == repository.REGISTRYTYPE_ECR {
-
 		accessKey, secretKey := dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey
-		//fmt.Printf("accessKey %s, secretKey %s\n", accessKey, secretKey)
-
 		var creds *credentials.Credentials
-
 		if len(dockerRegistry.AWSAccessKeyId) == 0 || len(dockerRegistry.AWSSecretAccessKey) == 0 {
-			//fmt.Println("empty accessKey or secretKey")
 			sess, err := session.NewSession(&aws.Config{
 				Region: &dockerRegistry.AWSRegion,
 			})
 			if err != nil {
-				log.Println(err)
+				impl.logger.Errorw("error in starting aws new session", "err", err)
 				return nil, err
 			}
 			creds = ec2rolecreds.NewCredentials(sess)
 		} else {
 			creds = credentials.NewStaticCredentials(accessKey, secretKey, "")
 		}
-
 		sess, err := session.NewSession(&aws.Config{
 			Region:      &dockerRegistry.AWSRegion,
 			Credentials: creds,
 		})
 		if err != nil {
-			log.Println(err)
+			impl.logger.Errorw("error in starting aws new session", "err", err)
 			return nil, err
 		}
 
@@ -210,12 +203,12 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		impl.logger.Errorw("Failed to post save to grafeas", "err", err)
 	}*/
 
-	vulnerabilities, err := impl.imageScanService.CreateScanExecutionRegistry(vs, scanEvent)
+	vulnerabilities, err := impl.imageScanService.CreateScanExecutionRegistryForClairV2(vs, scanEvent)
 	if err != nil {
 		impl.logger.Errorw("Failed dump scanned data", "err", err)
 		return scanEventResponse, err
 	}
-	scanEventResponse.ResponseData = vulnerabilities
+	scanEventResponse.ResponseDataClairV2 = vulnerabilities
 
 	return scanEventResponse, nil
 }

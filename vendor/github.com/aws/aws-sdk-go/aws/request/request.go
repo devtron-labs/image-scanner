@@ -129,26 +129,13 @@ func New(cfg aws.Config, clientInfo metadata.ClientInfo, handlers Handlers,
 	httpReq, _ := http.NewRequest(method, "", nil)
 
 	var err error
-	httpReq.URL, err = url.Parse(clientInfo.Endpoint)
+	httpReq.URL, err = url.Parse(clientInfo.Endpoint + operation.HTTPPath)
 	if err != nil {
 		httpReq.URL = &url.URL{}
 		err = awserr.New("InvalidEndpointURL", "invalid endpoint uri", err)
 	}
 
-	if len(operation.HTTPPath) != 0 {
-		opHTTPPath := operation.HTTPPath
-		var opQueryString string
-		if idx := strings.Index(opHTTPPath, "?"); idx >= 0 {
-			opQueryString = opHTTPPath[idx+1:]
-			opHTTPPath = opHTTPPath[:idx]
-		}
-
-		if strings.HasSuffix(httpReq.URL.Path, "/") && strings.HasPrefix(opHTTPPath, "/") {
-			opHTTPPath = opHTTPPath[1:]
-		}
-		httpReq.URL.Path += opHTTPPath
-		httpReq.URL.RawQuery = opQueryString
-	}
+	SanitizeHostForHeader(httpReq)
 
 	r := &Request{
 		Config:     cfg,
@@ -439,8 +426,6 @@ func (r *Request) Sign() error {
 		return r.Error
 	}
 
-	SanitizeHostForHeader(r.HTTPRequest)
-
 	r.Handlers.Sign.Run(r)
 	return r.Error
 }
@@ -652,10 +637,6 @@ func SanitizeHostForHeader(r *http.Request) {
 func getHost(r *http.Request) string {
 	if r.Host != "" {
 		return r.Host
-	}
-
-	if r.URL == nil {
-		return ""
 	}
 
 	return r.URL.Host
