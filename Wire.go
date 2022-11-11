@@ -1,10 +1,11 @@
-//+build wireinject
+//go:build wireinject
+// +build wireinject
 
 package main
 
 import (
+	client "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/api"
-	"github.com/devtron-labs/image-scanner/client"
 	"github.com/devtron-labs/image-scanner/internal/logger"
 	"github.com/devtron-labs/image-scanner/internal/sql"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
@@ -30,7 +31,7 @@ func InitializeApp() (*App, error) {
 		api.GetScannerConfig,
 		klarService.GetKlarConfig,
 		grafeasService.GetGrafeasClient,
-		client.NewPubSubClient,
+		client.NewPubSubClientServiceImpl,
 		klarService.NewKlarServiceImpl,
 		wire.Bind(new(klarService.KlarService), new(*klarService.KlarServiceImpl)),
 		pubsub.NewNatSubscription,

@@ -2,9 +2,8 @@ package pubsub
 
 import (
 	"encoding/json"
-	"github.com/devtron-labs/image-scanner/client"
+	pubsub1 "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/common"
-	"github.com/nats-io/nats.go"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"go.uber.org/zap"
 )
@@ -14,12 +13,12 @@ type NatSubscription interface {
 }
 
 type NatSubscriptionImpl struct {
-	pubSubClient *client.PubSubClient
+	pubSubClient *pubsub1.PubSubClientServiceImpl
 	logger       *zap.SugaredLogger
 	clairService clairService.ClairService
 }
 
-func NewNatSubscription(pubSubClient *client.PubSubClient,
+func NewNatSubscription(pubSubClient *pubsub1.PubSubClientServiceImpl,
 	logger *zap.SugaredLogger,
 	clairService clairService.ClairService) (*NatSubscriptionImpl, error) {
 	ns := &NatSubscriptionImpl{
@@ -27,19 +26,15 @@ func NewNatSubscription(pubSubClient *client.PubSubClient,
 		logger:       logger,
 		clairService: clairService,
 	}
-	err := AddStream(ns.pubSubClient.JetStrContext, IMAGE_SCANNER_STREAM)
-	if err != nil {
-		ns.logger.Errorw("Error while adding stream", "error", err)
-	}
 	return ns, ns.Subscribe()
 }
 
 func (impl *NatSubscriptionImpl) Subscribe() error {
-	_, err := impl.pubSubClient.JetStrContext.QueueSubscribe(TOPIC_CI_SCAN, TOPIC_CI_SCAN_GRP, func(msg *nats.Msg) {
+	callback := func(msg *pubsub1.PubSubMsg) {
 		impl.logger.Debugw("received msg", "msg", msg)
-		defer msg.Ack()
+		//defer msg.Ack()
 		scanConfig := &common.ScanEvent{}
-		err := json.Unmarshal(msg.Data, scanConfig)
+		err := json.Unmarshal([]byte(msg.Data), scanConfig)
 		if err != nil {
 			impl.logger.Errorw("err in reading msg", "err", err, "msg", string(msg.Data))
 			return
@@ -52,6 +47,10 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 			impl.logger.Infow("err in process msg", "err", err)
 			return
 		}
-	}, nats.Durable(TOPIC_CI_SCAN_DURABLE), nats.DeliverLast(), nats.ManualAck(), nats.BindStream(IMAGE_SCANNER_STREAM))
+	}
+	err := impl.pubSubClient.Subscribe(pubsub1.TOPIC_CI_SCAN, callback)
+	if err != nil {
+		impl.logger.Errorw("Error while subscribing to pubsub", "topic", pubsub1.TOPIC_CI_SCAN, "error", err)
+	}
 	return err
 }
