@@ -54,7 +54,7 @@ github.com/caarlos0/env
 github.com/coreos/clair/api/v3/clairpb
 github.com/coreos/clair/database
 github.com/coreos/clair/ext/versionfmt
-# github.com/devtron-labs/common-lib v0.0.0-20221111021905-8bdf81d09308
+# github.com/devtron-labs/common-lib v0.0.0-20221111092855-6dae5a34a041
 ## explicit
 github.com/devtron-labs/common-lib/pubsub-lib
 github.com/devtron-labs/common-lib/utils
@@ -128,7 +128,7 @@ github.com/jmespath/go-jmespath
 # github.com/juju/errors v0.0.0-20210818161939-5560c4c073ff
 ## explicit
 github.com/juju/errors
-# github.com/nats-io/nats.go v1.15.0
+# github.com/nats-io/nats.go v1.19.0
 ## explicit
 github.com/nats-io/nats.go
 github.com/nats-io/nats.go/encoders/builtin
