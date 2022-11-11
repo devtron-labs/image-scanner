@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
+	client "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/api"
-	"github.com/devtron-labs/image-scanner/client"
 	"github.com/devtron-labs/image-scanner/pubsub"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"
@@ -20,10 +20,10 @@ type App struct {
 	server           *http.Server
 	db               *pg.DB
 	natsSubscription *pubsub.NatSubscriptionImpl
-	pubSubClient     *client.PubSubClient
+	pubSubClient     *client.PubSubClientServiceImpl
 }
 
-func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger, db *pg.DB, natsSubscription *pubsub.NatSubscriptionImpl, pubSubClient *client.PubSubClient) *App {
+func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger, db *pg.DB, natsSubscription *pubsub.NatSubscriptionImpl, pubSubClient *client.PubSubClientServiceImpl) *App {
 	return &App{
 		MuxRouter:        MuxRouter,
 		Logger:           Logger,
@@ -56,13 +56,13 @@ func (app *App) Stop() {
 		app.Logger.Errorw("error in mux router shutdown", "err", err)
 	}
 
-	app.Logger.Infow("Draining nats connection")
+	//app.Logger.Infow("Draining nats connection")
 	//Drain nats connection
-	err = app.pubSubClient.Conn.Drain()
-
-	if err != nil {
-		app.Logger.Errorw("Error while draining Nats", "error", err)
-	}
+	//err = app.pubSubClient.Conn.Drain()
+	//
+	//if err != nil {
+	//	app.Logger.Errorw("Error while draining Nats", "error", err)
+	//}
 
 	app.Logger.Infow("closing db connection")
 	err = app.db.Close()
