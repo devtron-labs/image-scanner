@@ -54,7 +54,7 @@ github.com/caarlos0/env
 github.com/coreos/clair/api/v3/clairpb
 github.com/coreos/clair/database
 github.com/coreos/clair/ext/versionfmt
-# github.com/devtron-labs/common-lib v0.0.0-20221126093411-794588b004ea
+# github.com/devtron-labs/common-lib v0.0.0-20221130083108-d35a1c63675b
 ## explicit
 github.com/devtron-labs/common-lib/pubsub-lib
 github.com/devtron-labs/common-lib/utils
