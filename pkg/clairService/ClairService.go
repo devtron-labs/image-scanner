@@ -148,6 +148,7 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ScanEvent) (*common.Sc
 }
 
 func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.ScanEvent) (*claircore.VulnerabilityReport, error) {
+	impl.logger.Infow("received vulnerability report creation request", "scanEvent", scanEvent)
 	//get manifest from image
 	manifest, err := impl.CreateClairManifest(scanEvent)
 	if err != nil {
@@ -155,7 +156,7 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.
 		return nil, err
 	}
 	//end get manifest
-
+	impl.logger.Debugw("created clair manifest", "scanEvent", scanEvent, "manifest", manifest)
 	//checking if index report exists for this manifest hash; if it does, no need of creating index report
 	exists, err := impl.CheckIfIndexReportExistsForManifestHash(manifest.Hash)
 	if err != nil {
@@ -168,6 +169,7 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.
 				impl.logger.Errorw("error in creating clair index report", "err", err, "manifest", manifest)
 				return nil, err
 			}
+			impl.logger.Debugw("created index report from manifest", "manifest", manifest)
 		}
 	} else if !exists {
 		//index report do not exist, creating index report for manifest
@@ -176,6 +178,7 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.
 			impl.logger.Errorw("error in creating clair index report", "err", err, "manifest", manifest)
 			return nil, err
 		}
+		impl.logger.Debugw("created index report from manifest", "manifest", manifest)
 	}
 
 	//index report created, now getting vulnerability report
