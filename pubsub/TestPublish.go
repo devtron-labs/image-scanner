@@ -2,10 +2,7 @@ package pubsub
 
 import (
 	"encoding/json"
-	"github.com/nats-io/nats.go"
-
-	"github.com/devtron-labs/image-scanner/client"
-	"github.com/devtron-labs/image-scanner/internal/util"
+	pubsub "github.com/devtron-labs/common-lib/pubsub-lib"
 	"go.uber.org/zap"
 )
 
@@ -14,11 +11,11 @@ type TestPublish interface {
 }
 
 type TestPublishImpl struct {
-	pubSubClient *client.PubSubClient
+	pubSubClient *pubsub.PubSubClientServiceImpl
 	logger       *zap.SugaredLogger
 }
 
-func NewTestPublishImpl(pubSubClient *client.PubSubClient,
+func NewTestPublishImpl(pubSubClient *pubsub.PubSubClientServiceImpl,
 	logger *zap.SugaredLogger) *TestPublishImpl {
 	ns := &TestPublishImpl{
 		pubSubClient: pubSubClient,
@@ -32,14 +29,7 @@ func (impl *TestPublishImpl) PublishForScan(channel string, payload interface{})
 	if err != nil {
 		return err
 	}
-	err = AddStream(impl.pubSubClient.JetStrContext, IMAGE_SCANNER_STREAM)
-	if err != nil {
-		impl.logger.Errorw("Error while adding stream", "error", err)
-	}
-
-	//Generate random string for passing as Header Id in message
-	randString := "MsgHeaderId-" + util.Generate(10)
-	_, err = impl.pubSubClient.JetStrContext.Publish(channel, body, nats.MsgId(randString))
+	err = impl.pubSubClient.Publish(channel, string(body))
 	if err != nil {
 		impl.logger.Errorw("Error while publishing request", "topic", channel, "error", err)
 	}

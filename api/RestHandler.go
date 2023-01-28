@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/caarlos0/env"
+	pubsub1 "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
@@ -108,7 +109,7 @@ func (impl *RestHandlerImpl) TestApplication(w http.ResponseWriter, r *http.Requ
 	scanConfig := &common.ScanEvent{}
 	scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
 	//err := impl.klarService.Process(scanConfig)
-	err := impl.testPublish.PublishForScan(pubsub.TOPIC_CI_SCAN, scanConfig)
+	err := impl.testPublish.PublishForScan(pubsub1.TOPIC_CI_SCAN, scanConfig)
 	if err != nil {
 		impl.logger.Errorw("err in process msg", "err", err)
 		impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)

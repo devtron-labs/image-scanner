@@ -7,8 +7,8 @@
 package main
 
 import (
+	"github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/api"
-	"github.com/devtron-labs/image-scanner/client"
 	"github.com/devtron-labs/image-scanner/internal/logger"
 	"github.com/devtron-labs/image-scanner/internal/sql"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
@@ -24,14 +24,11 @@ import (
 
 func InitializeApp() (*App, error) {
 	sugaredLogger := logger.NewSugardLogger()
-	pubSubClient, err := client.NewPubSubClient(sugaredLogger)
-	if err != nil {
-		return nil, err
-	}
-	testPublishImpl := pubsub.NewTestPublishImpl(pubSubClient, sugaredLogger)
+	pubSubClientServiceImpl := pubsub_lib.NewPubSubClientServiceImpl(sugaredLogger)
+	testPublishImpl := pubsub.NewTestPublishImpl(pubSubClientServiceImpl, sugaredLogger)
 	apiClient := grafeasService.GetGrafeasClient()
-	httpClient := logger.NewHttpClient()
-	grafeasServiceImpl := grafeasService.NewKlarServiceImpl(sugaredLogger, apiClient, httpClient)
+	client := logger.NewHttpClient()
+	grafeasServiceImpl := grafeasService.NewKlarServiceImpl(sugaredLogger, apiClient, client)
 	config, err := sql.GetConfig()
 	if err != nil {
 		return nil, err
@@ -59,17 +56,17 @@ func InitializeApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	clairServiceImpl := clairService.NewClairServiceImpl(sugaredLogger, clairConfig, httpClient, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl)
+	clairServiceImpl := clairService.NewClairServiceImpl(sugaredLogger, clairConfig, client, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl)
 	scannerConfig, err := api.GetScannerConfig()
 	if err != nil {
 		return nil, err
 	}
 	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, testPublishImpl, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl, scannerConfig)
 	muxRouter := api.NewMuxRouter(sugaredLogger, restHandlerImpl)
-	natSubscriptionImpl, err := pubsub.NewNatSubscription(pubSubClient, sugaredLogger, clairServiceImpl)
+	natSubscriptionImpl, err := pubsub.NewNatSubscription(pubSubClientServiceImpl, sugaredLogger, clairServiceImpl)
 	if err != nil {
 		return nil, err
 	}
-	app := NewApp(muxRouter, sugaredLogger, db, natSubscriptionImpl, pubSubClient)
+	app := NewApp(muxRouter, sugaredLogger, db, natSubscriptionImpl, pubSubClientServiceImpl)
 	return app, nil
 }
