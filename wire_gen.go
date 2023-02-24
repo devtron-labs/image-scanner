@@ -12,6 +12,7 @@ import (
 	"github.com/devtron-labs/image-scanner/internal/logger"
 	"github.com/devtron-labs/image-scanner/internal/sql"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
+	"github.com/devtron-labs/image-scanner/internal/thread-lib"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
@@ -45,7 +46,12 @@ func InitializeApp() (*App, error) {
 	cveStoreRepositoryImpl := repository.NewCveStoreRepositoryImpl(db, sugaredLogger)
 	imageScanDeployInfoRepositoryImpl := repository.NewImageScanDeployInfoRepositoryImpl(db, sugaredLogger)
 	ciArtifactRepositoryImpl := repository.NewCiArtifactRepositoryImpl(db, sugaredLogger)
-	imageScanServiceImpl := security.NewImageScanServiceImpl(sugaredLogger, imageScanHistoryRepositoryImpl, imageScanResultRepositoryImpl, imageScanObjectMetaRepositoryImpl, cveStoreRepositoryImpl, imageScanDeployInfoRepositoryImpl, ciArtifactRepositoryImpl)
+	scanToolExecutionResultMappingRepositoryImpl := repository.NewScanToolExecutionResultMappingRepositoryImpl(db, sugaredLogger)
+	scanToolMetadataRepositoryImpl := repository.NewScanToolMetadataRepositoryImpl(db, sugaredLogger)
+	scanStepConditionRepositoryImpl := repository.NewScanStepConditionRepositoryImpl(db, sugaredLogger)
+	scanToolStepRepositoryImpl := repository.NewScanToolStepRepositoryImpl(db, sugaredLogger)
+	scanStepConditionMappingRepositoryImpl := repository.NewScanStepConditionMappingRepositoryImpl(db, sugaredLogger)
+	imageScanServiceImpl := security.NewImageScanServiceImpl(sugaredLogger, imageScanHistoryRepositoryImpl, imageScanResultRepositoryImpl, imageScanObjectMetaRepositoryImpl, cveStoreRepositoryImpl, imageScanDeployInfoRepositoryImpl, ciArtifactRepositoryImpl, scanToolExecutionResultMappingRepositoryImpl, scanToolMetadataRepositoryImpl, scanStepConditionRepositoryImpl, scanToolStepRepositoryImpl, scanStepConditionMappingRepositoryImpl)
 	klarConfig, err := klarService.GetKlarConfig()
 	if err != nil {
 		return nil, err
@@ -67,6 +73,10 @@ func InitializeApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	app := NewApp(muxRouter, sugaredLogger, db, natSubscriptionImpl, pubSubClientServiceImpl)
+	threadPoolImpl, err := thread_lib.NewThreadPoolImpl()
+	if err != nil {
+		return nil, err
+	}
+	app := NewApp(muxRouter, sugaredLogger, db, natSubscriptionImpl, pubSubClientServiceImpl, threadPoolImpl)
 	return app, nil
 }

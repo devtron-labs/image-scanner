@@ -45,7 +45,7 @@ func GetKlarConfig() (*KlarConfig, error) {
 }
 
 type KlarService interface {
-	Process(scanEvent *common.ScanEvent) (*common.ScanEventResponse, error)
+	Process(scanEvent *common.ImageScanEvent) (*common.ScanEventResponse, error)
 }
 
 type KlarServiceImpl struct {
@@ -70,7 +70,7 @@ func NewKlarServiceImpl(logger *zap.SugaredLogger, klarConfig *KlarConfig, grafe
 	}
 }
 
-func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanEventResponse, error) {
+func (impl *KlarServiceImpl) Process(scanEvent *common.ImageScanEvent) (*common.ScanEventResponse, error) {
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
 	}

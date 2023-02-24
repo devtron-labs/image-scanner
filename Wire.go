@@ -9,6 +9,7 @@ import (
 	"github.com/devtron-labs/image-scanner/internal/logger"
 	"github.com/devtron-labs/image-scanner/internal/sql"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
+	thread_lib "github.com/devtron-labs/image-scanner/internal/thread-lib"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
@@ -65,6 +66,21 @@ func InitializeApp() (*App, error) {
 		wire.Bind(new(repository.CiArtifactRepository), new(*repository.CiArtifactRepositoryImpl)),
 		repository.NewDockerArtifactStoreRepositoryImpl,
 		wire.Bind(new(repository.DockerArtifactStoreRepository), new(*repository.DockerArtifactStoreRepositoryImpl)),
+
+		repository.NewScanToolMetadataRepositoryImpl,
+		wire.Bind(new(repository.ScanToolMetadataRepository), new(*repository.ScanToolMetadataRepositoryImpl)),
+		repository.NewScanToolStepRepositoryImpl,
+		wire.Bind(new(repository.ScanToolStepRepository), new(*repository.ScanToolStepRepositoryImpl)),
+		repository.NewScanStepConditionRepositoryImpl,
+		wire.Bind(new(repository.ScanStepConditionRepository), new(*repository.ScanStepConditionRepositoryImpl)),
+		repository.NewScanStepConditionMappingRepositoryImpl,
+		wire.Bind(new(repository.ScanStepConditionMappingRepository), new(*repository.ScanStepConditionMappingRepositoryImpl)),
+
+		repository.NewScanToolExecutionResultMappingRepositoryImpl,
+		wire.Bind(new(repository.ScanToolExecutionResultMappingRepository), new(*repository.ScanToolExecutionResultMappingRepositoryImpl)),
+
+		thread_lib.NewThreadPoolImpl,
+		wire.Bind(new(thread_lib.ThreadPool), new(*thread_lib.ThreadPoolImpl)),
 	)
 	return &App{}, nil
 }

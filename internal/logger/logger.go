@@ -15,7 +15,7 @@ func NewSugardLogger() *zap.SugaredLogger {
 	if err != nil {
 		panic("failed to create the default logger: " + err.Error())
 	}
-	Logger := l.Sugar()*/
+	logger := l.Sugar()*/
 	return l.Sugar()
 }
 

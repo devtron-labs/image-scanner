@@ -68,11 +68,6 @@ func (impl ImageScanResultRepositoryImpl) Update(team *ImageScanExecutionResult)
 
 func (impl ImageScanResultRepositoryImpl) FetchByScanExecutionId(scanExecutionId int) ([]*ImageScanExecutionResult, error) {
 	var models []*ImageScanExecutionResult
-	/*err := impl.dbConnection.Model(&models).Column("image_scan_execution_result.*", "cs.*").
-	Join("inner join cve_store cs on cs.name=image_scan_execution_result.cve_name").
-	Where("image_scan_execution_result.scan_execution_id = ?", id).Select()
-	*/
-
 	err := impl.dbConnection.Model(&models).Column("image_scan_execution_result.*", "CveStore").
 		Where("image_scan_execution_result.image_scan_execution_history_id = ?", scanExecutionId).
 		Select()

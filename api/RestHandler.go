@@ -5,7 +5,6 @@ import (
 	"errors"
 	"fmt"
 	"github.com/caarlos0/env"
-	pubsub1 "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
@@ -18,8 +17,6 @@ import (
 )
 
 type RestHandler interface {
-	TestApplication(w http.ResponseWriter, r *http.Request)
-	TestApplicationList(w http.ResponseWriter, r *http.Request)
 	ScanForVulnerability(w http.ResponseWriter, r *http.Request)
 }
 
@@ -76,97 +73,6 @@ const (
 	SCANNER_TYPE_TRIVY    = "TRIVY"
 )
 
-func (impl RestHandlerImpl) writeJsonResp(w http.ResponseWriter, err error, respBody interface{}, status int) {
-	response := Response{}
-	response.Code = status
-	response.Status = http.StatusText(status)
-	if err == nil {
-		response.Result = respBody
-	} else {
-		apiErr := &ApiError{}
-		apiErr.Code = "000" // 000=unknown
-		apiErr.InternalMessage = err.Error()
-		apiErr.UserMessage = respBody
-		response.Errors = []*ApiError{apiErr}
-
-	}
-	b, err := json.Marshal(response)
-	if err != nil {
-		impl.logger.Error("error in marshaling err object", err)
-		status = 500
-	}
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(status)
-	w.Write(b)
-}
-
-type ResetRequest struct {
-	AppId         int `json:"appId"`
-	EnvironmentId int `json:"environmentId"`
-}
-
-func (impl *RestHandlerImpl) TestApplication(w http.ResponseWriter, r *http.Request) {
-	scanConfig := &common.ScanEvent{}
-	scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
-	//err := impl.klarService.Process(scanConfig)
-	err := impl.testPublish.PublishForScan(pubsub1.TOPIC_CI_SCAN, scanConfig)
-	if err != nil {
-		impl.logger.Errorw("err in process msg", "err", err)
-		impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
-		return
-	}
-	impl.logger.Debugw("save", "status", "")
-	impl.writeJsonResp(w, err, nil, 200)
-}
-
-func (impl *RestHandlerImpl) TestApplicationList(w http.ResponseWriter, r *http.Request) {
-	scanConfig := &common.ScanEvent{}
-	scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
-	noteResp, err := impl.grafeasService.GetNotesById("CVE-2016-9840")
-	if err != nil {
-		impl.logger.Errorw("err in process msg", "err", err)
-		impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
-		return
-	}
-	impl.logger.Debugw("resp from get note api", "noteResp", noteResp)
-	impl.writeJsonResp(w, err, noteResp, 200)
-}
-
-func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http.Request) {
-	decoder := json.NewDecoder(r.Body)
-	var scanConfig common.ScanEvent
-	err := decoder.Decode(&scanConfig)
-	if err != nil {
-		impl.logger.Errorw("error in decode request", "error", err)
-		writeJsonResp(w, err, nil, http.StatusBadRequest)
-		return
-	}
-	//scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
-	if scanConfig.UserId == 0 {
-		scanConfig.UserId = 1
-	}
-	impl.logger.Infow("image scan req", "req", scanConfig)
-	var result *common.ScanEventResponse
-
-	if impl.scannerConfig.ScannerType == SCANNER_TYPE_CLAIR_V2 {
-		result, err = impl.klarService.Process(&scanConfig)
-		if err != nil {
-			impl.logger.Errorw("err in process msg", "err", err)
-			impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
-			return
-		}
-	} else if impl.scannerConfig.ScannerType == SCANNER_TYPE_CLAIR_V4 {
-		result, err = impl.clairService.ScanImage(&scanConfig)
-		if err != nil {
-			impl.logger.Errorw("err in process msg", "err", err)
-			impl.writeJsonResp(w, err, nil, http.StatusInternalServerError)
-			return
-		}
-	}
-
-	impl.logger.Debugw("save", "status", result)
-	impl.writeJsonResp(w, err, result, 200)
-}
 func GetScannerConfig() (*ScannerConfig, error) {
 	scannerConfig := &ScannerConfig{}
 	err := env.Parse(scannerConfig)
@@ -174,4 +80,43 @@ func GetScannerConfig() (*ScannerConfig, error) {
 		return nil, errors.New(fmt.Sprintf("could not get scanner config from environment :%v", err))
 	}
 	return scannerConfig, err
+}
+
+type ResetRequest struct {
+	AppId         int `json:"appId"`
+	EnvironmentId int `json:"environmentId"`
+}
+
+func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http.Request) {
+	decoder := json.NewDecoder(r.Body)
+	var scanConfig common.ImageScanEvent
+	err := decoder.Decode(&scanConfig)
+	if err != nil {
+		impl.logger.Errorw("error in decode request", "error", err)
+		writeJsonResp(w, err, nil, http.StatusBadRequest)
+		return
+	}
+	if scanConfig.UserId == 0 {
+		scanConfig.UserId = 1 //setting user as system user in case of empty user data
+	}
+	impl.logger.Infow("image scan req", "req", scanConfig)
+	var result *common.ScanEventResponse
+	if impl.scannerConfig.ScannerType == SCANNER_TYPE_CLAIR_V2 {
+		result, err = impl.klarService.Process(&scanConfig)
+		if err != nil {
+			impl.logger.Errorw("err in process msg", "err", err)
+			writeJsonResp(w, err, nil, http.StatusInternalServerError)
+			return
+		}
+	} else if impl.scannerConfig.ScannerType == SCANNER_TYPE_CLAIR_V4 {
+		result, err = impl.clairService.ScanImage(&scanConfig)
+		if err != nil {
+			impl.logger.Errorw("err in process msg", "err", err)
+			writeJsonResp(w, err, nil, http.StatusInternalServerError)
+			return
+		}
+	}
+
+	impl.logger.Debugw("save", "status", result)
+	writeJsonResp(w, err, result, http.StatusOK)
 }

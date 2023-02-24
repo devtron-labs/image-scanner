@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-type ScanEvent struct {
+type ImageScanEvent struct {
 	Image            string `json:"image"`
 	ImageDigest      string `json:"imageDigest"`
 	AppId            int    `json:"appId"`
@@ -22,7 +22,7 @@ type ScanEvent struct {
 }
 
 type ScanEventResponse struct {
-	RequestData         *ScanEvent                 `json:"requestData"`
+	RequestData         *ImageScanEvent            `json:"requestData"`
 	ResponseDataClairV4 []*claircore.Vulnerability `json:"responseDataClairV4"`
 	ResponseDataClairV2 []*clair.Vulnerability     `json:"ResponseDataClairV2"`
 }

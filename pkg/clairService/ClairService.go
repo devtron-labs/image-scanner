@@ -41,7 +41,7 @@ const (
 )
 
 type ClairService interface {
-	ScanImage(scanEvent *common.ScanEvent) (*common.ScanEventResponse, error)
+	ScanImage(scanEvent *common.ImageScanEvent) (*common.ScanEventResponse, error)
 	CheckIfIndexReportExistsForManifestHash(manifestHash claircore.Digest) (bool, error)
 	CreateIndexReportFromManifest(manifest *claircore.Manifest) error
 	GetVulnerabilityReportFromManifestHash(manifestHash claircore.Digest) (*claircore.VulnerabilityReport, error)
@@ -112,7 +112,7 @@ func GetClairConfig() (*ClairConfig, error) {
 	return cfg, err
 }
 
-func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ScanEvent) (*common.ScanEventResponse, error) {
+func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent) (*common.ScanEventResponse, error) {
 	impl.logger.Debugw("new request, scan image", "requestPayload", scanEvent)
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
@@ -147,7 +147,7 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ScanEvent) (*common.Sc
 	return scanEventResponse, nil
 }
 
-func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.ScanEvent) (*claircore.VulnerabilityReport, error) {
+func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.ImageScanEvent) (*claircore.VulnerabilityReport, error) {
 	//get manifest from image
 	manifest, err := impl.CreateClairManifest(scanEvent)
 	if err != nil {
@@ -193,7 +193,7 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.
 	return vulnerabilityReport, nil
 }
 
-func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (*claircore.Manifest, error) {
+func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ImageScanEvent) (*claircore.Manifest, error) {
 	authenticator, err := impl.GetAuthenticatorByDockerRegistryId(scanEvent.DockerRegistryId)
 	if err != nil {
 		impl.logger.Errorw("error in getting authenticator by dockerRegistryId", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
