@@ -9,21 +9,23 @@ import (
 )
 
 type ScanToolStep struct {
-	tableName         struct{}               `sql:"scan_tool_step" pg:",discard_unknown_columns"`
-	Id                int                    `sql:"id,pk"`
-	ScanToolId        int                    `sql:"scan_tool_id"`
-	Index             int                    `sql:"index"`
-	StepExecutionType bean.ScanExecutionType `sql:"step_execution_type"`
-	RetryCount        int                    `sql:"retry_count"`          //only applicable if step fails
-	ExecuteStepOnFail int                    `sql:"execute_step_on_fail"` //fail means that at least one condition is not matched
-	ExecuteStepOnPass int                    `sql:"execute_step_on_pass"` //pass means that all conditions are matched
-	InputPayload      json.RawMessage        `sql:"input_payload"`
-	HttpReqType       string                 `sql:"http_req_type"`
-	HttpReqHeaders    json.RawMessage        `sql:"http_req_headers"`
-	HttpQueryParams   json.RawMessage        `sql:"http_query_params"`
-	CliFlags          json.RawMessage        `sql:"cli_flags"`
-	CliOutputType     cli_util.CliOutputType `sql:"cli_output_type"`
-	Deleted           bool                   `sql:"deleted,notnull"`
+	tableName               struct{}               `sql:"scan_tool_step" pg:",discard_unknown_columns"`
+	Id                      int                    `sql:"id,pk"`
+	ScanToolId              int                    `sql:"scan_tool_id"`
+	Index                   int                    `sql:"index"`
+	StepExecutionType       bean.ScanExecutionType `sql:"step_execution_type"`
+	StepExecutionSync       bool                   `sql:"step_execution_sync,notnull"` //sync if true, else async
+	RetryCount              int                    `sql:"retry_count"`                 //only applicable if step fails
+	ExecuteStepOnFail       int                    `sql:"execute_step_on_fail"`        //fail means that at least one condition is not matched (not applicable for async process)
+	ExecuteStepOnPass       int                    `sql:"execute_step_on_pass"`        //pass means that all conditions are matched
+	RenderInputDataFromStep int                    `sql:"render_input_data_from_step"` //use this steps output to render input data, -1 if not needed
+	HttpInputPayload        json.RawMessage        `sql:"http_input_payload"`
+	HttpMethodType          string                 `sql:"http_method_type"`
+	HttpReqHeaders          json.RawMessage        `sql:"http_req_headers"`
+	HttpQueryParams         json.RawMessage        `sql:"http_query_params"`
+	CliArgs                 json.RawMessage        `sql:"cli_args"` //consists of sub command and flags along with applicable values
+	CliOutputType           cli_util.CliOutputType `sql:"cli_output_type"`
+	Deleted                 bool                   `sql:"deleted,notnull"`
 	ScanToolMetadata
 	AuditLog
 }

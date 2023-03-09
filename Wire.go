@@ -76,8 +76,8 @@ func InitializeApp() (*App, error) {
 		repository.NewScanStepConditionMappingRepositoryImpl,
 		wire.Bind(new(repository.ScanStepConditionMappingRepository), new(*repository.ScanStepConditionMappingRepositoryImpl)),
 
-		repository.NewScanToolExecutionResultMappingRepositoryImpl,
-		wire.Bind(new(repository.ScanToolExecutionResultMappingRepository), new(*repository.ScanToolExecutionResultMappingRepositoryImpl)),
+		repository.NewScanToolExecutionHistoryMappingRepositoryImpl,
+		wire.Bind(new(repository.ScanToolExecutionHistoryMappingRepository), new(*repository.ScanToolExecutionHistoryMappingRepositoryImpl)),
 
 		thread_lib.NewThreadPoolImpl,
 		wire.Bind(new(thread_lib.ThreadPool), new(*thread_lib.ThreadPoolImpl)),

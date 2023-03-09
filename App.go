@@ -54,9 +54,9 @@ func (app *App) Start() {
 }
 
 func (app *App) Stop() {
-	app.Logger.Infow("lens shutdown initiating")
-	timeoutContext, _ := context.WithTimeout(context.Background(), 5*time.Second)
-
+	app.Logger.Infow("image scanner shutdown initiating")
+	timeoutContext, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
 	app.Logger.Infow("closing router")
 	err := app.server.Shutdown(timeoutContext)
 	if err != nil {

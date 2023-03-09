@@ -9,9 +9,10 @@ type ImageScanExecutionResult struct {
 	tableName                   struct{} `sql:"image_scan_execution_result" pg:",discard_unknown_columns"`
 	Id                          int      `sql:"id,pk"`
 	CveStoreName                string   `sql:"cve_store_name,notnull"`
-	ImageScanExecutionHistoryId int      `sql:"image_scan_execution_history_id"`
-	CveStore                    CveStore
-	ImageScanExecutionHistory   ImageScanExecutionHistory
+	ImageScanExecutionHistoryId int      `sql:"image_scan_execution_history_id"` //TODO: remove this
+
+	CveStore                  CveStore
+	ImageScanExecutionHistory ImageScanExecutionHistory
 }
 
 type ImageScanResultRepository interface {

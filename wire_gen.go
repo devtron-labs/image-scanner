@@ -46,12 +46,16 @@ func InitializeApp() (*App, error) {
 	cveStoreRepositoryImpl := repository.NewCveStoreRepositoryImpl(db, sugaredLogger)
 	imageScanDeployInfoRepositoryImpl := repository.NewImageScanDeployInfoRepositoryImpl(db, sugaredLogger)
 	ciArtifactRepositoryImpl := repository.NewCiArtifactRepositoryImpl(db, sugaredLogger)
-	scanToolExecutionResultMappingRepositoryImpl := repository.NewScanToolExecutionResultMappingRepositoryImpl(db, sugaredLogger)
+	scanToolExecutionHistoryMappingRepositoryImpl := repository.NewScanToolExecutionHistoryMappingRepositoryImpl(db, sugaredLogger)
 	scanToolMetadataRepositoryImpl := repository.NewScanToolMetadataRepositoryImpl(db, sugaredLogger)
 	scanStepConditionRepositoryImpl := repository.NewScanStepConditionRepositoryImpl(db, sugaredLogger)
 	scanToolStepRepositoryImpl := repository.NewScanToolStepRepositoryImpl(db, sugaredLogger)
 	scanStepConditionMappingRepositoryImpl := repository.NewScanStepConditionMappingRepositoryImpl(db, sugaredLogger)
-	imageScanServiceImpl := security.NewImageScanServiceImpl(sugaredLogger, imageScanHistoryRepositoryImpl, imageScanResultRepositoryImpl, imageScanObjectMetaRepositoryImpl, cveStoreRepositoryImpl, imageScanDeployInfoRepositoryImpl, ciArtifactRepositoryImpl, scanToolExecutionResultMappingRepositoryImpl, scanToolMetadataRepositoryImpl, scanStepConditionRepositoryImpl, scanToolStepRepositoryImpl, scanStepConditionMappingRepositoryImpl)
+	threadPoolImpl, err := thread_lib.NewThreadPoolImpl()
+	if err != nil {
+		return nil, err
+	}
+	imageScanServiceImpl := security.NewImageScanServiceImpl(sugaredLogger, imageScanHistoryRepositoryImpl, imageScanResultRepositoryImpl, imageScanObjectMetaRepositoryImpl, cveStoreRepositoryImpl, imageScanDeployInfoRepositoryImpl, ciArtifactRepositoryImpl, scanToolExecutionHistoryMappingRepositoryImpl, scanToolMetadataRepositoryImpl, scanStepConditionRepositoryImpl, scanToolStepRepositoryImpl, scanStepConditionMappingRepositoryImpl, threadPoolImpl)
 	klarConfig, err := klarService.GetKlarConfig()
 	if err != nil {
 		return nil, err
@@ -70,10 +74,6 @@ func InitializeApp() (*App, error) {
 	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, testPublishImpl, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl, scannerConfig)
 	muxRouter := api.NewMuxRouter(sugaredLogger, restHandlerImpl)
 	natSubscriptionImpl, err := pubsub.NewNatSubscription(pubSubClientServiceImpl, sugaredLogger, clairServiceImpl)
-	if err != nil {
-		return nil, err
-	}
-	threadPoolImpl, err := thread_lib.NewThreadPoolImpl()
 	if err != nil {
 		return nil, err
 	}

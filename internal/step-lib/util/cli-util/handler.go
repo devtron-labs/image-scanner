@@ -16,17 +16,13 @@ const (
 	CliOutPutTypeStream CliOutputType = "STREAM"
 )
 
-func handleCliRequest(baseCommand, stepIdentifier string, readOutput bool, ctx context.Context, outputType CliOutputType, args map[string]string) (err error) {
+func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, outputType CliOutputType, args map[string]string) (err error) {
 	//converting maps of args and their values to a slice of string for execution
-	argsSlice := make([]string, 0)
+	argsSlice := make([]string, 0, len(args))
 	for arg, value := range args {
-		//assuming '-' or '--' is provided by user
+		//assuming '-' or '--' is provided by user (if applicable)
 		argsSlice = append(argsSlice, arg)
 		argsSlice = append(argsSlice, value)
-	}
-	outputFileName := ""
-	if readOutput {
-		outputFileName, err = common_util.CreateFile(stepIdentifier)
 	}
 	command := exec.CommandContext(ctx, baseCommand, argsSlice...)
 	if outputType == CliOutPutTypeStream {
@@ -47,10 +43,12 @@ func executeStaticCliRequest(command *exec.Cmd, outputFileName string) error {
 		log.Println("error in running command", "err", err)
 		return err
 	}
-	err = common_util.WriteFile(outputFileName, op)
-	if err != nil {
-		log.Println("error in writing cli static command output to file", "err", err)
-		return err
+	if outputFileName != "" && op != nil {
+		err = common_util.WriteFile(outputFileName, op)
+		if err != nil {
+			log.Println("error in writing cli static command output to file", "err", err)
+			return err
+		}
 	}
 	return nil
 }
@@ -94,10 +92,12 @@ func copyAndWriteToOutputFile(r io.Reader, outputFileName string) error {
 		if n > 0 {
 			d := buf[:n]
 			out = append(out, d...)
-			errWrite := common_util.WriteFile(outputFileName, out)
-			if errWrite != nil {
-				log.Println("error in writing buffer output to file", "err", err)
-				return errWrite
+			if outputFileName != "" && out != nil {
+				errWrite := common_util.WriteFile(outputFileName, out)
+				if errWrite != nil {
+					log.Println("error in writing buffer output to file", "err", err)
+					return errWrite
+				}
 			}
 		}
 		if err != nil {

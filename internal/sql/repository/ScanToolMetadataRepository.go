@@ -27,7 +27,7 @@ type ScanToolMetadata struct {
 }
 
 type ScanToolMetadataRepository interface {
-	FindAllActiveToolsForScanTarget(scanTarget ScanTargetType) ([]*ScanToolMetadata, error)
+	FindAllActiveToolsByScanTarget(scanTarget ScanTargetType) ([]*ScanToolMetadata, error)
 	FindActiveById(id int) (*ScanToolMetadata, error)
 	Save(model *ScanToolMetadata) (*ScanToolMetadata, error)
 	Update(model *ScanToolMetadata) (*ScanToolMetadata, error)
@@ -47,7 +47,7 @@ func NewScanToolMetadataRepositoryImpl(dbConnection *pg.DB,
 	}
 }
 
-func (repo *ScanToolMetadataRepositoryImpl) FindAllActiveToolsForScanTarget(scanTargetType ScanTargetType) ([]*ScanToolMetadata, error) {
+func (repo *ScanToolMetadataRepositoryImpl) FindAllActiveToolsByScanTarget(scanTargetType ScanTargetType) ([]*ScanToolMetadata, error) {
 	models := make([]*ScanToolMetadata, 0)
 	err := repo.dbConnection.Model(&models).Where("active = ?", true).
 		Where("scan_target = ?", scanTargetType).
