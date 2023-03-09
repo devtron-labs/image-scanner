@@ -183,18 +183,15 @@ func (impl *ImageScanServiceImpl) ProcessScanForATool(tool repository.ScanToolMe
 		impl.logger.Errorw("error in getting steps by scan tool id", "err", err, "toolId", tool.Id)
 		return err
 	}
-	wg := &sync.WaitGroup{}
-	wg.Add(len(steps))
 	//sorting steps on the basis of index
 	sort.Slice(steps, func(i, j int) bool { return steps[i].Index < steps[j].Index })
 	stepIndexMap := make(map[int]repository.ScanToolStep)
 	stepTryCount := make(map[int]int) //map of stepIndex and it's try count
 	var stepProcessIndex int
-	for i, step := range steps {
+	//setting index of first step for processing starting point
+	stepProcessIndex = steps[0].Index
+	for _, step := range steps {
 		stepCopy := *step
-		if i == 0 { //setting index of first step for processing starting point
-			stepProcessIndex = stepCopy.Index
-		}
 		if stepCopy.Index == stepCopy.ExecuteStepOnFail {
 			stepTryCount[stepCopy.Index] = 1 + stepCopy.RetryCount // adding 1 for the initial try
 		} else {
@@ -202,63 +199,57 @@ func (impl *ImageScanServiceImpl) ProcessScanForATool(tool repository.ScanToolMe
 		}
 		stepIndexMap[stepCopy.Index] = stepCopy
 	}
-
 	for {
-		if !(stepTryCount[stepProcessIndex] > 0) {
+		if stepTryCount[stepProcessIndex] <= 0 {
 			return fmt.Errorf("error in completing tool scan process, max no of tries reached for failed step with index : %d", stepProcessIndex)
 		}
 		step := stepIndexMap[stepProcessIndex]
-		//reducing try count for this step
-		tryCount := stepTryCount[stepProcessIndex]
-		stepTryCount[stepProcessIndex] = tryCount - 1
+		//decrementing try count for this step
+		stepTryCount[stepProcessIndex] -= 1
 		if step.StepExecutionSync {
 			err, isPassed := impl.ProcessScanStep(step, tool, toolOutputDirPath)
 			if err != nil {
 				impl.logger.Errorw("error in processing scan step sync", "err", err, "stepId", step.Id)
 				return err
 			}
-			if isPassed {
-				if step.ExecuteStepOnPass == bean.NullProcessIndex {
-					//TODO: use this steps output to get vulnerabilities
-					return nil
-				} else {
-					stepProcessIndex = step.ExecuteStepOnPass
-				}
-				wg.Done()
-			} else {
-				if step.ExecuteStepOnFail == bean.NullProcessIndex {
-					return fmt.Errorf("error in executing step with index : %d", stepProcessIndex)
-				} else if stepProcessIndex != step.ExecuteStepOnFail { //only marking this step done when the next step is not same
-					stepProcessIndex = step.ExecuteStepOnFail
-					wg.Done()
-				}
+			if step.ExecuteStepOnPass == bean.NullProcessIndex && isPassed { //step process is passed and scanning is completed
+				//TODO: use this steps output to get vulnerabilities
+				return nil
+			} else if step.ExecuteStepOnFail == bean.NullProcessIndex && !isPassed { //step process is failed and scanning is completed
+				return fmt.Errorf("error in executing step with index : %d", stepProcessIndex)
+			} else if isPassed { //step process is passed and have to move to next step for processing
+				stepProcessIndex = step.ExecuteStepOnPass
+			} else if !isPassed { //step process is failed and have to move to next step for processing
+				stepProcessIndex = step.ExecuteStepOnFail //this step can be equal to the same step in case of retry or can be other one
 			}
 		} else { //async type processing
-			stepProcessIndex = step.ExecuteStepOnPass // for async type process, always considering step to be passed
 			go func() {
 				//will not check if step is passed or failed
 				err, _ := impl.ProcessScanStep(step, tool, toolOutputDirPath)
 				if err != nil {
 					impl.logger.Errorw("error in processing scan step async", "err", err, "stepId", step.Id)
+					return
 				}
-				wg.Done()
 			}()
+			stepProcessIndex = step.ExecuteStepOnPass      // for async type process, always considering step to be passed
+			if stepProcessIndex == bean.NullProcessIndex { // if end step, consider it completed and return
+				return nil
+			}
 		}
 	}
-	wg.Wait()
-	return nil
 }
 
 func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, tool repository.ScanToolMetadata, toolOutputDirPath string) (error, bool) {
 	var err error
 	outputFileNameForThisStep := path.Join(toolOutputDirPath, fmt.Sprintf("%d%s", step.Index, bean.JsonOutputFileNameSuffix))
+	isPassed := false
 	if step.StepExecutionType == bean.ScanExecutionTypeHttp {
 		var queryParams url.Values
 		if step.HttpQueryParams != nil {
 			err = json.Unmarshal(step.HttpQueryParams, &queryParams)
 			if err != nil {
 				impl.logger.Errorw("error in unmarshalling query params", "err", err)
-				return err, false
+				return err, isPassed
 			}
 		}
 		httpHeaders := make(map[string]string)
@@ -266,7 +257,7 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 			err = json.Unmarshal(step.HttpReqHeaders, &httpHeaders)
 			if err != nil {
 				impl.logger.Errorw("error in unmarshalling http headers", "err", err)
-				return err, false
+				return err, isPassed
 			}
 		}
 		inputPayloadBytes := step.HttpInputPayload
@@ -274,14 +265,14 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 			inputPayloadBytes, err = impl.RenderInputDataWithOtherStepOutput(step.HttpInputPayload, step.RenderInputDataFromStep, toolOutputDirPath)
 			if err != nil {
 				impl.logger.Errorw("error in rendering http input payload", "err", err)
-				return err, false
+				return err, isPassed
 			}
 		}
 		inputPayload := bytes.NewBuffer(inputPayloadBytes)
 		_, err = http_util.HandleHTTPRequest(tool.ServerBaseUrl, step.HttpMethodType, httpHeaders, queryParams, inputPayload, outputFileNameForThisStep)
 		if err != nil {
 			impl.logger.Errorw("error in http request txn", "err", err)
-			return err, false
+			return err, isPassed
 		}
 	} else if step.StepExecutionType == bean.ScanExecutionTypeCli {
 		inputArgsBytes := step.CliArgs
@@ -289,7 +280,7 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 			inputArgsBytes, err = impl.RenderInputDataWithOtherStepOutput(step.CliArgs, step.RenderInputDataFromStep, toolOutputDirPath)
 			if err != nil {
 				impl.logger.Errorw("error in rendering cli input args", "err", err)
-				return err, false
+				return err, isPassed
 			}
 		}
 		cliArgs := make(map[string]string)
@@ -297,16 +288,16 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 			err = json.Unmarshal(inputArgsBytes, &cliArgs)
 			if err != nil {
 				impl.logger.Errorw("error in unmarshalling cli args", "err", err)
-				return err, false
+				return err, isPassed
 			}
 		}
 		err := cli_util.HandleCliRequest(tool.BaseCliCommand, outputFileNameForThisStep, context.Background(), step.CliOutputType, cliArgs)
 		if err != nil {
 			impl.logger.Errorw("error in cli request txn", "err", err)
-			return err, false
+			return err, isPassed
 		}
 	}
-	return nil, false
+	return nil, isPassed
 }
 
 func (impl *ImageScanServiceImpl) RenderInputDataWithOtherStepOutput(inputPayloadTmpl json.RawMessage, outputStepIndex int, toolExecutionDirectoryPath string) ([]byte, error) {
