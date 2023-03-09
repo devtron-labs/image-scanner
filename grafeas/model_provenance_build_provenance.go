@@ -39,6 +39,6 @@ type ProvenanceBuildProvenance struct {
 	TriggerId string `json:"trigger_id,omitempty"`
 	// Special options applied to this build. This is a catch-all field where build providers can enter any desired additional details.
 	BuildOptions map[string]string `json:"build_options,omitempty"`
-	// Version string of the builder at the time this build was executed.
+	// PackageVersion string of the builder at the time this build was executed.
 	BuilderVersion string `json:"builder_version,omitempty"`
 }

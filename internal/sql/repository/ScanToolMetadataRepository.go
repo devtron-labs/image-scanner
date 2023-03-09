@@ -13,21 +13,22 @@ const (
 )
 
 type ScanToolMetadata struct {
-	tableName                        struct{}       `sql:"scan_tool_metadata" pg:",discard_unknown_columns"`
-	Id                               int            `sql:"id,pk"`
-	Name                             string         `sql:"name"`
-	Version                          string         `sql:"version"`
-	ServerBaseUrl                    string         `sql:"server_base_url"`
-	BaseCliCommand                   string         `sql:"base_cli_command"`
-	ResultDescriptorTemplateLocation string         `sql:"result_descriptor_template"`
-	ScanTarget                       ScanTargetType `sql:"scan_target"`
-	Active                           bool           `sql:"active,notnull"`
-	Deleted                          bool           `sql:"deleted,notnull"`
+	tableName                struct{}       `sql:"scan_tool_metadata" pg:",discard_unknown_columns"`
+	Id                       int            `sql:"id,pk"`
+	Name                     string         `sql:"name"`
+	Version                  string         `sql:"version"`
+	ServerBaseUrl            string         `sql:"server_base_url"`
+	BaseCliCommand           string         `sql:"base_cli_command"`
+	ResultDescriptorTemplate string         `sql:"result_descriptor_template"`
+	ScanTarget               ScanTargetType `sql:"scan_target"`
+	Active                   bool           `sql:"active,notnull"`
+	Deleted                  bool           `sql:"deleted,notnull"`
 	AuditLog
 }
 
 type ScanToolMetadataRepository interface {
 	FindAllActiveToolsByScanTarget(scanTarget ScanTargetType) ([]*ScanToolMetadata, error)
+	FindByNameAndVersion(name, version string) (*ScanToolMetadata, error)
 	FindActiveById(id int) (*ScanToolMetadata, error)
 	Save(model *ScanToolMetadata) (*ScanToolMetadata, error)
 	Update(model *ScanToolMetadata) (*ScanToolMetadata, error)
@@ -57,6 +58,18 @@ func (repo *ScanToolMetadataRepositoryImpl) FindAllActiveToolsByScanTarget(scanT
 		return nil, err
 	}
 	return models, nil
+}
+
+func (repo *ScanToolMetadataRepositoryImpl) FindByNameAndVersion(name, version string) (*ScanToolMetadata, error) {
+	model := &ScanToolMetadata{}
+	err := repo.dbConnection.Model(&model).Where("active = ?", true).
+		Where("name = ?", name).Where("version = ?", version).
+		Where("deleted = ?", false).Select()
+	if err != nil {
+		repo.logger.Errorw("error in getting tool by name and version", "err", err, "name", name, "version", version)
+		return nil, err
+	}
+	return model, nil
 }
 
 func (repo *ScanToolMetadataRepositoryImpl) FindActiveById(id int) (*ScanToolMetadata, error) {

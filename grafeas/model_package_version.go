@@ -9,7 +9,7 @@
 
 package grafeas
 
-// Version contains structured information about the version of a package.
+// PackageVersion contains structured information about the version of a package.
 type PackageVersion struct {
 	// Used to correct mistakes in the version numbering scheme.
 	Epoch int32 `json:"epoch,omitempty"`

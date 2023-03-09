@@ -1,7 +1,10 @@
 package common_util
 
 import (
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"html/template"
 	"io/fs"
 	"log"
 	"os"
@@ -45,4 +48,21 @@ func ReadFile(fileName string) ([]byte, error) {
 		return nil, err
 	}
 	return op, nil
+}
+
+func ParseJsonTemplate(inputTemplate string, data []byte) (string, error) {
+	tmpl := template.Must(template.New("").Parse(inputTemplate))
+	jsonMap := map[string]interface{}{}
+	err := json.Unmarshal(data, &jsonMap)
+	if err != nil {
+		log.Println("error in unmarshalling", "err", err)
+		return "", err
+	}
+	buf := &bytes.Buffer{}
+	err = tmpl.Execute(buf, jsonMap)
+	if err != nil {
+		log.Println("error in executing template", "err", err)
+		return "", err
+	}
+	return buf.String(), nil
 }

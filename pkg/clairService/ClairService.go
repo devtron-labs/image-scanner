@@ -13,6 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/caarlos0/env"
 	"github.com/devtron-labs/image-scanner/common"
+	"github.com/devtron-labs/image-scanner/internal/sql/bean"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
@@ -54,17 +55,20 @@ type ClairServiceImpl struct {
 	httpClient                    *http.Client
 	imageScanService              security.ImageScanService
 	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository
+	scanToolMetadataRepository    repository.ScanToolMetadataRepository
 }
 
 func NewClairServiceImpl(logger *zap.SugaredLogger, clairConfig *ClairConfig,
 	httpClient *http.Client, imageScanService security.ImageScanService,
-	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository) *ClairServiceImpl {
+	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository,
+	scanToolMetadataRepository repository.ScanToolMetadataRepository) *ClairServiceImpl {
 	return &ClairServiceImpl{
 		logger:                        logger,
 		clairConfig:                   clairConfig,
 		httpClient:                    httpClient,
 		imageScanService:              imageScanService,
 		dockerArtifactStoreRepository: dockerArtifactStoreRepository,
+		scanToolMetadataRepository:    scanToolMetadataRepository,
 	}
 }
 
@@ -137,8 +141,12 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent) (*comm
 	for _, vulnerability := range vulnerabilityReport.Vulnerabilities {
 		vulnerabilities = append(vulnerabilities, vulnerability)
 	}
-
-	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent)
+	tool, err := impl.scanToolMetadataRepository.FindByNameAndVersion(bean.ClairTool, bean.Version4)
+	if err != nil {
+		impl.logger.Errorw("error in getting tool by name and version", "err", err)
+		return scanEventResponse, err
+	}
+	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent, tool.Id)
 	if err != nil {
 		impl.logger.Errorw("error in CreateScanExecutionRegistry", "err", err)
 		return scanEventResponse, err
