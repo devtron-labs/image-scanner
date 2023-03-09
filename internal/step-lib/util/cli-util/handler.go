@@ -100,12 +100,11 @@ func copyAndWriteToOutputFile(r io.Reader, outputFileName string) error {
 				}
 			}
 		}
-		if err != nil {
-			if err == io.EOF {
-				err = nil
-			}
+		if err != nil && err != io.EOF {
 			log.Println("error in reading from buffer", "err", err)
 			return err
+		} else {
+			return nil
 		}
 	}
 }
