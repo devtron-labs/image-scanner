@@ -34,9 +34,5 @@ func (r MuxRouter) Init() {
 		_, _ = writer.Write(b)
 	})
 
-	r.Router.Path("/scanner/test").HandlerFunc(r.restHandler.TestApplication).Methods("GET")
-	r.Router.Path("/scanner/list").HandlerFunc(r.restHandler.TestApplicationList).Methods("GET")
-
-
 	r.Router.Path("/scanner/image").HandlerFunc(r.restHandler.ScanForVulnerability).Methods("POST")
 }

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/caarlos0/env"
+	"github.com/caarlos0/env/v6"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"
 )

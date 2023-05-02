@@ -7,12 +7,14 @@ import (
 )
 
 type ImageScanExecutionHistory struct {
-	tableName     struct{}  `sql:"image_scan_execution_history" pg:",discard_unknown_columns"`
-	Id            int       `sql:"id,pk"`
-	Image         string    `sql:"image,notnull"`
-	ImageHash     string    `sql:"image_hash,notnull"`
-	ExecutionTime time.Time `sql:"execution_time"`
-	ExecutedBy    int       `sql:"executed_by,notnull"`
+	tableName                     struct{}  `sql:"image_scan_execution_history" pg:",discard_unknown_columns"`
+	Id                            int       `sql:"id,pk"`
+	Image                         string    `sql:"image,notnull"`
+	ImageHash                     string    `sql:"image_hash,notnull"`
+	ExecutionTime                 time.Time `sql:"execution_time"`
+	ExecutedBy                    int       `sql:"executed_by,notnull"`
+	ScanEventJson                 string    `sql:"scan_event_json"`
+	ExecutionHistoryDirectoryPath string    `sql:"execution_history_directory_path"`
 }
 
 type ImageScanHistoryRepository interface {

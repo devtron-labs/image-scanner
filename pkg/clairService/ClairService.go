@@ -11,8 +11,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecr"
-	"github.com/caarlos0/env"
+	"github.com/caarlos0/env/v6"
 	"github.com/devtron-labs/image-scanner/common"
+	"github.com/devtron-labs/image-scanner/internal/sql/bean"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
@@ -41,7 +42,7 @@ const (
 )
 
 type ClairService interface {
-	ScanImage(scanEvent *common.ScanEvent) (*common.ScanEventResponse, error)
+	ScanImage(scanEvent *common.ImageScanEvent) (*common.ScanEventResponse, error)
 	CheckIfIndexReportExistsForManifestHash(manifestHash claircore.Digest) (bool, error)
 	CreateIndexReportFromManifest(manifest *claircore.Manifest) error
 	GetVulnerabilityReportFromManifestHash(manifestHash claircore.Digest) (*claircore.VulnerabilityReport, error)
@@ -54,17 +55,20 @@ type ClairServiceImpl struct {
 	httpClient                    *http.Client
 	imageScanService              security.ImageScanService
 	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository
+	scanToolMetadataRepository    repository.ScanToolMetadataRepository
 }
 
 func NewClairServiceImpl(logger *zap.SugaredLogger, clairConfig *ClairConfig,
 	httpClient *http.Client, imageScanService security.ImageScanService,
-	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository) *ClairServiceImpl {
+	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository,
+	scanToolMetadataRepository repository.ScanToolMetadataRepository) *ClairServiceImpl {
 	return &ClairServiceImpl{
 		logger:                        logger,
 		clairConfig:                   clairConfig,
 		httpClient:                    httpClient,
 		imageScanService:              imageScanService,
 		dockerArtifactStoreRepository: dockerArtifactStoreRepository,
+		scanToolMetadataRepository:    scanToolMetadataRepository,
 	}
 }
 
@@ -112,7 +116,7 @@ func GetClairConfig() (*ClairConfig, error) {
 	return cfg, err
 }
 
-func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ScanEvent) (*common.ScanEventResponse, error) {
+func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent) (*common.ScanEventResponse, error) {
 	impl.logger.Debugw("new request, scan image", "requestPayload", scanEvent)
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
@@ -137,8 +141,12 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ScanEvent) (*common.Sc
 	for _, vulnerability := range vulnerabilityReport.Vulnerabilities {
 		vulnerabilities = append(vulnerabilities, vulnerability)
 	}
-
-	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent)
+	tool, err := impl.scanToolMetadataRepository.FindByNameAndVersion(bean.ClairTool, bean.Version4)
+	if err != nil {
+		impl.logger.Errorw("error in getting tool by name and version", "err", err)
+		return scanEventResponse, err
+	}
+	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent, tool.Id)
 	if err != nil {
 		impl.logger.Errorw("error in CreateScanExecutionRegistry", "err", err)
 		return scanEventResponse, err
@@ -147,7 +155,7 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ScanEvent) (*common.Sc
 	return scanEventResponse, nil
 }
 
-func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.ScanEvent) (*claircore.VulnerabilityReport, error) {
+func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.ImageScanEvent) (*claircore.VulnerabilityReport, error) {
 	//get manifest from image
 	manifest, err := impl.CreateClairManifest(scanEvent)
 	if err != nil {
@@ -193,7 +201,7 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.
 	return vulnerabilityReport, nil
 }
 
-func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ScanEvent) (*claircore.Manifest, error) {
+func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ImageScanEvent) (*claircore.Manifest, error) {
 	authenticator, err := impl.GetAuthenticatorByDockerRegistryId(scanEvent.DockerRegistryId)
 	if err != nil {
 		impl.logger.Errorw("error in getting authenticator by dockerRegistryId", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)

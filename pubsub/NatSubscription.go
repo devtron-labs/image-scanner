@@ -33,7 +33,7 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 	callback := func(msg *pubsub1.PubSubMsg) {
 		impl.logger.Debugw("received msg", "msg", msg)
 		//defer msg.Ack()
-		scanConfig := &common.ScanEvent{}
+		scanConfig := &common.ImageScanEvent{}
 		err := json.Unmarshal([]byte(msg.Data), scanConfig)
 		if err != nil {
 			impl.logger.Errorw("err in reading msg", "err", err, "msg", string(msg.Data))
