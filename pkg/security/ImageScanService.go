@@ -81,13 +81,7 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 }
 
 func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent) error {
-	imageScanConfig := &ImageScanConfig{}
-	err := env.Parse(imageScanConfig)
-	if err != nil {
-		impl.logger.Errorw("error in parsing env ", "err", err)
-		return err
-	}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(imageScanConfig.ScanImageTimeout)*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(impl.imageScanConfig.ScanImageTimeout)*time.Minute)
 	defer cancel()
 	//checking if image is already scanned or not
 	isImageScanned, err := impl.IsImageScanned(scanEvent.Image)

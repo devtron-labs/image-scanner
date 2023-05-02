@@ -32,7 +32,6 @@ func (d PolicyAction) String() string {
 	return [...]string{"Inherit", "Allow", "Block"}[d]
 }
 
-// ----------------
 type PolicyLevel int
 
 const (

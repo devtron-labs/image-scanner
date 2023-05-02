@@ -33,8 +33,8 @@ type ScanToolStep struct {
 type ScanToolStepRepository interface {
 	Save(model *ScanToolStep) (*ScanToolStep, error)
 	Update(model *ScanToolStep) (*ScanToolStep, error)
-	SaveBulk(model []*ScanToolStep) ([]*ScanToolStep, error)
-	UpdateBulk(model []*ScanToolStep) ([]*ScanToolStep, error)
+	SaveInBatch(model []*ScanToolStep) ([]*ScanToolStep, error)
+	UpdateInBatch(model []*ScanToolStep) ([]*ScanToolStep, error)
 	FindAllByScanToolId(scanToolId int) ([]*ScanToolStep, error)
 	MarkDeletedById(id int) error
 	MarkAllStepsDeletedByToolId(scanToolId int) error
@@ -71,7 +71,7 @@ func (repo *ScanToolStepRepositoryImpl) Update(model *ScanToolStep) (*ScanToolSt
 	return model, nil
 }
 
-func (repo *ScanToolStepRepositoryImpl) SaveBulk(model []*ScanToolStep) ([]*ScanToolStep, error) {
+func (repo *ScanToolStepRepositoryImpl) SaveInBatch(model []*ScanToolStep) ([]*ScanToolStep, error) {
 	err := repo.dbConnection.Insert(&model)
 	if err != nil {
 		repo.logger.Errorw("error in saving scan tool step in bulk", "err", err)
@@ -80,7 +80,7 @@ func (repo *ScanToolStepRepositoryImpl) SaveBulk(model []*ScanToolStep) ([]*Scan
 	return model, nil
 }
 
-func (repo *ScanToolStepRepositoryImpl) UpdateBulk(model []*ScanToolStep) ([]*ScanToolStep, error) {
+func (repo *ScanToolStepRepositoryImpl) UpdateInBatch(model []*ScanToolStep) ([]*ScanToolStep, error) {
 	_, err := repo.dbConnection.Model(&model).Update()
 	if err != nil {
 		repo.logger.Errorw("error in updating scan tool step in bulk", "err", err)
