@@ -308,12 +308,12 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 			return nil, err
 		}
 	} else if step.StepExecutionType == bean.ScanExecutionTypeCli {
-		cliArgs, err := impl.GetCliInputParams(step, toolOutputDirPath)
+		renderedCommand, err := impl.GetCliInputParams(step, toolOutputDirPath)
 		if err != nil {
 			impl.logger.Errorw("error in getting cli step input params", "err", err)
 			return nil, err
 		}
-		output, err = cliUtil.HandleCliRequest(tool.BaseCliCommand, outputFileNameForThisStep, ctx, step.CliOutputType, cliArgs)
+		output, err = cliUtil.HandleCliRequest(renderedCommand, outputFileNameForThisStep, ctx, step.CliOutputType, nil)
 		if err != nil {
 			impl.logger.Errorw("error in cli request txn", "err", err)
 			return nil, err
@@ -419,7 +419,7 @@ func (impl *ImageScanServiceImpl) GetHttpStepInputParams(step repository.ScanToo
 		}
 	}
 	if step.RenderInputDataFromStep != bean.NullProcessIndex {
-		inputPayloadBytes, err = impl.RenderInputDataWithOtherStepOutput(step.HttpInputPayload, step.RenderInputDataFromStep, toolOutputDirPath)
+		inputPayloadBytes, err = impl.RenderInputDataWithOtherStepOutput(string(step.HttpInputPayload), step.RenderInputDataFromStep, toolOutputDirPath)
 		if err != nil {
 			impl.logger.Errorw("error in rendering http input payload", "err", err)
 			return queryParams, httpHeaders, inputPayload, err
