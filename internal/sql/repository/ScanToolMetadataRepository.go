@@ -18,7 +18,6 @@ type ScanToolMetadata struct {
 	Name                     string         `sql:"name"`
 	Version                  string         `sql:"version"`
 	ServerBaseUrl            string         `sql:"server_base_url"`
-	BaseCliCommand           string         `sql:"base_cli_command"`
 	ResultDescriptorTemplate string         `sql:"result_descriptor_template"`
 	ScanTarget               ScanTargetType `sql:"scan_target"`
 	Active                   bool           `sql:"active,notnull"`

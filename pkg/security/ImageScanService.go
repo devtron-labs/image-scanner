@@ -429,29 +429,21 @@ func (impl *ImageScanServiceImpl) GetHttpStepInputParams(step repository.ScanToo
 	return queryParams, httpHeaders, inputPayload, nil
 }
 
-func (impl *ImageScanServiceImpl) GetCliInputParams(step repository.ScanToolStep, toolOutputDirPath string) (map[string]string, error) {
+func (impl *ImageScanServiceImpl) GetCliInputParams(step repository.ScanToolStep, toolOutputDirPath string) (string, error) {
 	var err error
-	cliArgs := make(map[string]string)
-	inputArgsBytes := step.CliArgs
+	var renderedCommand []byte
 	if step.RenderInputDataFromStep != bean.NullProcessIndex {
-		inputArgsBytes, err = impl.RenderInputDataWithOtherStepOutput(step.CliArgs, step.RenderInputDataFromStep, toolOutputDirPath)
+		renderedCommand, err = impl.RenderInputDataWithOtherStepOutput(step.CliCommand, step.RenderInputDataFromStep, toolOutputDirPath)
 		if err != nil {
 			impl.logger.Errorw("error in rendering cli input args", "err", err)
-			return cliArgs, err
+			return "", err
 		}
 	}
-	if inputArgsBytes != nil {
-		err = json.Unmarshal(inputArgsBytes, &cliArgs)
-		if err != nil {
-			impl.logger.Errorw("error in unmarshalling cli args", "err", err)
-			return cliArgs, err
-		}
-	}
-	return cliArgs, nil
+	return string(renderedCommand), nil
 }
 
-func (impl *ImageScanServiceImpl) RenderInputDataWithOtherStepOutput(inputPayloadTmpl json.RawMessage, outputStepIndex int, toolExecutionDirectoryPath string) ([]byte, error) {
-	tmpl := template.Must(template.New("").Parse(string(inputPayloadTmpl)))
+func (impl *ImageScanServiceImpl) RenderInputDataWithOtherStepOutput(inputPayloadTmpl string, outputStepIndex int, toolExecutionDirectoryPath string) ([]byte, error) {
+	tmpl := template.Must(template.New("").Parse(inputPayloadTmpl))
 	outputFileName := path.Join(toolExecutionDirectoryPath, fmt.Sprintf("%d%s", outputStepIndex, bean.JsonOutputFileNameSuffix))
 	outputFromStep, err := commonUtil.ReadFile(outputFileName)
 	if err != nil {

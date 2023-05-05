@@ -23,7 +23,7 @@ type ScanToolStep struct {
 	HttpMethodType          string                 `sql:"http_method_type"`
 	HttpReqHeaders          json.RawMessage        `sql:"http_req_headers"`
 	HttpQueryParams         json.RawMessage        `sql:"http_query_params"`
-	CliArgs                 json.RawMessage        `sql:"cli_args"` //consists of sub command and flags along with applicable values
+	CliCommand              string                 `sql:"cli_command"` //consists of sub command and flags along with applicable values
 	CliOutputType           cli_util.CliOutputType `sql:"cli_output_type"`
 	Deleted                 bool                   `sql:"deleted,notnull"`
 	ScanToolMetadata
