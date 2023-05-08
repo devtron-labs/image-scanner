@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="Registry Index Mapping changes">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/bean.go" beforeDir="false" afterPath="$PROJECT_DIR$/common/bean.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/security/ImageScanService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/security/ImageScanService.go" afterDir="false" />
-    </list>
+    <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="Docker File Update" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,7 +102,8 @@
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Registry Index Mapping changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="Registry Index Mapping changes" />
+    <MESSAGE value="Docker File Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Docker File Update" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
