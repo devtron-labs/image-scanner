@@ -34,7 +34,7 @@ type ImageScanService interface {
 	CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int) ([]*claircore.Vulnerability, error)
 	CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int) ([]*clair.Vulnerability, error)
 	IsImageScanned(image string) (bool, error)
-	ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int, executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto interface{})
+	ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int, executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto)
 	CreateFolderForOutputData(executionHistoryModelId int) string
 	HandleProgressingScans()
 }
@@ -54,6 +54,7 @@ type ImageScanServiceImpl struct {
 	scanStepConditionMappingRepository        repository.ScanStepConditionMappingRepository
 	imageScanConfig                           *ImageScanConfig
 	dockerArtifactStoreRepository             repository.DockerArtifactStoreRepository
+	registryIndexMappingRepository            repository.RegistryIndexMappingRepository
 }
 
 func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository repository.ImageScanHistoryRepository,
@@ -66,7 +67,7 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 	scanToolStepRepository repository.ScanToolStepRepository,
 	scanStepConditionMappingRepository repository.ScanStepConditionMappingRepository,
 	imageScanConfig *ImageScanConfig,
-	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository) *ImageScanServiceImpl {
+	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository, registryIndexMappingRepository repository.RegistryIndexMappingRepository) *ImageScanServiceImpl {
 	imageScanService := &ImageScanServiceImpl{logger: logger, scanHistoryRepository: scanHistoryRepository, scanResultRepository: scanResultRepository,
 		scanObjectMetaRepository: scanObjectMetaRepository, cveStoreRepository: cveStoreRepository,
 		imageScanDeployInfoRepository:             imageScanDeployInfoRepository,
@@ -78,6 +79,7 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 		scanStepConditionMappingRepository:        scanStepConditionMappingRepository,
 		imageScanConfig:                           imageScanConfig,
 		dockerArtifactStoreRepository:             dockerArtifactStoreRepository,
+		registryIndexMappingRepository:            registryIndexMappingRepository,
 	}
 	imageScanService.HandleProgressingScans()
 	return imageScanService
@@ -240,8 +242,11 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 	stepIndexMap := make(map[int]repository.ScanToolStep)
 	stepTryCount := make(map[int]int) //map of stepIndex and it's try count
 	var stepProcessIndex int
-	//setting index of first step for processing starting point
-	stepProcessIndex = steps[0].Index
+
+	// Getting and Setting the starting index based of first step for processing starting point on registry type and tool
+	registryIndexMappingModel, err := impl.registryIndexMappingRepository.GetStartingIndexForARegistryAndATool(tool.Id, imageScanRenderDto.RegistryType)
+	stepProcessIndex = registryIndexMappingModel.Index
+
 	for _, step := range steps {
 		stepCopy := *step
 		if stepCopy.Index == stepCopy.ExecuteStepOnFail {

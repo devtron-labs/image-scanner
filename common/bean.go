@@ -1,7 +1,6 @@
 package common
 
 import (
-	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/optiopay/klar/clair"
 	"github.com/quay/claircore"
 	"time"
@@ -15,13 +14,15 @@ const (
 	Password           = "Password"
 )
 
+type RegistryType string
+
 type ImageScanRenderDto struct {
-	RegistryType       repository.RegistryType `json:"-"`
-	AWSAccessKeyId     string                  `json:"awsAccessKeyId,omitempty" `
-	AWSSecretAccessKey string                  `json:"awsSecretAccessKey,omitempty"`
-	AWSRegion          string                  `json:"awsRegion"`
-	Username           string                  `json:"username,omitempty"`
-	Password           string                  `json:"password,omitempty"`
+	RegistryType       RegistryType `json:"-"`
+	AWSAccessKeyId     string       `json:"awsAccessKeyId,omitempty" `
+	AWSSecretAccessKey string       `json:"awsSecretAccessKey,omitempty"`
+	AWSRegion          string       `json:"awsRegion"`
+	Username           string       `json:"username,omitempty"`
+	Password           string       `json:"password,omitempty"`
 }
 
 type ImageScanEvent struct {

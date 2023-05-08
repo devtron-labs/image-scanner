@@ -64,6 +64,8 @@ func InitializeApp() (*App, error) {
 		wire.Bind(new(repository.CiArtifactRepository), new(*repository.CiArtifactRepositoryImpl)),
 		repository.NewDockerArtifactStoreRepositoryImpl,
 		wire.Bind(new(repository.DockerArtifactStoreRepository), new(*repository.DockerArtifactStoreRepositoryImpl)),
+		repository.NewRegistryIndexMappingRepositoryImpl,
+		wire.Bind(new(repository.RegistryIndexMappingRepository), new(*repository.RegistryIndexMappingRepositoryImpl)),
 
 		repository.NewScanToolMetadataRepositoryImpl,
 		wire.Bind(new(repository.ScanToolMetadataRepository), new(*repository.ScanToolMetadataRepositoryImpl)),

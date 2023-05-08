@@ -51,7 +51,9 @@ func ReadFile(fileName string) ([]byte, error) {
 }
 
 func ParseJsonTemplate(inputTemplate string, data []byte) (string, error) {
-	tmpl := template.Must(template.New("").Parse(inputTemplate))
+	tmpl := template.Must(template.New("").Funcs(template.FuncMap{
+		"add": func(a, b int) int { return a + b },
+	}).Parse(inputTemplate))
 	jsonMap := map[string]interface{}{}
 	err := json.Unmarshal(data, &jsonMap)
 	if err != nil {
