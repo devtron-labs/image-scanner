@@ -1,7 +1,7 @@
 FROM golang:1.18  AS build-env
-RUN apk add --no-cache git gcc musl-dev
-RUN apk add --update make
-RUN go install github.com/google/wire/cmd/wire
+RUN apt update
+RUN apt install git gcc musl-dev make -y
+RUN go install github.com/google/wire/cmd/wire@latest
 WORKDIR /go/src/github.com/devtron-labs/image-scanner
 ADD . /go/src/github.com/devtron-labs/image-scanner
 RUN GOOS=linux make
