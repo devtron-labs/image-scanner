@@ -23,6 +23,7 @@ type ImageScanRenderDto struct {
 	AWSRegion          string       `json:"awsRegion"`
 	Username           string       `json:"username,omitempty"`
 	Password           string       `json:"password,omitempty"`
+	Image              string       `json:"image"`
 }
 
 type ImageScanEvent struct {

@@ -23,8 +23,8 @@ import (
 	"net/url"
 	"os"
 	"path"
-	"sort"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 )
@@ -109,7 +109,7 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent) er
 		impl.logger.Errorw("service err, RegisterScanExecutionHistoryAndState", "err", err)
 		return err
 	}
-	imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId)
+	imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
 	if err != nil {
 		impl.logger.Errorw("service error, getImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 		return err
@@ -127,7 +127,7 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent) er
 	return nil
 }
 
-func (impl *ImageScanServiceImpl) getImageScanRenderDto(registryId string) (*common.ImageScanRenderDto, error) {
+func (impl *ImageScanServiceImpl) getImageScanRenderDto(registryId string, image string) (*common.ImageScanRenderDto, error) {
 	dockerRegistry, err := impl.dockerArtifactStoreRepository.FindById(registryId)
 	if err != nil {
 		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", registryId)
@@ -140,6 +140,7 @@ func (impl *ImageScanServiceImpl) getImageScanRenderDto(registryId string) (*com
 		AWSAccessKeyId:     dockerRegistry.AWSAccessKeyId,
 		AWSSecretAccessKey: dockerRegistry.AWSSecretAccessKey,
 		AWSRegion:          dockerRegistry.AWSRegion,
+		Image:              image,
 	}
 	return imageScanRenderDto, nil
 }
@@ -238,7 +239,7 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 		return err
 	}
 	//sorting steps on the basis of index
-	sort.Slice(steps, func(i, j int) bool { return steps[i].Index < steps[j].Index })
+	//sort.Slice(steps, func(i, j int) bool { return steps[i].Index < steps[j].Index })
 	stepIndexMap := make(map[int]repository.ScanToolStep)
 	stepTryCount := make(map[int]int) //map of stepIndex and it's try count
 	var stepProcessIndex int
@@ -344,6 +345,8 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 			impl.logger.Errorw("error in getting cli step input params", "err", err)
 			return nil, err
 		}
+		filePathForCredentials := path.Join(toolOutputDirPath, imageScanRenderDto.Image)
+		renderedCommand = renderCredentialsIntoCommand(renderedCommand, imageScanRenderDto, filePathForCredentials)
 		output, err = cliUtil.HandleCliRequest(renderedCommand, outputFileNameForThisStep, ctx, step.CliOutputType, nil)
 		if err != nil {
 			impl.logger.Errorw("error in cli request txn", "err", err)
@@ -353,6 +356,15 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 	return output, nil
 }
 
+func renderCredentialsIntoCommand(renderedCommand string, imageScanRenderDto *common.ImageScanRenderDto, filePath string) string {
+	r := strings.NewReplacer("$USERNAME", imageScanRenderDto.Username,
+		"$PASSWORD", imageScanRenderDto.Password,
+		"$AWS_ACCESS_KEY_ID", imageScanRenderDto.AWSAccessKeyId, "$AWS_SECRET_ACCESS_KEY", imageScanRenderDto.AWSSecretAccessKey, "$AWS_DEFAULT_REGION", imageScanRenderDto.AWSRegion, "$IMAGE_NAME", imageScanRenderDto.Image, "$FILE_PATH", filePath)
+
+	// Replace all pairs
+	result := r.Replace(renderedCommand)
+	return result
+}
 func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(stepOutput []byte, executionHistoryId int, tool repository.ScanToolMetadata, step repository.ScanToolStep, userId int32) error {
 	//rendering image descriptor template with output json to get vulnerabilities updated
 	renderedTemplate, err := commonUtil.ParseJsonTemplate(tool.ResultDescriptorTemplate, stepOutput)
@@ -720,7 +732,7 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 			impl.logger.Errorw("error in un-marshaling", "err", err)
 			return
 		}
-		imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId)
+		imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
 		if err != nil {
 			impl.logger.Errorw("service error, getImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 			return

@@ -4,15 +4,10 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/internal/sql/repository/RegistryIndexMappingRepository.go" afterDir="false" />
+    <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="Registry Index Mapping changes">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Wire.go" beforeDir="false" afterPath="$PROJECT_DIR$/Wire.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/common/bean.go" beforeDir="false" afterPath="$PROJECT_DIR$/common/bean.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/sql/bean/bean.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/sql/bean/bean.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/step-lib/util/common-util/util.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/step-lib/util/common-util/util.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/security/ImageScanService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/security/ImageScanService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wire_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/wire_gen.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,6 +68,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="GoMoveDeclarationDialog.RECENT_KEY">
+      <recent name="$PROJECT_DIR$/common" />
       <recent name="$PROJECT_DIR$/pkg/security" />
     </key>
   </component>
@@ -109,6 +105,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Registry Index Mapping changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="Registry Index Mapping changes" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
