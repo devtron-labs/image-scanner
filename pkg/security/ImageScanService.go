@@ -444,12 +444,10 @@ func (impl *ImageScanServiceImpl) GetHttpStepInputParams(step repository.ScanToo
 			return queryParams, httpHeaders, inputPayload, err
 		}
 	}
-	if step.RenderInputDataFromStep != bean.NullProcessIndex {
-		inputPayloadBytes, err = impl.RenderInputDataWithOtherStepOutput(string(step.HttpInputPayload), step.RenderInputDataFromStep, toolOutputDirPath, imageScanRenderDto)
-		if err != nil {
-			impl.logger.Errorw("error in rendering http input payload", "err", err)
-			return queryParams, httpHeaders, inputPayload, err
-		}
+	inputPayloadBytes, err = impl.RenderInputDataForAStep(string(step.HttpInputPayload), step.RenderInputDataFromStep, toolOutputDirPath, imageScanRenderDto)
+	if err != nil {
+		impl.logger.Errorw("error in rendering http input payload", "err", err)
+		return queryParams, httpHeaders, inputPayload, err
 	}
 	inputPayload = bytes.NewBuffer(inputPayloadBytes)
 	return queryParams, httpHeaders, inputPayload, nil
@@ -459,30 +457,30 @@ func (impl *ImageScanServiceImpl) GetCliInputParams(step repository.ScanToolStep
 	imageScanRenderDto *common.ImageScanRenderDto) (string, error) {
 	var err error
 	var renderedCommand []byte
-	if step.RenderInputDataFromStep != bean.NullProcessIndex {
-		renderedCommand, err = impl.RenderInputDataWithOtherStepOutput(step.CliCommand, step.RenderInputDataFromStep, toolOutputDirPath, imageScanRenderDto)
-		if err != nil {
-			impl.logger.Errorw("error in rendering cli input args", "err", err)
-			return "", err
-		}
+	renderedCommand, err = impl.RenderInputDataForAStep(step.CliCommand, step.RenderInputDataFromStep, toolOutputDirPath, imageScanRenderDto)
+	if err != nil {
+		impl.logger.Errorw("error in rendering cli input args", "err", err)
+		return "", err
 	}
 	return string(renderedCommand), nil
 }
 
-func (impl *ImageScanServiceImpl) RenderInputDataWithOtherStepOutput(inputPayloadTmpl string, outputStepIndex int,
+func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl string, outputStepIndex int,
 	toolExecutionDirectoryPath string, imageScanRenderDto *common.ImageScanRenderDto) ([]byte, error) {
 	tmpl := template.Must(template.New("").Parse(inputPayloadTmpl))
-	outputFileName := path.Join(toolExecutionDirectoryPath, fmt.Sprintf("%d%s", outputStepIndex, bean.JsonOutputFileNameSuffix))
-	outputFromStep, err := commonUtil.ReadFile(outputFileName)
-	if err != nil {
-		impl.logger.Errorw("error in getting reading output of step", "err", err, "stepOutputFileName", outputFromStep)
-		return nil, err
-	}
 	jsonMap := map[string]interface{}{}
-	err = json.Unmarshal(outputFromStep, &jsonMap)
-	if err != nil {
-		impl.logger.Errorw("error in unmarshalling", "err", err)
-		return nil, err
+	if outputStepIndex != bean.NullProcessIndex {
+		outputFileName := path.Join(toolExecutionDirectoryPath, fmt.Sprintf("%d%s", outputStepIndex, bean.JsonOutputFileNameSuffix))
+		outputFromStep, err := commonUtil.ReadFile(outputFileName)
+		if err != nil {
+			impl.logger.Errorw("error in getting reading output of step", "err", err, "stepOutputFileName", outputFromStep)
+			return nil, err
+		}
+		err = json.Unmarshal(outputFromStep, &jsonMap)
+		if err != nil {
+			impl.logger.Errorw("error in unmarshalling", "err", err)
+			return nil, err
+		}
 	}
 	//entering imageScanRenderData in above json map; TODO: update this to some other logic to handle more fields in future
 	jsonMap[common.AWSSecretAccessKey] = imageScanRenderDto.AWSSecretAccessKey
@@ -491,7 +489,7 @@ func (impl *ImageScanServiceImpl) RenderInputDataWithOtherStepOutput(inputPayloa
 	jsonMap[common.Username] = imageScanRenderDto.Username
 	jsonMap[common.Password] = imageScanRenderDto.Password
 	buf := &bytes.Buffer{}
-	err = tmpl.Execute(buf, jsonMap)
+	err := tmpl.Execute(buf, jsonMap)
 	if err != nil {
 		impl.logger.Errorw("error in executing template", "err", err)
 		return nil, err
