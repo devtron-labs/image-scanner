@@ -16,8 +16,6 @@ type ScanToolExecutionHistoryMapping struct {
 	ExecutionFinishTime         time.Time                      `sql:"execution_finish_time,notnull"`
 	State                       bean.ScanExecutionProcessState `sql:"state"`
 	TryCount                    int                            `sql:"try_count"`
-	ImageScanExecutionHistory
-	ScanToolMetadata
 	AuditLog
 }
 

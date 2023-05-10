@@ -7,11 +7,14 @@ import (
 )
 
 const (
-	AWSAccessKeyId     = "AWSAccessKeyId"
-	AWSSecretAccessKey = "AWSSecretAccessKey"
-	AWSRegion          = "AWSRegion"
-	Username           = "Username"
-	Password           = "Password"
+	AWSAccessKeyId     = "AWS_ACCESS_KEY_ID"
+	AWSSecretAccessKey = "AWS_SECRET_ACCESS_KEY"
+	AWSRegion          = "AWS_DEFAULT_REGION"
+	Username           = "USERNAME"
+	Password           = "PASSWORD"
+	GCR_FILE_PATH      = "FILE_PATH"
+	IMAGE_NAME         = "IMAGE_NAME"
+	OUTPUT_FILE_PATH   = "OUTPUT_FILE_PATH"
 )
 
 type RegistryType string
@@ -24,6 +27,7 @@ type ImageScanRenderDto struct {
 	Username           string       `json:"username,omitempty"`
 	Password           string       `json:"password,omitempty"`
 	Image              string       `json:"image"`
+	OutputFilePath     string       `json:"-"`
 }
 
 type ImageScanEvent struct {

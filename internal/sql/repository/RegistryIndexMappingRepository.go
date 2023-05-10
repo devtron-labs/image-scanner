@@ -32,10 +32,10 @@ type RegistryIndexMappingRepository interface {
 }
 
 func (repo *RegistryIndexMappingRepositoryImpl) GetStartingIndexForARegistryAndATool(scanToolid int, registry common.RegistryType) (*RegistryIndexMapping, error) {
-	var model *RegistryIndexMapping
-	err := repo.dbConnection.Model(model).Where("scan_tool_id = (?)", scanToolid).Where("registry_type =(?)", registry).Select()
+	var model RegistryIndexMapping
+	err := repo.dbConnection.Model(&model).Where("scan_tool_id = ?", scanToolid).Where("registry_type = ?", registry).Select()
 	if err != nil {
-		return model, err
+		return &model, err
 	}
-	return model, nil
+	return &model, nil
 }

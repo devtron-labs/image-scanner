@@ -19,13 +19,12 @@ import (
 	"github.com/quay/claircore"
 	"github.com/tidwall/gjson"
 	"go.uber.org/zap"
-	"html/template"
 	"net/url"
 	"os"
 	"path"
 	"strconv"
-	"strings"
 	"sync"
+	"text/template"
 	"time"
 )
 
@@ -118,8 +117,8 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent) er
 	wg.Add(1)
 	impl.ScanImageForTool(tool, executionHistory.Id, executionHistoryDirPath, wg, int32(scanEvent.UserId), ctx, imageScanRenderDto)
 	wg.Wait()
-	//deleting executionDirectoryPath
-	err = os.Remove(executionHistoryDirPath)
+	//deleting executionDirectoryPath with files as well
+	err = os.RemoveAll(executionHistoryDirPath)
 	if err != nil {
 		impl.logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
 		return err
@@ -279,9 +278,6 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 					return err
 				}
 			}
-			if !gjson.Valid(string(output)) {
-				return errors.New("invalid json output, exiting")
-			}
 
 			isPassed, err := impl.CheckConditionsForAStep(step, output)
 			if err != nil {
@@ -340,13 +336,12 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 			return nil, err
 		}
 	} else if step.StepExecutionType == bean.ScanExecutionTypeCli {
-		renderedCommand, err := impl.GetCliInputParams(step, toolOutputDirPath, imageScanRenderDto)
+		imageScanRenderDto.OutputFilePath = outputFileNameForThisStep
+		renderedCommand, err := impl.GetCliInputParams(step, toolOutputDirPath, imageScanRenderDto, tool.ToolMetaData)
 		if err != nil {
 			impl.logger.Errorw("error in getting cli step input params", "err", err)
 			return nil, err
 		}
-		filePathForCredentials := path.Join(toolOutputDirPath, imageScanRenderDto.Image)
-		renderedCommand = renderCredentialsIntoCommand(renderedCommand, imageScanRenderDto, filePathForCredentials)
 		output, err = cliUtil.HandleCliRequest(renderedCommand, outputFileNameForThisStep, ctx, step.CliOutputType, nil)
 		if err != nil {
 			impl.logger.Errorw("error in cli request txn", "err", err)
@@ -356,15 +351,6 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 	return output, nil
 }
 
-func renderCredentialsIntoCommand(renderedCommand string, imageScanRenderDto *common.ImageScanRenderDto, filePath string) string {
-	r := strings.NewReplacer("$USERNAME", imageScanRenderDto.Username,
-		"$PASSWORD", imageScanRenderDto.Password,
-		"$AWS_ACCESS_KEY_ID", imageScanRenderDto.AWSAccessKeyId, "$AWS_SECRET_ACCESS_KEY", imageScanRenderDto.AWSSecretAccessKey, "$AWS_DEFAULT_REGION", imageScanRenderDto.AWSRegion, "$IMAGE_NAME", imageScanRenderDto.Image, "$FILE_PATH", filePath)
-
-	// Replace all pairs
-	result := r.Replace(renderedCommand)
-	return result
-}
 func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(stepOutput []byte, executionHistoryId int, tool repository.ScanToolMetadata, step repository.ScanToolStep, userId int32) error {
 	//rendering image descriptor template with output json to get vulnerabilities updated
 	renderedTemplate, err := commonUtil.ParseJsonTemplate(tool.ResultDescriptorTemplate, stepOutput)
@@ -378,15 +364,31 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 		impl.logger.Errorw("error in unmarshalling rendered template", "err", err)
 		return err
 	}
-	allCves := make([]*repository.CveStore, 0, len(vulnerabilities))
+	allCvesMap := make([]*repository.CveStore, 0, len(vulnerabilities))
 	cvesToBeSaved := make([]*repository.CveStore, 0, len(vulnerabilities))
+	uniqueVulnerabilityMap := make(map[string]*bean.ImageScanOutputObject)
+	allCvesNames := make([]string, 0, len(vulnerabilities))
 	for _, vul := range vulnerabilities {
-		cve, err := impl.cveStoreRepository.FindByName(vul.Name)
-		if err != nil && err != pg.ErrNoRows {
-			impl.logger.Errorw("error in getting cve by name", "err", err, "name", vul.Name)
-			return err
+		if _, value := uniqueVulnerabilityMap[vul.Name]; !value {
+			uniqueVulnerabilityMap[vul.Name] = vul
+			allCvesNames = append(allCvesNames, vul.Name)
 		}
-		if len(cve.Name) == 0 {
+	}
+	allSavedCves, err := impl.cveStoreRepository.FindByCveNames(allCvesNames)
+	if err != nil {
+		impl.logger.Errorw("error in getting all cves ", "err", err)
+	}
+	allSavedCvesMap := make(map[string]*repository.CveStore)
+	for _, cve := range allSavedCves {
+		allSavedCvesMap[cve.Name] = cve
+	}
+
+	for _, vul := range uniqueVulnerabilityMap {
+		var cve *repository.CveStore
+		if val, ok := allSavedCvesMap[vul.Name]; ok {
+			cve = val
+		}
+		if cve == nil {
 			cve = &repository.CveStore{
 				Name:         vul.Name,
 				Package:      vul.Package,
@@ -400,11 +402,11 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 			cve.UpdatedBy = userId
 			cvesToBeSaved = append(cvesToBeSaved, cve)
 		}
-		allCves = append(allCves, cve)
+		allCvesMap = append(allCvesMap, cve)
 	}
 
-	imageScanExecutionResults := make([]*repository.ImageScanExecutionResult, 0, len(allCves))
-	for _, cve := range allCves {
+	imageScanExecutionResults := make([]*repository.ImageScanExecutionResult, 0, len(allCvesMap))
+	for _, cve := range allCvesMap {
 		imageScanExecutionResult := &repository.ImageScanExecutionResult{
 			ImageScanExecutionHistoryId: executionHistoryId,
 			CveStoreName:                cve.Name,
@@ -461,7 +463,7 @@ func (impl *ImageScanServiceImpl) GetHttpStepInputParams(step repository.ScanToo
 			return queryParams, httpHeaders, inputPayload, err
 		}
 	}
-	inputPayloadBytes, err = impl.RenderInputDataForAStep(string(step.HttpInputPayload), step.RenderInputDataFromStep, toolOutputDirPath, imageScanRenderDto)
+	inputPayloadBytes, err = impl.RenderInputDataForAStep(string(step.HttpInputPayload), step.RenderInputDataFromStep, toolOutputDirPath, imageScanRenderDto, "")
 	if err != nil {
 		impl.logger.Errorw("error in rendering http input payload", "err", err)
 		return queryParams, httpHeaders, inputPayload, err
@@ -470,11 +472,10 @@ func (impl *ImageScanServiceImpl) GetHttpStepInputParams(step repository.ScanToo
 	return queryParams, httpHeaders, inputPayload, nil
 }
 
-func (impl *ImageScanServiceImpl) GetCliInputParams(step repository.ScanToolStep, toolOutputDirPath string,
-	imageScanRenderDto *common.ImageScanRenderDto) (string, error) {
+func (impl *ImageScanServiceImpl) GetCliInputParams(step repository.ScanToolStep, toolOutputDirPath string, imageScanRenderDto *common.ImageScanRenderDto, toolMetaData string) (string, error) {
 	var err error
 	var renderedCommand []byte
-	renderedCommand, err = impl.RenderInputDataForAStep(step.CliCommand, step.RenderInputDataFromStep, toolOutputDirPath, imageScanRenderDto)
+	renderedCommand, err = impl.RenderInputDataForAStep(step.CliCommand, step.RenderInputDataFromStep, toolOutputDirPath, imageScanRenderDto, toolMetaData)
 	if err != nil {
 		impl.logger.Errorw("error in rendering cli input args", "err", err)
 		return "", err
@@ -482,10 +483,15 @@ func (impl *ImageScanServiceImpl) GetCliInputParams(step repository.ScanToolStep
 	return string(renderedCommand), nil
 }
 
-func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl string, outputStepIndex int,
-	toolExecutionDirectoryPath string, imageScanRenderDto *common.ImageScanRenderDto) ([]byte, error) {
+func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl string, outputStepIndex int, toolExecutionDirectoryPath string, imageScanRenderDto *common.ImageScanRenderDto, toolMetaData string) ([]byte, error) {
 	tmpl := template.Must(template.New("").Parse(inputPayloadTmpl))
 	jsonMap := map[string]interface{}{}
+	metaDataMap := map[string]interface{}{}
+	err := json.Unmarshal([]byte(toolMetaData), &metaDataMap)
+	if err != nil {
+		impl.logger.Errorw("error in unmarshalling meta data ", "err", err)
+		return nil, err
+	}
 	if outputStepIndex != bean.NullProcessIndex {
 		outputFileName := path.Join(toolExecutionDirectoryPath, fmt.Sprintf("%d%s", outputStepIndex, bean.JsonOutputFileNameSuffix))
 		outputFromStep, err := commonUtil.ReadFile(outputFileName)
@@ -505,8 +511,15 @@ func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl strin
 	jsonMap[common.AWSRegion] = imageScanRenderDto.AWSRegion
 	jsonMap[common.Username] = imageScanRenderDto.Username
 	jsonMap[common.Password] = imageScanRenderDto.Password
+	jsonMap[common.GCR_FILE_PATH] = toolExecutionDirectoryPath
+	jsonMap[common.IMAGE_NAME] = imageScanRenderDto.Image
+	jsonMap[common.OUTPUT_FILE_PATH] = imageScanRenderDto.OutputFilePath
+
+	for key, val := range metaDataMap {
+		jsonMap[key] = val
+	}
 	buf := &bytes.Buffer{}
-	err := tmpl.Execute(buf, jsonMap)
+	err = tmpl.Execute(buf, jsonMap)
 	if err != nil {
 		impl.logger.Errorw("error in executing template", "err", err)
 		return nil, err
@@ -721,11 +734,30 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 		executionHistoryDirPath = impl.CreateFolderForOutputData(scanHistories[0].ImageScanExecutionHistoryId)
 	}
 	wg := &sync.WaitGroup{}
-	wg.Add(len(scanHistories))
-	// System doing image scanning for all pending scans
+	wg.Add(1)
+	imagescanExecutionHistories, err := impl.scanHistoryRepository.FindAll()
+	if err != nil {
+		impl.logger.Errorw("error in getting scan histories on start up", "err", err)
+		return
+	}
+	imageScanToolMetadatas, err := impl.scanToolMetadataRepository.FindAllActiveTools()
+	if err != nil {
+		impl.logger.Errorw("error in getting all active tools", "err", err)
+	}
+	imageScanExecutionHistoryMap := make(map[int]*repository.ImageScanExecutionHistory)
+	imageScanToolsMap := make(map[int]*repository.ScanToolMetadata)
+
+	for _, imageScanExecutionHistory := range imagescanExecutionHistories {
+		imageScanExecutionHistoryMap[imageScanExecutionHistory.Id] = imageScanExecutionHistory
+	}
+	for _, imageScanToolMetaData := range imageScanToolMetadatas {
+		imageScanToolsMap[imageScanToolMetaData.Id] = imageScanToolMetaData
+	}
+
+	//System doing image scanning for all pending scans
 	for _, scanHistory := range scanHistories {
 		scanEvent := common.ImageScanEvent{}
-		err = json.Unmarshal([]byte(scanHistory.ImageScanExecutionHistory.ScanEventJson), &scanHistory)
+		err = json.Unmarshal([]byte(imageScanExecutionHistoryMap[scanHistory.ImageScanExecutionHistoryId].ScanEventJson), &scanHistory)
 		if err != nil {
 			impl.logger.Errorw("error in un-marshaling", "err", err)
 			return
@@ -735,7 +767,7 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 			impl.logger.Errorw("service error, getImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 			return
 		}
-		impl.ScanImageForTool(&scanHistory.ScanToolMetadata, scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, nil, imageScanRenderDto)
+		impl.ScanImageForTool(imageScanToolsMap[scanHistory.ScanToolId], scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, nil, imageScanRenderDto)
 
 	}
 	wg.Wait()
@@ -759,6 +791,6 @@ func GetImageScannerConfig() (*ImageScanConfig, error) {
 type ImageScanConfig struct {
 	ScannerType           string `env:"SCANNER_TYPE" envDefault:""`
 	ScanTryCount          int    `env:"IMAGE_SCAN_TRY_COUNT" envDefault:"1"`
-	ScanImageTimeout      int    `env:"IMAGE_SCAN_TIMEOUT" envDefault:"5"`
+	ScanImageTimeout      int    `env:"IMAGE_SCAN_TIMEOUT" envDefault:"10"`
 	ScanImageAsyncTimeout int    `env:"IMAGE_SCAN_ASYNC_TIMEOUT" envDefault:"3"`
 }
