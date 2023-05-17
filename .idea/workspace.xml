@@ -6,7 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/api/RestHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/RestHandler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/common/bean.go" beforeDir="false" afterPath="$PROJECT_DIR$/common/bean.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/sql/bean/bean.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/sql/bean/bean.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/sql/repository/ScanToolExecutionHistoryMappingRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/sql/repository/ScanToolExecutionHistoryMappingRepository.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/internal/sql/repository/UserRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/sql/repository/UserRepository.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/security/ImageScanService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/security/ImageScanService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pkg/user/UserService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/user/UserService.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/wire_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/wire_gen.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

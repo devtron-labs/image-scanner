@@ -45,18 +45,6 @@ type ScanEventResponse struct {
 	ResponseDataClairV2 []*clair.Vulnerability     `json:"ResponseDataClairV2"`
 }
 
-type UserInfo struct {
-	Id          int32    `json:"id" validate:"number"`
-	EmailId     string   `json:"email_id" validate:"required"`
-	Roles       []string `json:"roles,omitempty"`
-	AccessToken string   `json:"access_token,omitempty"`
-	Exist       bool     `json:"-"`
-	UserId      int32    `json:"-"` // created or modified user id
-	Status      string   `json:"status,omitempty"`
-	Groups      []string `json:"groups"`
-	SuperAdmin  bool     `json:"superAdmin,notnull"`
-}
-
 const (
 	ScanObjectType_APP   string = "app"
 	ScanObjectType_CHART string = "chart"

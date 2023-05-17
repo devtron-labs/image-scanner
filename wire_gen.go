@@ -54,12 +54,12 @@ func InitializeApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	imageScanServiceImpl := security.NewImageScanServiceImpl(sugaredLogger, imageScanHistoryRepositoryImpl, imageScanResultRepositoryImpl, imageScanObjectMetaRepositoryImpl, cveStoreRepositoryImpl, imageScanDeployInfoRepositoryImpl, ciArtifactRepositoryImpl, scanToolExecutionHistoryMappingRepositoryImpl, scanToolMetadataRepositoryImpl, scanStepConditionRepositoryImpl, scanToolStepRepositoryImpl, scanStepConditionMappingRepositoryImpl, imageScanConfig)
+	dockerArtifactStoreRepositoryImpl := repository.NewDockerArtifactStoreRepositoryImpl(db, sugaredLogger)
+	imageScanServiceImpl := security.NewImageScanServiceImpl(sugaredLogger, imageScanHistoryRepositoryImpl, imageScanResultRepositoryImpl, imageScanObjectMetaRepositoryImpl, cveStoreRepositoryImpl, imageScanDeployInfoRepositoryImpl, ciArtifactRepositoryImpl, scanToolExecutionHistoryMappingRepositoryImpl, scanToolMetadataRepositoryImpl, scanStepConditionRepositoryImpl, scanToolStepRepositoryImpl, scanStepConditionMappingRepositoryImpl, imageScanConfig, dockerArtifactStoreRepositoryImpl)
 	klarConfig, err := klarService.GetKlarConfig()
 	if err != nil {
 		return nil, err
 	}
-	dockerArtifactStoreRepositoryImpl := repository.NewDockerArtifactStoreRepositoryImpl(db, sugaredLogger)
 	klarServiceImpl := klarService.NewKlarServiceImpl(sugaredLogger, klarConfig, grafeasServiceImpl, userRepositoryImpl, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl, scanToolMetadataRepositoryImpl)
 	clairConfig, err := clairService.GetClairConfig()
 	if err != nil {

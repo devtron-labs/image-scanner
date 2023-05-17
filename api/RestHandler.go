@@ -64,6 +64,9 @@ const (
 	SCANNER_TYPE_CLAIR_V4 = "CLAIRV4"
 	SCANNER_TYPE_CLAIR_V2 = "CLAIRV2"
 	SCANNER_TYPE_TRIVY    = "TRIVY"
+	SCAN_TOOL_CLAIR       = "CLAIR"
+	SCAN_TOOL_VERSION_2   = "V2"
+	SCAN_TOOL_VERSION_4   = "V4"
 )
 
 type ResetRequest struct {
@@ -85,14 +88,20 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 	}
 	impl.logger.Infow("image scan req", "req", scanConfig)
 	var result *common.ScanEventResponse
-	if impl.imageScanConfig.ScannerType == SCANNER_TYPE_CLAIR_V2 {
+	tool, err := impl.imageScanService.GetActiveTool()
+	if err != nil {
+		impl.logger.Errorw("err in image scanning", "err", err)
+		writeJsonResp(w, err, nil, http.StatusInternalServerError)
+		return
+	}
+	if tool.Name == SCAN_TOOL_CLAIR && tool.Version == SCAN_TOOL_VERSION_2 {
 		result, err = impl.klarService.Process(&scanConfig)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)
 			writeJsonResp(w, err, nil, http.StatusInternalServerError)
 			return
 		}
-	} else if impl.imageScanConfig.ScannerType == SCANNER_TYPE_CLAIR_V4 {
+	} else if tool.Name == SCAN_TOOL_CLAIR && tool.Version == SCAN_TOOL_VERSION_4 {
 		result, err = impl.clairService.ScanImage(&scanConfig)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)
@@ -100,7 +109,7 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 			return
 		}
 	} else {
-		err = impl.imageScanService.ScanImage(&scanConfig)
+		err = impl.imageScanService.ScanImage(&scanConfig, tool)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)
 			writeJsonResp(w, err, nil, http.StatusInternalServerError)
