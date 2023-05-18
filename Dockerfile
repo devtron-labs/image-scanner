@@ -10,10 +10,10 @@ FROM alpine:3.9
 RUN apk add --no-cache ca-certificates
 RUN adduser -D devtron
 COPY --from=build-env  /go/src/github.com/devtron-labs/image-scanner/image-scanner .
-RUN chown -R devtron:devtron ./image-scanner/trivy
+RUN chown -R devtron:devtron ./image-scanner
 RUN chmod +x ./image-scanner
 RUN apk add curl \
-    && curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b ./image-scanner \
+    && curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b ./image-scanner/trivy \
     && trivy filesystem --exit-code 1 --no-progress /
 RUN trivy filesystem --exit-code 1 --no-progress /
 USER devtron
