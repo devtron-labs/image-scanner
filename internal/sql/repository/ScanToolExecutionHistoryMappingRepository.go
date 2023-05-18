@@ -87,7 +87,7 @@ func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) MarkAllRunningStateAs
 
 func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) GetAllScanHistoriesByState(state bean.ScanExecutionProcessState) ([]*ScanToolExecutionHistoryMapping, error) {
 	var models []*ScanToolExecutionHistoryMapping
-	err := repo.dbConnection.Model(models).Column("scan_tool_execution_history_mapping.*", "ScanToolMetadata").
+	err := repo.dbConnection.Model(&models).Column("scan_tool_execution_history_mapping.*", "ScanToolMetadata").
 		Where("state = ?", bean.ScanExecutionProcessStateRunning).Select()
 	if err != nil {
 		repo.logger.Errorw("error in ScanToolExecutionHistoryMappingRepository, GetAllScanHistoriesByState", "err", err)
