@@ -25,6 +25,7 @@ type ScanToolExecutionHistoryMappingRepository interface {
 	UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolId int, state bean.ScanExecutionProcessState, executionFinishTime time.Time) error
 	MarkAllRunningStateAsFailedHavingTryCountReachedLimit(tryCount int) error
 	GetAllScanHistoriesByState(state bean.ScanExecutionProcessState) ([]*ScanToolExecutionHistoryMapping, error)
+	GetAllScanHistoriesByExecutionHistoryIdAndStates(executionHistoryId int, states []bean.ScanExecutionProcessState) ([]*ScanToolExecutionHistoryMapping, error)
 }
 
 type ScanToolExecutionHistoryMappingRepositoryImpl struct {
@@ -88,7 +89,19 @@ func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) MarkAllRunningStateAs
 func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) GetAllScanHistoriesByState(state bean.ScanExecutionProcessState) ([]*ScanToolExecutionHistoryMapping, error) {
 	var models []*ScanToolExecutionHistoryMapping
 	err := repo.dbConnection.Model(&models).Column("scan_tool_execution_history_mapping.*").
-		Where("state = ?", bean.ScanExecutionProcessStateRunning).Select()
+		Where("state = ?", state).Select()
+	if err != nil {
+		repo.logger.Errorw("error in ScanToolExecutionHistoryMappingRepository, GetAllScanHistoriesByState", "err", err)
+		return nil, err
+	}
+	return models, nil
+}
+
+func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) GetAllScanHistoriesByExecutionHistoryIdAndStates(executionHistoryId int, states []bean.ScanExecutionProcessState) ([]*ScanToolExecutionHistoryMapping, error) {
+	var models []*ScanToolExecutionHistoryMapping
+	err := repo.dbConnection.Model(&models).Column("scan_tool_execution_history_mapping.*").
+		Where("image_scan_execution_history_id = ?", executionHistoryId).
+		Where("state in ?", pg.In(states)).Select()
 	if err != nil {
 		repo.logger.Errorw("error in ScanToolExecutionHistoryMappingRepository, GetAllScanHistoriesByState", "err", err)
 		return nil, err

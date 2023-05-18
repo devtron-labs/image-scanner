@@ -29,13 +29,14 @@ import (
 )
 
 type ImageScanService interface {
-	ScanImage(scanEvent *common.ImageScanEvent) error
+	ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) error
 	CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int) ([]*claircore.Vulnerability, error)
 	CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int) ([]*clair.Vulnerability, error)
 	IsImageScanned(image string) (bool, error)
 	ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int, executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto)
 	CreateFolderForOutputData(executionHistoryModelId int) string
 	HandleProgressingScans()
+	GetActiveTool() (*repository.ScanToolMetadata, error)
 }
 
 type ImageScanServiceImpl struct {
@@ -84,7 +85,16 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 	return imageScanService
 }
 
-func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent) error {
+func (impl *ImageScanServiceImpl) GetActiveTool() (*repository.ScanToolMetadata, error) {
+	//get active tool
+	tool, err := impl.scanToolMetadataRepository.FindActiveToolByScanTarget(repository.ImageScanTargetType)
+	if err != nil {
+		impl.logger.Errorw("error in getting active tool by scan target", "err", err, "scanTarget", repository.ImageScanTargetType)
+		return nil, err
+	}
+	return tool, nil
+}
+func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(impl.imageScanConfig.ScanImageTimeout)*time.Minute)
 	defer cancel()
 	//checking if image is already scanned or not
@@ -96,12 +106,6 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent) er
 	if isImageScanned {
 		impl.logger.Infow("image already scanned, skipping further process", "image", scanEvent.Image)
 		return nil
-	}
-	//get all active tools
-	tool, err := impl.scanToolMetadataRepository.FindActiveToolByScanTarget(repository.ImageScanTargetType)
-	if err != nil {
-		impl.logger.Errorw("error in getting all active tools", "")
-		return err
 	}
 	executionHistory, executionHistoryDirPath, err := impl.RegisterScanExecutionHistoryAndState(scanEvent, tool)
 	if err != nil {
@@ -662,9 +666,22 @@ func (impl *ImageScanServiceImpl) IsImageScanned(image string) (bool, error) {
 		impl.logger.Errorw("error in fetching scan history ", "err", err)
 		return scanned, err
 	}
-	if scanHistory != nil && scanHistory.Id > 0 {
-		scanned = true
+	scanHistoryId := 0
+	if scanHistory != nil {
+		scanHistoryId = scanHistory.Id
+		//scanned = true
 	}
+	if scanHistoryId > 0 {
+		scanHistoryMappings, err := impl.scanToolExecutionHistoryMappingRepository.GetAllScanHistoriesByExecutionHistoryIdAndStates(scanHistoryId, []bean.ScanExecutionProcessState{bean.ScanExecutionProcessStateRunning, bean.ScanExecutionProcessStateCompleted})
+		if err != nil && err != pg.ErrNoRows {
+			impl.logger.Errorw("error in getting history mappings", "err", err)
+			return scanned, err
+		}
+		if len(scanHistoryMappings) > 0 {
+			scanned = true
+		}
+	}
+
 	return scanned, err
 }
 
