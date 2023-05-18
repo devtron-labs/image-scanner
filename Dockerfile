@@ -14,5 +14,6 @@ RUN chown -R devtron:devtron ./image-scanner
 RUN chmod +x ./image-scanner
 RUN apk add curl
 RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.41.0
+COPY --from=build-env  /usr/local/bin/trivy .
 USER devtron
 CMD ["./image-scanner"]
