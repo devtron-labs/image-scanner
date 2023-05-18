@@ -12,8 +12,9 @@ RUN adduser -D devtron
 COPY --from=build-env  /go/src/github.com/devtron-labs/image-scanner/image-scanner .
 RUN chown -R devtron:devtron ./image-scanner
 RUN chmod +x ./image-scanner
-RUN apk add curl
-RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.41.0
-COPY --from=build-env  /usr/local/bin/trivy .
+
+FROM build AS vulnscan
+COPY --from=aquasec/trivy:latest /usr/local/bin/trivy /usr/local/bin/trivy
+RUN trivy filesystem --exit-code 1 --no-progress /
 USER devtron
 CMD ["./image-scanner"]
