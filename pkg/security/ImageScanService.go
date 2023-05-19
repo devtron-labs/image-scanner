@@ -199,7 +199,7 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		return nil, executionHistoryDirPath, err
 	}
 	if !isExist && err == nil {
-		err = os.Mkdir(bean.ScanOutputDirectory, commonUtil.DefaultFolderCreatePermission)
+		err = os.Mkdir(bean.ScanOutputDirectory, commonUtil.DefaultFileCreatePermission)
 		if err != nil && !os.IsExist(err) {
 			impl.logger.Errorw("error in creating Output directory", "err", err, "toolId", tool.Id, "executionHistoryDir", executionHistoryDirPath)
 			return nil, executionHistoryDirPath, err
@@ -207,7 +207,7 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 	}
 	// creating folder for storing output data for this execution history data
 	executionHistoryDirPath = impl.CreateFolderForOutputData(executionHistoryModel.Id)
-	err = os.Mkdir(executionHistoryDirPath, commonUtil.DefaultFolderCreatePermission)
+	err = os.Mkdir(executionHistoryDirPath, commonUtil.DefaultFileCreatePermission)
 	if err != nil && !os.IsExist(err) {
 		impl.logger.Errorw("error in creating executionHistory directory", "err", err, "executionHistoryId", executionHistoryModel.Id)
 		return nil, executionHistoryDirPath, err

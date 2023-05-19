@@ -11,9 +11,8 @@ import (
 )
 
 const (
-	OutputFilePrefix                          = "tmp-output" //TODO: should this be csv?
-	DefaultFileCreatePermission   fs.FileMode = 0666
-	DefaultFolderCreatePermission fs.FileMode = 0755
+	OutputFilePrefix                        = "tmp-output" //TODO: should this be csv?
+	DefaultFileCreatePermission fs.FileMode = 0755
 )
 
 // CreateFile takes a unique identifier for a file and creates it in the current working directory
