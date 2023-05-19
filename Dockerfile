@@ -14,8 +14,7 @@ RUN adduser -D devtron
 COPY --from=build-env  /go/src/github.com/devtron-labs/image-scanner/image-scanner .
 RUN chown -R devtron:devtron ./image-scanner
 RUN chmod +x ./image-scanner
-RUN chown -R devtron:devtron ./testpurpose
+RUN chown -R devtron:devtron ./security
 RUN chmod +x ./security
 USER devtron
-RUN mkdir -p /security
 CMD ["./image-scanner"]
