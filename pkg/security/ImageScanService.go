@@ -746,8 +746,10 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 	}
 
 	var executionHistoryDirPath string
+	flagForDeleting := false
 	// Create Folder for output data for execution history only if any pending scans are there due to pod died
 	if len(scanHistories) > 0 {
+		flagForDeleting = true
 		executionHistoryDirPath = impl.CreateFolderForOutputData(scanHistories[0].ImageScanExecutionHistoryId)
 	}
 	wg := &sync.WaitGroup{}
@@ -788,10 +790,13 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 
 	}
 	wg.Wait()
+
 	//deleting executionDirectoryPath
-	err = os.Remove(executionHistoryDirPath)
-	if err != nil {
-		impl.logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
+	if flagForDeleting {
+		err = os.Remove(executionHistoryDirPath)
+		if err != nil {
+			impl.logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
+		}
 	}
 
 }
