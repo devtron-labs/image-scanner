@@ -219,13 +219,35 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 	}
 	return executionHistoryModel, executionHistoryDirPath, nil
 }
-
+func DoesFileExist(path string) (bool, error) {
+	_, err := os.Stat(path)
+	if err == nil {
+		return true, nil
+	}
+	if os.IsNotExist(err) {
+		return false, nil
+	}
+	return false, err
+}
 func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMetadata, executionHistoryDirPath string, executionHistoryId int, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto) error {
 	imageScanConfig := &ImageScanConfig{}
 	err := env.Parse(imageScanConfig)
 	if err != nil {
 		impl.logger.Errorw("error in parsing env ", "err", err)
 		return err
+	}
+	// creating folder for storing all details if not exist
+	isExist, err := DoesFileExist(bean.ScanOutputDirectory)
+	if err != nil {
+		impl.logger.Errorw("error in checking if scan output directory exist ", "err", err)
+		return err
+	}
+	if !isExist && err == nil {
+		err = os.Mkdir(bean.ScanOutputDirectory, commonUtil.DefaultFolderCreatePermission)
+		if err != nil && !os.IsExist(err) {
+			impl.logger.Errorw("error in creating Output directory", "err", err, "toolId", tool.Id, "executionHistoryDir", executionHistoryDirPath)
+			return err
+		}
 	}
 	// creating folder for storing this tool output data
 	toolIdStr := strconv.Itoa(tool.Id)
