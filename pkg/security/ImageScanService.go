@@ -194,7 +194,7 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 	}
 	// creating folder for storing output data for this execution history data
 	executionHistoryDirPath = impl.CreateFolderForOutputData(executionHistoryModel.Id)
-	err = os.Mkdir(executionHistoryDirPath, commonUtil.DefaultFileCreatePermission)
+	err = os.Mkdir(executionHistoryDirPath, commonUtil.DefaultFolderCreatePermission)
 	if err != nil && !os.IsExist(err) {
 		impl.logger.Errorw("error in creating executionHistory directory", "err", err, "executionHistoryId", executionHistoryModel.Id)
 		return nil, executionHistoryDirPath, err
