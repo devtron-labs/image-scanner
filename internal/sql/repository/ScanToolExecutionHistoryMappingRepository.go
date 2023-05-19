@@ -101,7 +101,7 @@ func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) GetAllScanHistoriesBy
 	var models []*ScanToolExecutionHistoryMapping
 	err := repo.dbConnection.Model(&models).Column("scan_tool_execution_history_mapping.*").
 		Where("image_scan_execution_history_id = ?", executionHistoryId).
-		Where("state in ?", pg.In(states)).Select()
+		Where("state in (?)", pg.In(states)).Select()
 	if err != nil {
 		repo.logger.Errorw("error in ScanToolExecutionHistoryMappingRepository, GetAllScanHistoriesByState", "err", err)
 		return nil, err
