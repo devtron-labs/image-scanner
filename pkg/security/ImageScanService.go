@@ -751,7 +751,7 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 		executionHistoryDirPath = impl.CreateFolderForOutputData(scanHistories[0].ImageScanExecutionHistoryId)
 	}
 	wg := &sync.WaitGroup{}
-	wg.Add(1)
+	wg.Add(len(scanHistories))
 	imagescanExecutionHistories, err := impl.scanHistoryRepository.FindAll()
 	if err != nil {
 		impl.logger.Errorw("error in getting scan histories on start up", "err", err)
