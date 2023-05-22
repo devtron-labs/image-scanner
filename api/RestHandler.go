@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"github.com/devtron-labs/image-scanner/common"
+	"github.com/devtron-labs/image-scanner/internal/sql/bean"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
@@ -60,15 +61,6 @@ type ApiError struct {
 	UserDetailMessage string      `json:"userDetailMessage,omitempty"`
 }
 
-const (
-	SCANNER_TYPE_CLAIR_V4 = "CLAIRV4"
-	SCANNER_TYPE_CLAIR_V2 = "CLAIRV2"
-	SCANNER_TYPE_TRIVY    = "TRIVY"
-	SCAN_TOOL_CLAIR       = "CLAIR"
-	SCAN_TOOL_VERSION_2   = "V2"
-	SCAN_TOOL_VERSION_4   = "V4"
-)
-
 type ResetRequest struct {
 	AppId         int `json:"appId"`
 	EnvironmentId int `json:"environmentId"`
@@ -94,15 +86,15 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		writeJsonResp(w, err, nil, http.StatusInternalServerError)
 		return
 	}
-	if tool.Name == SCAN_TOOL_CLAIR && tool.Version == SCAN_TOOL_VERSION_2 {
+	if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {
 		result, err = impl.klarService.Process(&scanConfig)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)
 			writeJsonResp(w, err, nil, http.StatusInternalServerError)
 			return
 		}
-	} else if tool.Name == SCAN_TOOL_CLAIR && tool.Version == SCAN_TOOL_VERSION_4 {
-		result, err = impl.clairService.ScanImage(&scanConfig)
+	} else if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion4 {
+		result, err = impl.clairService.ScanImage(&scanConfig, tool)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)
 			writeJsonResp(w, err, nil, http.StatusInternalServerError)

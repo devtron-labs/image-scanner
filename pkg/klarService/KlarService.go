@@ -202,7 +202,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ImageScanEvent) (*common.
 		impl.logger.Errorw("Failed to analyze, exiting", "err", err)
 		return scanEventResponse, err
 	}
-	tool, err := impl.scanToolMetadataRepository.FindByNameAndVersion(bean.ClairTool, bean.Version2)
+	tool, err := impl.scanToolMetadataRepository.FindByNameAndVersion(bean.ScanToolClair, bean.ScanToolVersion2)
 	if err != nil {
 		impl.logger.Errorw("error in getting tool by name and version", "err", err)
 		return scanEventResponse, err
