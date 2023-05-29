@@ -29,7 +29,7 @@ import (
 )
 
 type ImageScanService interface {
-	ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) error
+	ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory, executionHistoryDirPath string) error
 	CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int) ([]*claircore.Vulnerability, error)
 	CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int) ([]*clair.Vulnerability, error)
 	IsImageScanned(image string) (bool, error)
@@ -37,6 +37,7 @@ type ImageScanService interface {
 	CreateFolderForOutputData(executionHistoryModelId int) string
 	HandleProgressingScans()
 	GetActiveTool() (*repository.ScanToolMetadata, error)
+	RegisterScanExecutionHistoryAndState(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) (*repository.ImageScanExecutionHistory, string, error)
 }
 
 type ImageScanServiceImpl struct {
@@ -94,7 +95,7 @@ func (impl *ImageScanServiceImpl) GetActiveTool() (*repository.ScanToolMetadata,
 	}
 	return tool, nil
 }
-func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) error {
+func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory, executionHistoryDirPath string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(impl.imageScanConfig.ScanImageTimeout)*time.Minute)
 	defer cancel()
 	//checking if image is already scanned or not
@@ -107,11 +108,6 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 		impl.logger.Infow("image already scanned, skipping further process", "image", scanEvent.Image)
 		return nil
 	}
-	executionHistory, executionHistoryDirPath, err := impl.RegisterScanExecutionHistoryAndState(scanEvent, tool)
-	if err != nil {
-		impl.logger.Errorw("service err, RegisterScanExecutionHistoryAndState", "err", err)
-		return err
-	}
 	imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
 	if err != nil {
 		impl.logger.Errorw("service error, getImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
@@ -121,12 +117,6 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 	wg.Add(1)
 	impl.ScanImageForTool(tool, executionHistory.Id, executionHistoryDirPath, wg, int32(scanEvent.UserId), ctx, imageScanRenderDto)
 	wg.Wait()
-	//deleting executionDirectoryPath with files as well
-	err = os.RemoveAll(executionHistoryDirPath)
-	if err != nil {
-		impl.logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
-		return err
-	}
 	return nil
 }
 

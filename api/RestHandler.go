@@ -12,6 +12,7 @@ import (
 	"github.com/devtron-labs/image-scanner/pubsub"
 	"go.uber.org/zap"
 	"net/http"
+	"os"
 )
 
 type RestHandler interface {
@@ -86,6 +87,11 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		writeJsonResp(w, err, nil, http.StatusInternalServerError)
 		return
 	}
+	executionHistory, executionHistoryDirPath, err := impl.imageScanService.RegisterScanExecutionHistoryAndState(&scanConfig, tool)
+	if err != nil {
+		impl.logger.Errorw("service err, RegisterScanExecutionHistoryAndState", "err", err)
+		return
+	}
 	if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {
 		result, err = impl.klarService.Process(&scanConfig)
 		if err != nil {
@@ -101,12 +107,18 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 			return
 		}
 	} else {
-		err = impl.imageScanService.ScanImage(&scanConfig, tool)
+		err = impl.imageScanService.ScanImage(&scanConfig, tool, executionHistory, executionHistoryDirPath)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)
 			writeJsonResp(w, err, nil, http.StatusInternalServerError)
 			return
 		}
+	}
+	//deleting executionDirectoryPath with files as well
+	err = os.RemoveAll(executionHistoryDirPath)
+	if err != nil {
+		impl.logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
+		return
 	}
 
 	impl.logger.Debugw("save", "status", result)
