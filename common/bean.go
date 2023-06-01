@@ -17,6 +17,11 @@ const (
 	OUTPUT_FILE_PATH   = "OUTPUT_FILE_PATH"
 )
 
+const (
+	SHELL_COMMAND = "sh"
+	COMMAND_ARGS  = "-c"
+)
+
 type RegistryType string
 
 type ImageScanRenderDto struct {

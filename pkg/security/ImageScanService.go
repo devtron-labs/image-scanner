@@ -188,7 +188,7 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		impl.logger.Errorw("error in checking if scan output directory exist ", "err", err)
 		return nil, executionHistoryDirPath, err
 	}
-	if !isExist && err == nil {
+	if !isExist {
 		err = os.Mkdir(bean.ScanOutputDirectory, commonUtil.DefaultFileCreatePermission)
 		if err != nil && !os.IsExist(err) {
 			impl.logger.Errorw("error in creating Output directory", "err", err, "toolId", tool.Id, "executionHistoryDir", executionHistoryDirPath)
@@ -262,6 +262,10 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 
 	// Getting and Setting the starting index based of first step for processing starting point on registry type and tool
 	registryIndexMappingModel, err := impl.registryIndexMappingRepository.GetStartingIndexForARegistryAndATool(tool.Id, imageScanRenderDto.RegistryType)
+	if err != nil {
+		impl.logger.Errorw("error in getting registry index mapping", "err", err, "RegistryType", imageScanRenderDto.RegistryType, "toolId", tool.Id)
+		return err
+	}
 	stepProcessIndex = registryIndexMappingModel.Index
 
 	for _, step := range steps {
@@ -386,14 +390,20 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	uniqueVulnerabilityMap := make(map[string]*bean.ImageScanOutputObject)
 	allCvesNames := make([]string, 0, len(vulnerabilities))
 	for _, vul := range vulnerabilities {
-		if _, value := uniqueVulnerabilityMap[vul.Name]; !value {
+		if _, ok := uniqueVulnerabilityMap[vul.Name]; !ok {
 			uniqueVulnerabilityMap[vul.Name] = vul
 			allCvesNames = append(allCvesNames, vul.Name)
 		}
 	}
 	allSavedCves, err := impl.cveStoreRepository.FindByCveNames(allCvesNames)
 	if err != nil {
-		impl.logger.Errorw("error in getting all cves ", "err", err)
+		if err == pg.ErrNoRows {
+			// in case of no cve found , just ignore
+			impl.logger.Infow("no saved cves found", err)
+		} else {
+			impl.logger.Errorw("error in getting all cves ", "err", err)
+			return err
+		}
 	}
 	allSavedCvesMap := make(map[string]*repository.CveStore)
 	for _, cve := range allSavedCves {
@@ -506,7 +516,7 @@ func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl strin
 	metaDataMap := map[string]interface{}{}
 	err := json.Unmarshal([]byte(toolMetaData), &metaDataMap)
 	if err != nil {
-		impl.logger.Errorw("error in unmarshalling meta data ", "err", err)
+		impl.logger.Errorw("error in unmarshalling meta data ", "err", err, "toolMetaData", toolMetaData)
 		return nil, err
 	}
 	if outputStepIndex != bean.NullProcessIndex {
@@ -789,7 +799,12 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 	//System doing image scanning for all pending scans
 	for _, scanHistory := range scanHistories {
 		scanEvent := common.ImageScanEvent{}
-		err = json.Unmarshal([]byte(imageScanExecutionHistoryMap[scanHistory.ImageScanExecutionHistoryId].ScanEventJson), &scanHistory)
+		scanEventJson := imageScanExecutionHistoryMap[scanHistory.ImageScanExecutionHistoryId].ScanEventJson
+		if len(scanEventJson) == 0 {
+			return
+		}
+		scanTool := imageScanToolsMap[scanHistory.ScanToolId]
+		err = json.Unmarshal([]byte(scanEventJson), &scanHistory)
 		if err != nil {
 			impl.logger.Errorw("error in un-marshaling", "err", err)
 			return
@@ -799,7 +814,7 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 			impl.logger.Errorw("service error, getImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 			return
 		}
-		impl.ScanImageForTool(imageScanToolsMap[scanHistory.ScanToolId], scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, nil, imageScanRenderDto)
+		impl.ScanImageForTool(scanTool, scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, nil, imageScanRenderDto)
 
 	}
 	wg.Wait()
@@ -808,7 +823,7 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 	if flagForDeleting {
 		err = os.Remove(executionHistoryDirPath)
 		if err != nil {
-			impl.logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
+			impl.logger.Errorw("error in deleting executionHistoryDirectory", "err", err, "executionHistoryDirPath", executionHistoryDirPath)
 		}
 	}
 
@@ -826,6 +841,6 @@ func GetImageScannerConfig() (*ImageScanConfig, error) {
 type ImageScanConfig struct {
 	ScannerType           string `env:"SCANNER_TYPE" envDefault:""`
 	ScanTryCount          int    `env:"IMAGE_SCAN_TRY_COUNT" envDefault:"1"`
-	ScanImageTimeout      int    `env:"IMAGE_SCAN_TIMEOUT" envDefault:"10"`
-	ScanImageAsyncTimeout int    `env:"IMAGE_SCAN_ASYNC_TIMEOUT" envDefault:"3"`
+	ScanImageTimeout      int    `env:"IMAGE_SCAN_TIMEOUT" envDefault:"10"`      // Time is considered in minutes
+	ScanImageAsyncTimeout int    `env:"IMAGE_SCAN_ASYNC_TIMEOUT" envDefault:"3"` // Time is considered in minutes
 }
