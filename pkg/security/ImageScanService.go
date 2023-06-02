@@ -30,8 +30,8 @@ import (
 
 type ImageScanService interface {
 	ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory, executionHistoryDirPath string) error
-	CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int) ([]*claircore.Vulnerability, error)
-	CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int) ([]*clair.Vulnerability, error)
+	CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*claircore.Vulnerability, error)
+	CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*clair.Vulnerability, error)
 	IsImageScanned(image string) (bool, error)
 	ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int, executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto)
 	CreateFolderForOutputData(executionHistoryModelId int) string
@@ -554,7 +554,7 @@ func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl strin
 	return buf.Bytes(), nil
 }
 
-func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int) ([]*claircore.Vulnerability, error) {
+func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*claircore.Vulnerability, error) {
 
 	var cveNames []string
 	for _, item := range vs {
@@ -592,20 +592,9 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*cl
 			cveNames = append(cveNames, cveStore.Name)
 		}
 	}
-	imageScanExecutionHistory := &repository.ImageScanExecutionHistory{
-		Image:         event.Image,
-		ImageHash:     event.ImageDigest,
-		ExecutionTime: time.Now(),
-		ExecutedBy:    event.UserId,
-	}
-	err := impl.scanHistoryRepository.Save(imageScanExecutionHistory)
-	if err != nil {
-		impl.logger.Errorw("Failed to save cve", "err", err)
-		return nil, err
-	}
 	for _, cveName := range cveNames {
 		imageScanExecutionResult := &repository.ImageScanExecutionResult{
-			ImageScanExecutionHistoryId: imageScanExecutionHistory.Id,
+			ImageScanExecutionHistoryId: executionHistory.Id,
 			CveStoreName:                cveName,
 			ScanToolId:                  toolId,
 		}
@@ -618,7 +607,7 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*cl
 	return vs, nil
 }
 
-func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int) ([]*clair.Vulnerability, error) {
+func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*clair.Vulnerability, error) {
 
 	var cveNames []string
 	for _, item := range vs {
@@ -656,20 +645,9 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 			cveNames = append(cveNames, cveStore.Name)
 		}
 	}
-	imageScanExecutionHistory := &repository.ImageScanExecutionHistory{
-		Image:         event.Image,
-		ImageHash:     event.ImageDigest,
-		ExecutionTime: time.Now(),
-		ExecutedBy:    event.UserId,
-	}
-	err := impl.scanHistoryRepository.Save(imageScanExecutionHistory)
-	if err != nil {
-		impl.logger.Errorw("Failed to save cve", "err", err)
-		return nil, err
-	}
 	for _, cveName := range cveNames {
 		imageScanExecutionResult := &repository.ImageScanExecutionResult{
-			ImageScanExecutionHistoryId: imageScanExecutionHistory.Id,
+			ImageScanExecutionHistoryId: executionHistory.Id,
 			CveStoreName:                cveName,
 			ScanToolId:                  toolId,
 		}

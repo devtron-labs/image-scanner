@@ -43,7 +43,7 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 		// NOTE: This is not being used, thats why not updated the call
 		// TODO: Will have to update if any usage in future
 		//scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
-		_, err = impl.clairService.ScanImage(scanConfig, nil)
+		_, err = impl.clairService.ScanImage(scanConfig, nil, nil)
 		if err != nil {
 			impl.logger.Infow("err in process msg", "err", err)
 			return

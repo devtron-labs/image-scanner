@@ -41,7 +41,7 @@ const (
 )
 
 type ClairService interface {
-	ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) (*common.ScanEventResponse, error)
+	ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error)
 	CheckIfIndexReportExistsForManifestHash(manifestHash claircore.Digest) (bool, error)
 	CreateIndexReportFromManifest(manifest *claircore.Manifest) error
 	GetVulnerabilityReportFromManifestHash(manifestHash claircore.Digest) (*claircore.VulnerabilityReport, error)
@@ -115,7 +115,7 @@ func GetClairConfig() (*ClairConfig, error) {
 	return cfg, err
 }
 
-func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) (*common.ScanEventResponse, error) {
+func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error) {
 	impl.logger.Debugw("new request, scan image", "requestPayload", scanEvent)
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
@@ -140,7 +140,7 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *
 	for _, vulnerability := range vulnerabilityReport.Vulnerabilities {
 		vulnerabilities = append(vulnerabilities, vulnerability)
 	}
-	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent, tool.Id)
+	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent, tool.Id, executionHistory)
 	if err != nil {
 		impl.logger.Errorw("error in CreateScanExecutionRegistry", "err", err)
 		return scanEventResponse, err
