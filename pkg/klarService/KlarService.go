@@ -8,13 +8,14 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/devtron-labs/image-scanner/common"
+	"github.com/devtron-labs/image-scanner/internal/sql/bean"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
 	"strings"
 
 	"errors"
-	"github.com/caarlos0/env"
+	"github.com/caarlos0/env/v6"
 	/*"github.com/devtron-labs/image-scanner/client"*/
 	/*"github.com/devtron-labs/image-scanner/client"*/
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
@@ -45,7 +46,7 @@ func GetKlarConfig() (*KlarConfig, error) {
 }
 
 type KlarService interface {
-	Process(scanEvent *common.ScanEvent) (*common.ScanEventResponse, error)
+	Process(scanEvent *common.ImageScanEvent, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error)
 }
 
 type KlarServiceImpl struct {
@@ -55,11 +56,13 @@ type KlarServiceImpl struct {
 	userRepository                repository.UserRepository
 	imageScanService              security.ImageScanService
 	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository
+	scanToolMetadataRepository    repository.ScanToolMetadataRepository
 }
 
 func NewKlarServiceImpl(logger *zap.SugaredLogger, klarConfig *KlarConfig, grafeasService grafeasService.GrafeasService,
 	userRepository repository.UserRepository, imageScanService security.ImageScanService,
-	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository) *KlarServiceImpl {
+	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository,
+	scanToolMetadataRepository repository.ScanToolMetadataRepository) *KlarServiceImpl {
 	return &KlarServiceImpl{
 		logger:                        logger,
 		klarConfig:                    klarConfig,
@@ -67,10 +70,11 @@ func NewKlarServiceImpl(logger *zap.SugaredLogger, klarConfig *KlarConfig, grafe
 		userRepository:                userRepository,
 		imageScanService:              imageScanService,
 		dockerArtifactStoreRepository: dockerArtifactStoreRepository,
+		scanToolMetadataRepository:    scanToolMetadataRepository,
 	}
 }
 
-func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanEventResponse, error) {
+func (impl *KlarServiceImpl) Process(scanEvent *common.ImageScanEvent, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error) {
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
 	}
@@ -198,12 +202,12 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ScanEvent) (*common.ScanE
 		impl.logger.Errorw("Failed to analyze, exiting", "err", err)
 		return scanEventResponse, err
 	}
-	/*_, err = impl.grafeasService.CreateNote(vs, scanEvent)
+	tool, err := impl.scanToolMetadataRepository.FindByNameAndVersion(bean.ScanToolClair, bean.ScanToolVersion2)
 	if err != nil {
-		impl.logger.Errorw("Failed to post save to grafeas", "err", err)
-	}*/
-
-	vulnerabilities, err := impl.imageScanService.CreateScanExecutionRegistryForClairV2(vs, scanEvent)
+		impl.logger.Errorw("error in getting tool by name and version", "err", err)
+		return scanEventResponse, err
+	}
+	vulnerabilities, err := impl.imageScanService.CreateScanExecutionRegistryForClairV2(vs, scanEvent, tool.Id, executionHistory)
 	if err != nil {
 		impl.logger.Errorw("Failed dump scanned data", "err", err)
 		return scanEventResponse, err

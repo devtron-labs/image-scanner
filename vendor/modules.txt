@@ -1,5 +1,8 @@
 # cloud.google.com/go/compute v1.7.0
 cloud.google.com/go/compute/metadata
+# github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible
+## explicit
+github.com/Knetic/govaluate
 # github.com/antihax/optional v1.0.0
 ## explicit
 github.com/antihax/optional
@@ -49,6 +52,9 @@ github.com/aws/aws-sdk-go/service/sts/stsiface
 # github.com/caarlos0/env v3.5.0+incompatible
 ## explicit
 github.com/caarlos0/env
+# github.com/caarlos0/env/v6 v6.10.1
+## explicit
+github.com/caarlos0/env/v6
 # github.com/coreos/clair v2.0.1-0.20171220021131-30bd568d8361+incompatible
 ## explicit
 github.com/coreos/clair/api/v3/clairpb
@@ -129,7 +135,6 @@ github.com/jmespath/go-jmespath
 ## explicit
 github.com/juju/errors
 # github.com/nats-io/nats.go v1.19.0
-## explicit
 github.com/nats-io/nats.go
 github.com/nats-io/nats.go/encoders/builtin
 github.com/nats-io/nats.go/util
@@ -159,6 +164,13 @@ github.com/quay/claircore
 github.com/quay/claircore/pkg/cpe
 # github.com/sirupsen/logrus v1.8.1
 github.com/sirupsen/logrus
+# github.com/tidwall/gjson v1.14.4
+## explicit
+github.com/tidwall/gjson
+# github.com/tidwall/match v1.1.1
+github.com/tidwall/match
+# github.com/tidwall/pretty v1.2.0
+github.com/tidwall/pretty
 # go.uber.org/atomic v1.9.0
 ## explicit
 go.uber.org/atomic

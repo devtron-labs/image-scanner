@@ -33,16 +33,17 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 	callback := func(msg *pubsub1.PubSubMsg) {
 		impl.logger.Debugw("received msg", "msg", msg)
 		//defer msg.Ack()
-		scanConfig := &common.ScanEvent{}
+		scanConfig := &common.ImageScanEvent{}
 		err := json.Unmarshal([]byte(msg.Data), scanConfig)
 		if err != nil {
 			impl.logger.Errorw("err in reading msg", "err", err, "msg", string(msg.Data))
 			return
 		}
 		impl.logger.Infow("scanConfig unmarshal data", "scanConfig", scanConfig)
-
+		// NOTE: This is not being used, thats why not updated the call
+		// TODO: Will have to update if any usage in future
 		//scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
-		_, err = impl.clairService.ScanImage(scanConfig)
+		_, err = impl.clairService.ScanImage(scanConfig, nil, nil)
 		if err != nil {
 			impl.logger.Infow("err in process msg", "err", err)
 			return

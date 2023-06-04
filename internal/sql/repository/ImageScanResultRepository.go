@@ -9,13 +9,15 @@ type ImageScanExecutionResult struct {
 	tableName                   struct{} `sql:"image_scan_execution_result" pg:",discard_unknown_columns"`
 	Id                          int      `sql:"id,pk"`
 	CveStoreName                string   `sql:"cve_store_name,notnull"`
-	ImageScanExecutionHistoryId int      `sql:"image_scan_execution_history_id"`
+	ImageScanExecutionHistoryId int      `sql:"image_scan_execution_history_id"` //TODO: remove this
+	ScanToolId                  int      `sql:"scan_tool_id"`
 	CveStore                    CveStore
 	ImageScanExecutionHistory   ImageScanExecutionHistory
 }
 
 type ImageScanResultRepository interface {
 	Save(model *ImageScanExecutionResult) error
+	SaveInBatch(models []*ImageScanExecutionResult, tx *pg.Tx) error
 	FindAll() ([]*ImageScanExecutionResult, error)
 	FindOne(id int) (*ImageScanExecutionResult, error)
 	FindByCveName(name string) ([]*ImageScanExecutionResult, error)
@@ -38,6 +40,11 @@ func NewImageScanResultRepositoryImpl(dbConnection *pg.DB, logger *zap.SugaredLo
 
 func (impl ImageScanResultRepositoryImpl) Save(model *ImageScanExecutionResult) error {
 	err := impl.dbConnection.Insert(model)
+	return err
+}
+
+func (impl ImageScanResultRepositoryImpl) SaveInBatch(models []*ImageScanExecutionResult, tx *pg.Tx) error {
+	err := tx.Insert(&models)
 	return err
 }
 
@@ -68,11 +75,6 @@ func (impl ImageScanResultRepositoryImpl) Update(team *ImageScanExecutionResult)
 
 func (impl ImageScanResultRepositoryImpl) FetchByScanExecutionId(scanExecutionId int) ([]*ImageScanExecutionResult, error) {
 	var models []*ImageScanExecutionResult
-	/*err := impl.dbConnection.Model(&models).Column("image_scan_execution_result.*", "cs.*").
-	Join("inner join cve_store cs on cs.name=image_scan_execution_result.cve_name").
-	Where("image_scan_execution_result.scan_execution_id = ?", id).Select()
-	*/
-
 	err := impl.dbConnection.Model(&models).Column("image_scan_execution_result.*", "CveStore").
 		Where("image_scan_execution_result.image_scan_execution_history_id = ?", scanExecutionId).
 		Select()

@@ -2,10 +2,10 @@ package grafeasService
 
 import (
 	"bytes"
-	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/grafeas"
 	"encoding/json"
 	"fmt"
+	"github.com/devtron-labs/image-scanner/common"
+	"github.com/devtron-labs/image-scanner/grafeas"
 	"github.com/optiopay/klar/clair"
 	"go.uber.org/zap"
 	"io/ioutil"
@@ -27,8 +27,8 @@ func GetGrafeasClient() *grafeas.APIClient {
 type GrafeasService interface {
 	GetNotesById(noteID string) (*grafeas.V1beta1Note, error)
 	GetAllNotes() ([]*grafeas.V1beta1Note, error)
-	CreateNote(vs []*clair.Vulnerability, event *common.ScanEvent) (bool, error)
-	CreateOccurrence(v *clair.Vulnerability, noteName string, event *common.ScanEvent) (bool, error)
+	CreateNote(vs []*clair.Vulnerability, event *common.ImageScanEvent) (bool, error)
+	CreateOccurrence(v *clair.Vulnerability, noteName string, event *common.ImageScanEvent) (bool, error)
 	GetOccurrenceById(noteID string) (*grafeas.V1beta1Occurrence, error)
 	GetAllOccurrence() ([]*grafeas.V1beta1Occurrence, error)
 }
@@ -128,7 +128,7 @@ func (impl *GrafeasServiceImpl) GetAllNotes() ([]*grafeas.V1beta1Note, error) {
 	return noteResponse, nil
 }
 
-func (impl *GrafeasServiceImpl) CreateNote(vs []*clair.Vulnerability, event *common.ScanEvent) (bool, error) {
+func (impl *GrafeasServiceImpl) CreateNote(vs []*clair.Vulnerability, event *common.ImageScanEvent) (bool, error) {
 	for _, item := range vs {
 		var vulnerabilityDetails []grafeas.VulnerabilityDetail
 		vulnerabilityDetails = append(vulnerabilityDetails, grafeas.VulnerabilityDetail{
@@ -179,7 +179,7 @@ func (impl *GrafeasServiceImpl) CreateNote(vs []*clair.Vulnerability, event *com
 	return true, nil
 }
 
-func (impl *GrafeasServiceImpl) CreateOccurrence(v *clair.Vulnerability, noteName string, event *common.ScanEvent) (bool, error) {
+func (impl *GrafeasServiceImpl) CreateOccurrence(v *clair.Vulnerability, noteName string, event *common.ImageScanEvent) (bool, error) {
 	kind := grafeas.VULNERABILITY_V1beta1NoteKind
 	versionKind := grafeas.NORMAL_VersionVersionKind
 	vulnerabilityVulnerability := grafeas.V1beta1vulnerabilityDetails{}

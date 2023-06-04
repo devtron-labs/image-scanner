@@ -1,12 +1,12 @@
 /*
-	@author: vikram@github.com/devtron-labs
-	@description: user crud
+@author: vikram@github.com/devtron-labs
+@description: user crud
 */
 package repository
 
 import (
-	"github.com/devtron-labs/image-scanner/common"
 	"fmt"
+	"github.com/devtron-labs/image-scanner/internal/sql/bean"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"
 	"time"
@@ -18,7 +18,7 @@ type UserRepository interface {
 	GetById(id int32) (*UserModel, error)
 	GetAll() ([]UserModel, error)
 	GetUsersByFilter(size int, from int) ([]UserModel, error)
-	FetchUserByEmail(email string) (common.UserInfo, error)
+	FetchUserByEmail(email string) (bean.UserInfo, error)
 	FetchUserByEmailV2(email string) (*UserModel, error)
 	FetchUserDetailByEmailV2(email string) (*UserModel, error)
 	GetByIds(ids []int32) ([]UserModel, error)
@@ -106,8 +106,8 @@ func (impl UserRepositoryImpl) GetUsersByFilter(size int, from int) ([]UserModel
 	return userModel, err
 }
 
-func (impl UserRepositoryImpl) FetchUserByEmail(email string) (common.UserInfo, error) {
-	var users common.UserInfo
+func (impl UserRepositoryImpl) FetchUserByEmail(email string) (bean.UserInfo, error) {
+	var users bean.UserInfo
 
 	query := "SELECT u.id, u.email_id, u.access_token FROM users u" +
 		" WHERE u.email_id ILIKE ? order by u.updated_on desc"

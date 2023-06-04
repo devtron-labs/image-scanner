@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/devtron-labs/image-scanner/internal/sql/bean"
 	"github.com/go-pg/pg"
 )
 
@@ -13,7 +14,7 @@ type CvePolicy struct {
 	AppId         int
 	CVEStoreId    int
 	Action        PolicyAction
-	Severity      Severity
+	Severity      bean.Severity
 	Deleted       bool
 	AuditLog
 	*CveStore
@@ -31,20 +32,6 @@ func (d PolicyAction) String() string {
 	return [...]string{"Inherit", "Allow", "Block"}[d]
 }
 
-//------------------
-type Severity int
-
-const (
-	Low Severity = iota
-	Moderate
-	Critical
-)
-
-func (d Severity) String() string {
-	return [...]string{"Low", "Moderate", "Critical"}[d]
-}
-
-//----------------
 type PolicyLevel int
 
 const (

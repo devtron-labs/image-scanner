@@ -28,7 +28,6 @@ func InitializeApp() (*App, error) {
 		sql.NewDbConnection,
 		api.NewRestHandlerImpl,
 		wire.Bind(new(api.RestHandler), new(*api.RestHandlerImpl)),
-		api.GetScannerConfig,
 		klarService.GetKlarConfig,
 		grafeasService.GetGrafeasClient,
 		client.NewPubSubClientServiceImpl,
@@ -48,7 +47,7 @@ func InitializeApp() (*App, error) {
 		wire.Bind(new(user.UserService), new(*user.UserServiceImpl)),
 		repository.NewUserRepositoryImpl,
 		wire.Bind(new(repository.UserRepository), new(*repository.UserRepositoryImpl)),
-
+		security.GetImageScannerConfig,
 		security.NewImageScanServiceImpl,
 		wire.Bind(new(security.ImageScanService), new(*security.ImageScanServiceImpl)),
 		repository.NewImageScanHistoryRepositoryImpl,
@@ -65,6 +64,20 @@ func InitializeApp() (*App, error) {
 		wire.Bind(new(repository.CiArtifactRepository), new(*repository.CiArtifactRepositoryImpl)),
 		repository.NewDockerArtifactStoreRepositoryImpl,
 		wire.Bind(new(repository.DockerArtifactStoreRepository), new(*repository.DockerArtifactStoreRepositoryImpl)),
+		repository.NewRegistryIndexMappingRepositoryImpl,
+		wire.Bind(new(repository.RegistryIndexMappingRepository), new(*repository.RegistryIndexMappingRepositoryImpl)),
+
+		repository.NewScanToolMetadataRepositoryImpl,
+		wire.Bind(new(repository.ScanToolMetadataRepository), new(*repository.ScanToolMetadataRepositoryImpl)),
+		repository.NewScanToolStepRepositoryImpl,
+		wire.Bind(new(repository.ScanToolStepRepository), new(*repository.ScanToolStepRepositoryImpl)),
+		repository.NewScanStepConditionRepositoryImpl,
+		wire.Bind(new(repository.ScanStepConditionRepository), new(*repository.ScanStepConditionRepositoryImpl)),
+		repository.NewScanStepConditionMappingRepositoryImpl,
+		wire.Bind(new(repository.ScanStepConditionMappingRepository), new(*repository.ScanStepConditionMappingRepositoryImpl)),
+
+		repository.NewScanToolExecutionHistoryMappingRepositoryImpl,
+		wire.Bind(new(repository.ScanToolExecutionHistoryMappingRepository), new(*repository.ScanToolExecutionHistoryMappingRepositoryImpl)),
 	)
 	return &App{}, nil
 }
