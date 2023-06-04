@@ -16,8 +16,6 @@ type ScanToolExecutionHistoryMapping struct {
 	ExecutionFinishTime         time.Time                      `sql:"execution_finish_time,notnull"`
 	State                       bean.ScanExecutionProcessState `sql:"state"`
 	TryCount                    int                            `sql:"try_count"`
-	ImageScanExecutionHistory
-	ScanToolMetadata
 	AuditLog
 }
 
@@ -90,7 +88,7 @@ func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) MarkAllRunningStateAs
 
 func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) GetAllScanHistoriesByState(state bean.ScanExecutionProcessState) ([]*ScanToolExecutionHistoryMapping, error) {
 	var models []*ScanToolExecutionHistoryMapping
-	err := repo.dbConnection.Model(models).Column("scan_tool_execution_history_mapping.*", "ScanToolMetadata").
+	err := repo.dbConnection.Model(&models).Column("scan_tool_execution_history_mapping.*").
 		Where("state = ?", state).Select()
 	if err != nil {
 		repo.logger.Errorw("error in ScanToolExecutionHistoryMappingRepository, GetAllScanHistoriesByState", "err", err)
@@ -101,9 +99,9 @@ func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) GetAllScanHistoriesBy
 
 func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) GetAllScanHistoriesByExecutionHistoryIdAndStates(executionHistoryId int, states []bean.ScanExecutionProcessState) ([]*ScanToolExecutionHistoryMapping, error) {
 	var models []*ScanToolExecutionHistoryMapping
-	err := repo.dbConnection.Model(models).Column("scan_tool_execution_history_mapping.*", "ScanToolMetadata").
+	err := repo.dbConnection.Model(&models).Column("scan_tool_execution_history_mapping.*").
 		Where("image_scan_execution_history_id = ?", executionHistoryId).
-		Where("state in ?", pg.In(states)).Select()
+		Where("state in (?)", pg.In(states)).Select()
 	if err != nil {
 		repo.logger.Errorw("error in ScanToolExecutionHistoryMappingRepository, GetAllScanHistoriesByState", "err", err)
 		return nil, err

@@ -4,17 +4,14 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
+    <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="Docker File Update" />
+=======
     <list default="true" id="f021f5c5-5adf-4e9c-bc1e-58069a9fdc1c" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/api/RestHandler.go" beforeDir="false" afterPath="$PROJECT_DIR$/api/RestHandler.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/common/bean.go" beforeDir="false" afterPath="$PROJECT_DIR$/common/bean.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/sql/bean/bean.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/sql/bean/bean.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/sql/repository/ScanToolExecutionHistoryMappingRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/sql/repository/ScanToolExecutionHistoryMappingRepository.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/internal/sql/repository/UserRepository.go" beforeDir="false" afterPath="$PROJECT_DIR$/internal/sql/repository/UserRepository.go" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pkg/security/ImageScanService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/security/ImageScanService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pkg/user/UserService.go" beforeDir="false" afterPath="$PROJECT_DIR$/pkg/user/UserService.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/wire_gen.go" beforeDir="false" afterPath="$PROJECT_DIR$/wire_gen.go" afterDir="false" />
     </list>
+>>>>>>> generic-scanning
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -56,6 +53,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.go.format.on.save.advertiser.fired&quot;: &quot;true&quot;,
@@ -66,11 +64,14 @@
     &quot;RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/kartikdevtron.ai&quot;
+    &quot;last_opened_file_path&quot;: &quot;/Users/kartikdevtron.ai&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;
   }
 }</component>
   <component name="RecentsManager">
     <key name="GoMoveDeclarationDialog.RECENT_KEY">
+      <recent name="$PROJECT_DIR$/common" />
       <recent name="$PROJECT_DIR$/pkg/security" />
     </key>
   </component>
@@ -107,6 +108,9 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Registry Index Mapping changes" />
+    <MESSAGE value="Docker File Update" />
+    <option name="LAST_COMMIT_MESSAGE" value="Docker File Update" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>

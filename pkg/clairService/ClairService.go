@@ -13,7 +13,6 @@ import (
 	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/caarlos0/env/v6"
 	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/internal/sql/bean"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
@@ -42,7 +41,7 @@ const (
 )
 
 type ClairService interface {
-	ScanImage(scanEvent *common.ImageScanEvent) (*common.ScanEventResponse, error)
+	ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error)
 	CheckIfIndexReportExistsForManifestHash(manifestHash claircore.Digest) (bool, error)
 	CreateIndexReportFromManifest(manifest *claircore.Manifest) error
 	GetVulnerabilityReportFromManifestHash(manifestHash claircore.Digest) (*claircore.VulnerabilityReport, error)
@@ -116,7 +115,7 @@ func GetClairConfig() (*ClairConfig, error) {
 	return cfg, err
 }
 
-func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent) (*common.ScanEventResponse, error) {
+func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error) {
 	impl.logger.Debugw("new request, scan image", "requestPayload", scanEvent)
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
@@ -141,12 +140,7 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent) (*comm
 	for _, vulnerability := range vulnerabilityReport.Vulnerabilities {
 		vulnerabilities = append(vulnerabilities, vulnerability)
 	}
-	tool, err := impl.scanToolMetadataRepository.FindByNameAndVersion(bean.ClairTool, bean.Version4)
-	if err != nil {
-		impl.logger.Errorw("error in getting tool by name and version", "err", err)
-		return scanEventResponse, err
-	}
-	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent, tool.Id)
+	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent, tool.Id, executionHistory)
 	if err != nil {
 		impl.logger.Errorw("error in CreateScanExecutionRegistry", "err", err)
 		return scanEventResponse, err

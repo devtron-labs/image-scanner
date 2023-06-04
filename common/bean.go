@@ -1,27 +1,38 @@
 package common
 
 import (
-	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/optiopay/klar/clair"
 	"github.com/quay/claircore"
 	"time"
 )
 
 const (
-	AWSAccessKeyId     = "AWSAccessKeyId"
-	AWSSecretAccessKey = "AWSSecretAccessKey"
-	AWSRegion          = "AWSRegion"
-	Username           = "Username"
-	Password           = "Password"
+	AWSAccessKeyId     = "AWS_ACCESS_KEY_ID"
+	AWSSecretAccessKey = "AWS_SECRET_ACCESS_KEY"
+	AWSRegion          = "AWS_DEFAULT_REGION"
+	Username           = "USERNAME"
+	Password           = "PASSWORD"
+	GCR_FILE_PATH      = "FILE_PATH"
+	IMAGE_NAME         = "IMAGE_NAME"
+	OUTPUT_FILE_PATH   = "OUTPUT_FILE_PATH"
 )
 
+const (
+	SHELL_COMMAND = "sh"
+	COMMAND_ARGS  = "-c"
+)
+
+type RegistryType string
+
 type ImageScanRenderDto struct {
-	RegistryType       repository.RegistryType `json:"-"`
-	AWSAccessKeyId     string                  `json:"awsAccessKeyId,omitempty" `
-	AWSSecretAccessKey string                  `json:"awsSecretAccessKey,omitempty"`
-	AWSRegion          string                  `json:"awsRegion"`
-	Username           string                  `json:"username,omitempty"`
-	Password           string                  `json:"password,omitempty"`
+	RegistryType       RegistryType `json:"-"`
+	AWSAccessKeyId     string       `json:"awsAccessKeyId,omitempty" `
+	AWSSecretAccessKey string       `json:"awsSecretAccessKey,omitempty"`
+	AWSRegion          string       `json:"awsRegion"`
+	Username           string       `json:"username,omitempty"`
+	Password           string       `json:"password,omitempty"`
+	Image              string       `json:"image"`
+	OutputFilePath     string       `json:"-"`
 }
 
 type ImageScanEvent struct {

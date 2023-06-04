@@ -46,7 +46,7 @@ func GetKlarConfig() (*KlarConfig, error) {
 }
 
 type KlarService interface {
-	Process(scanEvent *common.ImageScanEvent) (*common.ScanEventResponse, error)
+	Process(scanEvent *common.ImageScanEvent, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error)
 }
 
 type KlarServiceImpl struct {
@@ -74,7 +74,7 @@ func NewKlarServiceImpl(logger *zap.SugaredLogger, klarConfig *KlarConfig, grafe
 	}
 }
 
-func (impl *KlarServiceImpl) Process(scanEvent *common.ImageScanEvent) (*common.ScanEventResponse, error) {
+func (impl *KlarServiceImpl) Process(scanEvent *common.ImageScanEvent, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error) {
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
 	}
@@ -202,12 +202,12 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ImageScanEvent) (*common.
 		impl.logger.Errorw("Failed to analyze, exiting", "err", err)
 		return scanEventResponse, err
 	}
-	tool, err := impl.scanToolMetadataRepository.FindByNameAndVersion(bean.ClairTool, bean.Version2)
+	tool, err := impl.scanToolMetadataRepository.FindByNameAndVersion(bean.ScanToolClair, bean.ScanToolVersion2)
 	if err != nil {
 		impl.logger.Errorw("error in getting tool by name and version", "err", err)
 		return scanEventResponse, err
 	}
-	vulnerabilities, err := impl.imageScanService.CreateScanExecutionRegistryForClairV2(vs, scanEvent, tool.Id)
+	vulnerabilities, err := impl.imageScanService.CreateScanExecutionRegistryForClairV2(vs, scanEvent, tool.Id, executionHistory)
 	if err != nil {
 		impl.logger.Errorw("Failed dump scanned data", "err", err)
 		return scanEventResponse, err

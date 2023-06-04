@@ -6,12 +6,15 @@ import (
 )
 
 const (
-	ScanOutputDirectory      = "/devtronimagescan"
+	ScanOutputDirectory      = "/security/devtronimagescan" // This is not configurable due to permissions for devtron-user
 	NullProcessIndex         = -1
 	JsonOutputFileNameSuffix = "_out.json"
-	ClairTool                = "clair"
-	Version4                 = "v4"
-	Version2                 = "v2"
+	ScannerTypeClairV4       = "CLAIRV4"
+	ScannerTypeClairV2       = "CLAIRV2"
+	ScannerTypeTrivy         = "TRIVY"
+	ScanToolClair            = "CLAIR"
+	ScanToolVersion2         = "V2"
+	ScanToolVersion4         = "V4"
 )
 
 type ScanExecutionType string

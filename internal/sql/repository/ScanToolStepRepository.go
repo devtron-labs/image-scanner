@@ -26,7 +26,6 @@ type ScanToolStep struct {
 	CliCommand              string                 `sql:"cli_command"` //consists of sub command and flags along with applicable values
 	CliOutputType           cli_util.CliOutputType `sql:"cli_output_type"`
 	Deleted                 bool                   `sql:"deleted,notnull"`
-	ScanToolMetadata
 	AuditLog
 }
 

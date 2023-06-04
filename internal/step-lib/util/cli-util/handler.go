@@ -2,9 +2,11 @@ package cli_util
 
 import (
 	"context"
+	"github.com/devtron-labs/image-scanner/common"
 	common_util "github.com/devtron-labs/image-scanner/internal/step-lib/util/common-util"
 	"io"
 	"log"
+	"os"
 	"os/exec"
 	"sync"
 )
@@ -24,7 +26,7 @@ func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, o
 		argsSlice = append(argsSlice, arg)
 		argsSlice = append(argsSlice, value)
 	}
-	command := exec.CommandContext(ctx, baseCommand, argsSlice...)
+	command := exec.CommandContext(ctx, common.SHELL_COMMAND, common.COMMAND_ARGS, baseCommand)
 	if outputType == CliOutPutTypeStream { //TODO: make async in further feature iterations
 		err = executeStreamCliRequest(command, outputFileName)
 	} else if outputType == CliOutPutTypeStatic {
@@ -43,11 +45,20 @@ func executeStaticCliRequest(command *exec.Cmd, outputFileName string) (error, [
 		log.Println("error in running command", "err", err)
 		return err, nil
 	}
+	// If output is already stored in file, considering the output from file (file is created by tool over here)
 	if outputFileName != "" && op != nil {
-		err = common_util.WriteFile(outputFileName, op)
-		if err != nil {
-			log.Println("error in writing cli static command output to file", "err", err)
-			return err, nil
+		if _, err := os.Stat(outputFileName); err == nil {
+			op, err = os.ReadFile(outputFileName)
+			if err != nil {
+				log.Println("error in reading output file", "err", err)
+				return err, nil
+			}
+		} else {
+			err = common_util.WriteFile(outputFileName, op)
+			if err != nil {
+				log.Println("error in writing cli static command output to file", "err", err)
+				return err, nil
+			}
 		}
 	}
 	return nil, op

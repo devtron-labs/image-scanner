@@ -22,6 +22,7 @@ type ScanToolMetadata struct {
 	ScanTarget               ScanTargetType `sql:"scan_target"`
 	Active                   bool           `sql:"active,notnull"`
 	Deleted                  bool           `sql:"deleted,notnull"`
+	ToolMetaData             string         `sql:"tool_metadata"`
 	AuditLog
 }
 
@@ -32,6 +33,7 @@ type ScanToolMetadataRepository interface {
 	Save(model *ScanToolMetadata) (*ScanToolMetadata, error)
 	Update(model *ScanToolMetadata) (*ScanToolMetadata, error)
 	MarkToolDeletedById(id int) error
+	FindAllActiveTools() ([]*ScanToolMetadata, error)
 }
 
 type ScanToolMetadataRepositoryImpl struct {
@@ -110,4 +112,15 @@ func (repo *ScanToolMetadataRepositoryImpl) MarkToolDeletedById(id int) error {
 		return err
 	}
 	return nil
+}
+func (repo *ScanToolMetadataRepositoryImpl) FindAllActiveTools() ([]*ScanToolMetadata, error) {
+	var models []*ScanToolMetadata
+	err := repo.dbConnection.Model(&models).Where("active = ?", true).
+		Where("deleted = ?", false).Select()
+	if err != nil {
+		repo.logger.Errorw("error in getting active tool for scan target", "err", err)
+		return nil, err
+	}
+	return models, nil
+
 }

@@ -42,7 +42,7 @@ type ServerConfig struct {
 
 func (app *App) Start() {
 	serverConfig := ServerConfig{}
-	err := env.Parse(serverConfig)
+	err := env.Parse(&serverConfig)
 	if err != nil {
 		app.Logger.Errorw("error in parsing server config from environment", "err", err)
 		os.Exit(2)
