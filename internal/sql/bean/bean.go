@@ -50,14 +50,14 @@ const (
 )
 
 func (sev Severity) String() string {
-	return [...]string{"Low", "Medium", "High", "Critical"}[sev]
+	return [...]string{"LOW", "MEDIUM", "HIGH", "CRITICAL"}[sev]
 }
 
 var ConvertToSeverity = map[string]Severity{
-	"Low":      Low,
-	"Medium":   Medium,
-	"High":     High,
-	"Critical": Critical,
+	"LOW":      Low,
+	"MEDIUM":   Medium,
+	"HIGH":     High,
+	"CRITICAL": Critical,
 }
 
 type VariableFormat string
