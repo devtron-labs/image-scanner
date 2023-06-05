@@ -45,12 +45,12 @@ type Severity int
 const (
 	Low Severity = iota
 	Medium
-	High
 	Critical
+	High
 )
 
 func (sev Severity) String() string {
-	return [...]string{"LOW", "MEDIUM", "HIGH", "CRITICAL"}[sev]
+	return [...]string{"Low", "Medium", "Critical", "High"}[sev]
 }
 
 var ConvertToSeverity = map[string]Severity{
