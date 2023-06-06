@@ -13,7 +13,7 @@ type CveStore struct {
 	Package          string        `sql:"package,notnull"`
 	Version          string        `sql:"version,notnull"`
 	FixedVersion     string        `sql:"fixed_version,notnull"`
-	StandardSeverity bean.Severity `sql:"standard_severity"`
+	StandardSeverity bean.Severity `sql:"standard_severity,notnull"`
 	AuditLog
 }
 
