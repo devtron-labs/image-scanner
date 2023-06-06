@@ -3,6 +3,7 @@ package bean
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -47,17 +48,29 @@ const (
 	Medium
 	Critical
 	High
+	Safe
 )
 
 func (sev Severity) String() string {
-	return [...]string{"Low", "Medium", "Critical", "High"}[sev]
+	return [...]string{"low", "medium", "critical", "high", "safe"}[sev]
+}
+func ConvertToAllSmallLetters(input string) string {
+	return strings.ToLower(input)
 }
 
 var ConvertToSeverity = map[string]Severity{
-	"LOW":      Low,
-	"MEDIUM":   Medium,
-	"HIGH":     High,
-	"CRITICAL": Critical,
+	"low":      Low,
+	"medium":   Medium,
+	"high":     Critical,
+	"critical": Critical,
+	"safe":     Low,
+}
+var ConvertToStandardSeverity = map[string]Severity{
+	"low":      Low,
+	"medium":   Medium,
+	"high":     High,
+	"critical": Critical,
+	"safe":     Safe,
 }
 
 type VariableFormat string

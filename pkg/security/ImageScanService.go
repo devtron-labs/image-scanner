@@ -422,7 +422,9 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 				Version:      vul.PackageVersion,
 				FixedVersion: vul.FixedInVersion,
 			}
-			cve.Severity = bean.ConvertToSeverity[vul.Severity]
+			lowerCaseSeverity := bean.ConvertToAllSmallLetters(vul.Severity)
+			cve.Severity = bean.ConvertToSeverity[lowerCaseSeverity]
+			cve.StandardSeverity = bean.ConvertToStandardSeverity[lowerCaseSeverity]
 			cve.CreatedOn = time.Now()
 			cve.CreatedBy = userId
 			cve.UpdatedOn = time.Now()
@@ -571,13 +573,9 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*cl
 				Version:      item.Package.Version,
 				FixedVersion: item.FixedInVersion,
 			}
-			if item.Severity == "High" {
-				cveStore.Severity = 2
-			} else if item.Severity == "Medium" {
-				cveStore.Severity = 1
-			} else if item.Severity == "Low" {
-				cveStore.Severity = 0
-			}
+			lowerCaseSeverity := bean.ConvertToAllSmallLetters(item.Severity)
+			cveStore.Severity = bean.ConvertToSeverity[lowerCaseSeverity]
+			cveStore.StandardSeverity = bean.ConvertToStandardSeverity[lowerCaseSeverity]
 			cveStore.CreatedOn = time.Now()
 			cveStore.CreatedBy = int32(event.UserId)
 			cveStore.UpdatedOn = time.Now()
@@ -624,13 +622,9 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 				Version:      item.FeatureVersion,
 				FixedVersion: item.FixedBy,
 			}
-			if item.Severity == "High" {
-				cveStore.Severity = 2
-			} else if item.Severity == "Medium" {
-				cveStore.Severity = 1
-			} else if item.Severity == "Low" {
-				cveStore.Severity = 0
-			}
+			lowerCaseSeverity := bean.ConvertToAllSmallLetters(item.Severity)
+			cveStore.Severity = bean.ConvertToSeverity[lowerCaseSeverity]
+			cveStore.StandardSeverity = bean.ConvertToStandardSeverity[lowerCaseSeverity]
 			cveStore.CreatedOn = time.Now()
 			cveStore.CreatedBy = int32(event.UserId)
 			cveStore.UpdatedOn = time.Now()

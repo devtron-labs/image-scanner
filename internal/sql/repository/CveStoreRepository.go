@@ -7,12 +7,13 @@ import (
 )
 
 type CveStore struct {
-	tableName    struct{}      `sql:"cve_store" pg:",discard_unknown_columns"`
-	Name         string        `sql:"name,pk"`
-	Severity     bean.Severity `sql:"severity,notnull"`
-	Package      string        `sql:"package,notnull"`
-	Version      string        `sql:"version,notnull"`
-	FixedVersion string        `sql:"fixed_version,notnull"`
+	tableName        struct{}      `sql:"cve_store" pg:",discard_unknown_columns"`
+	Name             string        `sql:"name,pk"`
+	Severity         bean.Severity `sql:"severity,notnull"`
+	Package          string        `sql:"package,notnull"`
+	Version          string        `sql:"version,notnull"`
+	FixedVersion     string        `sql:"fixed_version,notnull"`
+	StandardSeverity bean.Severity `sql:"standard_severity"`
 	AuditLog
 }
 
