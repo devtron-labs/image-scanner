@@ -3,6 +3,7 @@ package bean
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 const (
@@ -43,21 +44,52 @@ type ImageScanOutputObject struct {
 type Severity int
 
 const (
+	HIGH     string = "high"
+	CRITICAL string = "critical"
+	SAFE     string = "safe"
+	LOW      string = "low"
+	MEDIUM   string = "medium"
+	MODERATE string = "moderate"
+)
+
+const (
 	Low Severity = iota
 	Medium
-	High
 	Critical
+	High
+	Safe
 )
 
 func (sev Severity) String() string {
-	return [...]string{"Low", "Medium", "High", "Critical"}[sev]
+	return [...]string{"low", "medium", "critical", "high", "safe"}[sev]
+}
+func ConvertToLowerCase(input string) string {
+	return strings.ToLower(input)
 }
 
-var ConvertToSeverity = map[string]Severity{
-	"Low":      Low,
-	"Medium":   Medium,
-	"High":     High,
-	"Critical": Critical,
+func ConvertToSeverityUtility(severity string) Severity {
+	if severity == LOW || severity == SAFE {
+		return Low
+	} else if severity == MEDIUM {
+		return Medium
+	} else if severity == HIGH || severity == CRITICAL {
+		return Critical
+	}
+	return Low
+}
+func ConvertToStandardSeverityUtility(severity string) Severity {
+	if severity == LOW {
+		return Low
+	} else if severity == MEDIUM {
+		return Medium
+	} else if severity == HIGH {
+		return High
+	} else if severity == CRITICAL {
+		return Critical
+	} else if severity == SAFE {
+		return Safe
+	}
+	return Low
 }
 
 type VariableFormat string
