@@ -54,7 +54,7 @@ const (
 func (sev Severity) String() string {
 	return [...]string{"low", "medium", "critical", "high", "safe"}[sev]
 }
-func ConvertToAllSmallLetters(input string) string {
+func ConvertToLowerCase(input string) string {
 	return strings.ToLower(input)
 }
 

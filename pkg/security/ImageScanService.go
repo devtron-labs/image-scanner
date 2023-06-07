@@ -422,7 +422,7 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 				Version:      vul.PackageVersion,
 				FixedVersion: vul.FixedInVersion,
 			}
-			lowerCaseSeverity := bean.ConvertToAllSmallLetters(vul.Severity)
+			lowerCaseSeverity := bean.ConvertToLowerCase(vul.Severity)
 			cve.Severity = bean.ConvertToSeverity[lowerCaseSeverity]
 			cve.StandardSeverity = bean.ConvertToStandardSeverity[lowerCaseSeverity]
 			cve.CreatedOn = time.Now()
@@ -573,7 +573,7 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*cl
 				Version:      item.Package.Version,
 				FixedVersion: item.FixedInVersion,
 			}
-			lowerCaseSeverity := bean.ConvertToAllSmallLetters(item.Severity)
+			lowerCaseSeverity := bean.ConvertToLowerCase(item.Severity)
 			cveStore.Severity = bean.ConvertToSeverity[lowerCaseSeverity]
 			cveStore.StandardSeverity = bean.ConvertToStandardSeverity[lowerCaseSeverity]
 			cveStore.CreatedOn = time.Now()
@@ -622,7 +622,7 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 				Version:      item.FeatureVersion,
 				FixedVersion: item.FixedBy,
 			}
-			lowerCaseSeverity := bean.ConvertToAllSmallLetters(item.Severity)
+			lowerCaseSeverity := bean.ConvertToLowerCase(item.Severity)
 			cveStore.Severity = bean.ConvertToSeverity[lowerCaseSeverity]
 			cveStore.StandardSeverity = bean.ConvertToStandardSeverity[lowerCaseSeverity]
 			cveStore.CreatedOn = time.Now()
