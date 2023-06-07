@@ -67,21 +67,6 @@ func ConvertToLowerCase(input string) string {
 	return strings.ToLower(input)
 }
 
-var ConvertToSeverity = map[string]Severity{
-	"low":      Low,
-	"medium":   Medium,
-	"high":     Critical,
-	"critical": Critical,
-	"safe":     Low,
-}
-var ConvertToStandardSeverity = map[string]Severity{
-	"low":      Low,
-	"medium":   Medium,
-	"high":     High,
-	"critical": Critical,
-	"safe":     Safe,
-}
-
 func ConvertToSeverityUtility(severity string) Severity {
 	if severity == LOW || severity == SAFE {
 		return Low
