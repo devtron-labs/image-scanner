@@ -44,6 +44,15 @@ type ImageScanOutputObject struct {
 type Severity int
 
 const (
+	HIGH     string = "high"
+	CRITICAL string = "critical"
+	SAFE     string = "safe"
+	LOW      string = "low"
+	MEDIUM   string = "medium"
+	MODERATE string = "moderate"
+)
+
+const (
 	Low Severity = iota
 	Medium
 	Critical
@@ -71,6 +80,31 @@ var ConvertToStandardSeverity = map[string]Severity{
 	"high":     High,
 	"critical": Critical,
 	"safe":     Safe,
+}
+
+func ConvertToSeverityUtility(severity string) Severity {
+	if severity == LOW || severity == SAFE {
+		return Low
+	} else if severity == MEDIUM {
+		return Medium
+	} else if severity == HIGH || severity == CRITICAL {
+		return Critical
+	}
+	return Low
+}
+func ConvertToStandardSeverityUtility(severity string) Severity {
+	if severity == LOW {
+		return Low
+	} else if severity == MEDIUM {
+		return Medium
+	} else if severity == HIGH {
+		return High
+	} else if severity == CRITICAL {
+		return Critical
+	} else if severity == SAFE {
+		return Safe
+	}
+	return Low
 }
 
 type VariableFormat string
