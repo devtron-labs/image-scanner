@@ -16,7 +16,7 @@ import (
 )
 
 type App struct {
-	MuxRouter        *api.MuxRouter
+	Router           *api.Router
 	Logger           *zap.SugaredLogger
 	server           *http.Server
 	db               *pg.DB
@@ -24,11 +24,11 @@ type App struct {
 	pubSubClient     *client.PubSubClientServiceImpl
 }
 
-func NewApp(MuxRouter *api.MuxRouter, Logger *zap.SugaredLogger,
+func NewApp(Router *api.Router, Logger *zap.SugaredLogger,
 	db *pg.DB, natsSubscription *pubsub.NatSubscriptionImpl,
 	pubSubClient *client.PubSubClientServiceImpl) *App {
 	return &App{
-		MuxRouter:        MuxRouter,
+		Router:           Router,
 		Logger:           Logger,
 		db:               db,
 		natsSubscription: natsSubscription,
@@ -49,8 +49,8 @@ func (app *App) Start() {
 	}
 	httpPort := serverConfig.SERVER_HTTP_PORT
 	app.Logger.Infow("starting server on ", "httpPort", httpPort)
-	app.MuxRouter.Init()
-	server := &http.Server{Addr: fmt.Sprintf(":%d", httpPort), Handler: app.MuxRouter.Router}
+	app.Router.Init()
+	server := &http.Server{Addr: fmt.Sprintf(":%d", httpPort), Handler: app.Router.Router}
 	app.server = server
 	err = server.ListenAndServe()
 	if err != nil {

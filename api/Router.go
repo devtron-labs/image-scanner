@@ -2,23 +2,27 @@ package api
 
 import (
 	"encoding/json"
+	"github.com/devtron-labs/image-scanner/pprof"
 	"github.com/gorilla/mux"
 	"go.uber.org/zap"
 	"net/http"
 )
 
-type MuxRouter struct {
+type Router struct {
 	logger      *zap.SugaredLogger
 	Router      *mux.Router
 	restHandler RestHandler
+	pprofRouter pprof.PProfRouter
 }
 
-func NewMuxRouter(logger *zap.SugaredLogger, restHandler RestHandler) *MuxRouter {
-	return &MuxRouter{logger: logger, Router: mux.NewRouter(), restHandler: restHandler}
+func NewRouter(logger *zap.SugaredLogger, restHandler RestHandler, pprofRouter pprof.PProfRouter) *Router {
+	return &Router{logger: logger, Router: mux.NewRouter(), restHandler: restHandler, pprofRouter: pprofRouter}
 }
 
-func (r MuxRouter) Init() {
+func (r Router) Init() {
 	r.Router.StrictSlash(true)
+	pProfListenerRouter := r.Router.PathPrefix("/image-scanner/debug/pprof/").Subrouter()
+	r.pprofRouter.InitPProfRouter(pProfListenerRouter)
 	//r.Router.Handle("/metrics", promhttp.Handler())
 	r.Router.Path("/health").HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json")
