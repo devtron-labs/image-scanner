@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/caarlos0/env"
+	"github.com/devtron-labs/image-scanner/internal/middleware"
 	"net/http"
 	"os"
 	"time"
@@ -51,6 +52,7 @@ func (app *App) Start() {
 	app.Logger.Infow("starting server on ", "httpPort", httpPort)
 	app.Router.Init()
 	server := &http.Server{Addr: fmt.Sprintf(":%d", httpPort), Handler: app.Router.Router}
+	app.Router.Router.Use(middleware.PrometheusMiddleware)
 	app.server = server
 	err = server.ListenAndServe()
 	if err != nil {

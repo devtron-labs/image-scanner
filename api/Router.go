@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/devtron-labs/image-scanner/pprof"
 	"github.com/gorilla/mux"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
 	"net/http"
 )
@@ -23,7 +24,7 @@ func (r Router) Init() {
 	r.Router.StrictSlash(true)
 	pProfListenerRouter := r.Router.PathPrefix("/image-scanner/debug/pprof/").Subrouter()
 	r.pprofRouter.InitPProfRouter(pProfListenerRouter)
-	//r.Router.Handle("/metrics", promhttp.Handler())
+	r.Router.Handle("/metrics", promhttp.Handler())
 	r.Router.Path("/health").HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json")
 		writer.WriteHeader(200)

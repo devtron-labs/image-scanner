@@ -19,6 +19,7 @@ require (
 	github.com/onsi/ginkgo v1.16.5 // indirect
 	github.com/onsi/gomega v1.17.0 // indirect
 	github.com/optiopay/klar v2.4.0+incompatible
+	github.com/prometheus/client_golang v1.9.0
 	github.com/quay/claircore v1.3.1
 	github.com/tidwall/gjson v1.14.4
 	go.uber.org/atomic v1.9.0 // indirect
