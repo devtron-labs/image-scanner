@@ -14,6 +14,7 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/user"
+	"github.com/devtron-labs/image-scanner/pprof"
 	"github.com/devtron-labs/image-scanner/pubsub"
 	"github.com/google/wire"
 )
@@ -21,7 +22,7 @@ import (
 func InitializeApp() (*App, error) {
 	wire.Build(
 		NewApp,
-		api.NewMuxRouter,
+		api.NewRouter,
 		logger.NewSugardLogger,
 		logger.NewHttpClient,
 		sql.GetConfig,
@@ -38,6 +39,11 @@ func InitializeApp() (*App, error) {
 		wire.Bind(new(grafeasService.GrafeasService), new(*grafeasService.GrafeasServiceImpl)),
 		pubsub.NewTestPublishImpl,
 		wire.Bind(new(pubsub.TestPublish), new(*pubsub.TestPublishImpl)),
+
+		pprof.NewPProfRestHandler,
+		wire.Bind(new(pprof.PProfRestHandler), new(*pprof.PProfRestHandlerImpl)),
+		pprof.NewPProfRouter,
+		wire.Bind(new(pprof.PProfRouter), new(*pprof.PProfRouterImpl)),
 
 		clairService.GetClairConfig,
 		clairService.NewClairServiceImpl,

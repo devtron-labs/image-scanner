@@ -17,6 +17,7 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/user"
+	"github.com/devtron-labs/image-scanner/pprof"
 	"github.com/devtron-labs/image-scanner/pubsub"
 )
 
@@ -68,11 +69,13 @@ func InitializeApp() (*App, error) {
 	}
 	clairServiceImpl := clairService.NewClairServiceImpl(sugaredLogger, clairConfig, client, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl, scanToolMetadataRepositoryImpl)
 	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, testPublishImpl, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl, imageScanConfig)
-	muxRouter := api.NewMuxRouter(sugaredLogger, restHandlerImpl)
+	pProfRestHandlerImpl := pprof.NewPProfRestHandler(sugaredLogger)
+	pProfRouterImpl := pprof.NewPProfRouter(sugaredLogger, pProfRestHandlerImpl)
+	router := api.NewRouter(sugaredLogger, restHandlerImpl, pProfRouterImpl)
 	natSubscriptionImpl, err := pubsub.NewNatSubscription(pubSubClientServiceImpl, sugaredLogger, clairServiceImpl)
 	if err != nil {
 		return nil, err
 	}
-	app := NewApp(muxRouter, sugaredLogger, db, natSubscriptionImpl, pubSubClientServiceImpl)
+	app := NewApp(router, sugaredLogger, db, natSubscriptionImpl, pubSubClientServiceImpl)
 	return app, nil
 }
