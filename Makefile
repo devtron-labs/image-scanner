@@ -19,7 +19,7 @@ wire:
 	wire
 
 clean:
-	rm -f image-scanner
+	rm -rf image-scanner
 
 run: build
 	./image-scanner
