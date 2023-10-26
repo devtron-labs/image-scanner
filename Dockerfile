@@ -7,7 +7,7 @@ ADD . /go/src/github.com/devtron-labs/image-scanner
 RUN GOOS=linux make
 
 FROM alpine:3.17
-COPY --from=aquasec/trivy:0.41.0 /usr/local/bin/trivy /usr/local/bin/trivy
+COPY --from=aquasec/trivy:@latest /usr/local/bin/trivy /usr/local/bin/trivy
 RUN apk add --no-cache ca-certificates
 RUN mkdir -p /security
 RUN adduser -D devtron
