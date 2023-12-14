@@ -3,6 +3,7 @@ package common
 import (
 	"github.com/optiopay/klar/clair"
 	"github.com/quay/claircore"
+	"strings"
 	"time"
 )
 
@@ -123,4 +124,11 @@ type SeverityCount struct {
 	High     int `json:"high"`
 	Moderate int `json:"moderate"`
 	Low      int `json:"low"`
+}
+
+func RemoveTrailingComma(jsonString string) string {
+	if strings.HasSuffix(jsonString, ",]") {
+		return jsonString[:len(jsonString)-2] + jsonString[len(jsonString)-1:]
+	}
+	return jsonString
 }
