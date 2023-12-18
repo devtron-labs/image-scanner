@@ -536,14 +536,14 @@ func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl strin
 		}
 	}
 	//entering imageScanRenderData in above json map; TODO: update this to some other logic to handle more fields in future
-	jsonMap[common.AWSSecretAccessKey] = imageScanRenderDto.AWSSecretAccessKey
-	jsonMap[common.AWSAccessKeyId] = imageScanRenderDto.AWSAccessKeyId
-	jsonMap[common.AWSRegion] = imageScanRenderDto.AWSRegion
-	jsonMap[common.Username] = imageScanRenderDto.Username
-	jsonMap[common.Password] = imageScanRenderDto.Password
-	jsonMap[common.GCR_FILE_PATH] = toolExecutionDirectoryPath
-	jsonMap[common.IMAGE_NAME] = imageScanRenderDto.Image
-	jsonMap[common.OUTPUT_FILE_PATH] = imageScanRenderDto.OutputFilePath
+	jsonMap[common.AWSSecretAccessKey] = cliUtil.SanitizeCliParam(imageScanRenderDto.AWSSecretAccessKey)
+	jsonMap[common.AWSAccessKeyId] = cliUtil.SanitizeCliParam(imageScanRenderDto.AWSAccessKeyId)
+	jsonMap[common.AWSRegion] = cliUtil.SanitizeCliParam(imageScanRenderDto.AWSRegion)
+	jsonMap[common.Username] = cliUtil.SanitizeCliParam(imageScanRenderDto.Username)
+	jsonMap[common.Password] = cliUtil.SanitizeCliParam(imageScanRenderDto.Password)
+	jsonMap[common.GCR_FILE_PATH] = cliUtil.SanitizeCliParam(toolExecutionDirectoryPath)
+	jsonMap[common.IMAGE_NAME] = cliUtil.SanitizeCliParam(imageScanRenderDto.Image)
+	jsonMap[common.OUTPUT_FILE_PATH] = cliUtil.SanitizeCliParam(imageScanRenderDto.OutputFilePath)
 
 	for key, val := range metaDataMap {
 		jsonMap[key] = val
