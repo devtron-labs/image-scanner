@@ -3,6 +3,7 @@ package pubsub
 import (
 	"encoding/json"
 	pubsub1 "github.com/devtron-labs/common-lib/pubsub-lib"
+	"github.com/devtron-labs/common-lib/pubsub-lib/model"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"go.uber.org/zap"
@@ -30,9 +31,9 @@ func NewNatSubscription(pubSubClient *pubsub1.PubSubClientServiceImpl,
 }
 
 func (impl *NatSubscriptionImpl) Subscribe() error {
-	callback := func(msg *pubsub1.PubSubMsg) {
+	callback := func(msg *model.PubSubMsg) {
 		impl.logger.Debugw("received msg", "msg", msg)
-		//defer msg.Ack()
+		// defer msg.Ack()
 		scanConfig := &common.ImageScanEvent{}
 		err := json.Unmarshal([]byte(msg.Data), scanConfig)
 		if err != nil {
@@ -42,7 +43,7 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 		impl.logger.Infow("scanConfig unmarshal data", "scanConfig", scanConfig)
 		// NOTE: This is not being used, thats why not updated the call
 		// TODO: Will have to update if any usage in future
-		//scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
+		// scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
 		_, err = impl.clairService.ScanImage(scanConfig, nil, nil)
 		if err != nil {
 			impl.logger.Infow("err in process msg", "err", err)
