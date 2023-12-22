@@ -379,6 +379,7 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 		impl.logger.Errorw("error in parsing template to get vulnerabilities", "err", err)
 		return err
 	}
+	renderedTemplate = common.RemoveTrailingComma(renderedTemplate)
 	var vulnerabilities []*bean.ImageScanOutputObject
 	err = json.Unmarshal([]byte(renderedTemplate), &vulnerabilities)
 	if err != nil {
