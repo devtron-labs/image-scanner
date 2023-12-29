@@ -152,9 +152,10 @@ func (impl *ImageScanServiceImpl) ScanImageForTool(tool *repository.ScanToolMeta
 	} else {
 		processedState = bean.ScanExecutionProcessStateCompleted
 	}
-	err = impl.scanToolExecutionHistoryMappingRepository.UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolCopy.Id, processedState, time.Now())
-	if err != nil {
+	err1 := impl.scanToolExecutionHistoryMappingRepository.UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolCopy.Id, processedState, time.Now())
+	if err1 != nil {
 		impl.logger.Errorw("error in UpdateStateByToolAndExecutionHistoryId", "err", err)
+		err = err1
 	}
 	wg.Done()
 	return err
