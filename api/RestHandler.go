@@ -90,6 +90,7 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 	executionHistory, executionHistoryDirPath, err := impl.imageScanService.RegisterScanExecutionHistoryAndState(&scanConfig, tool)
 	if err != nil {
 		impl.logger.Errorw("service err, RegisterScanExecutionHistoryAndState", "err", err)
+		writeJsonResp(w, err, nil, http.StatusInternalServerError)
 		return
 	}
 	if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {
@@ -118,6 +119,7 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 	err = os.RemoveAll(executionHistoryDirPath)
 	if err != nil {
 		impl.logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
+		writeJsonResp(w, err, nil, http.StatusInternalServerError)
 		return
 	}
 
