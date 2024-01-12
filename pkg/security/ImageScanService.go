@@ -115,9 +115,10 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 	}
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
+	// TODO: if multiple processes are to be done in parallel, then error propagation should have to be done via channels
 	err = impl.ScanImageForTool(tool, executionHistory.Id, executionHistoryDirPath, wg, int32(scanEvent.UserId), ctx, imageScanRenderDto)
 	if err != nil {
-		impl.logger.Errorw("err in scanning image", "err", err)
+		impl.logger.Errorw("err in scanning image", "err", err, "tool", tool, "executionHistory.Id", executionHistory.Id, "executionHistoryDirPath", executionHistoryDirPath, "scanEvent.UserId", scanEvent.UserId)
 		return err
 	}
 	wg.Wait()
