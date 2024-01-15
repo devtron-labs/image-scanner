@@ -4,33 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4c4a8012-891b-4327-b4b2-d4ac8f388e85" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/github.com/docker/distribution/registry/client/auth/challenge/authchallenge.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/github.com/docker/distribution/registry/client/auth/challenge/authchallenge.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/github.com/docker/docker/pkg/homedir/homedir_others.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker/pkg/homedir/homedir_others.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/github.com/docker/docker/pkg/homedir/homedir_unix.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/github.com/docker/docker/pkg/homedir/homedir_unix.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/v1/index.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/v1/index.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/v1/manifest.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/v1/manifest.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/version.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/github.com/opencontainers/image-spec/specs-go/version.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/LICENSE.md" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/Makefile" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/mellium.im/sasl/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/bitbucket-pipelines.yml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/doc.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/mellium.im/sasl/doc.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/mechanism.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/mellium.im/sasl/mechanism.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/negotiator.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/mellium.im/sasl/negotiator.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/nonce.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/mellium.im/sasl/nonce.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/options.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/mellium.im/sasl/options.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/plain.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/mellium.im/sasl/plain.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/scram.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/mellium.im/sasl/scram.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/xor_generic.go" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/mellium.im/sasl/xor_generic.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/mellium.im/sasl/xor_unaligned.go" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/vendor/modules.txt" beforeDir="false" afterPath="$PROJECT_DIR$/vendor/modules.txt" afterDir="false" />
-    </list>
+    <list default="true" id="4c4a8012-891b-4327-b4b2-d4ac8f388e85" name="Changes" comment="image scanner version upgraded" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -73,6 +47,10 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="image scanner version upgraded" />
+    <option name="LAST_COMMIT_MESSAGE" value="image scanner version upgraded" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
