@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4c4a8012-891b-4327-b4b2-d4ac8f388e85" name="Changes" comment="image scanner version upgraded" />
+    <list default="true" id="4c4a8012-891b-4327-b4b2-d4ac8f388e85" name="Changes" comment="xml file upgraded">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -50,7 +52,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="image scanner version upgraded" />
-    <option name="LAST_COMMIT_MESSAGE" value="image scanner version upgraded" />
+    <MESSAGE value="xml file upgraded" />
+    <option name="LAST_COMMIT_MESSAGE" value="xml file upgraded" />
   </component>
   <component name="VgoProject">
     <settings-migrated>true</settings-migrated>
