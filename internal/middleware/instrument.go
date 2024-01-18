@@ -50,6 +50,11 @@ var currentRequestGauge = promauto.NewGaugeVec(prometheus.GaugeOpts{
 	Help: "no of request being served currently",
 }, []string{"path", "method"})
 
+var imageScannerHTTPStatusCode = promauto.NewHistogramVec(prometheus.HistogramOpts{
+	Name: "image_scanner_http_status_code",
+	Help: "http status code",
+}, []string{"path", "method", "status"})
+
 // prometheusMiddleware implements mux.MiddlewareFunc.
 func PrometheusMiddleware(next http.Handler) http.Handler {
 	//	prometheus.MustRegister(requestCounter)
@@ -65,5 +70,6 @@ func PrometheusMiddleware(next http.Handler) http.Handler {
 		next.ServeHTTP(d, r)
 		httpDuration.WithLabelValues(path, method, strconv.Itoa(d.Status())).Observe(time.Since(start).Seconds())
 		requestCounter.WithLabelValues(path, method, strconv.Itoa(d.Status())).Inc()
+		imageScannerHTTPStatusCode.WithLabelValues(path, method, strconv.Itoa(d.Status()))
 	})
 }
