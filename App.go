@@ -53,6 +53,7 @@ func (app *App) Start() {
 	app.Router.Init()
 	server := &http.Server{Addr: fmt.Sprintf(":%d", httpPort), Handler: app.Router.Router}
 	app.Router.Router.Use(middleware.PrometheusMiddleware)
+	app.Router.Router.Use(middleware.Recovery)
 	app.server = server
 	err = server.ListenAndServe()
 	if err != nil {

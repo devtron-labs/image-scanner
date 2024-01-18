@@ -2,7 +2,7 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/devtron-labs/image-scanner/pprof"
+	"github.com/devtron-labs/common-lib/monitoring"
 	"github.com/gorilla/mux"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"go.uber.org/zap"
@@ -10,20 +10,21 @@ import (
 )
 
 type Router struct {
-	logger      *zap.SugaredLogger
-	Router      *mux.Router
-	restHandler RestHandler
-	pprofRouter pprof.PProfRouter
+	logger           *zap.SugaredLogger
+	Router           *mux.Router
+	restHandler      RestHandler
+	monitoringRouter *monitoring.MonitoringRouter
 }
 
-func NewRouter(logger *zap.SugaredLogger, restHandler RestHandler, pprofRouter pprof.PProfRouter) *Router {
-	return &Router{logger: logger, Router: mux.NewRouter(), restHandler: restHandler, pprofRouter: pprofRouter}
+func NewRouter(logger *zap.SugaredLogger, restHandler RestHandler, monitoringRouter *monitoring.MonitoringRouter) *Router {
+	return &Router{logger: logger, Router: mux.NewRouter(), restHandler: restHandler, monitoringRouter: monitoringRouter}
 }
 
 func (r Router) Init() {
 	r.Router.StrictSlash(true)
 	pProfListenerRouter := r.Router.PathPrefix("/image-scanner/debug/pprof/").Subrouter()
-	r.pprofRouter.InitPProfRouter(pProfListenerRouter)
+	statsVizRouter := r.Router.PathPrefix("/image-scanner").Subrouter()
+	r.monitoringRouter.InitMonitoringRouter(pProfListenerRouter, statsVizRouter, "/image-scanner")
 	r.Router.Handle("/metrics", promhttp.Handler())
 	r.Router.Path("/health").HandlerFunc(func(writer http.ResponseWriter, request *http.Request) {
 		writer.Header().Set("Content-Type", "application/json")
