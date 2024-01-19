@@ -4,6 +4,7 @@
 package main
 
 import (
+	"github.com/devtron-labs/common-lib/monitoring"
 	client "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/api"
 	"github.com/devtron-labs/image-scanner/internal/logger"
@@ -14,7 +15,6 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/user"
-	"github.com/devtron-labs/image-scanner/pprof"
 	"github.com/devtron-labs/image-scanner/pubsub"
 	"github.com/google/wire"
 )
@@ -39,11 +39,6 @@ func InitializeApp() (*App, error) {
 		wire.Bind(new(grafeasService.GrafeasService), new(*grafeasService.GrafeasServiceImpl)),
 		pubsub.NewTestPublishImpl,
 		wire.Bind(new(pubsub.TestPublish), new(*pubsub.TestPublishImpl)),
-
-		pprof.NewPProfRestHandler,
-		wire.Bind(new(pprof.PProfRestHandler), new(*pprof.PProfRestHandlerImpl)),
-		pprof.NewPProfRouter,
-		wire.Bind(new(pprof.PProfRouter), new(*pprof.PProfRouterImpl)),
 
 		clairService.GetClairConfig,
 		clairService.NewClairServiceImpl,
@@ -84,6 +79,7 @@ func InitializeApp() (*App, error) {
 
 		repository.NewScanToolExecutionHistoryMappingRepositoryImpl,
 		wire.Bind(new(repository.ScanToolExecutionHistoryMappingRepository), new(*repository.ScanToolExecutionHistoryMappingRepositoryImpl)),
+		monitoring.NewMonitoringRouter,
 	)
 	return &App{}, nil
 }
