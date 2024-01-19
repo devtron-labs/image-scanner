@@ -9,6 +9,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/devtron-labs/common-lib/middlewares"
 	client "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/api"
 	"github.com/devtron-labs/image-scanner/pubsub"
@@ -53,7 +54,7 @@ func (app *App) Start() {
 	app.Router.Init()
 	server := &http.Server{Addr: fmt.Sprintf(":%d", httpPort), Handler: app.Router.Router}
 	app.Router.Router.Use(middleware.PrometheusMiddleware)
-	app.Router.Router.Use(middleware.Recovery)
+	app.Router.Router.Use(middlewares.Recovery)
 	app.server = server
 	err = server.ListenAndServe()
 	if err != nil {
