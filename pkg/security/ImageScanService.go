@@ -403,21 +403,23 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 			allCvesNames = append(allCvesNames, vul.Name)
 		}
 	}
-	allSavedCves, err := impl.cveStoreRepository.FindByCveNames(allCvesNames)
-	if err != nil {
-		if err == pg.ErrNoRows {
-			// in case of no cve found , just ignore
-			impl.logger.Infow("no saved cves found", err)
-		} else {
-			impl.logger.Errorw("error in getting all cves ", "err", err)
-			return err
+	allSavedCvesMap := make(map[string]*repository.CveStore)
+	if len(allCvesNames) > 0 {
+		allSavedCves, err := impl.cveStoreRepository.FindByCveNames(allCvesNames)
+		if err != nil {
+			if err == pg.ErrNoRows {
+				// in case of no cve found , just ignore
+				impl.logger.Infow("no saved cves found", err)
+			} else {
+				impl.logger.Errorw("error in getting all cves ", "err", err)
+				return err
+			}
+		}
+
+		for _, cve := range allSavedCves {
+			allSavedCvesMap[cve.Name] = cve
 		}
 	}
-	allSavedCvesMap := make(map[string]*repository.CveStore)
-	for _, cve := range allSavedCves {
-		allSavedCvesMap[cve.Name] = cve
-	}
-
 	for _, vul := range uniqueVulnerabilityMap {
 		var cve *repository.CveStore
 		if val, ok := allSavedCvesMap[vul.Name]; ok {
