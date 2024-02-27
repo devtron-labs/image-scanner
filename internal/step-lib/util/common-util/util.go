@@ -61,6 +61,10 @@ func ParseJsonTemplate(inputTemplate string, data []byte) (string, error) {
 		return "", err
 	}
 	buf := &bytes.Buffer{}
+	//this check handles the case when Results key is not found in trivy scan report
+	if _, ok := jsonMap["Results"]; !ok {
+		return "[]", nil
+	}
 	err = tmpl.Execute(buf, jsonMap)
 	if err != nil {
 		log.Println("error in executing template", "err", err)
