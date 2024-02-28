@@ -46,7 +46,7 @@ type ClairService interface {
 	CreateIndexReportFromManifest(manifest *claircore.Manifest) error
 	GetVulnerabilityReportFromManifestHash(manifestHash claircore.Digest) (*claircore.VulnerabilityReport, error)
 	DeleteIndexReportFromManifestHash(manifestHash claircore.Digest) error
-	GetRoundTripper(ctx context.Context, ref string, authenticator authn.Authenticator) (http.RoundTripper, error)
+	GetRoundTripper(ctx context.Context, scanEvent *common.ImageScanEvent, ref string, authenticator authn.Authenticator) (http.RoundTripper, error)
 }
 type ClairServiceImpl struct {
 	logger                        *zap.SugaredLogger
@@ -81,7 +81,7 @@ var (
 	rtMu sync.Mutex
 )
 
-func (impl *ClairServiceImpl) GetRoundTripper(ctx context.Context, ref string, authenticator authn.Authenticator) (http.RoundTripper, error) {
+func (impl *ClairServiceImpl) GetRoundTripper(ctx context.Context, scanEvent *common.ImageScanEvent, ref string, authenticator authn.Authenticator) (http.RoundTripper, error) {
 	r, err := name.ParseReference(ref)
 	if err != nil {
 		impl.logger.Errorw("error in parsing reference", "err", err, "ref", ref)
@@ -90,7 +90,18 @@ func (impl *ClairServiceImpl) GetRoundTripper(ctx context.Context, ref string, a
 	repo := r.Context()
 	rtMu.Lock()
 	defer rtMu.Unlock()
-	rt := http.DefaultTransport
+	roundTripperTransport := http.DefaultTransport
+
+	if scanEvent.RegistryConnectionConfig != nil && scanEvent.RegistryConnectionConfig.ProxyConfig != nil {
+		proxyUrl, err := url.Parse(scanEvent.RegistryConnectionConfig.ProxyConfig.ProxyUrl)
+		if err != nil {
+			impl.logger.Errorw("error in parsing proxy url", "err", err, "proxyUrl", proxyUrl)
+			return nil, err
+		}
+		roundTripperTransport = &http.Transport{Proxy: http.ProxyURL(proxyUrl)}
+	}
+
+	rt := roundTripperTransport
 	rt = transport.NewUserAgent(rt, userAgent)
 	rt = transport.NewRetry(rt)
 	rt, err = transport.NewWithContext(ctx, repo.Registry, authenticator, rt, []string{repo.Scope(transport.PullScope)})
@@ -201,7 +212,7 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ImageScanEve
 		impl.logger.Errorw("error in getting authenticator by dockerRegistryId", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 		return nil, err
 	}
-	roundTripper, err := impl.GetRoundTripper(context.Background(), scanEvent.Image, authenticator)
+	roundTripper, err := impl.GetRoundTripper(context.Background(), scanEvent, scanEvent.Image, authenticator)
 	if err != nil {
 		impl.logger.Errorw("error in getting round tripper", "err", "image", scanEvent.Image)
 		return nil, err

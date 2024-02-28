@@ -1,6 +1,7 @@
 package common
 
 import (
+	"github.com/devtron-labs/common-lib/utils/serverConnection/bean"
 	"github.com/optiopay/klar/clair"
 	"github.com/quay/claircore"
 	"strings"
@@ -37,18 +38,19 @@ type ImageScanRenderDto struct {
 }
 
 type ImageScanEvent struct {
-	Image            string `json:"image"`
-	ImageDigest      string `json:"imageDigest"`
-	AppId            int    `json:"appId"`
-	EnvId            int    `json:"envId"`
-	PipelineId       int    `json:"pipelineId"`
-	CiArtifactId     int    `json:"ciArtifactId"`
-	UserId           int    `json:"userId"`
-	AccessKey        string `json:"accessKey"`
-	SecretKey        string `json:"secretKey"`
-	Token            string `json:"token"`
-	AwsRegion        string `json:"awsRegion"`
-	DockerRegistryId string `json:"dockerRegistryId"`
+	Image                    string                           `json:"image"`
+	ImageDigest              string                           `json:"imageDigest"`
+	AppId                    int                              `json:"appId"`
+	EnvId                    int                              `json:"envId"`
+	PipelineId               int                              `json:"pipelineId"`
+	CiArtifactId             int                              `json:"ciArtifactId"`
+	UserId                   int                              `json:"userId"`
+	AccessKey                string                           `json:"accessKey"`
+	SecretKey                string                           `json:"secretKey"`
+	Token                    string                           `json:"token"`
+	AwsRegion                string                           `json:"awsRegion"`
+	DockerRegistryId         string                           `json:"dockerRegistryId"`
+	RegistryConnectionConfig *bean.ServerConnectionConfigBean `json:"registryConnectionConfig"`
 }
 
 type ScanEventResponse struct {

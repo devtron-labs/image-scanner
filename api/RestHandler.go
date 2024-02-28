@@ -3,7 +3,6 @@ package api
 import (
 	"encoding/json"
 	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/internal/sql/bean"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
@@ -93,14 +92,14 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		writeJsonResp(w, err, nil, http.StatusInternalServerError)
 		return
 	}
-	if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {
+	if false {
 		result, err = impl.klarService.Process(&scanConfig, executionHistory)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)
 			writeJsonResp(w, err, nil, http.StatusInternalServerError)
 			return
 		}
-	} else if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion4 {
+	} else if true {
 		result, err = impl.clairService.ScanImage(&scanConfig, tool, executionHistory)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)
