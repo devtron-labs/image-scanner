@@ -1,8 +1,8 @@
 package user
 
 import (
-	"github.com/devtron-labs/image-scanner/internal/sql/bean"
-	"github.com/devtron-labs/image-scanner/internal/sql/repository"
+	"github.com/devtron-labs/image-scanner/internals/sql/bean"
+	"github.com/devtron-labs/image-scanner/internals/sql/repository"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"
 )

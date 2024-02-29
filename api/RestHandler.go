@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/internal/sql/bean"
+	"github.com/devtron-labs/image-scanner/internals/sql/bean"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
