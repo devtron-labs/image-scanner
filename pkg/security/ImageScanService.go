@@ -33,11 +33,14 @@ type ImageScanService interface {
 	CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*claircore.Vulnerability, error)
 	CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*clair.Vulnerability, error)
 	IsImageScanned(image string) (bool, error)
-	ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int, executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto) error
+	ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int, executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto, proxyUrl string) error
 	CreateFolderForOutputData(executionHistoryModelId int) string
 	HandleProgressingScans()
 	GetActiveTool() (*repository.ScanToolMetadata, error)
 	RegisterScanExecutionHistoryAndState(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) (*repository.ImageScanExecutionHistory, string, error)
+	GetImageScanRenderDto(registryId string, image string) (*common.ImageScanRenderDto, error)
+	FetchProxyUrl(scanEvent *common.ImageScanEvent) string
+	FetchProxyEnvForCliRequest(proxyUrl string) []string
 }
 
 type ImageScanServiceImpl struct {
@@ -86,6 +89,11 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 	return imageScanService
 }
 
+func (impl *ImageScanServiceImpl) FetchProxyEnvForCliRequest(proxyUrl string) []string {
+	var proxyEnv []string
+	return proxyEnv
+}
+
 func (impl *ImageScanServiceImpl) GetActiveTool() (*repository.ScanToolMetadata, error) {
 	//get active tool
 	tool, err := impl.scanToolMetadataRepository.FindActiveToolByScanTarget(repository.ImageScanTargetType)
@@ -95,6 +103,11 @@ func (impl *ImageScanServiceImpl) GetActiveTool() (*repository.ScanToolMetadata,
 	}
 	return tool, nil
 }
+
+func (impl *ImageScanServiceImpl) FetchProxyUrl(scanEvent *common.ImageScanEvent) string {
+	return ""
+}
+
 func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory, executionHistoryDirPath string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(impl.imageScanConfig.ScanImageTimeout)*time.Minute)
 	defer cancel()
@@ -108,15 +121,16 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 		impl.logger.Infow("image already scanned, skipping further process", "image", scanEvent.Image)
 		return nil
 	}
-	imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
+	imageScanRenderDto, err := impl.GetImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
 	if err != nil {
-		impl.logger.Errorw("service error, getImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
+		impl.logger.Errorw("service error, GetImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 		return err
 	}
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
+	proxyUrl := impl.FetchProxyUrl(scanEvent)
 	// TODO: if multiple processes are to be done in parallel, then error propagation should have to be done via channels
-	err = impl.ScanImageForTool(tool, executionHistory.Id, executionHistoryDirPath, wg, int32(scanEvent.UserId), ctx, imageScanRenderDto, "")
+	err = impl.ScanImageForTool(tool, executionHistory.Id, executionHistoryDirPath, wg, int32(scanEvent.UserId), ctx, imageScanRenderDto, proxyUrl)
 	if err != nil {
 		impl.logger.Errorw("err in scanning image", "err", err, "tool", tool, "executionHistory.Id", executionHistory.Id, "executionHistoryDirPath", executionHistoryDirPath, "scanEvent.UserId", scanEvent.UserId)
 		return err
@@ -125,7 +139,7 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 	return err
 }
 
-func (impl *ImageScanServiceImpl) getImageScanRenderDto(registryId string, image string) (*common.ImageScanRenderDto, error) {
+func (impl *ImageScanServiceImpl) GetImageScanRenderDto(registryId string, image string) (*common.ImageScanRenderDto, error) {
 	dockerRegistry, err := impl.dockerArtifactStoreRepository.FindById(registryId)
 	if err != nil {
 		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", registryId)
@@ -370,7 +384,8 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 			impl.logger.Errorw("error in getting cli step input params", "err", err)
 			return nil, err
 		}
-		output, err = cliUtil.HandleCliRequest(renderedCommand, outputFileNameForThisStep, ctx, step.CliOutputType, nil, proxyUrl)
+		proxyEnv := impl.FetchProxyEnvForCliRequest(proxyUrl)
+		output, err = cliUtil.HandleCliRequest(renderedCommand, outputFileNameForThisStep, ctx, step.CliOutputType, nil, proxyEnv)
 		if err != nil {
 			impl.logger.Errorw("error in cli request txn", "err", err)
 			return nil, err
@@ -791,12 +806,13 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 			impl.logger.Errorw("error in un-marshaling", "err", err)
 			return
 		}
-		imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
+		imageScanRenderDto, err := impl.GetImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
 		if err != nil {
-			impl.logger.Errorw("service error, getImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
+			impl.logger.Errorw("service error, GetImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 			return
 		}
-		err = impl.ScanImageForTool(scanTool, scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, nil, imageScanRenderDto, "")
+		proxyUrl := impl.FetchProxyUrl(&scanEvent)
+		err = impl.ScanImageForTool(scanTool, scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, nil, imageScanRenderDto, proxyUrl)
 		if err != nil {
 			impl.logger.Errorw("error in scanning image", "err", err)
 			return
