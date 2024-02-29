@@ -18,7 +18,7 @@ const (
 	CliOutPutTypeStream CliOutputType = "STREAM"
 )
 
-func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, outputType CliOutputType, args map[string]string) (output []byte, err error) {
+func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, outputType CliOutputType, args map[string]string, proxyUrl string) (output []byte, err error) {
 	//converting maps of args and their values to a slice of string for execution
 	argsSlice := make([]string, 0, len(args))
 	for arg, value := range args {
