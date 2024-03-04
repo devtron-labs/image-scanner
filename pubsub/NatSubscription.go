@@ -50,7 +50,11 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 			return
 		}
 	}
-	err := impl.pubSubClient.Subscribe(pubsub1.TOPIC_CI_SCAN, callback)
+	// add required logging here
+	var loggerFunc pubsub1.LoggerFunc = func(msg model.PubSubMsg) (string, []interface{}) {
+		return "", nil
+	}
+	err := impl.pubSubClient.Subscribe(pubsub1.TOPIC_CI_SCAN, callback, loggerFunc)
 	if err != nil {
 		impl.logger.Errorw("Error while subscribing to pubsub", "topic", pubsub1.TOPIC_CI_SCAN, "error", err)
 	}
