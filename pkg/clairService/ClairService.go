@@ -13,7 +13,7 @@ import (
 	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/caarlos0/env/v6"
 	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/internals/sql/repository"
+	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
 	"github.com/google/go-containerregistry/pkg/authn"

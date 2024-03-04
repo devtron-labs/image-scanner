@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/devtron-labs/image-scanner/internals/sql/bean"
+	"github.com/devtron-labs/image-scanner/internal/sql/bean"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"
 	"time"

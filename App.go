@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/caarlos0/env"
-	"github.com/devtron-labs/image-scanner/internals/middleware"
+	"github.com/devtron-labs/image-scanner/internal/middleware"
 	"net/http"
 	"os"
 	"time"
