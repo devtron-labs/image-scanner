@@ -3,7 +3,7 @@ package http_util
 import (
 	"context"
 	"fmt"
-	common_util "github.com/devtron-labs/image-scanner/internal/step-lib/util/common-util"
+	common_util "github.com/devtron-labs/image-scanner/internals/step-lib/util/common-util"
 	"io"
 	"log"
 	"net/http"

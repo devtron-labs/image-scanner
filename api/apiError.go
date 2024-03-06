@@ -2,13 +2,13 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/devtron-labs/image-scanner/internal/util"
+	"github.com/devtron-labs/image-scanner/internals/util"
 	"github.com/juju/errors"
 	"net/http"
 )
 
 // use of writeJsonRespStructured is preferable. it api exists due to historical reason
-// err.message is used as internal message for ApiError object in resp
+// err.message is used as internals message for ApiError object in resp
 func writeJsonResp(w http.ResponseWriter, err error, respBody interface{}, status int) {
 	response := ResponseV2{}
 	if err == nil {
