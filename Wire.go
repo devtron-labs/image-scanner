@@ -4,12 +4,14 @@
 package main
 
 import (
+	"github.com/devtron-labs/image-scanner/pkg"
 	"github.com/google/wire"
 )
 
 func InitializeApp() (*App, error) {
 	wire.Build(
-		ImageScannerWireSet,
+		NewApp,
+		pkg.ImageScannerPkgWireSet,
 	)
 	return &App{}, nil
 }

@@ -1,4 +1,4 @@
-package main
+package pkg
 
 import (
 	"github.com/devtron-labs/common-lib/monitoring"
@@ -16,8 +16,7 @@ import (
 	"github.com/google/wire"
 )
 
-var ImageScannerWireSet = wire.NewSet(
-	NewApp,
+var ImageScannerPkgWireSet = wire.NewSet(
 	api.NewRouter,
 	logger.NewSugardLogger,
 	logger.NewHttpClient,
