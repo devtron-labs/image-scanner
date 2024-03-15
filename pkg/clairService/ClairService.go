@@ -41,13 +41,14 @@ const (
 )
 
 type ClairService interface {
-	ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error)
+	ScanImage(scanEvent *common.ImageScanEvent, imageToBeScanned string, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error)
 	CheckIfIndexReportExistsForManifestHash(manifestHash claircore.Digest) (bool, error)
 	CreateIndexReportFromManifest(manifest *claircore.Manifest) error
 	GetVulnerabilityReportFromManifestHash(manifestHash claircore.Digest) (*claircore.VulnerabilityReport, error)
 	DeleteIndexReportFromManifestHash(manifestHash claircore.Digest) error
 	GetRoundTripper(ctx context.Context, scanEvent *common.ImageScanEvent, ref string, authenticator authn.Authenticator) (http.RoundTripper, error)
 	GetRoundTripperTransport(scanEvent *common.ImageScanEvent) (http.RoundTripper, error)
+	GetImageToBeScanned(scanEvent *common.ImageScanEvent) (string, error)
 }
 type ClairServiceImpl struct {
 	Logger                        *zap.SugaredLogger
@@ -128,16 +129,16 @@ func (impl *ClairServiceImpl) GetImageToBeScanned(scanEvent *common.ImageScanEve
 	return scanEvent.Image, nil
 }
 
-func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error) {
+func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, imageToBeScanned string, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error) {
 	impl.Logger.Debugw("new request, scan image", "requestPayload", scanEvent)
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
 	}
-	imageToBeScanned, err := impl.GetImageToBeScanned(scanEvent)
-	if err != nil {
-		impl.Logger.Errorw("error in getting vulnerability report from clair", "err", err, "scanEvent", scanEvent)
-		return nil, err
-	}
+	//imageToBeScanned, err := impl.GetImageToBeScanned(scanEvent)
+	//if err != nil {
+	//	impl.Logger.Errorw("error in getting vulnerability report from clair", "err", err, "scanEvent", scanEvent)
+	//	return nil, err
+	//}
 	isImageScanned, err := impl.ImageScanService.IsImageScanned(imageToBeScanned)
 	if err != nil && err != pg.ErrNoRows {
 		impl.Logger.Errorw("error in fetching scan history ", "err", err, "image", imageToBeScanned)
