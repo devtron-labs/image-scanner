@@ -50,6 +50,8 @@ type ImageScanEvent struct {
 	Token                  string                           `json:"token"`
 	AwsRegion              string                           `json:"awsRegion"`
 	DockerRegistryId       string                           `json:"dockerRegistryId"`
+	DockerUsername         string                           `json:"dockerUsername"`
+	DockerPassword         string                           `json:"dockerPassword"`
 	ServerConnectionConfig *bean.ServerConnectionConfigBean `json:"serverConnectionConfig"`
 }
 
