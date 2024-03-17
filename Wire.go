@@ -13,6 +13,7 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
+	"github.com/devtron-labs/image-scanner/pkg/roundTripper"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"github.com/devtron-labs/image-scanner/pubsub"
@@ -80,6 +81,9 @@ func InitializeApp() (*App, error) {
 		repository.NewScanToolExecutionHistoryMappingRepositoryImpl,
 		wire.Bind(new(repository.ScanToolExecutionHistoryMappingRepository), new(*repository.ScanToolExecutionHistoryMappingRepositoryImpl)),
 		monitoring.NewMonitoringRouter,
+
+		roundTripper.NewRoundTripperServiceImpl,
+		wire.Bind(new(roundTripper.RoundTripperService), new(*roundTripper.RoundTripperServiceImpl)),
 	)
 	return &App{}, nil
 }

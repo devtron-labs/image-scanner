@@ -14,6 +14,7 @@ import (
 	"github.com/caarlos0/env/v6"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/internals/sql/repository"
+	"github.com/devtron-labs/image-scanner/pkg/roundTripper"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
 	"github.com/google/go-containerregistry/pkg/authn"
@@ -47,7 +48,6 @@ type ClairService interface {
 	GetVulnerabilityReportFromManifestHash(manifestHash claircore.Digest) (*claircore.VulnerabilityReport, error)
 	DeleteIndexReportFromManifestHash(manifestHash claircore.Digest) error
 	GetRoundTripper(ctx context.Context, scanEvent *common.ImageScanEvent, ref string, authenticator authn.Authenticator) (http.RoundTripper, error)
-	GetRoundTripperTransport(scanEvent *common.ImageScanEvent) (http.RoundTripper, error)
 	GetImageToBeScanned(scanEvent *common.ImageScanEvent) (string, error)
 }
 type ClairServiceImpl struct {
@@ -57,12 +57,13 @@ type ClairServiceImpl struct {
 	ImageScanService              security.ImageScanService
 	DockerArtifactStoreRepository repository.DockerArtifactStoreRepository
 	ScanToolMetadataRepository    repository.ScanToolMetadataRepository
+	RoundTripperService           roundTripper.RoundTripperService
 }
 
 func NewClairServiceImpl(logger *zap.SugaredLogger, clairConfig *ClairConfig,
 	httpClient *http.Client, imageScanService security.ImageScanService,
 	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository,
-	scanToolMetadataRepository repository.ScanToolMetadataRepository) *ClairServiceImpl {
+	scanToolMetadataRepository repository.ScanToolMetadataRepository, roundTripperService roundTripper.RoundTripperService) *ClairServiceImpl {
 	return &ClairServiceImpl{
 		Logger:                        logger,
 		ClairConfig:                   clairConfig,
@@ -70,6 +71,7 @@ func NewClairServiceImpl(logger *zap.SugaredLogger, clairConfig *ClairConfig,
 		ImageScanService:              imageScanService,
 		DockerArtifactStoreRepository: dockerArtifactStoreRepository,
 		ScanToolMetadataRepository:    scanToolMetadataRepository,
+		RoundTripperService:           roundTripperService,
 	}
 }
 
@@ -83,10 +85,6 @@ var (
 	rtMu sync.Mutex
 )
 
-func (impl *ClairServiceImpl) GetRoundTripperTransport(scanEvent *common.ImageScanEvent) (http.RoundTripper, error) {
-	return http.DefaultTransport, nil
-}
-
 func (impl *ClairServiceImpl) GetRoundTripper(ctx context.Context, scanEvent *common.ImageScanEvent, ref string, authenticator authn.Authenticator) (http.RoundTripper, error) {
 	r, err := name.ParseReference(ref)
 	if err != nil {
@@ -96,7 +94,7 @@ func (impl *ClairServiceImpl) GetRoundTripper(ctx context.Context, scanEvent *co
 	repo := r.Context()
 	rtMu.Lock()
 	defer rtMu.Unlock()
-	rt, err := impl.GetRoundTripperTransport(scanEvent)
+	rt, err := impl.RoundTripperService.GetRoundTripperTransport(scanEvent)
 	if err != nil {
 		impl.Logger.Errorw("error in getting roundTripper", "err", err)
 		return nil, err
@@ -134,11 +132,6 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, imageT
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
 	}
-	//imageToBeScanned, err := impl.GetImageToBeScanned(scanEvent)
-	//if err != nil {
-	//	impl.Logger.Errorw("error in getting vulnerability report from clair", "err", err, "scanEvent", scanEvent)
-	//	return nil, err
-	//}
 	isImageScanned, err := impl.ImageScanService.IsImageScanned(imageToBeScanned)
 	if err != nil && err != pg.ErrNoRows {
 		impl.Logger.Errorw("error in fetching scan history ", "err", err, "image", imageToBeScanned)

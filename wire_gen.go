@@ -16,6 +16,7 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
+	"github.com/devtron-labs/image-scanner/pkg/roundTripper"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"github.com/devtron-labs/image-scanner/pubsub"
@@ -67,7 +68,8 @@ func InitializeApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	clairServiceImpl := clairService.NewClairServiceImpl(sugaredLogger, clairConfig, client, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl, scanToolMetadataRepositoryImpl)
+	roundTripperServiceImpl := roundTripper.NewRoundTripperServiceImpl(sugaredLogger)
+	clairServiceImpl := clairService.NewClairServiceImpl(sugaredLogger, clairConfig, client, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl, scanToolMetadataRepositoryImpl, roundTripperServiceImpl)
 	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, testPublishImpl, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl, imageScanConfig)
 	monitoringRouter := monitoring.NewMonitoringRouter(sugaredLogger)
 	router := api.NewRouter(sugaredLogger, restHandlerImpl, monitoringRouter)
