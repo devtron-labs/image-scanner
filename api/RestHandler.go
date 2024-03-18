@@ -102,13 +102,16 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		}
 	} else if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion4 {
 		imageToBeScanned, err := impl.clairService.GetImageToBeScanned(&scanConfig)
-		result, err = impl.clairService.ScanImage(&scanConfig, imageToBeScanned, tool, executionHistory)
+		scanConfig.Image = imageToBeScanned
+		result, err = impl.clairService.ScanImage(&scanConfig, tool, executionHistory)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)
 			writeJsonResp(w, err, nil, http.StatusInternalServerError)
 			return
 		}
 	} else {
+		imageToBeScanned, err := impl.imageScanService.GetImageToBeScanned(&scanConfig)
+		scanConfig.Image = imageToBeScanned
 		err = impl.imageScanService.ScanImage(&scanConfig, tool, executionHistory, executionHistoryDirPath)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)

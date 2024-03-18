@@ -42,7 +42,7 @@ const (
 )
 
 type ClairService interface {
-	ScanImage(scanEvent *common.ImageScanEvent, imageToBeScanned string, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error)
+	ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error)
 	CheckIfIndexReportExistsForManifestHash(manifestHash claircore.Digest) (bool, error)
 	CreateIndexReportFromManifest(manifest *claircore.Manifest) error
 	GetVulnerabilityReportFromManifestHash(manifestHash claircore.Digest) (*claircore.VulnerabilityReport, error)
@@ -127,18 +127,18 @@ func (impl *ClairServiceImpl) GetImageToBeScanned(scanEvent *common.ImageScanEve
 	return scanEvent.Image, nil
 }
 
-func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, imageToBeScanned string, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error) {
+func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error) {
 	impl.Logger.Debugw("new request, scan image", "requestPayload", scanEvent)
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
 	}
-	isImageScanned, err := impl.ImageScanService.IsImageScanned(imageToBeScanned)
+	isImageScanned, err := impl.ImageScanService.IsImageScanned(scanEvent.Image)
 	if err != nil && err != pg.ErrNoRows {
-		impl.Logger.Errorw("error in fetching scan history ", "err", err, "image", imageToBeScanned)
+		impl.Logger.Errorw("error in fetching scan history ", "err", err, "image", scanEvent.Image)
 		return nil, err
 	}
 	if isImageScanned {
-		impl.Logger.Infow("image already scanned, skipping further process", "image", imageToBeScanned)
+		impl.Logger.Infow("image already scanned, skipping further process", "image", scanEvent.Image)
 		return scanEventResponse, nil
 	}
 

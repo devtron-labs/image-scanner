@@ -39,6 +39,7 @@ type ImageScanService interface {
 	GetActiveTool() (*repository.ScanToolMetadata, error)
 	RegisterScanExecutionHistoryAndState(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) (*repository.ImageScanExecutionHistory, string, error)
 	GetImageScanRenderDto(registryId string, image string) (*common.ImageScanRenderDto, error)
+	GetImageToBeScanned(scanEvent *common.ImageScanEvent) (string, error)
 }
 
 type ImageScanServiceImpl struct {
@@ -85,6 +86,10 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 	}
 	imageScanService.HandleProgressingScans()
 	return imageScanService
+}
+
+func (impl *ImageScanServiceImpl) GetImageToBeScanned(scanEvent *common.ImageScanEvent) (string, error) {
+	return scanEvent.Image, nil
 }
 
 func (impl *ImageScanServiceImpl) GetActiveTool() (*repository.ScanToolMetadata, error) {
