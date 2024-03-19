@@ -2,7 +2,6 @@ package clairService
 
 import (
 	"bytes"
-	"context"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -12,7 +11,6 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/roundTripper"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/go-pg/pg"
-	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/google/go-containerregistry/pkg/name"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/google/go-containerregistry/pkg/v1/remote"
@@ -40,8 +38,6 @@ type ClairService interface {
 	CreateIndexReportFromManifest(manifest *claircore.Manifest) error
 	GetVulnerabilityReportFromManifestHash(manifestHash claircore.Digest) (*claircore.VulnerabilityReport, error)
 	DeleteIndexReportFromManifestHash(manifestHash claircore.Digest) error
-	GetRoundTripper(ctx context.Context, scanEvent *common.ImageScanEvent, ref string, authenticator authn.Authenticator) (http.RoundTripper, error)
-	GetImageToBeScanned(scanEvent *common.ImageScanEvent) (string, error)
 }
 type ClairServiceImpl struct {
 	Logger                        *zap.SugaredLogger
@@ -86,10 +82,6 @@ func GetClairConfig() (*ClairConfig, error) {
 		cfg.ClairAddress = fmt.Sprintf("http://%s", cfg.ClairAddress)
 	}
 	return cfg, err
-}
-
-func (impl *ClairServiceImpl) GetImageToBeScanned(scanEvent *common.ImageScanEvent) (string, error) {
-	return scanEvent.Image, nil
 }
 
 func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error) {

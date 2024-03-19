@@ -93,6 +93,13 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		writeJsonResp(w, err, nil, http.StatusInternalServerError)
 		return
 	}
+	imageToBeScanned, err := impl.imageScanService.GetImageToBeScanned(&scanConfig)
+	if err != nil {
+		impl.logger.Errorw("service err, GetImageToBeScanned", "err", err)
+		writeJsonResp(w, err, nil, http.StatusInternalServerError)
+		return
+	}
+	scanConfig.Image = imageToBeScanned
 	if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {
 		result, err = impl.klarService.Process(&scanConfig, executionHistory)
 		if err != nil {
@@ -101,8 +108,6 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 			return
 		}
 	} else if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion4 {
-		imageToBeScanned, err := impl.clairService.GetImageToBeScanned(&scanConfig)
-		scanConfig.Image = imageToBeScanned
 		result, err = impl.clairService.ScanImage(&scanConfig, tool, executionHistory)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)
@@ -110,8 +115,6 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 			return
 		}
 	} else {
-		imageToBeScanned, err := impl.imageScanService.GetImageToBeScanned(&scanConfig)
-		scanConfig.Image = imageToBeScanned
 		err = impl.imageScanService.ScanImage(&scanConfig, tool, executionHistory, executionHistoryDirPath)
 		if err != nil {
 			impl.logger.Errorw("err in process msg", "err", err)

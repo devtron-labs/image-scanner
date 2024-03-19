@@ -68,7 +68,7 @@ func InitializeApp() (*App, error) {
 	if err != nil {
 		return nil, err
 	}
-	roundTripperServiceImpl := roundTripper.NewRoundTripperServiceImpl(sugaredLogger)
+	roundTripperServiceImpl := roundTripper.NewRoundTripperServiceImpl(sugaredLogger, dockerArtifactStoreRepositoryImpl)
 	clairServiceImpl := clairService.NewClairServiceImpl(sugaredLogger, clairConfig, client, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl, scanToolMetadataRepositoryImpl, roundTripperServiceImpl)
 	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, testPublishImpl, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl, imageScanConfig)
 	monitoringRouter := monitoring.NewMonitoringRouter(sugaredLogger)
