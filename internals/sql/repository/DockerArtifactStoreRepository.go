@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/devtron-labs/common-lib/utils/serverConnection/bean"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"
@@ -16,20 +17,21 @@ const (
 )
 
 type DockerArtifactStore struct {
-	tableName          struct{}            `sql:"docker_artifact_store" json:",omitempty"  pg:",discard_unknown_columns"`
-	Id                 string              `sql:"id,pk" json:"id,,omitempty"`
-	PluginId           string              `sql:"plugin_id,notnull" json:"pluginId,omitempty"`
-	RegistryURL        string              `sql:"registry_url" json:"registryUrl,omitempty"`
-	RegistryType       common.RegistryType `sql:"registry_type,notnull" json:"registryType,omitempty"`
-	AWSAccessKeyId     string              `sql:"aws_accesskey_id" json:"awsAccessKeyId,omitempty" `
-	AWSSecretAccessKey string              `sql:"aws_secret_accesskey" json:"awsSecretAccessKey,omitempty"`
-	AWSRegion          string              `sql:"aws_region" json:"awsRegion,omitempty"`
-	Username           string              `sql:"username" json:"username,omitempty"`
-	Password           string              `sql:"password" json:"password,omitempty"`
-	IsDefault          bool                `sql:"is_default,notnull" json:"isDefault"`
-	Connection         string              `sql:"connection" json:"connection,omitempty"`
-	Cert               string              `sql:"cert" json:"cert,omitempty"`
-	Active             bool                `sql:"active,notnull" json:"active"`
+	tableName              struct{}            `sql:"docker_artifact_store" json:",omitempty"  pg:",discard_unknown_columns"`
+	Id                     string              `sql:"id,pk" json:"id,,omitempty"`
+	PluginId               string              `sql:"plugin_id,notnull" json:"pluginId,omitempty"`
+	RegistryURL            string              `sql:"registry_url" json:"registryUrl,omitempty"`
+	RegistryType           common.RegistryType `sql:"registry_type,notnull" json:"registryType,omitempty"`
+	AWSAccessKeyId         string              `sql:"aws_accesskey_id" json:"awsAccessKeyId,omitempty" `
+	AWSSecretAccessKey     string              `sql:"aws_secret_accesskey" json:"awsSecretAccessKey,omitempty"`
+	AWSRegion              string              `sql:"aws_region" json:"awsRegion,omitempty"`
+	Username               string              `sql:"username" json:"username,omitempty"`
+	Password               string              `sql:"password" json:"password,omitempty"`
+	IsDefault              bool                `sql:"is_default,notnull" json:"isDefault"`
+	Connection             string              `sql:"connection" json:"connection,omitempty"`
+	Cert                   string              `sql:"cert" json:"cert,omitempty"`
+	Active                 bool                `sql:"active,notnull" json:"active"`
+	ServerConnectionConfig *bean.ServerConnectionConfigBean
 	AuditLog
 }
 
@@ -74,6 +76,7 @@ func (impl DockerArtifactStoreRepositoryImpl) FindActiveDefaultStore() (*DockerA
 func (impl DockerArtifactStoreRepositoryImpl) FindById(id string) (*DockerArtifactStore, error) {
 	var provider DockerArtifactStore
 	err := impl.dbConnection.Model(&provider).
+		Column("docker_artifact_store.*", "ServerConnectionConfig").
 		Where("id = ?", id).
 		Where("active = ?", true).
 		Select()
