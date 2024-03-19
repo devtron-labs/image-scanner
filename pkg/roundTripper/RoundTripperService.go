@@ -20,7 +20,7 @@ import (
 )
 
 type RoundTripperService interface {
-	GetRoundTripper( scanEvent *common.ImageScanEvent) (http.RoundTripper, error)
+	GetRoundTripper(scanEvent *common.ImageScanEvent) (http.RoundTripper, error)
 }
 type RoundTripperServiceImpl struct {
 	Logger                        *zap.SugaredLogger
@@ -49,7 +49,7 @@ const (
 	userAgent = `clairctl/1`
 )
 
-func (impl *RoundTripperServiceImpl) GetRoundTripper( scanEvent *common.ImageScanEvent) (http.RoundTripper, error) {
+func (impl *RoundTripperServiceImpl) GetRoundTripper(scanEvent *common.ImageScanEvent) (http.RoundTripper, error) {
 	authenticator, dockerRegistry, err := impl.GetAuthenticatorByDockerRegistryId(scanEvent.DockerRegistryId)
 	if err != nil {
 		impl.Logger.Errorw("error, GetAuthenticatorByDockerRegistryId", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
@@ -58,7 +58,6 @@ func (impl *RoundTripperServiceImpl) GetRoundTripper( scanEvent *common.ImageSca
 	rtConfig := &RoundTripperConfig{
 		Username: dockerRegistry.Username,
 		Password: dockerRegistry.Password,
-		ProxyUrl: ,
 	}
 	rt, err := impl.GetRoundTripperTransport(rtConfig)
 	if err != nil {
@@ -131,8 +130,8 @@ func (impl *RoundTripperServiceImpl) GetAuthenticatorByDockerRegistryId(dockerRe
 	authenticatorFromConfig := authn.FromConfig(authConfig)
 	return authenticatorFromConfig, dockerRegistry, nil
 }
-func (impl *RoundTripperServiceImpl) UpdateTransportWithReference(rt http.RoundTripper , ref string,authenticator authn.Authenticator)( http.RoundTripper , error){
-	r, err:= name.ParseReference(ref)
+func (impl *RoundTripperServiceImpl) UpdateTransportWithReference(rt http.RoundTripper, ref string, authenticator authn.Authenticator) (http.RoundTripper, error) {
+	r, err := name.ParseReference(ref)
 	if err != nil {
 		impl.Logger.Errorw("error in parsing reference", "err", err, "ref", ref)
 		return nil, err
