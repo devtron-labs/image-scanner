@@ -146,4 +146,5 @@ func (impl *RoundTripperServiceImpl) UpdateTransportWithReference(rt http.RoundT
 		impl.Logger.Errorw("error in getting roundTripper", "err", err)
 		return nil, err
 	}
+	return rt, nil
 }
