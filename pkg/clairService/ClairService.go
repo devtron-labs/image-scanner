@@ -6,11 +6,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/credentials"
-	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/caarlos0/env/v6"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/internals/sql/repository"
@@ -21,7 +16,6 @@ import (
 	"github.com/google/go-containerregistry/pkg/name"
 	v1 "github.com/google/go-containerregistry/pkg/v1"
 	"github.com/google/go-containerregistry/pkg/v1/remote"
-	"github.com/google/go-containerregistry/pkg/v1/remote/transport"
 	"github.com/quay/claircore"
 	"go.uber.org/zap"
 	"io/ioutil"
@@ -29,7 +23,6 @@ import (
 	"net/url"
 	"path"
 	"strings"
-	"sync"
 )
 
 type ClairConfig struct {
@@ -80,34 +73,6 @@ func NewClairServiceImpl(logger *zap.SugaredLogger, clairConfig *ClairConfig,
 const (
 	userAgent = `clairctl/1`
 )
-
-var (
-	rtMu sync.Mutex
-)
-
-func (impl *ClairServiceImpl) GetRoundTripper(ctx context.Context, scanEvent *common.ImageScanEvent, ref string, authenticator authn.Authenticator) (http.RoundTripper, error) {
-	r, err := name.ParseReference(ref)
-	if err != nil {
-		impl.Logger.Errorw("error in parsing reference", "err", err, "ref", ref)
-		return nil, err
-	}
-	repo := r.Context()
-	rtMu.Lock()
-	defer rtMu.Unlock()
-	rt, err := impl.RoundTripperService.GetRoundTripperTransport(scanEvent)
-	if err != nil {
-		impl.Logger.Errorw("error in getting roundTripper", "err", err)
-		return nil, err
-	}
-	rt = transport.NewUserAgent(rt, userAgent)
-	rt = transport.NewRetry(rt)
-	rt, err = transport.NewWithContext(ctx, repo.Registry, authenticator, rt, []string{repo.Scope(transport.PullScope)})
-	if err != nil {
-		impl.Logger.Errorw("error in getting roundTripper", "err", err)
-		return nil, err
-	}
-	return rt, nil
-}
 
 // clairctl code ends
 
@@ -208,12 +173,7 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.
 }
 
 func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ImageScanEvent) (*claircore.Manifest, error) {
-	authenticator, err := impl.GetAuthenticatorByDockerRegistryId(scanEvent.DockerRegistryId)
-	if err != nil {
-		impl.Logger.Errorw("error in getting authenticator by dockerRegistryId", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
-		return nil, err
-	}
-	roundTripper, err := impl.GetRoundTripper(context.Background(), scanEvent, scanEvent.Image, authenticator)
+	roundTripper, err := impl.RoundTripperService.GetRoundTripper(scanEvent)
 	if err != nil {
 		impl.Logger.Errorw("error in getting round tripper", "err", "image", scanEvent.Image)
 		return nil, err
@@ -239,61 +199,6 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ImageScanEve
 		return nil, err
 	}
 	return manifest, nil
-}
-
-func (impl *ClairServiceImpl) GetAuthenticatorByDockerRegistryId(dockerRegistryId string) (authn.Authenticator, error) {
-	dockerRegistry, err := impl.DockerArtifactStoreRepository.FindById(dockerRegistryId)
-	if err != nil {
-		impl.Logger.Errorw("error in getting docker registry by id", "err", err, "id", dockerRegistryId)
-		return nil, err
-	}
-	//case for gcr and artifact registry
-	if dockerRegistry.Username == "_json_key" {
-		lenPassword := len(dockerRegistry.Password)
-		if lenPassword > 1 {
-			dockerRegistry.Password = strings.TrimPrefix(dockerRegistry.Password, "'")
-			dockerRegistry.Password = strings.TrimSuffix(dockerRegistry.Password, "'")
-		}
-	}
-	authConfig := authn.AuthConfig{
-		Username: dockerRegistry.Username,
-		Password: dockerRegistry.Password,
-	}
-	if dockerRegistry.RegistryType == repository.REGISTRYTYPE_ECR {
-		accessKey, secretKey := dockerRegistry.AWSAccessKeyId, dockerRegistry.AWSSecretAccessKey
-		var creds *credentials.Credentials
-		if len(dockerRegistry.AWSAccessKeyId) == 0 || len(dockerRegistry.AWSSecretAccessKey) == 0 {
-			sess, err := session.NewSession(&aws.Config{
-				Region: &dockerRegistry.AWSRegion,
-			})
-			if err != nil {
-				impl.Logger.Errorw("error in starting aws new session", "err", err)
-				return nil, err
-			}
-			creds = ec2rolecreds.NewCredentials(sess)
-		} else {
-			creds = credentials.NewStaticCredentials(accessKey, secretKey, "")
-		}
-		sess, err := session.NewSession(&aws.Config{
-			Region:      &dockerRegistry.AWSRegion,
-			Credentials: creds,
-		})
-		if err != nil {
-			impl.Logger.Errorw("error in starting aws new session", "err", err)
-			return nil, err
-		}
-
-		// Create a ECR client with additional configuration
-		svc := ecr.New(sess, aws.NewConfig().WithRegion(dockerRegistry.AWSRegion))
-		token, err := svc.GetAuthorizationToken(&ecr.GetAuthorizationTokenInput{})
-		if err != nil {
-			impl.Logger.Errorw("error in getting auth token from ecr", "err", err)
-			return nil, err
-		}
-		authConfig.Auth = *token.AuthorizationData[0].AuthorizationToken
-	}
-	authenticatorFromConfig := authn.FromConfig(authConfig)
-	return authenticatorFromConfig, nil
 }
 
 func (impl *ClairServiceImpl) GenerateClairManifestFromImage(image v1.Image, reference name.Reference, roundTripper http.RoundTripper) (*claircore.Manifest, error) {
