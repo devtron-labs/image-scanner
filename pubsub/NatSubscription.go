@@ -50,7 +50,17 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 			return
 		}
 	}
-	err := impl.pubSubClient.Subscribe(pubsub1.TOPIC_CI_SCAN, callback)
+
+	var loggerFunc pubsub1.LoggerFunc = func(msg model.PubSubMsg) (string, []interface{}) {
+		deploymentEvent := &common.ImageScanEvent{}
+		err := json.Unmarshal([]byte(msg.Data), &deploymentEvent)
+		if err != nil {
+			return "error while unmarshalling deploymentEvent object", []interface{}{"err", err, "msg", msg.Data}
+		}
+		return "got message for deployment stage completion", []interface{}{"envId", deploymentEvent.EnvId, "appId", deploymentEvent.AppId, "ciArtifactId", deploymentEvent.CiArtifactId}
+	}
+
+	err := impl.pubSubClient.Subscribe(pubsub1.TOPIC_CI_SCAN, callback, loggerFunc)
 	if err != nil {
 		impl.logger.Errorw("Error while subscribing to pubsub", "topic", pubsub1.TOPIC_CI_SCAN, "error", err)
 	}
