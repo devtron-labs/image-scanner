@@ -380,7 +380,7 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	var vulnerabilities []*bean.ImageScanOutputObject
 	var err error
 	impl.logger.Debugw("ConvertEndStepOutputAndSaveVulnerabilities", "stepOutput", string(stepOutput), "resultDescriptorTemplate", tool.ResultDescriptorTemplate)
-	if isValidTemplate(tool.ResultDescriptorTemplate) { // result descriptor template is go template, go with v1 logic
+	if isV1Template(tool.ResultDescriptorTemplate) { // result descriptor template is go template, go with v1 logic
 		vulnerabilities, err = impl.getImageScanOutputObjectsV1(stepOutput, tool.ResultDescriptorTemplate)
 		if err != nil {
 			impl.logger.Errorw("error, getImageScanOutputObjectsV1", "err", err, "stepOutput", stepOutput, "resultDescriptorTemplate", tool.ResultDescriptorTemplate)
@@ -483,7 +483,13 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	return nil
 }
 
-func isValidTemplate(templateStr string) bool {
+func isV1Template(resultDescriptorTemplate string) bool {
+	var mappings []bean.Mapping
+	err := json.Unmarshal([]byte(resultDescriptorTemplate), &mappings)
+	return err != nil && isValidGoTemplate(resultDescriptorTemplate) //checking error too because our new result descriptor template can pass go templating too as it contains a simple json
+}
+
+func isValidGoTemplate(templateStr string) bool {
 	_, err := template.New("test").Funcs(template.FuncMap{ //for trivy we use add function, so it needs to be defined here
 		"add": func(a, b int) int { return a + b },
 	}).Parse(templateStr)
