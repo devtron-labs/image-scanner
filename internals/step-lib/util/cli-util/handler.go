@@ -18,7 +18,7 @@ const (
 	CliOutPutTypeStream CliOutputType = "STREAM"
 )
 
-func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, outputType CliOutputType, args map[string]string) (output []byte, err error) {
+func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, outputType CliOutputType, args map[string]string, cliCommandEnv []string) (output []byte, err error) {
 	//converting maps of args and their values to a slice of string for execution
 	argsSlice := make([]string, 0, len(args))
 	for arg, value := range args {
@@ -27,6 +27,7 @@ func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, o
 		argsSlice = append(argsSlice, value)
 	}
 	command := exec.CommandContext(ctx, common.SHELL_COMMAND, common.COMMAND_ARGS, baseCommand)
+	command.Env = append(command.Env, cliCommandEnv...)
 	if outputType == CliOutPutTypeStream { //TODO: make async in further feature iterations
 		err = executeStreamCliRequest(command, outputFileName)
 	} else if outputType == CliOutPutTypeStatic {

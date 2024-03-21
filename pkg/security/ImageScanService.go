@@ -58,6 +58,7 @@ type ImageScanServiceImpl struct {
 	ImageScanConfig                           *ImageScanConfig
 	DockerArtifactStoreRepository             repository.DockerArtifactStoreRepository
 	RegistryIndexMappingRepository            repository.RegistryIndexMappingRepository
+	CliCommandEnv                             []string
 }
 
 func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository repository.ImageScanHistoryRepository,
@@ -83,6 +84,7 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 		ImageScanConfig:                           imageScanConfig,
 		DockerArtifactStoreRepository:             dockerArtifactStoreRepository,
 		RegistryIndexMappingRepository:            registryIndexMappingRepository,
+		CliCommandEnv:                             os.Environ(),
 	}
 	imageScanService.HandleProgressingScans()
 	return imageScanService
@@ -377,7 +379,8 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 			impl.Logger.Errorw("error in getting cli step input params", "err", err)
 			return nil, err
 		}
-		output, err = cliUtil.HandleCliRequest(renderedCommand, outputFileNameForThisStep, ctx, step.CliOutputType, nil)
+		cliCommandEnv := impl.CliCommandEnv
+		output, err = cliUtil.HandleCliRequest(renderedCommand, outputFileNameForThisStep, ctx, step.CliOutputType, nil, cliCommandEnv)
 		if err != nil {
 			impl.Logger.Errorw("error in cli request txn", "err", err)
 			return nil, err
