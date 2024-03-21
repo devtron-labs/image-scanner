@@ -522,7 +522,6 @@ func (impl *ImageScanServiceImpl) getImageScanOutputObjectsV2(stepOutput []byte,
 				// if the nested value is an array, recursively process it
 				processArray(mapping, nestedValue)
 			} else {
-				impl.logger.Debugw("received, nestedValue for processArray", "nestedValue", nestedValue.String())
 				vulnerability := &bean.ImageScanOutputObject{
 					Name:           nestedValue.Get(mapping[bean.MappingKeyName]).String(),
 					Package:        nestedValue.Get(mapping[bean.MappingKeyPackage]).String(),
@@ -542,6 +541,7 @@ func (impl *ImageScanServiceImpl) getImageScanOutputObjectsV2(stepOutput []byte,
 		}
 		processArray(mapping, result)
 	}
+	impl.logger.Debugw("received vulnerabilities", "vulnerabilites", vulnerabilities)
 	return vulnerabilities, nil
 }
 
