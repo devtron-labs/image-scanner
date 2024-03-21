@@ -93,7 +93,7 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		writeJsonResp(w, err, nil, http.StatusInternalServerError)
 		return
 	}
-	imageToBeScanned, err := impl.imageScanService.GetImageToBeScanned(&scanConfig)
+	imageToBeScanned, err := impl.imageScanService.GetImageToBeScannedAndFetchCliEnv(&scanConfig)
 	if err != nil {
 		impl.logger.Errorw("service err, GetImageToBeScanned", "err", err)
 		writeJsonResp(w, err, nil, http.StatusInternalServerError)
