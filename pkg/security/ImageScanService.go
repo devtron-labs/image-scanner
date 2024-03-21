@@ -483,7 +483,9 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 }
 
 func isValidTemplate(templateStr string) bool {
-	_, err := template.New("test").Parse(templateStr)
+	_, err := template.New("test").Funcs(template.FuncMap{ //for trivy we use add function, so it needs to be defined here
+		"add": func(a, b int) int { return a + b },
+	}).Parse(templateStr)
 	return err == nil
 }
 
