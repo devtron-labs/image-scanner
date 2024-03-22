@@ -9,10 +9,10 @@ import (
 )
 
 var (
-	// Logger is the defaut logger
+	// logger is the defaut logger
 	logger *zap.SugaredLogger
 	//FIXME: remove this
-	//defer Logger.Sync()
+	//defer logger.Sync()
 )
 
 // Deprecated: instead calling this method inject logger from wire

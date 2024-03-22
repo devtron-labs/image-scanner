@@ -8,7 +8,7 @@ require (
 	github.com/aws/aws-sdk-go v1.44.116
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/caarlos0/env/v6 v6.10.1
-	github.com/devtron-labs/common-lib v0.0.10-0.20240119124817-22edd78beee8
+	github.com/devtron-labs/common-lib v0.0.16-0.20240227120652-070a8694839e
 	github.com/go-pg/pg v6.15.1+incompatible
 	github.com/google/go-containerregistry v0.6.0
 	github.com/google/wire v0.3.0
