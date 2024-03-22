@@ -63,7 +63,8 @@ func (impl *RoundTripperServiceImpl) GetRoundTripper(scanEvent *common.ImageScan
 		impl.Logger.Errorw("error in getting roundTripper", "err", err)
 		return nil, err
 	}
-	return impl.UpdateTransportWithReference(rt, scanEvent.Image, authenticator)
+	var referenceOptions []name.Option
+	return impl.UpdateTransportWithReference(rt, scanEvent.Image, authenticator, referenceOptions)
 }
 
 func (impl *RoundTripperServiceImpl) GetRoundTripperTransport(config *RoundTripperConfig) (http.RoundTripper, error) {
@@ -124,8 +125,8 @@ func (impl *RoundTripperServiceImpl) GetAuthenticatorByDockerRegistryId(dockerRe
 	authenticatorFromConfig := authn.FromConfig(authConfig)
 	return authenticatorFromConfig, dockerRegistry, nil
 }
-func (impl *RoundTripperServiceImpl) UpdateTransportWithReference(rt http.RoundTripper, ref string, authenticator authn.Authenticator) (http.RoundTripper, error) {
-	r, err := name.ParseReference(ref)
+func (impl *RoundTripperServiceImpl) UpdateTransportWithReference(rt http.RoundTripper, ref string, authenticator authn.Authenticator, referenceOptions []name.Option) (http.RoundTripper, error) {
+	r, err := name.ParseReference(ref, referenceOptions...)
 	if err != nil {
 		impl.Logger.Errorw("error in parsing reference", "err", err, "ref", ref)
 		return nil, err
