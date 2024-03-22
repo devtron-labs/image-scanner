@@ -2,7 +2,6 @@ package roundTripper
 
 import (
 	"context"
-	"crypto/tls"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/credentials/ec2rolecreds"
@@ -68,12 +67,7 @@ func (impl *RoundTripperServiceImpl) GetRoundTripper(scanEvent *common.ImageScan
 }
 
 func (impl *RoundTripperServiceImpl) GetRoundTripperTransport(config *RoundTripperConfig) (http.RoundTripper, error) {
-	roundTripperTransport := &http.Transport{
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
-		},
-	}
-	return roundTripperTransport, nil
+	return http.DefaultTransport, nil
 }
 
 func (impl *RoundTripperServiceImpl) GetAuthenticatorByDockerRegistryId(dockerRegistryId string) (authn.Authenticator, *repository.DockerArtifactStore, error) {
