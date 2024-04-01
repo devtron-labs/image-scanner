@@ -31,7 +31,7 @@ type DockerArtifactStore struct {
 	Connection               string              `sql:"connection" json:"connection,omitempty"`
 	Cert                     string              `sql:"cert" json:"cert,omitempty"`
 	Active                   bool                `sql:"active,notnull" json:"active"`
-	ServerConnectionConfig   *ServerConnectionConfig
+	ServerConnectionConfig   *RemoteConnectionConfig
 	AuditLog
 }
 

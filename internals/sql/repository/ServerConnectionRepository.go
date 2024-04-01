@@ -1,31 +1,31 @@
 package repository
 
 import (
-	"github.com/devtron-labs/common-lib/utils/serverConnection/bean"
+	"github.com/devtron-labs/common-lib/utils/remoteConnection/bean"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"
 )
 
-type ServerConnectionRepository interface {
-	GetById(id int) (*ServerConnectionConfig, error)
+type RemoteConnectionRepository interface {
+	GetById(id int) (*RemoteConnectionConfig, error)
 }
 
-type ServerConnectionRepositoryImpl struct {
+type RemoteConnectionRepositoryImpl struct {
 	logger       *zap.SugaredLogger
 	dbConnection *pg.DB
 }
 
-func NewServerConnectionRepositoryImpl(dbConnection *pg.DB, logger *zap.SugaredLogger) *ServerConnectionRepositoryImpl {
-	return &ServerConnectionRepositoryImpl{
+func NewRemoteConnectionRepositoryImpl(dbConnection *pg.DB, logger *zap.SugaredLogger) *RemoteConnectionRepositoryImpl {
+	return &RemoteConnectionRepositoryImpl{
 		logger:       logger,
 		dbConnection: dbConnection,
 	}
 }
 
-type ServerConnectionConfig struct {
-	tableName        struct{}                    `sql:"server_connection_config" pg:",discard_unknown_columns"`
+type RemoteConnectionConfig struct {
+	tableName        struct{}                    `sql:"remote_connection_config" pg:",discard_unknown_columns"`
 	Id               int                         `sql:"id,pk"`
-	ConnectionMethod bean.ServerConnectionMethod `sql:"connection_method"`
+	ConnectionMethod bean.RemoteConnectionMethod `sql:"connection_method"`
 	ProxyUrl         string                      `sql:"proxy_url"`
 	SSHServerAddress string                      `sql:"ssh_server_address"`
 	SSHUsername      string                      `sql:"ssh_username"`
@@ -35,8 +35,8 @@ type ServerConnectionConfig struct {
 	AuditLog
 }
 
-func (repo *ServerConnectionRepositoryImpl) GetById(id int) (*ServerConnectionConfig, error) {
-	model := &ServerConnectionConfig{}
+func (repo *RemoteConnectionRepositoryImpl) GetById(id int) (*RemoteConnectionConfig, error) {
+	model := &RemoteConnectionConfig{}
 	err := repo.dbConnection.Model(model).
 		Where("id = ?", id).
 		Where("deleted = ?", false).
