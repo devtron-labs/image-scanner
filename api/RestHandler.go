@@ -3,11 +3,11 @@ package api
 import (
 	"encoding/json"
 	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/internals/sql/bean"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"github.com/devtron-labs/image-scanner/pkg/security"
+	"github.com/devtron-labs/image-scanner/pkg/sql/bean"
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"github.com/devtron-labs/image-scanner/pubsub"
 	"go.uber.org/zap"

@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"github.com/devtron-labs/image-scanner/internals/sql/bean"
+	"github.com/devtron-labs/image-scanner/pkg/sql/bean"
 	"github.com/go-pg/pg"
 )
 

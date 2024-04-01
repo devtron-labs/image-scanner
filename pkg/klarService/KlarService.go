@@ -8,9 +8,9 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/internals/sql/bean"
-	"github.com/devtron-labs/image-scanner/internals/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/security"
+	"github.com/devtron-labs/image-scanner/pkg/sql/bean"
+	"github.com/devtron-labs/image-scanner/pkg/sql/repository"
 	"github.com/go-pg/pg"
 	"strings"
 

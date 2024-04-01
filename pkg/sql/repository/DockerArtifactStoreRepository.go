@@ -19,7 +19,7 @@ type DockerArtifactStore struct {
 	tableName                struct{}            `sql:"docker_artifact_store" json:",omitempty"  pg:",discard_unknown_columns"`
 	Id                       string              `sql:"id,pk" json:"id,,omitempty"`
 	PluginId                 string              `sql:"plugin_id,notnull" json:"pluginId,omitempty"`
-	ServerConnectionConfigId int                 `sql:"server_connection_config_id" json:"serverConnectionConfigId,omitempty"`
+	RemoteConnectionConfigId int                 `sql:"remote_connection_config_id" json:"remoteConnectionConfigId,omitempty"`
 	RegistryURL              string              `sql:"registry_url" json:"registryUrl,omitempty"`
 	RegistryType             common.RegistryType `sql:"registry_type,notnull" json:"registryType,omitempty"`
 	AWSAccessKeyId           string              `sql:"aws_accesskey_id" json:"awsAccessKeyId,omitempty" `
@@ -31,7 +31,7 @@ type DockerArtifactStore struct {
 	Connection               string              `sql:"connection" json:"connection,omitempty"`
 	Cert                     string              `sql:"cert" json:"cert,omitempty"`
 	Active                   bool                `sql:"active,notnull" json:"active"`
-	ServerConnectionConfig   *RemoteConnectionConfig
+	RemoteConnectionConfig   *RemoteConnectionConfig
 	AuditLog
 }
 
@@ -76,7 +76,7 @@ func (impl DockerArtifactStoreRepositoryImpl) FindActiveDefaultStore() (*DockerA
 func (impl DockerArtifactStoreRepositoryImpl) FindById(id string) (*DockerArtifactStore, error) {
 	var provider DockerArtifactStore
 	err := impl.dbConnection.Model(&provider).
-		Column("docker_artifact_store.*", "ServerConnectionConfig").
+		Column("docker_artifact_store.*", "RemoteConnectionConfig").
 		Where("docker_artifact_store.id = ?", id).
 		Where("docker_artifact_store.active = ?", true).
 		Select()

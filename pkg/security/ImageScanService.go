@@ -9,11 +9,11 @@ import (
 	"github.com/Knetic/govaluate"
 	"github.com/caarlos0/env"
 	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/internals/sql/bean"
-	"github.com/devtron-labs/image-scanner/internals/sql/repository"
-	cliUtil "github.com/devtron-labs/image-scanner/internals/step-lib/util/cli-util"
-	commonUtil "github.com/devtron-labs/image-scanner/internals/step-lib/util/common-util"
-	httpUtil "github.com/devtron-labs/image-scanner/internals/step-lib/util/http-util"
+	cliUtil "github.com/devtron-labs/image-scanner/internal/step-lib/util/cli-util"
+	commonUtil "github.com/devtron-labs/image-scanner/internal/step-lib/util/common-util"
+	httpUtil "github.com/devtron-labs/image-scanner/internal/step-lib/util/http-util"
+	"github.com/devtron-labs/image-scanner/pkg/sql/bean"
+	"github.com/devtron-labs/image-scanner/pkg/sql/repository"
 	"github.com/go-pg/pg"
 	"github.com/optiopay/klar/clair"
 	"github.com/quay/claircore"
@@ -200,25 +200,25 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		return nil, executionHistoryDirPath, err
 	}
 	// creating folder for storing all details if not exist
-	isExist, err := DoesFileExist(bean.ScanOutputDirectory)
-	if err != nil {
-		impl.Logger.Errorw("error in checking if scan output directory exist ", "err", err)
-		return nil, executionHistoryDirPath, err
-	}
-	if !isExist {
-		err = os.Mkdir(bean.ScanOutputDirectory, commonUtil.DefaultFileCreatePermission)
-		if err != nil && !os.IsExist(err) {
-			impl.Logger.Errorw("error in creating Output directory", "err", err, "toolId", tool.Id, "executionHistoryDir", executionHistoryDirPath)
-			return nil, executionHistoryDirPath, err
-		}
-	}
-	// creating folder for storing output data for this execution history data
-	executionHistoryDirPath = impl.CreateFolderForOutputData(executionHistoryModel.Id)
-	err = os.Mkdir(executionHistoryDirPath, commonUtil.DefaultFileCreatePermission)
-	if err != nil && !os.IsExist(err) {
-		impl.Logger.Errorw("error in creating executionHistory directory", "err", err, "executionHistoryId", executionHistoryModel.Id)
-		return nil, executionHistoryDirPath, err
-	}
+	//isExist, err := DoesFileExist(bean.ScanOutputDirectory)
+	//if err != nil {
+	//	impl.Logger.Errorw("error in checking if scan output directory exist ", "err", err)
+	//	return nil, executionHistoryDirPath, err
+	//}
+	//if !isExist {
+	//	err = os.Mkdir(bean.ScanOutputDirectory, commonUtil.DefaultFileCreatePermission)
+	//	if err != nil && !os.IsExist(err) {
+	//		impl.Logger.Errorw("error in creating Output directory", "err", err, "toolId", tool.Id, "executionHistoryDir", executionHistoryDirPath)
+	//		return nil, executionHistoryDirPath, err
+	//	}
+	//}
+	//// creating folder for storing output data for this execution history data
+	//executionHistoryDirPath = impl.CreateFolderForOutputData(executionHistoryModel.Id)
+	//err = os.Mkdir(executionHistoryDirPath, commonUtil.DefaultFileCreatePermission)
+	//if err != nil && !os.IsExist(err) {
+	//	impl.Logger.Errorw("error in creating executionHistory directory", "err", err, "executionHistoryId", executionHistoryModel.Id)
+	//	return nil, executionHistoryDirPath, err
+	//}
 	executionHistoryMappingModel := &repository.ScanToolExecutionHistoryMapping{
 		ImageScanExecutionHistoryId: executionHistoryModel.Id,
 		ScanToolId:                  tool.Id,
