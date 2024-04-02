@@ -391,19 +391,23 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 }
 
 func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(stepOutput []byte, executionHistoryId int, tool repository.ScanToolMetadata, step repository.ScanToolStep, userId int32) error {
-	//rendering image descriptor template with output json to get vulnerabilities updated
-	renderedTemplate, err := commonUtil.ParseJsonTemplate(tool.ResultDescriptorTemplate, stepOutput)
-	if err != nil {
-		impl.Logger.Errorw("error in parsing template to get vulnerabilities", "err", err)
-		return err
-	}
-	renderedTemplate = common.RemoveTrailingComma(renderedTemplate)
 	var vulnerabilities []*bean.ImageScanOutputObject
-	err = json.Unmarshal([]byte(renderedTemplate), &vulnerabilities)
-	if err != nil {
-		impl.Logger.Errorw("error in unmarshalling rendered template", "err", err)
-		return err
+	var err error
+	impl.Logger.Debugw("ConvertEndStepOutputAndSaveVulnerabilities", "stepOutput", string(stepOutput), "resultDescriptorTemplate", tool.ResultDescriptorTemplate)
+	if isV1Template(tool.ResultDescriptorTemplate) { // result descriptor template is go template, go with v1 logic
+		vulnerabilities, err = impl.getImageScanOutputObjectsV1(stepOutput, tool.ResultDescriptorTemplate)
+		if err != nil {
+			impl.Logger.Errorw("error, getImageScanOutputObjectsV1", "err", err, "stepOutput", stepOutput, "resultDescriptorTemplate", tool.ResultDescriptorTemplate)
+			return err
+		}
+	} else { //not go template, go with v2 logic
+		vulnerabilities, err = impl.getImageScanOutputObjectsV2(stepOutput, tool.ResultDescriptorTemplate)
+		if err != nil {
+			impl.Logger.Errorw("error, getImageScanOutputObjectsV2", "err", err, "stepOutput", stepOutput, "resultDescriptorTemplate", tool.ResultDescriptorTemplate)
+			return err
+		}
 	}
+
 	allCvesMap := make([]*repository.CveStore, 0, len(vulnerabilities))
 	cvesToBeSaved := make([]*repository.CveStore, 0, len(vulnerabilities))
 	uniqueVulnerabilityMap := make(map[string]*bean.ImageScanOutputObject)
@@ -491,6 +495,74 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 		return err
 	}
 	return nil
+}
+
+func isV1Template(resultDescriptorTemplate string) bool {
+	var mappings []bean.Mapping
+	err := json.Unmarshal([]byte(resultDescriptorTemplate), &mappings)
+	return err != nil && isValidGoTemplate(resultDescriptorTemplate) //checking error too because our new result descriptor template can pass go templating too as it contains a simple json
+}
+
+func isValidGoTemplate(templateStr string) bool {
+	_, err := template.New("test").Funcs(template.FuncMap{ //for trivy we use add function, so it needs to be defined here
+		"add": func(a, b int) int { return a + b },
+	}).Parse(templateStr)
+	return err == nil
+}
+
+func (impl *ImageScanServiceImpl) getImageScanOutputObjectsV1(stepOutput []byte, resultDescriptorTemplate string) ([]*bean.ImageScanOutputObject, error) {
+	//rendering image descriptor template with output json to get vulnerabilities updated
+	renderedTemplate, err := commonUtil.ParseJsonTemplate(resultDescriptorTemplate, stepOutput)
+	if err != nil {
+		impl.Logger.Errorw("error in parsing template to get vulnerabilities", "err", err)
+		return nil, err
+	}
+	renderedTemplate = common.RemoveTrailingComma(renderedTemplate)
+	var vulnerabilities []*bean.ImageScanOutputObject
+	err = json.Unmarshal([]byte(renderedTemplate), &vulnerabilities)
+	if err != nil {
+		impl.Logger.Errorw("error in unmarshalling rendered template", "err", err)
+		return nil, err
+	}
+	return vulnerabilities, nil
+}
+
+func (impl *ImageScanServiceImpl) getImageScanOutputObjectsV2(stepOutput []byte, resultDescriptorTemplate string) ([]*bean.ImageScanOutputObject, error) {
+	var vulnerabilities []*bean.ImageScanOutputObject
+	var mappings []bean.Mapping
+	err := json.Unmarshal([]byte(resultDescriptorTemplate), &mappings)
+	if err != nil {
+		impl.Logger.Errorw("error in un-marshaling result descriptor template", "err", err, "resultDescriptorTemplate", resultDescriptorTemplate)
+		return nil, err
+	}
+	var processArray func(mapping bean.Mapping, value gjson.Result)
+	processArray = func(mapping bean.Mapping, value gjson.Result) {
+		value.ForEach(func(_, nestedValue gjson.Result) bool {
+			if nestedValue.IsArray() {
+				// if the nested value is an array, recursively process it
+				processArray(mapping, nestedValue)
+			} else {
+				vulnerability := &bean.ImageScanOutputObject{
+					Name:           nestedValue.Get(mapping[bean.MappingKeyName]).String(),
+					Package:        nestedValue.Get(mapping[bean.MappingKeyPackage]).String(),
+					PackageVersion: nestedValue.Get(mapping[bean.MappingKeyPackageVersion]).String(),
+					FixedInVersion: nestedValue.Get(mapping[bean.MappingKeyFixedInVersion]).String(),
+					Severity:       nestedValue.Get(mapping[bean.MappingKeySeverity]).String(),
+				}
+				vulnerabilities = append(vulnerabilities, vulnerability)
+			}
+			return true
+		})
+	}
+	for _, mapping := range mappings {
+		result := gjson.Get(string(stepOutput), mapping[bean.MappingKeyPathToVulnerabilitiesArray])
+		if !result.Exists() {
+			continue
+		}
+		processArray(mapping, result)
+	}
+	impl.Logger.Debugw("received vulnerabilities", "vulnerabilites", vulnerabilities)
+	return vulnerabilities, nil
 }
 
 func (impl *ImageScanServiceImpl) GetHttpStepInputParams(step repository.ScanToolStep, toolOutputDirPath string, imageScanRenderDto *common.ImageScanRenderDto) (url.Values, map[string]string, *bytes.Buffer, error) {

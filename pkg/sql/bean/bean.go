@@ -41,6 +41,18 @@ type ImageScanOutputObject struct {
 	Severity       string `json:"severity"`
 }
 
+// Mapping is the used to store mappings of fields in ImageScanOutputObject and the path at which they are present in stepOutput
+type Mapping map[string]string
+
+const (
+	MappingKeyPathToVulnerabilitiesArray = "pathToVulnerabilitiesArray"
+	MappingKeyName                       = "name"
+	MappingKeyPackage                    = "package"
+	MappingKeyPackageVersion             = "packageVersion"
+	MappingKeyFixedInVersion             = "fixedInVersion"
+	MappingKeySeverity                   = "severity"
+)
+
 type Severity int
 
 const (
