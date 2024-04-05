@@ -16,13 +16,14 @@ type ScanToolExecutionHistoryMapping struct {
 	ExecutionFinishTime         time.Time                      `sql:"execution_finish_time,notnull"`
 	State                       bean.ScanExecutionProcessState `sql:"state"`
 	TryCount                    int                            `sql:"try_count"`
+	ErrorMessage                string                         `sql:"error_message"`
 	AuditLog
 }
 
 type ScanToolExecutionHistoryMappingRepository interface {
 	Save(model *ScanToolExecutionHistoryMapping) error
 	SaveInBatch(models []*ScanToolExecutionHistoryMapping) error
-	UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolId int, state bean.ScanExecutionProcessState, executionFinishTime time.Time) error
+	UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolId int, state bean.ScanExecutionProcessState, executionFinishTime time.Time, errorMessage string) error
 	MarkAllRunningStateAsFailedHavingTryCountReachedLimit(tryCount int) error
 	GetAllScanHistoriesByState(state bean.ScanExecutionProcessState) ([]*ScanToolExecutionHistoryMapping, error)
 	GetAllScanHistoriesByExecutionHistoryIdAndStates(executionHistoryId int, states []bean.ScanExecutionProcessState) ([]*ScanToolExecutionHistoryMapping, error)
@@ -60,9 +61,11 @@ func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) SaveInBatch(models []
 }
 
 func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolId int,
-	state bean.ScanExecutionProcessState, executionFinishTime time.Time) error {
+	state bean.ScanExecutionProcessState, executionFinishTime time.Time, errorMessage string) error {
 	model := &ScanToolExecutionHistoryMapping{}
-	_, err := repo.dbConnection.Model(model).Set("state = ?", state).
+	_, err := repo.dbConnection.Model(model).
+		Set("state = ?", state).
+		Set("error_message = ?", errorMessage).
 		Set("execution_finish_time  = ?", executionFinishTime).
 		Where("image_scan_execution_history_id = ?", executionHistoryId).
 		Where("scan_tool_id = ?", toolId).Update()

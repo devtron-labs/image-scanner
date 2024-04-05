@@ -123,8 +123,11 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 }
 
 func (impl *ImageScanServiceImpl) getImageScanRenderDto(registryId string, image string) (*common.ImageScanRenderDto, error) {
+
 	dockerRegistry, err := impl.dockerArtifactStoreRepository.FindById(registryId)
-	if err != nil {
+	if err == pg.ErrNoRows {
+		dockerRegistry = &repository.DockerArtifactStore{}
+	} else if err != nil {
 		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", registryId)
 		return nil, err
 	}
@@ -144,13 +147,16 @@ func (impl *ImageScanServiceImpl) scanImageForTool(tool *repository.ScanToolMeta
 	toolCopy := *tool
 	var processedState bean.ScanExecutionProcessState
 	err := impl.ProcessScanForTool(toolCopy, executionHistoryDirPathCopy, executionHistoryId, userId, ctx, imageScanRenderDto)
+	var errorMessage string
 	if err != nil {
 		impl.logger.Errorw("error in processing scan for tool:", toolCopy.Name, "err", err)
 		processedState = bean.ScanExecutionProcessStateFailed
+		errorMessage = err.Error()
 	} else {
 		processedState = bean.ScanExecutionProcessStateCompleted
 	}
-	updateErr := impl.scanToolExecutionHistoryMappingRepository.UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolCopy.Id, processedState, time.Now())
+
+	updateErr := impl.scanToolExecutionHistoryMappingRepository.UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolCopy.Id, processedState, time.Now(), errorMessage)
 	if updateErr != nil {
 		impl.logger.Errorw("error in UpdateStateByToolAndExecutionHistoryId", "err", err)
 		err = updateErr
