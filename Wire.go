@@ -37,8 +37,8 @@ func InitializeApp() (*App, error) {
 		pubsub.NewNatSubscription,
 		grafeasService.NewKlarServiceImpl,
 		wire.Bind(new(grafeasService.GrafeasService), new(*grafeasService.GrafeasServiceImpl)),
-		pubsub.NewTestPublishImpl,
-		wire.Bind(new(pubsub.TestPublish), new(*pubsub.TestPublishImpl)),
+		//pubsub.NewTestPublishImpl,
+		//wire.Bind(new(pubsub.TestPublish), new(*pubsub.TestPublishImpl)),
 
 		clairService.GetClairConfig,
 		clairService.NewClairServiceImpl,

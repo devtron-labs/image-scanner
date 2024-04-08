@@ -39,7 +39,7 @@ func NewApp(Router *api.Router, Logger *zap.SugaredLogger,
 }
 
 type ServerConfig struct {
-	SERVER_HTTP_PORT int `env:"SERVER_HTTP_PORT" envDefault:"8080"`
+	SERVER_HTTP_PORT int `env:"SERVER_HTTP_PORT" envDefault:"8083"`
 }
 
 func (app *App) Start() {
