@@ -17,7 +17,6 @@ import (
 
 type RestHandler interface {
 	ScanForVulnerability(w http.ResponseWriter, r *http.Request)
-	ScanForVulnerabilityEvent(scanConfig *common.ImageScanEvent) (*common.ScanEventResponse, error)
 }
 
 func NewRestHandlerImpl(logger *zap.SugaredLogger,
