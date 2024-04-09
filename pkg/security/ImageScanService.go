@@ -376,7 +376,7 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 		output, err = cliUtil.HandleCliRequest(renderedCommand, outputFileNameForThisStep, ctx, step.CliOutputType, nil)
 		if err != nil {
 			impl.logger.Errorw("error in cli request txn", "err", err)
-			return nil, err
+			return output, err
 		}
 	}
 	return output, nil

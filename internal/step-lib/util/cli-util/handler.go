@@ -43,7 +43,7 @@ func executeStaticCliRequest(command *exec.Cmd, outputFileName string) (error, [
 	op, err := command.CombinedOutput()
 	if err != nil {
 		log.Println("error in running command", "err", err)
-		return err, nil
+		return err, op
 	}
 	// If output is already stored in file, considering the output from file (file is created by tool over here)
 	if outputFileName != "" && op != nil {
