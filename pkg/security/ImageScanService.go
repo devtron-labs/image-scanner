@@ -306,7 +306,7 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 				output, err = commonUtil.ReadFile(outputFileName)
 				if err != nil {
 					impl.logger.Errorw("error in getting reading output of step", "err", err, "stepOutputFileName", outputFileName)
-					return err
+					return errors.New(string(output))
 				}
 			}
 
