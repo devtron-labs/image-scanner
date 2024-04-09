@@ -298,7 +298,7 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 			output, err := impl.ProcessScanStep(step, tool, toolOutputDirPath, ctx, imageScanRenderDto)
 			if err != nil {
 				impl.logger.Errorw("error in processing scan step sync", "err", err, "stepId", step.Id)
-				return err
+				return errors.New(string(output))
 			}
 			if step.StepExecutionType == bean.ScanExecutionTypeCli && step.CliOutputType == cliUtil.CliOutPutTypeStream {
 				// read output here for further processing, to update this logic when cli stream processing is made async
@@ -306,7 +306,7 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 				output, err = commonUtil.ReadFile(outputFileName)
 				if err != nil {
 					impl.logger.Errorw("error in getting reading output of step", "err", err, "stepOutputFileName", outputFileName)
-					return errors.New(string(output))
+					return err
 				}
 			}
 
