@@ -101,7 +101,8 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 		impl.logger.Errorw("error in fetching scan history ", "err", err, "image", scanEvent.Image)
 		return err
 	}
-	if isImageScanned {
+	//TODO handle for rescans for new history Id
+	if isImageScanned && scanEvent.ScanHistoryId == 0 {
 		impl.logger.Infow("image already scanned, skipping further process", "image", scanEvent.Image)
 		return nil
 	}
@@ -187,11 +188,16 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		ExecutedBy:    scanEvent.UserId,
 		ScanEventJson: string(scanEventJson),
 	}
-	err = impl.scanHistoryRepository.Save(executionHistoryModel)
-	if err != nil {
-		impl.logger.Errorw("Failed to save executionHistory", "err", err, "model", executionHistoryModel)
-		return nil, executionHistoryDirPath, err
+	if scanEvent.ScanHistoryId > 0 {
+		executionHistoryModel.Id = scanEvent.ScanHistoryId
+	} else {
+		err = impl.scanHistoryRepository.Save(executionHistoryModel)
+		if err != nil {
+			impl.logger.Errorw("Failed to save executionHistory", "err", err, "model", executionHistoryModel)
+			return nil, executionHistoryDirPath, err
+		}
 	}
+
 	// creating folder for storing all details if not exist
 	isExist, err := DoesFileExist(bean.ScanOutputDirectory)
 	if err != nil {

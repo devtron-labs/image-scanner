@@ -49,6 +49,7 @@ type ImageScanEvent struct {
 	Token            string `json:"token"`
 	AwsRegion        string `json:"awsRegion"`
 	DockerRegistryId string `json:"dockerRegistryId"`
+	ScanHistoryId    int    `json:"scanHistoryId"`
 }
 
 type ScanEventResponse struct {
