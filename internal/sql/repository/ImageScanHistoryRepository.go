@@ -7,15 +7,25 @@ import (
 )
 
 type ImageScanExecutionHistory struct {
-	tableName                     struct{}  `sql:"image_scan_execution_history" pg:",discard_unknown_columns"`
-	Id                            int       `sql:"id,pk"`
-	Image                         string    `sql:"image,notnull"`
-	ImageHash                     string    `sql:"image_hash,notnull"`
-	ExecutionTime                 time.Time `sql:"execution_time"`
-	ExecutedBy                    int       `sql:"executed_by,notnull"`
-	ScanEventJson                 string    `sql:"scan_event_json"`
-	ExecutionHistoryDirectoryPath string    `sql:"execution_history_directory_path"`
+	tableName                     struct{}    `sql:"image_scan_execution_history" pg:",discard_unknown_columns"`
+	Id                            int         `sql:"id,pk"`
+	Image                         string      `sql:"image,notnull"`      // Migrate to request Id in future
+	ImageHash                     string      `sql:"image_hash,notnull"` // Migrate to request metadata
+	ExecutionTime                 time.Time   `sql:"execution_time"`
+	ExecutedBy                    int         `sql:"executed_by,notnull"`
+	RequestMetadata               string      `sql:"request_metadata"`
+	ExecutionHistoryDirectoryPath string      `sql:"execution_history_directory_path"` // Deprecated
+	RequestId                     int         `sql:"request_id"`
+	RequestType                   RequestType `sql:"request_type"`
 }
+type RequestType int
+
+const (
+	Image        = 1
+	CiWorkflow   = 2
+	CdWorkflow   = 3
+	ChartHistory = 4
+)
 
 type ImageScanHistoryRepository interface {
 	Save(model *ImageScanExecutionHistory) error
