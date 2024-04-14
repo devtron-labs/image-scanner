@@ -11,23 +11,25 @@ type ResourceScanResult struct {
 	ImageScanExecutionHistoryId int                `sql:"image_scan_execution_history_id"`
 	ScanDataJson                string             `sql:"scan_data_json"`
 	Format                      ResourceScanFormat `sql:"format"`
-	Type                        ResourceScanType   `sql:"type"`
+	Types                       []ResourceScanType `sql:"types"`
 	ScanToolId                  int                `sql:"scan_tool_id"`
 }
 
 type ResourceScanFormat int
 
 const (
-	CycloneDx ResourceScanFormat = 1 //SBOM
-	TrivyJson                    = 2
-	Json                         = 3
+	CycloneDxSbom ResourceScanFormat = 1 //SBOM
+	TrivyJson                        = 2
+	Json                             = 3
 )
 
 type ResourceScanType int
 
 const (
-	LicenseVulnerabilities   ResourceScanType = 1
-	SecretsMisconfigurations                  = 2
+	Vulnerabilities ResourceScanType = 1
+	License                          = 2
+	Config                           = 3
+	Secrets                          = 4
 )
 
 type ResourceScanResultRepository interface {
