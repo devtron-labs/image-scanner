@@ -12,6 +12,7 @@ type ResourceScanResult struct {
 	ScanDataJson                string             `sql:"scan_data_json"`
 	Format                      ResourceScanFormat `sql:"format"`
 	Type                        ResourceScanType   `sql:"type"`
+	ScanToolId                  int                `sql:"scan_tool_id"`
 }
 
 type ResourceScanFormat int
@@ -21,8 +22,6 @@ const (
 	TrivyJson                    = 2
 	Json                         = 3
 )
-
-//const CycloneDx ResourceScanFormat = 1
 
 type ResourceScanType int
 

@@ -13,11 +13,12 @@ type ImageScanExecutionHistory struct {
 	ImageHash                     string      `sql:"image_hash,notnull"` // Migrate to request metadata
 	ExecutionTime                 time.Time   `sql:"execution_time"`
 	ExecutedBy                    int         `sql:"executed_by,notnull"`
-	RequestMetadata               string      `sql:"request_metadata"`
+	RequestMetadataJson           string      `sql:"request_metadata_json"`
 	ExecutionHistoryDirectoryPath string      `sql:"execution_history_directory_path"` // Deprecated
 	RequestId                     int         `sql:"request_id"`
 	RequestType                   RequestType `sql:"request_type"`
 }
+
 type RequestType int
 
 const (
