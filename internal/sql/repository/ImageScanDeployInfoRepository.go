@@ -110,8 +110,8 @@ func (impl ImageScanDeployInfoRepositoryImpl) FetchByAppIdAndEnvId(appId int, en
 }
 
 func (impl ImageScanDeployInfoRepositoryImpl) FindByObjectTypeAndId(scanObjectMetaId int, objectType string) (*ImageScanDeployInfo, error) {
-	var model *ImageScanDeployInfo
-	err := impl.dbConnection.Model(model).
+	var model ImageScanDeployInfo
+	err := impl.dbConnection.Model(&model).
 		Where("scan_object_meta_id = ?", scanObjectMetaId).
 		Where("object_type = ?", objectType).
 		Order("created_on desc").Limit(1).
@@ -119,5 +119,5 @@ func (impl ImageScanDeployInfoRepositoryImpl) FindByObjectTypeAndId(scanObjectMe
 	if err == pg.ErrNoRows {
 		return nil, nil
 	}
-	return model, err
+	return &model, err
 }

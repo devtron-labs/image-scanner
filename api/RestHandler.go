@@ -108,9 +108,10 @@ func (impl *RestHandlerImpl) ScanForVulnerabilityEvent(scanConfig *common.ImageS
 	}
 
 	if scanConfig.SourceType == common.SourceTypeCode {
-		err := impl.codeScanService.ScanCode(scanConfig, tool, executionHistory, executionHistoryDirPath)
+		err = impl.codeScanService.ScanCode(scanConfig, tool, executionHistory, executionHistoryDirPath)
 		if err != nil {
-			return nil, err
+			impl.logger.Errorw("Error scanning code", "err", err)
+
 		}
 	} else {
 		if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {

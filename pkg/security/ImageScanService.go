@@ -54,6 +54,7 @@ type ImageScanServiceImpl struct {
 	dockerArtifactStoreRepository             repository.DockerArtifactStoreRepository
 	registryIndexMappingRepository            repository.RegistryIndexMappingRepository
 	codeScanService                           CodeScanService
+	resourceScanResultRepository              repository.ResourceScanResultRepository
 }
 
 func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository repository.ImageScanHistoryRepository,
@@ -67,7 +68,9 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 	scanStepConditionMappingRepository repository.ScanStepConditionMappingRepository,
 	imageScanConfig *ImageScanConfig,
 	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository, registryIndexMappingRepository repository.RegistryIndexMappingRepository,
-	codeScanService CodeScanService) *ImageScanServiceImpl {
+	codeScanService CodeScanService,
+	resourceScanResultRepository repository.ResourceScanResultRepository,
+) *ImageScanServiceImpl {
 	imageScanService := &ImageScanServiceImpl{logger: logger, scanHistoryRepository: scanHistoryRepository, scanResultRepository: scanResultRepository,
 		scanObjectMetaRepository: scanObjectMetaRepository, cveStoreRepository: cveStoreRepository,
 		imageScanDeployInfoRepository:             imageScanDeployInfoRepository,
@@ -81,6 +84,7 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 		dockerArtifactStoreRepository:             dockerArtifactStoreRepository,
 		registryIndexMappingRepository:            registryIndexMappingRepository,
 		codeScanService:                           codeScanService,
+		resourceScanResultRepository:              resourceScanResultRepository,
 	}
 	imageScanService.handleProgressingScans()
 	return imageScanService
@@ -117,7 +121,13 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	// TODO: if multiple processes are to be done in parallel, then error propagation should have to be done via channels
-	err = impl.scanImageForTool(tool, executionHistory.Id, executionHistoryDirPath, wg, int32(scanEvent.UserId), ctx, imageScanRenderDto)
+
+	if scanEvent.SourceType == common.SourceTypeImage {
+		err = impl.processImageScanSbom(scanEvent, tool, executionHistory.Id, executionHistoryDirPath, ctx, imageScanRenderDto)
+	} else {
+		err = impl.scanImageForTool(tool, executionHistory.Id, executionHistoryDirPath, wg, int32(scanEvent.UserId), ctx, imageScanRenderDto)
+
+	}
 	if err != nil {
 		impl.logger.Errorw("err in scanning image", "err", err, "tool", tool, "executionHistory.Id", executionHistory.Id, "executionHistoryDirPath", executionHistoryDirPath, "scanEvent.UserId", scanEvent.UserId)
 		return err
@@ -146,6 +156,7 @@ func (impl *ImageScanServiceImpl) getImageScanRenderDto(registryId string, image
 	}
 	return imageScanRenderDto, nil
 }
+
 func (impl *ImageScanServiceImpl) scanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int,
 	executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto) error {
 	toolCopy := *tool
@@ -250,6 +261,97 @@ func DoesFileExist(path string) (bool, error) {
 	}
 	return false, err
 }
+func (impl *ImageScanServiceImpl) processImageScanSbom(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistoryId int,
+	executionHistoryDirPathCopy string, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto) error {
+
+	var metaId int
+	var objectType string
+	if scanEvent.SourceSubType == common.SourceSubTypeCi {
+		metaId = scanEvent.CiWorkflowId
+		objectType = repository.ScanObjectType_CI_Workflow
+	} else if scanEvent.SourceSubType == common.SourceSubTypeManifest {
+		metaId = scanEvent.CdWorkflowId
+		objectType = repository.ScanObjectType_CD_Workflow
+	}
+
+	var info *repository.ImageScanDeployInfo
+	var err error
+	info, err = impl.imageScanDeployInfoRepository.FindByObjectTypeAndId(metaId, objectType)
+	if err != nil {
+		return err
+	}
+
+	if info == nil {
+		info = &repository.ImageScanDeployInfo{
+			ImageScanExecutionHistoryId: []int{executionHistoryId},
+			ScanObjectMetaId:            metaId,
+			ObjectType:                  objectType,
+			EnvId:                       1,
+			ClusterId:                   1,
+			AuditLog: repository.AuditLog{
+				CreatedOn: time.Now(),
+				CreatedBy: 1,
+				UpdatedOn: time.Now(),
+				UpdatedBy: 1,
+			},
+		}
+		err := impl.imageScanDeployInfoRepository.Save(info)
+		if err != nil {
+			return err
+		}
+
+	} else {
+		info.ImageScanExecutionHistoryId = append(info.ImageScanExecutionHistoryId, executionHistoryId)
+		info.UpdatedOn = time.Now()
+		err := impl.imageScanDeployInfoRepository.Update(info)
+		if err != nil {
+			return err
+		}
+	}
+
+	//sbomFile := "cyclonedx.json"
+	//sbomCmd := "trivy image " + "--format cyclonedx " + scanEvent.Image + " -o " + sbomFile
+	//output, err := cliUtil.HandleCliRequest(sbomCmd, sbomFile, context.Background(), "STATIC", nil)
+	//if err != nil {
+	//	sbomScanFile := "imagesbomscan.json"
+	//	//trivy sbom  --scanners  vuln,license --format cyclonedx /data/bom.json > scan
+	//	trivyCmd := "trivy sbom " + sbomFile + " --scanners vuln,license " + "--format json " + "-o " + sbomScanFile
+	//	output, err = cliUtil.HandleCliRequest(trivyCmd, sbomScanFile, context.Background(), "STATIC", nil)
+	//}
+
+	imgScanFile := "imagesscan.json"
+	trivyCmd := "trivy image " + scanEvent.Image + " --scanners vuln,license " + "--format json " + " -o " + imgScanFile
+	output, err := cliUtil.HandleCliRequest(trivyCmd, imgScanFile, context.Background(), "STATIC", nil)
+
+	var processedState bean.ScanExecutionProcessState
+	var errorMessage string
+	if err != nil {
+		impl.logger.Errorw("error in processing scan for tool:", tool.Name, "err", err)
+		processedState = bean.ScanExecutionProcessStateFailed
+		errorMessage = err.Error()
+	} else {
+		processedState = bean.ScanExecutionProcessStateCompleted
+		result := &repository.ResourceScanResult{
+			ImageScanExecutionHistoryId: executionHistoryId,
+			ScanDataJson:                string(output),
+			Format:                      repository.Json,
+			Types:                       []int{repository.Vulnerabilities.ToInt(), repository.License.ToInt()},
+			ScanToolId:                  tool.Id,
+		}
+		err := impl.resourceScanResultRepository.SaveInBatch([]*repository.ResourceScanResult{result})
+		if err != nil {
+			impl.logger.Errorw("error in saving scan result:", "err", err)
+			processedState = bean.ScanExecutionProcessStateFailed
+		}
+	}
+	updateErr := impl.scanToolExecutionHistoryMappingRepository.UpdateStateByToolAndExecutionHistoryId(executionHistoryId, tool.Id, processedState, time.Now(), errorMessage)
+	if updateErr != nil {
+		impl.logger.Errorw("error in UpdateStateByToolAndExecutionHistoryId", "err", err)
+		err = updateErr
+	}
+	return nil
+}
+
 func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMetadata, executionHistoryDirPath string, executionHistoryId int, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto) error {
 	imageScanConfig := &ImageScanConfig{}
 	err := env.Parse(imageScanConfig)

@@ -87,6 +87,9 @@ func InitializeApp() (*App, error) {
 
 		security.NewCodeScanServiceImpl,
 		wire.Bind(new(security.CodeScanService), new(*security.CodeScanServiceImpl)),
+
+		repository.NewResourceScanResultRepositoryImpl,
+		wire.Bind(new(repository.ResourceScanResultRepository), new(*repository.ResourceScanResultRepositoryImpl)),
 	)
 	return &App{}, nil
 }

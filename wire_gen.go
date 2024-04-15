@@ -58,8 +58,9 @@ func InitializeApp() (*App, error) {
 	registryIndexMappingRepositoryImpl := repository.NewRegistryIndexMappingRepositoryImpl(db, sugaredLogger)
 	gitCliManagerImpl := helper.NewGitCliManager()
 	gitManager := helper.NewGitManagerImpl(gitCliManagerImpl)
-	codeScanServiceImpl := security.NewCodeScanServiceImpl(sugaredLogger, gitManager, scanToolExecutionHistoryMappingRepositoryImpl, imageScanDeployInfoRepositoryImpl)
-	imageScanServiceImpl := security.NewImageScanServiceImpl(sugaredLogger, imageScanHistoryRepositoryImpl, imageScanResultRepositoryImpl, imageScanObjectMetaRepositoryImpl, cveStoreRepositoryImpl, imageScanDeployInfoRepositoryImpl, ciArtifactRepositoryImpl, scanToolExecutionHistoryMappingRepositoryImpl, scanToolMetadataRepositoryImpl, scanStepConditionRepositoryImpl, scanToolStepRepositoryImpl, scanStepConditionMappingRepositoryImpl, imageScanConfig, dockerArtifactStoreRepositoryImpl, registryIndexMappingRepositoryImpl, codeScanServiceImpl)
+	resourceScanResultRepositoryImpl := repository.NewResourceScanResultRepositoryImpl(db, sugaredLogger)
+	codeScanServiceImpl := security.NewCodeScanServiceImpl(sugaredLogger, gitManager, scanToolExecutionHistoryMappingRepositoryImpl, imageScanDeployInfoRepositoryImpl, resourceScanResultRepositoryImpl)
+	imageScanServiceImpl := security.NewImageScanServiceImpl(sugaredLogger, imageScanHistoryRepositoryImpl, imageScanResultRepositoryImpl, imageScanObjectMetaRepositoryImpl, cveStoreRepositoryImpl, imageScanDeployInfoRepositoryImpl, ciArtifactRepositoryImpl, scanToolExecutionHistoryMappingRepositoryImpl, scanToolMetadataRepositoryImpl, scanStepConditionRepositoryImpl, scanToolStepRepositoryImpl, scanStepConditionMappingRepositoryImpl, imageScanConfig, dockerArtifactStoreRepositoryImpl, registryIndexMappingRepositoryImpl, codeScanServiceImpl, resourceScanResultRepositoryImpl)
 	klarConfig, err := klarService.GetKlarConfig()
 	if err != nil {
 		return nil, err

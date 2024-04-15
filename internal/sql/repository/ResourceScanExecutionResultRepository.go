@@ -11,7 +11,7 @@ type ResourceScanResult struct {
 	ImageScanExecutionHistoryId int                `sql:"image_scan_execution_history_id"`
 	ScanDataJson                string             `sql:"scan_data_json"`
 	Format                      ResourceScanFormat `sql:"format"`
-	Types                       []ResourceScanType `sql:"types"`
+	Types                       []int              `sql:"types" pg:",array"`
 	ScanToolId                  int                `sql:"scan_tool_id"`
 }
 
@@ -27,13 +27,17 @@ type ResourceScanType int
 
 const (
 	Vulnerabilities ResourceScanType = 1
-	License                          = 2
-	Config                           = 3
-	Secrets                          = 4
+	License         ResourceScanType = 2
+	Config          ResourceScanType = 3
+	Secrets         ResourceScanType = 4
 )
 
+func (t ResourceScanType) ToInt() int {
+	return int(t)
+}
+
 type ResourceScanResultRepository interface {
-	SaveInBatch(tx *pg.Tx, models []*ResourceScanResult) error
+	SaveInBatch(models []*ResourceScanResult) error
 }
 
 type ResourceScanResultRepositoryImpl struct {
@@ -41,13 +45,13 @@ type ResourceScanResultRepositoryImpl struct {
 	logger       *zap.SugaredLogger
 }
 
-func NewResourceScanResultRepositoryImpl(dbConnection *pg.DB, logger *zap.SugaredLogger) *ImageScanResultRepositoryImpl {
-	return &ImageScanResultRepositoryImpl{
+func NewResourceScanResultRepositoryImpl(dbConnection *pg.DB, logger *zap.SugaredLogger) *ResourceScanResultRepositoryImpl {
+	return &ResourceScanResultRepositoryImpl{
 		dbConnection: dbConnection,
 		logger:       logger,
 	}
 }
 
-func (impl ResourceScanResultRepositoryImpl) SaveInBatch(tx *pg.Tx, models []*ResourceScanResult) error {
-	return tx.Insert(&models)
+func (impl ResourceScanResultRepositoryImpl) SaveInBatch(models []*ResourceScanResult) error {
+	return impl.dbConnection.Insert(&models)
 }
