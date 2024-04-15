@@ -309,19 +309,9 @@ func (impl *ImageScanServiceImpl) processImageScanSbom(scanEvent *common.ImageSc
 		}
 	}
 
-	//sbomFile := "cyclonedx.json"
-	//sbomCmd := "trivy image " + "--format cyclonedx " + scanEvent.Image + " -o " + sbomFile
-	//output, err := cliUtil.HandleCliRequest(sbomCmd, sbomFile, context.Background(), "STATIC", nil)
-	//if err != nil {
-	//	sbomScanFile := "imagesbomscan.json"
-	//	//trivy sbom  --scanners  vuln,license --format cyclonedx /data/bom.json > scan
-	//	trivyCmd := "trivy sbom " + sbomFile + " --scanners vuln,license " + "--format json " + "-o " + sbomScanFile
-	//	output, err = cliUtil.HandleCliRequest(trivyCmd, sbomScanFile, context.Background(), "STATIC", nil)
-	//}
-
 	imgScanFile := "imagesscan.json"
 	trivyCmd := "trivy image " + scanEvent.Image + " --scanners vuln,license " + "--format json " + " -o " + imgScanFile
-	output, err := cliUtil.HandleCliRequest(trivyCmd, imgScanFile, context.Background(), "STATIC", nil)
+	output, err := cliUtil.HandleCliRequest(trivyCmd, imgScanFile, ctx, "STATIC", nil)
 
 	var processedState bean.ScanExecutionProcessState
 	var errorMessage string
