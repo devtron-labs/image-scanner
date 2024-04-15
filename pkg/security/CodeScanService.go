@@ -98,7 +98,7 @@ func (impl CodeScanServiceImpl) ScanCode(scanEvent *common.ImageScanEvent, tool 
 	} else if scanEvent.SourceSubType == common.SourceSubTypeManifest {
 		//TODO
 	}
-	outputFile := "cicodescan.json"
+	outputFile := executionHistoryDirPath + "/cicodescan.json"
 	renderedCommand := "trivy fs " + path + " --scanners vuln,config,secret,license " + "--license-full " + "--format json " + "-o " + outputFile
 
 	//args := map[string]string{path: "", "--scanners": "vuln,misconfig,secret,license", "--license-full": "", "--format": "json", "-o": outputFile}
