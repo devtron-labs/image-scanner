@@ -35,7 +35,7 @@ func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, o
 		err, output = executeStaticCliRequest(command, outputFileName)
 	}
 	if err != nil {
-		log.Println("error in executing cli request", "err", err, "req", command)
+		log.Println("error in executing cli request", "err", err, "req", command, output)
 		return output, err
 	}
 	return output, nil
@@ -44,7 +44,7 @@ func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, o
 func executeStaticCliRequest(command *exec.Cmd, outputFileName string) (error, []byte) {
 	op, err := command.CombinedOutput()
 	if err != nil {
-		log.Println("error in running command", "err", err)
+		log.Println("error in running command", "err", err, "op", op)
 		return err, op
 	}
 	// If output is already stored in file, considering the output from file (file is created by tool over here)

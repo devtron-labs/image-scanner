@@ -99,7 +99,7 @@ func (impl CodeScanServiceImpl) ScanCode(scanEvent *common.ImageScanEvent, tool 
 		//TODO
 	}
 	outputFile := "cicodescan.json"
-	renderedCommand := "trivy fs " + path + " --scanners vuln,misconfig,secret,license " + "--license-full " + "--format json " + "-o " + outputFile
+	renderedCommand := "trivy fs " + path + " --scanners vuln,config,secret,license " + "--license-full " + "--format json " + "-o " + outputFile
 
 	//args := map[string]string{path: "", "--scanners": "vuln,misconfig,secret,license", "--license-full": "", "--format": "json", "-o": outputFile}
 	output, err := cliUtil.HandleCliRequest(renderedCommand, outputFile, context.Background(), "STATIC", nil)
