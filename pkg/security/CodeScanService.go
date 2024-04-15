@@ -1,9 +1,12 @@
 package security
 
 import (
+	"context"
+	"fmt"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/helper"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
+	cliUtil "github.com/devtron-labs/image-scanner/internal/step-lib/util/cli-util"
 	"go.uber.org/zap"
 	"time"
 )
@@ -70,36 +73,23 @@ func (impl CodeScanServiceImpl) ScanCode(scanEvent *common.ImageScanEvent, tool 
 		}
 	}
 
-	//requestJson, _ := json.Marshal(scanRequest)
-	//historyCode := &security2.ImageScanExecutionHistory{
-	//	ExecutionTime:      time.Now(),
-	//	ExecutedBy:         bean4.SYSTEM_USER_ID,
-	//	SourceMetadataJson: string(requestJson),
-	//	SourceType:         security2.SourceTypeCode,
-	//	SourceSubType:      security2.SourceSubTypeCi,
-	//}
-	//err = impl.imageScanHistoryRepo.Save(historyCode)
-	//if err != nil {
-	//	impl.logger.Error("Error on saving ImageScanExecutionHistory", "error", err, "history", historyCode)
-	//	return
-	//}
-	//scanRequest.ScanHistoryId = historyCode.Id
-
+	path := executionHistoryDirPath + "/code"
 	if scanEvent.SourceSubType == common.SourceSubTypeCi {
 
-		err := impl.gitManager.CloneAndCheckout(scanEvent.CiProjectDetails, executionHistoryDirPath+"/code")
+		err := impl.gitManager.CloneAndCheckout(scanEvent.CiProjectDetails, path)
 		if err != nil {
 			return err
 		}
 
-		//updateErr := impl.scanToolExecutionHistoryMappingRepository.UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolCopy.Id, processedState, time.Now(), errorMessage)
-		//if updateErr != nil {
-		//	impl.logger.Errorw("error in UpdateStateByToolAndExecutionHistoryId", "err", err)
-		//	err = updateErr
-		//}
-
 	} else if scanEvent.SourceSubType == common.SourceSubTypeManifest {
-
+		//TODO
 	}
+
+	renderedCommand := "trivy fs"
+	outputFile := "cicodescan.json"
+	args := map[string]string{path: "", "--scanners": "vuln,misconfig,secret,license", "--license-full": "", "--format": "json", "-o": outputFile}
+	output, err := cliUtil.HandleCliRequest(renderedCommand, outputFile, context.Background(), "STATIC", args)
+	fmt.Println(output)
+
 	return nil
 }

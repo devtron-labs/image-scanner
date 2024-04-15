@@ -24,7 +24,9 @@ func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, o
 	for arg, value := range args {
 		//assuming '-' or '--' is provided by user (if applicable)
 		argsSlice = append(argsSlice, arg)
-		argsSlice = append(argsSlice, value)
+		if value != "" {
+			argsSlice = append(argsSlice, value)
+		}
 	}
 	command := exec.CommandContext(ctx, common.SHELL_COMMAND, common.COMMAND_ARGS, baseCommand)
 	if outputType == CliOutPutTypeStream { //TODO: make async in further feature iterations
