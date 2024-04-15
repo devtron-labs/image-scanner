@@ -18,6 +18,7 @@ const (
 	GCR_FILE_PATH      = "FILE_PATH"
 	IMAGE_NAME         = "IMAGE_NAME"
 	OUTPUT_FILE_PATH   = "OUTPUT_FILE_PATH"
+	EXTRA_ARGS         = "EXTRA_ARGS"
 )
 
 const (
