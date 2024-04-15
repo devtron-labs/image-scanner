@@ -23,7 +23,6 @@ RUN chmod 644 /root/.ssh/config
 RUN chown -R devtron:devtron ./image-scanner
 RUN chmod +x ./image-scanner
 RUN chown -R devtron:devtron ./security
-RUN chmod +x ./securityRUN apk update && apk add --no-cache --virtual .build-deps && apk add bash && apk add make && apk add curl && apk add git && apk add zip && apk add jq
-
+RUN chmod +x ./security
 USER devtron
 CMD ["./image-scanner"]
