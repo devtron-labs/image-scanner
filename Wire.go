@@ -7,6 +7,7 @@ import (
 	"github.com/devtron-labs/common-lib/monitoring"
 	client "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/api"
+	"github.com/devtron-labs/image-scanner/helper"
 	"github.com/devtron-labs/image-scanner/internal/logger"
 	"github.com/devtron-labs/image-scanner/internal/sql"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
@@ -80,6 +81,12 @@ func InitializeApp() (*App, error) {
 		repository.NewScanToolExecutionHistoryMappingRepositoryImpl,
 		wire.Bind(new(repository.ScanToolExecutionHistoryMappingRepository), new(*repository.ScanToolExecutionHistoryMappingRepositoryImpl)),
 		monitoring.NewMonitoringRouter,
+		helper.NewGitManagerImpl,
+		helper.NewGitCliManager,
+		wire.Bind(new(helper.GitCliManager), new(*helper.GitCliManagerImpl)),
+
+		security.NewCodeScanServiceImpl,
+		wire.Bind(new(security.CodeScanService), new(*security.CodeScanServiceImpl)),
 	)
 	return &App{}, nil
 }

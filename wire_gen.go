@@ -10,6 +10,7 @@ import (
 	"github.com/devtron-labs/common-lib/monitoring"
 	"github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/api"
+	"github.com/devtron-labs/image-scanner/helper"
 	"github.com/devtron-labs/image-scanner/internal/logger"
 	"github.com/devtron-labs/image-scanner/internal/sql"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
@@ -55,7 +56,10 @@ func InitializeApp() (*App, error) {
 	}
 	dockerArtifactStoreRepositoryImpl := repository.NewDockerArtifactStoreRepositoryImpl(db, sugaredLogger)
 	registryIndexMappingRepositoryImpl := repository.NewRegistryIndexMappingRepositoryImpl(db, sugaredLogger)
-	imageScanServiceImpl := security.NewImageScanServiceImpl(sugaredLogger, imageScanHistoryRepositoryImpl, imageScanResultRepositoryImpl, imageScanObjectMetaRepositoryImpl, cveStoreRepositoryImpl, imageScanDeployInfoRepositoryImpl, ciArtifactRepositoryImpl, scanToolExecutionHistoryMappingRepositoryImpl, scanToolMetadataRepositoryImpl, scanStepConditionRepositoryImpl, scanToolStepRepositoryImpl, scanStepConditionMappingRepositoryImpl, imageScanConfig, dockerArtifactStoreRepositoryImpl, registryIndexMappingRepositoryImpl)
+	gitCliManagerImpl := helper.NewGitCliManager()
+	gitManager := helper.NewGitManagerImpl(gitCliManagerImpl)
+	codeScanServiceImpl := security.NewCodeScanServiceImpl(sugaredLogger, gitManager, scanToolExecutionHistoryMappingRepositoryImpl)
+	imageScanServiceImpl := security.NewImageScanServiceImpl(sugaredLogger, imageScanHistoryRepositoryImpl, imageScanResultRepositoryImpl, imageScanObjectMetaRepositoryImpl, cveStoreRepositoryImpl, imageScanDeployInfoRepositoryImpl, ciArtifactRepositoryImpl, scanToolExecutionHistoryMappingRepositoryImpl, scanToolMetadataRepositoryImpl, scanStepConditionRepositoryImpl, scanToolStepRepositoryImpl, scanStepConditionMappingRepositoryImpl, imageScanConfig, dockerArtifactStoreRepositoryImpl, registryIndexMappingRepositoryImpl, codeScanServiceImpl)
 	klarConfig, err := klarService.GetKlarConfig()
 	if err != nil {
 		return nil, err
@@ -66,7 +70,7 @@ func InitializeApp() (*App, error) {
 		return nil, err
 	}
 	clairServiceImpl := clairService.NewClairServiceImpl(sugaredLogger, clairConfig, client, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl, scanToolMetadataRepositoryImpl)
-	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl, imageScanConfig)
+	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl, imageScanConfig, codeScanServiceImpl)
 	monitoringRouter := monitoring.NewMonitoringRouter(sugaredLogger)
 	router := api.NewRouter(sugaredLogger, restHandlerImpl, monitoringRouter)
 	pubSubClientServiceImpl := pubsub_lib.NewPubSubClientServiceImpl(sugaredLogger)

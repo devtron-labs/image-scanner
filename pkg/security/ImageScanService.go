@@ -53,6 +53,7 @@ type ImageScanServiceImpl struct {
 	imageScanConfig                           *ImageScanConfig
 	dockerArtifactStoreRepository             repository.DockerArtifactStoreRepository
 	registryIndexMappingRepository            repository.RegistryIndexMappingRepository
+	codeScanService                           CodeScanService
 }
 
 func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository repository.ImageScanHistoryRepository,
@@ -65,7 +66,8 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 	scanToolStepRepository repository.ScanToolStepRepository,
 	scanStepConditionMappingRepository repository.ScanStepConditionMappingRepository,
 	imageScanConfig *ImageScanConfig,
-	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository, registryIndexMappingRepository repository.RegistryIndexMappingRepository) *ImageScanServiceImpl {
+	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository, registryIndexMappingRepository repository.RegistryIndexMappingRepository,
+	codeScanService CodeScanService) *ImageScanServiceImpl {
 	imageScanService := &ImageScanServiceImpl{logger: logger, scanHistoryRepository: scanHistoryRepository, scanResultRepository: scanResultRepository,
 		scanObjectMetaRepository: scanObjectMetaRepository, cveStoreRepository: cveStoreRepository,
 		imageScanDeployInfoRepository:             imageScanDeployInfoRepository,
@@ -78,6 +80,7 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 		imageScanConfig:                           imageScanConfig,
 		dockerArtifactStoreRepository:             dockerArtifactStoreRepository,
 		registryIndexMappingRepository:            registryIndexMappingRepository,
+		codeScanService:                           codeScanService,
 	}
 	imageScanService.handleProgressingScans()
 	return imageScanService
@@ -182,11 +185,11 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		return nil, "", err
 	}
 	executionHistoryModel := &repository.ImageScanExecutionHistory{
-		Image:           scanEvent.Image,
-		ImageHash:       scanEvent.ImageDigest,
-		ExecutionTime:   executionTimeStart,
-		ExecutedBy:      scanEvent.UserId,
-		RequestMetadata: string(scanEventJson),
+		Image:              scanEvent.Image,
+		ImageHash:          scanEvent.ImageDigest,
+		ExecutionTime:      executionTimeStart,
+		ExecutedBy:         scanEvent.UserId,
+		SourceMetadataJson: string(scanEventJson),
 	}
 	if scanEvent.ScanHistoryId > 0 {
 		executionHistoryModel.Id = scanEvent.ScanHistoryId
@@ -862,7 +865,7 @@ func (impl *ImageScanServiceImpl) handleProgressingScans() {
 	//System doing image scanning for all pending scans
 	for _, scanHistory := range scanHistories {
 		scanEvent := common.ImageScanEvent{}
-		scanEventJson := imageScanExecutionHistoryMap[scanHistory.ImageScanExecutionHistoryId].RequestMetadata
+		scanEventJson := imageScanExecutionHistoryMap[scanHistory.ImageScanExecutionHistoryId].SourceMetadataJson
 		if len(scanEventJson) == 0 {
 			return
 		}

@@ -25,7 +25,9 @@ func NewRestHandlerImpl(logger *zap.SugaredLogger,
 	userService user.UserService, imageScanService security.ImageScanService,
 	klarService klarService.KlarService,
 	clairService clairService.ClairService,
-	imageScanConfig *security.ImageScanConfig) *RestHandlerImpl {
+	imageScanConfig *security.ImageScanConfig,
+	codeScanService security.CodeScanService,
+) *RestHandlerImpl {
 	return &RestHandlerImpl{
 		logger: logger,
 		//testPublish:      testPublish,
@@ -35,6 +37,7 @@ func NewRestHandlerImpl(logger *zap.SugaredLogger,
 		klarService:      klarService,
 		clairService:     clairService,
 		imageScanConfig:  imageScanConfig,
+		codeScanService:  codeScanService,
 	}
 }
 
@@ -47,6 +50,7 @@ type RestHandlerImpl struct {
 	klarService      klarService.KlarService
 	clairService     clairService.ClairService
 	imageScanConfig  *security.ImageScanConfig
+	codeScanService  security.CodeScanService
 }
 type Response struct {
 	Code   int         `json:"code,omitempty"`
@@ -102,25 +106,34 @@ func (impl *RestHandlerImpl) ScanForVulnerabilityEvent(scanConfig *common.ImageS
 		impl.logger.Errorw("service err, RegisterScanExecutionHistoryAndState", "err", err)
 		return nil, err
 	}
-	if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {
-		result, err = impl.klarService.Process(scanConfig, executionHistory)
+
+	if scanConfig.SourceType == common.SourceTypeCode {
+		err := impl.codeScanService.ScanCode(scanConfig, tool, executionHistory, executionHistoryDirPath)
 		if err != nil {
-			impl.logger.Errorw("err in process msg", "err", err)
-			return nil, err
-		}
-	} else if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion4 {
-		result, err = impl.clairService.ScanImage(scanConfig, tool, executionHistory)
-		if err != nil {
-			impl.logger.Errorw("err in process msg", "err", err)
 			return nil, err
 		}
 	} else {
-		err = impl.imageScanService.ScanImage(scanConfig, tool, executionHistory, executionHistoryDirPath)
-		if err != nil {
-			impl.logger.Errorw("err in process msg", "err", err)
-			return nil, err
+		if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {
+			result, err = impl.klarService.Process(scanConfig, executionHistory)
+			if err != nil {
+				impl.logger.Errorw("err in process msg", "err", err)
+				return nil, err
+			}
+		} else if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion4 {
+			result, err = impl.clairService.ScanImage(scanConfig, tool, executionHistory)
+			if err != nil {
+				impl.logger.Errorw("err in process msg", "err", err)
+				return nil, err
+			}
+		} else {
+			err = impl.imageScanService.ScanImage(scanConfig, tool, executionHistory, executionHistoryDirPath)
+			if err != nil {
+				impl.logger.Errorw("err in process msg", "err", err)
+				return nil, err
+			}
 		}
 	}
+
 	//deleting executionDirectoryPath with files as well
 	err = os.RemoveAll(executionHistoryDirPath)
 	if err != nil {

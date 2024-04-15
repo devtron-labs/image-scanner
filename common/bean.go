@@ -1,6 +1,8 @@
 package common
 
 import (
+	"github.com/devtron-labs/image-scanner/helper"
+	//"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/optiopay/klar/clair"
 	"github.com/quay/claircore"
 	"strings"
@@ -37,19 +39,22 @@ type ImageScanRenderDto struct {
 }
 
 type ImageScanEvent struct {
-	Image            string `json:"image"`
-	ImageDigest      string `json:"imageDigest"`
-	AppId            int    `json:"appId"`
-	EnvId            int    `json:"envId"`
-	PipelineId       int    `json:"pipelineId"`
-	CiArtifactId     int    `json:"ciArtifactId"`
-	UserId           int    `json:"userId"`
-	AccessKey        string `json:"accessKey"`
-	SecretKey        string `json:"secretKey"`
-	Token            string `json:"token"`
-	AwsRegion        string `json:"awsRegion"`
-	DockerRegistryId string `json:"dockerRegistryId"`
-	ScanHistoryId    int    `json:"scanHistoryId"`
+	Image            string                    `json:"image"`
+	ImageDigest      string                    `json:"imageDigest"`
+	AppId            int                       `json:"appId"`
+	EnvId            int                       `json:"envId"`
+	PipelineId       int                       `json:"pipelineId"`
+	CiArtifactId     int                       `json:"ciArtifactId"`
+	UserId           int                       `json:"userId"`
+	AccessKey        string                    `json:"accessKey"`
+	SecretKey        string                    `json:"secretKey"`
+	Token            string                    `json:"token"`
+	AwsRegion        string                    `json:"awsRegion"`
+	DockerRegistryId string                    `json:"dockerRegistryId"`
+	ScanHistoryId    int                       `json:"scanHistoryId"`
+	CiProjectDetails []helper.CiProjectDetails `json:"ciProjectDetails"`
+	SourceType       SourceType                `json:"sourceType"`
+	SourceSubType    SourceSubType             `json:"sourceSubType"`
 }
 
 type ScanEventResponse struct {
@@ -133,3 +138,19 @@ func RemoveTrailingComma(jsonString string) string {
 	}
 	return jsonString
 }
+
+// multiple history rows for one source event
+type SourceType int
+
+const (
+	SourceTypeImage SourceType = 1
+	SourceTypeCode  SourceType = 2
+	SourceTypeSbom  SourceType = 3 // can be used in future for direct sbom scanning
+)
+
+type SourceSubType int
+
+const (
+	SourceSubTypeCi       SourceSubType = 1 // relevant for ci code(2,1) or ci built image(1,1)
+	SourceSubTypeManifest SourceSubType = 2 // relevant for devtron app deployment manifest/helm app manifest(2,2) or images retrieved from manifest(1,2))
+)
