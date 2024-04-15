@@ -459,7 +459,7 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 	} else if step.StepExecutionType == bean.ScanExecutionTypeCli {
 		extraArgs := ""
 		if isV2 {
-			extraArgs = "--scanners vuln,misconfig,secret,license  --license-full"
+			extraArgs = "--scanners vuln,config,secret,license  --license-full"
 		}
 
 		imageScanRenderDto.OutputFilePath = outputFileNameForThisStep
