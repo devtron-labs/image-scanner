@@ -33,6 +33,7 @@ type ImageScanHistoryRepository interface {
 	FindByImageDigests(digest []string) ([]*ImageScanExecutionHistory, error)
 	Update(model *ImageScanExecutionHistory) error
 	FindByImage(image string) (*ImageScanExecutionHistory, error)
+	FindBySource(sourceType common.SourceType, subType common.SourceSubType) ([]*ImageScanExecutionHistory, error)
 }
 
 type ImageScanHistoryRepositoryImpl struct {
@@ -89,4 +90,17 @@ func (impl ImageScanHistoryRepositoryImpl) FindByImage(image string) (*ImageScan
 	err := impl.dbConnection.Model(&model).
 		Where("image = ?", image).Order("execution_time desc").Limit(1).Select()
 	return &model, err
+}
+
+func (impl ImageScanHistoryRepositoryImpl) FindBySource(sourceType common.SourceType, subType common.SourceSubType) ([]*ImageScanExecutionHistory, error) {
+	var model []*ImageScanExecutionHistory
+	err := impl.dbConnection.Model(&model).
+		Where("source_type = ?", sourceType).
+		Where("source_sub_type = ?", subType).
+		Select()
+	if err == pg.ErrNoRows {
+		return model, nil
+	}
+
+	return model, err
 }
