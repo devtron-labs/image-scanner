@@ -9,7 +9,7 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/user"
-	"github.com/devtron-labs/image-scanner/pubsub"
+	//"github.com/devtron-labs/image-scanner/pubsub"
 	"go.uber.org/zap"
 	"net/http"
 	"os"
@@ -20,33 +20,37 @@ type RestHandler interface {
 }
 
 func NewRestHandlerImpl(logger *zap.SugaredLogger,
-	testPublish pubsub.TestPublish,
+	//testPublish pubsub.TestPublish,
 	grafeasService grafeasService.GrafeasService,
 	userService user.UserService, imageScanService security.ImageScanService,
 	klarService klarService.KlarService,
 	clairService clairService.ClairService,
-	imageScanConfig *security.ImageScanConfig) *RestHandlerImpl {
+	imageScanConfig *security.ImageScanConfig,
+	codeScanService security.CodeScanService,
+) *RestHandlerImpl {
 	return &RestHandlerImpl{
-		logger:           logger,
-		testPublish:      testPublish,
+		logger: logger,
+		//testPublish:      testPublish,
 		grafeasService:   grafeasService,
 		userService:      userService,
 		imageScanService: imageScanService,
 		klarService:      klarService,
 		clairService:     clairService,
 		imageScanConfig:  imageScanConfig,
+		codeScanService:  codeScanService,
 	}
 }
 
 type RestHandlerImpl struct {
-	logger           *zap.SugaredLogger
-	testPublish      pubsub.TestPublish
+	logger *zap.SugaredLogger
+	//testPublish      pubsub.TestPublish
 	grafeasService   grafeasService.GrafeasService
 	userService      user.UserService
 	imageScanService security.ImageScanService
 	klarService      klarService.KlarService
 	clairService     clairService.ClairService
 	imageScanConfig  *security.ImageScanConfig
+	codeScanService  security.CodeScanService
 }
 type Response struct {
 	Code   int         `json:"code,omitempty"`
@@ -76,6 +80,17 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		writeJsonResp(w, err, nil, http.StatusBadRequest)
 		return
 	}
+	result, err := impl.ScanForVulnerabilityEvent(&scanConfig)
+	if err != nil {
+		writeJsonResp(w, err, nil, http.StatusInternalServerError)
+		return
+	}
+	impl.logger.Debugw("save", "status", result)
+	writeJsonResp(w, err, result, http.StatusOK)
+}
+
+func (impl *RestHandlerImpl) ScanForVulnerabilityEvent(scanConfig *common.ImageScanEvent) (*common.ScanEventResponse, error) {
+
 	if scanConfig.UserId == 0 {
 		scanConfig.UserId = 1 //setting user as system user in case of empty user data
 	}
@@ -84,45 +99,47 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 	tool, err := impl.imageScanService.GetActiveTool()
 	if err != nil {
 		impl.logger.Errorw("err in image scanning", "err", err)
-		writeJsonResp(w, err, nil, http.StatusInternalServerError)
-		return
+		return nil, err
 	}
-	executionHistory, executionHistoryDirPath, err := impl.imageScanService.RegisterScanExecutionHistoryAndState(&scanConfig, tool)
+	executionHistory, executionHistoryDirPath, err := impl.imageScanService.RegisterScanExecutionHistoryAndState(scanConfig, tool)
 	if err != nil {
 		impl.logger.Errorw("service err, RegisterScanExecutionHistoryAndState", "err", err)
-		writeJsonResp(w, err, nil, http.StatusInternalServerError)
-		return
+		return nil, err
 	}
-	if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {
-		result, err = impl.klarService.Process(&scanConfig, executionHistory)
+
+	if scanConfig.SourceType == common.SourceTypeCode {
+		err = impl.codeScanService.ScanCode(scanConfig, tool, executionHistory, executionHistoryDirPath)
 		if err != nil {
-			impl.logger.Errorw("err in process msg", "err", err)
-			writeJsonResp(w, err, nil, http.StatusInternalServerError)
-			return
-		}
-	} else if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion4 {
-		result, err = impl.clairService.ScanImage(&scanConfig, tool, executionHistory)
-		if err != nil {
-			impl.logger.Errorw("err in process msg", "err", err)
-			writeJsonResp(w, err, nil, http.StatusInternalServerError)
-			return
+			impl.logger.Errorw("Error scanning code", "err", err)
+
 		}
 	} else {
-		err = impl.imageScanService.ScanImage(&scanConfig, tool, executionHistory, executionHistoryDirPath)
-		if err != nil {
-			impl.logger.Errorw("err in process msg", "err", err)
-			writeJsonResp(w, err, nil, http.StatusInternalServerError)
-			return
+		if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {
+			result, err = impl.klarService.Process(scanConfig, executionHistory)
+			if err != nil {
+				impl.logger.Errorw("err in process msg", "err", err)
+				return nil, err
+			}
+		} else if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion4 {
+			result, err = impl.clairService.ScanImage(scanConfig, tool, executionHistory)
+			if err != nil {
+				impl.logger.Errorw("err in process msg", "err", err)
+				return nil, err
+			}
+		} else {
+			err = impl.imageScanService.ScanImage(scanConfig, tool, executionHistory, executionHistoryDirPath)
+			if err != nil {
+				impl.logger.Errorw("err in process msg", "err", err)
+				return nil, err
+			}
 		}
 	}
+
 	//deleting executionDirectoryPath with files as well
 	err = os.RemoveAll(executionHistoryDirPath)
 	if err != nil {
 		impl.logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
-		writeJsonResp(w, err, nil, http.StatusInternalServerError)
-		return
+		return nil, err
 	}
-
-	impl.logger.Debugw("save", "status", result)
-	writeJsonResp(w, err, result, http.StatusOK)
+	return result, nil
 }

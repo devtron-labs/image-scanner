@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	pubsub1 "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/common-lib/pubsub-lib/model"
+	"github.com/devtron-labs/image-scanner/api"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"go.uber.org/zap"
@@ -17,15 +18,18 @@ type NatSubscriptionImpl struct {
 	pubSubClient *pubsub1.PubSubClientServiceImpl
 	logger       *zap.SugaredLogger
 	clairService clairService.ClairService
+	restHandler  *api.RestHandlerImpl
 }
 
 func NewNatSubscription(pubSubClient *pubsub1.PubSubClientServiceImpl,
 	logger *zap.SugaredLogger,
-	clairService clairService.ClairService) (*NatSubscriptionImpl, error) {
+	clairService clairService.ClairService,
+	restHandler *api.RestHandlerImpl) (*NatSubscriptionImpl, error) {
 	ns := &NatSubscriptionImpl{
 		pubSubClient: pubSubClient,
 		logger:       logger,
 		clairService: clairService,
+		restHandler:  restHandler,
 	}
 	return ns, ns.Subscribe()
 }
@@ -44,11 +48,15 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 		// NOTE: This is not being used, thats why not updated the call
 		// TODO: Will have to update if any usage in future
 		// scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
-		_, err = impl.clairService.ScanImage(scanConfig, nil, nil)
-		if err != nil {
-			impl.logger.Infow("err in process msg", "err", err)
-			return
-		}
+		go func() {
+			_, err := impl.restHandler.ScanForVulnerabilityEvent(scanConfig)
+			if err != nil {
+				impl.logger.Infow("err in process msg", "err", err)
+				return
+			}
+		}()
+		//_, err = impl.clairService.ScanImage(scanConfig, nil, nil)
+
 	}
 
 	var loggerFunc pubsub1.LoggerFunc = func(msg model.PubSubMsg) (string, []interface{}) {

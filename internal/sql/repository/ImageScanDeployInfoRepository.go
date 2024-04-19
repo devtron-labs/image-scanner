@@ -9,6 +9,8 @@ import (
 this table contains scanned images registry for deployed object and apps,
 images which are deployed on cluster by anyway and has scanned result
 */
+
+// TODO refactor name and column names Subhashish
 type ImageScanDeployInfo struct {
 	tableName                   struct{} `sql:"image_scan_deploy_info" pg:",discard_unknown_columns"`
 	Id                          int      `sql:"id,pk"`
@@ -16,8 +18,18 @@ type ImageScanDeployInfo struct {
 	ScanObjectMetaId            int      `sql:"scan_object_meta_id,notnull"`
 	ObjectType                  string   `sql:"object_type,notnull"`
 	EnvId                       int      `sql:"env_id,notnull"`
+	ClusterId                   int      `sql:"cluster_id,notnull"`
 	AuditLog
 }
+
+const (
+	ScanObjectType_APP           string = "app"
+	ScanObjectType_CHART         string = "chart"
+	ScanObjectType_POD           string = "pod"
+	ScanObjectType_CHART_HISTORY string = "chart-history"
+	ScanObjectType_CI_Workflow   string = "ci-workflow"
+	ScanObjectType_CD_Workflow   string = "cd-workflow"
+)
 
 type ImageScanDeployInfoRepository interface {
 	Save(model *ImageScanDeployInfo) error
@@ -27,6 +39,7 @@ type ImageScanDeployInfoRepository interface {
 	Update(model *ImageScanDeployInfo) error
 	FetchListingGroupByObject() ([]*ImageScanDeployInfo, error)
 	FetchByAppIdAndEnvId(appId int, envId int) (*ImageScanDeployInfo, error)
+	FindByObjectTypeAndId(scanObjectMetaId int, objectType string) (*ImageScanDeployInfo, error)
 }
 
 type ImageScanDeployInfoRepositoryImpl struct {
@@ -93,5 +106,18 @@ func (impl ImageScanDeployInfoRepositoryImpl) FetchByAppIdAndEnvId(appId int, en
 		Where("env_id = ?", envId).Where("object_type = ?", "app").
 		Order("created_on desc").Limit(1).
 		Select()
+	return &model, err
+}
+
+func (impl ImageScanDeployInfoRepositoryImpl) FindByObjectTypeAndId(scanObjectMetaId int, objectType string) (*ImageScanDeployInfo, error) {
+	var model ImageScanDeployInfo
+	err := impl.dbConnection.Model(&model).
+		Where("scan_object_meta_id = ?", scanObjectMetaId).
+		Where("object_type = ?", objectType).
+		Order("created_on desc").Limit(1).
+		Select()
+	if err == pg.ErrNoRows {
+		return nil, nil
+	}
 	return &model, err
 }

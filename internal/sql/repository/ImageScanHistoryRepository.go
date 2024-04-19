@@ -1,21 +1,29 @@
 package repository
 
 import (
+	"github.com/devtron-labs/image-scanner/common"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"
 	"time"
 )
 
 type ImageScanExecutionHistory struct {
-	tableName                     struct{}  `sql:"image_scan_execution_history" pg:",discard_unknown_columns"`
-	Id                            int       `sql:"id,pk"`
-	Image                         string    `sql:"image,notnull"`
-	ImageHash                     string    `sql:"image_hash,notnull"`
-	ExecutionTime                 time.Time `sql:"execution_time"`
-	ExecutedBy                    int       `sql:"executed_by,notnull"`
-	ScanEventJson                 string    `sql:"scan_event_json"`
-	ExecutionHistoryDirectoryPath string    `sql:"execution_history_directory_path"`
+	tableName                     struct{}             `sql:"image_scan_execution_history" pg:",discard_unknown_columns"`
+	Id                            int                  `sql:"id,pk"`
+	Image                         string               `sql:"image,notnull"`
+	ImageHash                     string               `sql:"image_hash,notnull"` // TODO Migrate to request metadata
+	ExecutionTime                 time.Time            `sql:"execution_time"`
+	ExecutedBy                    int                  `sql:"executed_by,notnull"`
+	SourceMetadataJson            string               `sql:"source_metadata_json"`             // to have relevant info to process a scan for a given source type and subtype
+	ExecutionHistoryDirectoryPath string               `sql:"execution_history_directory_path"` // Deprecated
+	SourceType                    common.SourceType    `sql:"source_type"`
+	SourceSubType                 common.SourceSubType `sql:"source_sub_type"`
 }
+
+//Refer image_scan_deploy_info table for source_type relation
+// ci workflow will have  scans for ci-code and ci artifact
+// cd workflow will have scans for deployment manifest, manifest images
+// helm chart will have scans for manifest images and manifest
 
 type ImageScanHistoryRepository interface {
 	Save(model *ImageScanExecutionHistory) error
@@ -25,6 +33,7 @@ type ImageScanHistoryRepository interface {
 	FindByImageDigests(digest []string) ([]*ImageScanExecutionHistory, error)
 	Update(model *ImageScanExecutionHistory) error
 	FindByImage(image string) (*ImageScanExecutionHistory, error)
+	FindBySource(sourceType common.SourceType, subType common.SourceSubType) ([]*ImageScanExecutionHistory, error)
 }
 
 type ImageScanHistoryRepositoryImpl struct {
@@ -81,4 +90,17 @@ func (impl ImageScanHistoryRepositoryImpl) FindByImage(image string) (*ImageScan
 	err := impl.dbConnection.Model(&model).
 		Where("image = ?", image).Order("execution_time desc").Limit(1).Select()
 	return &model, err
+}
+
+func (impl ImageScanHistoryRepositoryImpl) FindBySource(sourceType common.SourceType, subType common.SourceSubType) ([]*ImageScanExecutionHistory, error) {
+	var model []*ImageScanExecutionHistory
+	err := impl.dbConnection.Model(&model).
+		Where("source_type = ?", sourceType).
+		Where("source_sub_type = ?", subType).
+		Select()
+	if err == pg.ErrNoRows {
+		return model, nil
+	}
+
+	return model, err
 }

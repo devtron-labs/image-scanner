@@ -7,6 +7,7 @@ import (
 	"github.com/devtron-labs/common-lib/monitoring"
 	client "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/api"
+	"github.com/devtron-labs/image-scanner/helper"
 	"github.com/devtron-labs/image-scanner/internal/logger"
 	"github.com/devtron-labs/image-scanner/internal/sql"
 	"github.com/devtron-labs/image-scanner/internal/sql/repository"
@@ -37,8 +38,8 @@ func InitializeApp() (*App, error) {
 		pubsub.NewNatSubscription,
 		grafeasService.NewKlarServiceImpl,
 		wire.Bind(new(grafeasService.GrafeasService), new(*grafeasService.GrafeasServiceImpl)),
-		pubsub.NewTestPublishImpl,
-		wire.Bind(new(pubsub.TestPublish), new(*pubsub.TestPublishImpl)),
+		//pubsub.NewTestPublishImpl,
+		//wire.Bind(new(pubsub.TestPublish), new(*pubsub.TestPublishImpl)),
 
 		clairService.GetClairConfig,
 		clairService.NewClairServiceImpl,
@@ -80,6 +81,15 @@ func InitializeApp() (*App, error) {
 		repository.NewScanToolExecutionHistoryMappingRepositoryImpl,
 		wire.Bind(new(repository.ScanToolExecutionHistoryMappingRepository), new(*repository.ScanToolExecutionHistoryMappingRepositoryImpl)),
 		monitoring.NewMonitoringRouter,
+		helper.NewGitManagerImpl,
+		helper.NewGitCliManager,
+		wire.Bind(new(helper.GitCliManager), new(*helper.GitCliManagerImpl)),
+
+		security.NewCodeScanServiceImpl,
+		wire.Bind(new(security.CodeScanService), new(*security.CodeScanServiceImpl)),
+
+		repository.NewResourceScanResultRepositoryImpl,
+		wire.Bind(new(repository.ResourceScanResultRepository), new(*repository.ResourceScanResultRepositoryImpl)),
 	)
 	return &App{}, nil
 }

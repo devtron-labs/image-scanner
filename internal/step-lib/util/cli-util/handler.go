@@ -24,7 +24,9 @@ func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, o
 	for arg, value := range args {
 		//assuming '-' or '--' is provided by user (if applicable)
 		argsSlice = append(argsSlice, arg)
-		argsSlice = append(argsSlice, value)
+		if value != "" {
+			argsSlice = append(argsSlice, value)
+		}
 	}
 	command := exec.CommandContext(ctx, common.SHELL_COMMAND, common.COMMAND_ARGS, baseCommand)
 	if outputType == CliOutPutTypeStream { //TODO: make async in further feature iterations
@@ -33,7 +35,7 @@ func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, o
 		err, output = executeStaticCliRequest(command, outputFileName)
 	}
 	if err != nil {
-		log.Println("error in executing cli request", "err", err, "req", command)
+		log.Println("error in executing cli request", "err", err, "req", command, string(output))
 		return output, err
 	}
 	return output, nil
@@ -42,8 +44,8 @@ func HandleCliRequest(baseCommand, outputFileName string, ctx context.Context, o
 func executeStaticCliRequest(command *exec.Cmd, outputFileName string) (error, []byte) {
 	op, err := command.CombinedOutput()
 	if err != nil {
-		log.Println("error in running command", "err", err)
-		return err, nil
+		log.Println("error in running command", "err", err, "op", string(op))
+		return err, op
 	}
 	// If output is already stored in file, considering the output from file (file is created by tool over here)
 	if outputFileName != "" && op != nil {

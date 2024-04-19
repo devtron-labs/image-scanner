@@ -1,6 +1,8 @@
 package common
 
 import (
+	"github.com/devtron-labs/image-scanner/helper"
+	//"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/optiopay/klar/clair"
 	"github.com/quay/claircore"
 	"strings"
@@ -16,6 +18,7 @@ const (
 	GCR_FILE_PATH      = "FILE_PATH"
 	IMAGE_NAME         = "IMAGE_NAME"
 	OUTPUT_FILE_PATH   = "OUTPUT_FILE_PATH"
+	EXTRA_ARGS         = "EXTRA_ARGS"
 )
 
 const (
@@ -49,6 +52,13 @@ type ImageScanEvent struct {
 	Token            string `json:"token"`
 	AwsRegion        string `json:"awsRegion"`
 	DockerRegistryId string `json:"dockerRegistryId"`
+	//ScanHistoryId    int                       `json:"scanHistoryId"`
+	CiProjectDetails []helper.CiProjectDetails `json:"ciProjectDetails"`
+	SourceType       SourceType                `json:"sourceType"`
+	SourceSubType    SourceSubType             `json:"sourceSubType"`
+	CiWorkflowId     int                       `json:"ciWorkflowId"`
+	CdWorkflowId     int                       `json:"cdWorkflowId"`
+	ChartHistoryId   int                       `json:"chartHistoryId"`
 }
 
 type ScanEventResponse struct {
@@ -132,3 +142,19 @@ func RemoveTrailingComma(jsonString string) string {
 	}
 	return jsonString
 }
+
+// multiple history rows for one source event
+type SourceType int
+
+const (
+	SourceTypeImage SourceType = 1
+	SourceTypeCode  SourceType = 2
+	SourceTypeSbom  SourceType = 3 // can be used in future for direct sbom scanning
+)
+
+type SourceSubType int
+
+const (
+	SourceSubTypeCi       SourceSubType = 1 // relevant for ci code(2,1) or ci built image(1,1)
+	SourceSubTypeManifest SourceSubType = 2 // relevant for devtron app deployment manifest/helm app manifest(2,2) or images retrieved from manifest(1,2))
+)
