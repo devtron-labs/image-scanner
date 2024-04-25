@@ -432,8 +432,9 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 			if vul.Package != val.Package || vul.FixedInVersion != val.FixedVersion || severityInDevtron != val.Severity {
 				hasCVEInfoChanged = true
 				cvesToBeUpdated = append(cvesToBeUpdated, val)
+			} else {
+				cve = val
 			}
-			cve = val
 		}
 		if cve == nil || hasCVEInfoChanged {
 			cve = &repository.CveStore{
@@ -474,6 +475,13 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 		err = impl.cveStoreRepository.SaveInBatch(cvesToBeSaved, tx)
 		if err != nil {
 			impl.logger.Errorw("error in saving cves in batch", "err", err)
+			return err
+		}
+	}
+	if len(cvesToBeUpdated) > 0 {
+		err = impl.cveStoreRepository.UpdateInBatch(cvesToBeUpdated, tx)
+		if err != nil {
+			impl.logger.Errorw("error in updating cves in batch", "err", err)
 			return err
 		}
 	}

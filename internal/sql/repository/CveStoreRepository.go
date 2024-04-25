@@ -25,6 +25,7 @@ type CveStoreRepository interface {
 	FindByCveNames(names []string) ([]*CveStore, error)
 	FindByName(name string) (*CveStore, error)
 	Update(model *CveStore) error
+	UpdateInBatch(models []*CveStore, tx *pg.Tx) error
 }
 
 type CveStoreRepositoryImpl struct {
@@ -74,4 +75,8 @@ func (impl CveStoreRepositoryImpl) FindByName(name string) (*CveStore, error) {
 func (impl CveStoreRepositoryImpl) Update(team *CveStore) error {
 	err := impl.dbConnection.Update(team)
 	return err
+}
+
+func (impl CveStoreRepositoryImpl) UpdateInBatch(models []*CveStore, tx *pg.Tx) error {
+	return tx.Update(&models)
 }
