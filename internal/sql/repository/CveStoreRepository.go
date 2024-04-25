@@ -78,5 +78,11 @@ func (impl CveStoreRepositoryImpl) Update(team *CveStore) error {
 }
 
 func (impl CveStoreRepositoryImpl) UpdateInBatch(models []*CveStore, tx *pg.Tx) error {
-	return tx.Update(&models)
+	for _, val := range models {
+		err := tx.Update(val)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

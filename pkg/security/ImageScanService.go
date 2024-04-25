@@ -425,11 +425,10 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	for _, vul := range uniqueVulnerabilityMap {
 		var cve *repository.CveStore
 		var hasCVEInfoChanged bool
-		if val, ok := allSavedCvesMap[vul.Name]; ok {
-			hasCVEInfoChanged = checkIfCveInfoHasChanged(val, vul)
-			if !hasCVEInfoChanged {
-				cve = val
-			}
+		existingCve, ok := allSavedCvesMap[vul.Name]
+		if ok {
+			hasCVEInfoChanged = checkIfCveInfoHasChanged(existingCve, vul)
+			cve = existingCve
 		}
 		if cve == nil || hasCVEInfoChanged {
 			cve = &repository.CveStore{
@@ -441,15 +440,17 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 			lowerCaseSeverity := bean.ConvertToLowerCase(vul.Severity)
 			cve.Severity = bean.ConvertToSeverityUtility(lowerCaseSeverity)
 			cve.StandardSeverity = bean.ConvertToStandardSeverityUtility(lowerCaseSeverity)
-			cve.CreatedOn = time.Now()
-			cve.CreatedBy = userId
 			cve.UpdatedOn = time.Now()
 			cve.UpdatedBy = userId
-		}
-		if hasCVEInfoChanged {
-			cvesToBeUpdated = append(cvesToBeUpdated, cve)
-		} else {
-			cvesToBeSaved = append(cvesToBeSaved, cve)
+			if hasCVEInfoChanged {
+				cve.CreatedOn = existingCve.CreatedOn
+				cve.CreatedBy = existingCve.CreatedBy
+				cvesToBeUpdated = append(cvesToBeUpdated, cve)
+			} else {
+				cve.CreatedOn = time.Now()
+				cve.CreatedBy = userId
+				cvesToBeSaved = append(cvesToBeSaved, cve)
+			}
 		}
 		allCvesMap = append(allCvesMap, cve)
 	}
