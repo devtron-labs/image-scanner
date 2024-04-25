@@ -396,6 +396,7 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 
 	allCvesMap := make([]*repository.CveStore, 0, len(vulnerabilities))
 	cvesToBeSaved := make([]*repository.CveStore, 0, len(vulnerabilities))
+	cvesToBeUpdated := make([]*repository.CveStore, 0, len(vulnerabilities))
 	uniqueVulnerabilityMap := make(map[string]*bean.ImageScanOutputObject)
 	allCvesNames := make([]string, 0, len(vulnerabilities))
 	for _, vul := range vulnerabilities {
@@ -423,10 +424,18 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	}
 	for _, vul := range uniqueVulnerabilityMap {
 		var cve *repository.CveStore
+		hasCVEInfoChanged := false
 		if val, ok := allSavedCvesMap[vul.Name]; ok {
+			lowerCaseSeverity := bean.ConvertToLowerCase(vul.Severity)
+			severityInDevtron := bean.ConvertToSeverityUtility(lowerCaseSeverity)
+			// check if some info has changed in cve
+			if vul.Package != val.Package || vul.FixedInVersion != val.FixedVersion || severityInDevtron != val.Severity {
+				hasCVEInfoChanged = true
+				cvesToBeUpdated = append(cvesToBeUpdated, val)
+			}
 			cve = val
 		}
-		if cve == nil {
+		if cve == nil || hasCVEInfoChanged {
 			cve = &repository.CveStore{
 				Name:         vul.Name,
 				Package:      vul.Package,
