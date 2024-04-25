@@ -187,25 +187,25 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		return nil, executionHistoryDirPath, err
 	}
 	// creating folder for storing all details if not exist
-	isExist, err := DoesFileExist(bean.ScanOutputDirectory)
-	if err != nil {
-		impl.logger.Errorw("error in checking if scan output directory exist ", "err", err)
-		return nil, executionHistoryDirPath, err
-	}
-	if !isExist {
-		err = os.Mkdir(bean.ScanOutputDirectory, commonUtil.DefaultFileCreatePermission)
-		if err != nil && !os.IsExist(err) {
-			impl.logger.Errorw("error in creating Output directory", "err", err, "toolId", tool.Id, "executionHistoryDir", executionHistoryDirPath)
-			return nil, executionHistoryDirPath, err
-		}
-	}
+	//isExist, err := DoesFileExist(bean.ScanOutputDirectory)
+	//if err != nil {
+	//	impl.logger.Errorw("error in checking if scan output directory exist ", "err", err)
+	//	return nil, executionHistoryDirPath, err
+	//}
+	//if !isExist {
+	//	err = os.Mkdir(bean.ScanOutputDirectory, commonUtil.DefaultFileCreatePermission)
+	//	if err != nil && !os.IsExist(err) {
+	//		impl.logger.Errorw("error in creating Output directory", "err", err, "toolId", tool.Id, "executionHistoryDir", executionHistoryDirPath)
+	//		return nil, executionHistoryDirPath, err
+	//	}
+	//}
 	// creating folder for storing output data for this execution history data
-	executionHistoryDirPath = impl.createFolderForOutputData(executionHistoryModel.Id)
-	err = os.Mkdir(executionHistoryDirPath, commonUtil.DefaultFileCreatePermission)
-	if err != nil && !os.IsExist(err) {
-		impl.logger.Errorw("error in creating executionHistory directory", "err", err, "executionHistoryId", executionHistoryModel.Id)
-		return nil, executionHistoryDirPath, err
-	}
+	//executionHistoryDirPath = impl.createFolderForOutputData(executionHistoryModel.Id)
+	//err = os.Mkdir(executionHistoryDirPath, commonUtil.DefaultFileCreatePermission)
+	//if err != nil && !os.IsExist(err) {
+	//	impl.logger.Errorw("error in creating executionHistory directory", "err", err, "executionHistoryId", executionHistoryModel.Id)
+	//	return nil, executionHistoryDirPath, err
+	//}
 	executionHistoryMappingModel := &repository.ScanToolExecutionHistoryMapping{
 		ImageScanExecutionHistoryId: executionHistoryModel.Id,
 		ScanToolId:                  tool.Id,
@@ -424,15 +424,10 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	}
 	for _, vul := range uniqueVulnerabilityMap {
 		var cve *repository.CveStore
-		hasCVEInfoChanged := false
+		var hasCVEInfoChanged bool
 		if val, ok := allSavedCvesMap[vul.Name]; ok {
-			lowerCaseSeverity := bean.ConvertToLowerCase(vul.Severity)
-			severityInDevtron := bean.ConvertToSeverityUtility(lowerCaseSeverity)
-			// check if some info has changed in cve
-			if vul.Package != val.Package || vul.FixedInVersion != val.FixedVersion || severityInDevtron != val.Severity {
-				hasCVEInfoChanged = true
-				cvesToBeUpdated = append(cvesToBeUpdated, val)
-			} else {
+			hasCVEInfoChanged = checkIfCveInfoHasChanged(val, vul)
+			if !hasCVEInfoChanged {
 				cve = val
 			}
 		}
@@ -450,6 +445,10 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 			cve.CreatedBy = userId
 			cve.UpdatedOn = time.Now()
 			cve.UpdatedBy = userId
+		}
+		if hasCVEInfoChanged {
+			cvesToBeUpdated = append(cvesToBeUpdated, cve)
+		} else {
 			cvesToBeSaved = append(cvesToBeSaved, cve)
 		}
 		allCvesMap = append(allCvesMap, cve)
@@ -498,6 +497,16 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 		return err
 	}
 	return nil
+}
+
+func checkIfCveInfoHasChanged(oldCve *repository.CveStore, newCve *bean.ImageScanOutputObject) bool {
+	lowerCaseSeverity := bean.ConvertToLowerCase(newCve.Severity)
+	severityInDevtron := bean.ConvertToSeverityUtility(lowerCaseSeverity)
+	// check if some info (like severity) has changed in cve
+	if newCve.Package != oldCve.Package || newCve.FixedInVersion != oldCve.FixedVersion || severityInDevtron != oldCve.Severity {
+		return true
+	}
+	return false
 }
 
 func isV1Template(resultDescriptorTemplate string) bool {
