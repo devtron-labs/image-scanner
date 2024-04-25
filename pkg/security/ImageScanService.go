@@ -396,6 +396,7 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 
 	allCvesMap := make([]*repository.CveStore, 0, len(vulnerabilities))
 	cvesToBeSaved := make([]*repository.CveStore, 0, len(vulnerabilities))
+	cvesToBeUpdated := make([]*repository.CveStore, 0, len(vulnerabilities))
 	uniqueVulnerabilityMap := make(map[string]*bean.ImageScanOutputObject)
 	allCvesNames := make([]string, 0, len(vulnerabilities))
 	for _, vul := range vulnerabilities {
@@ -423,10 +424,13 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	}
 	for _, vul := range uniqueVulnerabilityMap {
 		var cve *repository.CveStore
-		if val, ok := allSavedCvesMap[vul.Name]; ok {
-			cve = val
+		var hasCVEInfoChanged bool
+		existingCve, ok := allSavedCvesMap[vul.Name]
+		if ok {
+			hasCVEInfoChanged = checkIfCveInfoHasChanged(existingCve, vul)
+			cve = existingCve
 		}
-		if cve == nil {
+		if cve == nil || hasCVEInfoChanged {
 			cve = &repository.CveStore{
 				Name:         vul.Name,
 				Package:      vul.Package,
@@ -436,11 +440,17 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 			lowerCaseSeverity := bean.ConvertToLowerCase(vul.Severity)
 			cve.Severity = bean.ConvertToSeverityUtility(lowerCaseSeverity)
 			cve.StandardSeverity = bean.ConvertToStandardSeverityUtility(lowerCaseSeverity)
-			cve.CreatedOn = time.Now()
-			cve.CreatedBy = userId
 			cve.UpdatedOn = time.Now()
 			cve.UpdatedBy = userId
-			cvesToBeSaved = append(cvesToBeSaved, cve)
+			if hasCVEInfoChanged {
+				cve.CreatedOn = existingCve.CreatedOn
+				cve.CreatedBy = existingCve.CreatedBy
+				cvesToBeUpdated = append(cvesToBeUpdated, cve)
+			} else {
+				cve.CreatedOn = time.Now()
+				cve.CreatedBy = userId
+				cvesToBeSaved = append(cvesToBeSaved, cve)
+			}
 		}
 		allCvesMap = append(allCvesMap, cve)
 	}
@@ -468,6 +478,13 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 			return err
 		}
 	}
+	if len(cvesToBeUpdated) > 0 {
+		err = impl.cveStoreRepository.UpdateInBatch(cvesToBeUpdated, tx)
+		if err != nil {
+			impl.logger.Errorw("error in updating cves in batch", "err", err)
+			return err
+		}
+	}
 	if len(imageScanExecutionResults) > 0 {
 		err = impl.scanResultRepository.SaveInBatch(imageScanExecutionResults, tx)
 		if err != nil {
@@ -481,6 +498,16 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 		return err
 	}
 	return nil
+}
+
+func checkIfCveInfoHasChanged(oldCve *repository.CveStore, newCve *bean.ImageScanOutputObject) bool {
+	lowerCaseSeverity := bean.ConvertToLowerCase(newCve.Severity)
+	severityInDevtron := bean.ConvertToSeverityUtility(lowerCaseSeverity)
+	// check if some info (like severity) has changed in cve
+	if newCve.Package != oldCve.Package || newCve.FixedInVersion != oldCve.FixedVersion || severityInDevtron != oldCve.Severity {
+		return true
+	}
+	return false
 }
 
 func isV1Template(resultDescriptorTemplate string) bool {
