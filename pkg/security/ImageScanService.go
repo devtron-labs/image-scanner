@@ -235,7 +235,7 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		return nil, executionHistoryDirPath, err
 	}
 	// creating folder for storing all details if not exist
-	isExist, err := DoesFileExist(bean.ScanOutputDirectory)
+	isExist, err := helper.DoesFileExist(bean.ScanOutputDirectory)
 	if err != nil {
 		impl.logger.Errorw("error in checking if scan output directory exist ", "err", err)
 		return nil, executionHistoryDirPath, err
