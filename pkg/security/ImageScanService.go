@@ -14,6 +14,8 @@ import (
 	cliUtil "github.com/devtron-labs/image-scanner/internal/step-lib/util/cli-util"
 	commonUtil "github.com/devtron-labs/image-scanner/internal/step-lib/util/common-util"
 	httpUtil "github.com/devtron-labs/image-scanner/internal/step-lib/util/http-util"
+	"github.com/devtron-labs/image-scanner/internal/util"
+	"github.com/devtron-labs/image-scanner/pkg/helper"
 	"github.com/go-pg/pg"
 	"github.com/optiopay/klar/clair"
 	"github.com/quay/claircore"
@@ -22,6 +24,7 @@ import (
 	"net/url"
 	"os"
 	"path"
+	"path/filepath"
 	"strconv"
 	"sync"
 	"text/template"
@@ -92,6 +95,41 @@ func (impl *ImageScanServiceImpl) GetActiveTool() (*repository.ScanToolMetadata,
 	}
 	return tool, nil
 }
+
+func (impl *ImageScanServiceImpl) createCaCertFile(cert string) (string, error) {
+	// creating directory for temporarily storing CA certs, if not exist
+	isExist, err := helper.DoesFileExist(common.CaCertDirectory)
+	if err != nil {
+		impl.logger.Errorw("error in checking if certs directory exist ", "err", err)
+		return "", err
+	}
+	if !isExist {
+		err = os.Mkdir(common.CaCertDirectory, commonUtil.DefaultFileCreatePermission)
+		if err != nil && !os.IsExist(err) {
+			impl.logger.Errorw("error in creating certs directory", "err", err)
+			return "", err
+		}
+	}
+
+	caCertFilename := fmt.Sprintf("%s%v.pem", common.RegistryCaCertFilePrefix, util.Generate(6))
+	caCertFilePath := filepath.Join(common.CaCertDirectory, caCertFilename)
+	// creating ca cert file
+	caCertFile, err := os.Create(caCertFilePath)
+	if err != nil {
+		impl.logger.Errorw("error in creating cert file", "err", err)
+		return "", err
+	}
+	defer os.Remove(caCertFilePath)
+
+	// writing file with given cert
+	_, err = caCertFile.WriteString(cert)
+	if err != nil {
+		impl.logger.Errorw("error in writing cert file", "err", err)
+		return "", err
+	}
+	return caCertFilePath, nil
+}
+
 func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory, executionHistoryDirPath string) error {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(impl.imageScanConfig.ScanImageTimeout)*time.Minute)
 	defer cancel()
@@ -105,11 +143,20 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 		impl.logger.Infow("image already scanned, skipping further process", "image", scanEvent.Image)
 		return nil
 	}
-	imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
+	var caCertFilePath string
+	if scanEvent.DockerConnection == common.SECUREWITHCERT {
+		caCertFilePath, err = impl.createCaCertFile(scanEvent.DockerCert)
+		if err != nil {
+			impl.logger.Errorw("error in creating cert file", "err", err, "image", scanEvent.Image)
+			return err
+		}
+	}
+	imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent)
 	if err != nil {
 		impl.logger.Errorw("service error, getImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 		return err
 	}
+	imageScanRenderDto.CaCertFilePath = caCertFilePath
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	// TODO: if multiple processes are to be done in parallel, then error propagation should have to be done via channels
@@ -122,20 +169,21 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 	return err
 }
 
-func (impl *ImageScanServiceImpl) getImageScanRenderDto(registryId string, image string) (*common.ImageScanRenderDto, error) {
+func (impl *ImageScanServiceImpl) getImageScanRenderDto(registryId string, scanEvent *common.ImageScanEvent) (*common.ImageScanRenderDto, error) {
 	dockerRegistry, err := impl.dockerArtifactStoreRepository.FindById(registryId)
 	if err != nil {
 		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", registryId)
 		return nil, err
 	}
 	imageScanRenderDto := &common.ImageScanRenderDto{
-		RegistryType:       dockerRegistry.RegistryType,
-		Username:           dockerRegistry.Username,
-		Password:           dockerRegistry.Password,
-		AWSAccessKeyId:     dockerRegistry.AWSAccessKeyId,
-		AWSSecretAccessKey: dockerRegistry.AWSSecretAccessKey,
-		AWSRegion:          dockerRegistry.AWSRegion,
-		Image:              image,
+		RegistryType:           dockerRegistry.RegistryType,
+		Username:               dockerRegistry.Username,
+		Password:               dockerRegistry.Password,
+		AWSAccessKeyId:         dockerRegistry.AWSAccessKeyId,
+		AWSSecretAccessKey:     dockerRegistry.AWSSecretAccessKey,
+		AWSRegion:              dockerRegistry.AWSRegion,
+		Image:                  scanEvent.Image,
+		RegistryConnectionType: scanEvent.DockerConnection,
 	}
 	return imageScanRenderDto, nil
 }
@@ -226,16 +274,7 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 	}
 	return executionHistoryModel, executionHistoryDirPath, nil
 }
-func DoesFileExist(path string) (bool, error) {
-	_, err := os.Stat(path)
-	if err == nil {
-		return true, nil
-	}
-	if os.IsNotExist(err) {
-		return false, nil
-	}
-	return false, err
-}
+
 func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMetadata, executionHistoryDirPath string, executionHistoryId int, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto) error {
 	imageScanConfig := &ImageScanConfig{}
 	err := env.Parse(imageScanConfig)
@@ -622,6 +661,8 @@ func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl strin
 	jsonMap[common.GCR_FILE_PATH] = toolExecutionDirectoryPath
 	jsonMap[common.IMAGE_NAME] = imageScanRenderDto.Image
 	jsonMap[common.OUTPUT_FILE_PATH] = imageScanRenderDto.OutputFilePath
+	jsonMap[common.CA_CERT_FILE_PATH] = imageScanRenderDto.CaCertFilePath
+	jsonMap[common.INSECURE] = imageScanRenderDto.RegistryConnectionType == common.INSECURE
 
 	for key, val := range metaDataMap {
 		jsonMap[key] = val
@@ -860,7 +901,7 @@ func (impl *ImageScanServiceImpl) handleProgressingScans() {
 			impl.logger.Errorw("error in un-marshaling", "err", err)
 			return
 		}
-		imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
+		imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, &scanEvent)
 		if err != nil {
 			impl.logger.Errorw("service error, getImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 			return
