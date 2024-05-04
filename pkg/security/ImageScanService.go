@@ -119,7 +119,7 @@ func (impl *ImageScanServiceImpl) createCaCertFile(cert string) (string, error) 
 		impl.logger.Errorw("error in creating cert file", "err", err)
 		return "", err
 	}
-	defer os.Remove(caCertFilePath)
+	//defer os.Remove(caCertFilePath)
 
 	// writing file with given cert
 	_, err = caCertFile.WriteString(cert)
