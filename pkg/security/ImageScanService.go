@@ -228,11 +228,11 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		return nil, "", err
 	}
 	executionHistoryModel := &repository.ImageScanExecutionHistory{
-		Image:         scanEvent.Image,
-		ImageHash:     scanEvent.ImageDigest,
-		ExecutionTime: executionTimeStart,
-		ExecutedBy:    scanEvent.UserId,
-		ScanEventJson: string(scanEventJson),
+		Image:              scanEvent.Image,
+		ImageHash:          scanEvent.ImageDigest,
+		ExecutionTime:      executionTimeStart,
+		ExecutedBy:         scanEvent.UserId,
+		SourceMetadataJson: string(scanEventJson),
 	}
 	err = impl.scanHistoryRepository.Save(executionHistoryModel)
 	if err != nil {
@@ -896,7 +896,7 @@ func (impl *ImageScanServiceImpl) handleProgressingScans() {
 	//System doing image scanning for all pending scans
 	for _, scanHistory := range scanHistories {
 		scanEvent := common.ImageScanEvent{}
-		scanEventJson := imageScanExecutionHistoryMap[scanHistory.ImageScanExecutionHistoryId].ScanEventJson
+		scanEventJson := imageScanExecutionHistoryMap[scanHistory.ImageScanExecutionHistoryId].SourceMetadataJson
 		if len(scanEventJson) == 0 {
 			return
 		}
