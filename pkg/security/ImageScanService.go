@@ -119,7 +119,6 @@ func (impl *ImageScanServiceImpl) createCaCertFile(cert string) (string, error) 
 		impl.logger.Errorw("error in creating cert file", "err", err)
 		return "", err
 	}
-	//defer os.Remove(caCertFilePath)
 
 	// writing file with given cert
 	_, err = caCertFile.WriteString(cert)
@@ -150,6 +149,7 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 			impl.logger.Errorw("error in creating cert file", "err", err, "image", scanEvent.Image)
 			return err
 		}
+		defer os.Remove(caCertFilePath)
 	}
 	imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent)
 	if err != nil {
