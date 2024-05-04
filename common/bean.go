@@ -25,7 +25,7 @@ const (
 )
 
 const (
-	CaCertDirectory          = "/security/certs"
+	CaCertDirectory          = "security/certs"
 	RegistryCaCertFilePrefix = "registry-ca-cert-"
 )
 
