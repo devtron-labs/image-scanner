@@ -124,6 +124,11 @@ func (impl *ImageScanServiceImpl) createCaCertFile(cert string) (string, error) 
 	_, err = caCertFile.WriteString(cert)
 	if err != nil {
 		impl.logger.Errorw("error in writing cert file", "err", err)
+		err := os.Remove(caCertFilePath)
+		if err != nil {
+			impl.logger.Errorw("error in removing cert file", "err", err)
+			return "", err
+		}
 		return "", err
 	}
 	return caCertFilePath, nil
