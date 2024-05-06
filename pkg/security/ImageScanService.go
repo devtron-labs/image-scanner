@@ -105,7 +105,7 @@ func (impl *ImageScanServiceImpl) createCaCertFile(cert string) (string, error) 
 	}
 	if !isExist {
 		err = os.Mkdir(common.CaCertDirectory, commonUtil.DefaultFileCreatePermission)
-		if err != nil && !os.IsExist(err) {
+		if err != nil && os.IsNotExist(err) {
 			impl.logger.Errorw("error in creating certs directory", "err", err)
 			return "", err
 		}
@@ -181,14 +181,14 @@ func (impl *ImageScanServiceImpl) getImageScanRenderDto(registryId string, scanE
 		return nil, err
 	}
 	imageScanRenderDto := &common.ImageScanRenderDto{
-		RegistryType:           dockerRegistry.RegistryType,
-		Username:               dockerRegistry.Username,
-		Password:               dockerRegistry.Password,
-		AWSAccessKeyId:         dockerRegistry.AWSAccessKeyId,
-		AWSSecretAccessKey:     dockerRegistry.AWSSecretAccessKey,
-		AWSRegion:              dockerRegistry.AWSRegion,
-		Image:                  scanEvent.Image,
-		RegistryConnectionType: scanEvent.DockerConnection,
+		RegistryType:       dockerRegistry.RegistryType,
+		Username:           dockerRegistry.Username,
+		Password:           dockerRegistry.Password,
+		AWSAccessKeyId:     dockerRegistry.AWSAccessKeyId,
+		AWSSecretAccessKey: dockerRegistry.AWSSecretAccessKey,
+		AWSRegion:          dockerRegistry.AWSRegion,
+		Image:              scanEvent.Image,
+		DockerConnection:   scanEvent.DockerConnection,
 	}
 	return imageScanRenderDto, nil
 }
@@ -667,7 +667,7 @@ func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl strin
 	jsonMap[common.IMAGE_NAME] = imageScanRenderDto.Image
 	jsonMap[common.OUTPUT_FILE_PATH] = imageScanRenderDto.OutputFilePath
 	jsonMap[common.CA_CERT_FILE_PATH] = imageScanRenderDto.CaCertFilePath
-	jsonMap[common.INSECURE] = imageScanRenderDto.RegistryConnectionType == common.INSECURE
+	jsonMap[common.INSECURE] = imageScanRenderDto.DockerConnection == common.INSECURE
 
 	for key, val := range metaDataMap {
 		jsonMap[key] = val

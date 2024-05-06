@@ -38,16 +38,16 @@ const (
 )
 
 type ImageScanRenderDto struct {
-	RegistryType           RegistryType `json:"-"`
-	AWSAccessKeyId         string       `json:"awsAccessKeyId,omitempty" `
-	AWSSecretAccessKey     string       `json:"awsSecretAccessKey,omitempty"`
-	AWSRegion              string       `json:"awsRegion"`
-	Username               string       `json:"username,omitempty"`
-	Password               string       `json:"password,omitempty"`
-	Image                  string       `json:"image"`
-	OutputFilePath         string       `json:"-"`
-	CaCertFilePath         string       `json:"-"`
-	RegistryConnectionType string       `json:"-"`
+	RegistryType       RegistryType `json:"-"`
+	AWSAccessKeyId     string       `json:"awsAccessKeyId,omitempty" `
+	AWSSecretAccessKey string       `json:"awsSecretAccessKey,omitempty"`
+	AWSRegion          string       `json:"awsRegion"`
+	Username           string       `json:"username,omitempty"`
+	Password           string       `json:"password,omitempty"`
+	Image              string       `json:"image"`
+	OutputFilePath     string       `json:"-"`
+	CaCertFilePath     string       `json:"-"`
+	DockerConnection   string       `json:"-"`
 }
 
 type ImageScanEvent struct {
