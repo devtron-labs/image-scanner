@@ -15,6 +15,7 @@ type ScanToolExecutionHistoryMapping struct {
 	ExecutionStartTime          time.Time                      `sql:"execution_start_time,notnull"`
 	ExecutionFinishTime         time.Time                      `sql:"execution_finish_time,notnull"`
 	State                       bean.ScanExecutionProcessState `sql:"state"`
+	ErrorMessage                string                         `sql:"error_message"`
 	TryCount                    int                            `sql:"try_count"`
 	AuditLog
 }

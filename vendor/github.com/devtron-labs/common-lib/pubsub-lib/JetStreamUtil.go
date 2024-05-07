@@ -246,7 +246,6 @@ func ParseAndFillStreamWiseAndConsumerWiseConfigMaps() error {
 	err = env.Parse(&defaultConfig)
 	if err != nil {
 		log.Print("error while parsing config from environment params", "err", err)
-		return err
 	}
 
 	// default stream and consumer config values

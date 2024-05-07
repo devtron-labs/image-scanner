@@ -26,7 +26,10 @@ import (
 
 func InitializeApp() (*App, error) {
 	sugaredLogger := logger.NewSugardLogger()
-	pubSubClientServiceImpl := pubsub_lib.NewPubSubClientServiceImpl(sugaredLogger)
+	pubSubClientServiceImpl, err := pubsub_lib.NewPubSubClientServiceImpl(sugaredLogger)
+	if err != nil {
+		return nil, err
+	}
 	testPublishImpl := pubsub.NewTestPublishImpl(pubSubClientServiceImpl, sugaredLogger)
 	apiClient := grafeasService.GetGrafeasClient()
 	client := logger.NewHttpClient()

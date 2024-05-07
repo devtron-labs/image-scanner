@@ -5,7 +5,8 @@ import (
 	"go.uber.org/zap"
 )
 
-/**
+/*
+*
 this table contains scanned images registry for deployed object and apps,
 images which are deployed on cluster by anyway and has scanned result
 */
@@ -14,8 +15,8 @@ type ImageScanDeployInfo struct {
 	Id                          int      `sql:"id,pk"`
 	ImageScanExecutionHistoryId []int    `sql:"image_scan_execution_history_id,notnull" pg:",array"`
 	ScanObjectMetaId            int      `sql:"scan_object_meta_id,notnull"`
-	ObjectType                  string   `sql:"object_type,notnull"`
-	EnvId                       int      `sql:"env_id,notnull"`
+	ObjectType                  string   `sql:"object_type"`
+	EnvId                       int      `sql:"env_id"`
 	AuditLog
 }
 
