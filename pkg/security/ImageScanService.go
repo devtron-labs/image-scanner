@@ -668,6 +668,7 @@ func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl strin
 	jsonMap[common.OUTPUT_FILE_PATH] = imageScanRenderDto.OutputFilePath
 	jsonMap[common.CA_CERT_FILE_PATH] = imageScanRenderDto.CaCertFilePath
 	jsonMap[common.INSECURE] = imageScanRenderDto.DockerConnection == common.INSECURE
+	jsonMap[common.EXTRA_ARGS] = ""
 
 	for key, val := range metaDataMap {
 		jsonMap[key] = val
