@@ -7,13 +7,14 @@ import (
 	"github.com/devtron-labs/common-lib/monitoring"
 	client "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/image-scanner/api"
-	"github.com/devtron-labs/image-scanner/internal/logger"
-	"github.com/devtron-labs/image-scanner/internal/sql"
-	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
+	"github.com/devtron-labs/image-scanner/pkg/logger"
+	"github.com/devtron-labs/image-scanner/pkg/roundTripper"
 	"github.com/devtron-labs/image-scanner/pkg/security"
+	"github.com/devtron-labs/image-scanner/pkg/sql"
+	"github.com/devtron-labs/image-scanner/pkg/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"github.com/devtron-labs/image-scanner/pubsub"
 	"github.com/google/wire"
@@ -80,6 +81,9 @@ func InitializeApp() (*App, error) {
 		repository.NewScanToolExecutionHistoryMappingRepositoryImpl,
 		wire.Bind(new(repository.ScanToolExecutionHistoryMappingRepository), new(*repository.ScanToolExecutionHistoryMappingRepositoryImpl)),
 		monitoring.NewMonitoringRouter,
+
+		roundTripper.NewRoundTripperServiceImpl,
+		wire.Bind(new(roundTripper.RoundTripperService), new(*roundTripper.RoundTripperServiceImpl)),
 	)
 	return &App{}, nil
 }

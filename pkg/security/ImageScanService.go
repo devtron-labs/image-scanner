@@ -9,11 +9,11 @@ import (
 	"github.com/Knetic/govaluate"
 	"github.com/caarlos0/env"
 	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/internal/sql/bean"
-	"github.com/devtron-labs/image-scanner/internal/sql/repository"
 	cliUtil "github.com/devtron-labs/image-scanner/internal/step-lib/util/cli-util"
 	commonUtil "github.com/devtron-labs/image-scanner/internal/step-lib/util/common-util"
 	httpUtil "github.com/devtron-labs/image-scanner/internal/step-lib/util/http-util"
+	"github.com/devtron-labs/image-scanner/pkg/sql/bean"
+	"github.com/devtron-labs/image-scanner/pkg/sql/repository"
 	"github.com/go-pg/pg"
 	"github.com/optiopay/klar/clair"
 	"github.com/quay/claircore"
@@ -33,26 +33,32 @@ type ImageScanService interface {
 	CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*claircore.Vulnerability, error)
 	CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*clair.Vulnerability, error)
 	IsImageScanned(image string) (bool, error)
+	ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int, executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto) error
+	CreateFolderForOutputData(executionHistoryModelId int) string
+	HandleProgressingScans()
 	GetActiveTool() (*repository.ScanToolMetadata, error)
 	RegisterScanExecutionHistoryAndState(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) (*repository.ImageScanExecutionHistory, string, error)
+	GetImageScanRenderDto(registryId string, image string) (*common.ImageScanRenderDto, error)
+	GetImageToBeScannedAndFetchCliEnv(scanEvent *common.ImageScanEvent) (string, error)
 }
 
 type ImageScanServiceImpl struct {
-	logger                                    *zap.SugaredLogger
-	scanHistoryRepository                     repository.ImageScanHistoryRepository
-	scanResultRepository                      repository.ImageScanResultRepository
-	scanObjectMetaRepository                  repository.ImageScanObjectMetaRepository
-	cveStoreRepository                        repository.CveStoreRepository
-	imageScanDeployInfoRepository             repository.ImageScanDeployInfoRepository
-	ciArtifactRepository                      repository.CiArtifactRepository
-	scanToolExecutionHistoryMappingRepository repository.ScanToolExecutionHistoryMappingRepository
-	scanToolMetadataRepository                repository.ScanToolMetadataRepository
-	scanStepConditionRepository               repository.ScanStepConditionRepository
-	scanToolStepRepository                    repository.ScanToolStepRepository
-	scanStepConditionMappingRepository        repository.ScanStepConditionMappingRepository
-	imageScanConfig                           *ImageScanConfig
-	dockerArtifactStoreRepository             repository.DockerArtifactStoreRepository
-	registryIndexMappingRepository            repository.RegistryIndexMappingRepository
+	Logger                                    *zap.SugaredLogger
+	ScanHistoryRepository                     repository.ImageScanHistoryRepository
+	ScanResultRepository                      repository.ImageScanResultRepository
+	ScanObjectMetaRepository                  repository.ImageScanObjectMetaRepository
+	CveStoreRepository                        repository.CveStoreRepository
+	ImageScanDeployInfoRepository             repository.ImageScanDeployInfoRepository
+	CiArtifactRepository                      repository.CiArtifactRepository
+	ScanToolExecutionHistoryMappingRepository repository.ScanToolExecutionHistoryMappingRepository
+	ScanToolMetadataRepository                repository.ScanToolMetadataRepository
+	ScanStepConditionRepository               repository.ScanStepConditionRepository
+	ScanToolStepRepository                    repository.ScanToolStepRepository
+	ScanStepConditionMappingRepository        repository.ScanStepConditionMappingRepository
+	ImageScanConfig                           *ImageScanConfig
+	DockerArtifactStoreRepository             repository.DockerArtifactStoreRepository
+	RegistryIndexMappingRepository            repository.RegistryIndexMappingRepository
+	CliCommandEnv                             []string
 }
 
 func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository repository.ImageScanHistoryRepository,
@@ -66,66 +72,73 @@ func NewImageScanServiceImpl(logger *zap.SugaredLogger, scanHistoryRepository re
 	scanStepConditionMappingRepository repository.ScanStepConditionMappingRepository,
 	imageScanConfig *ImageScanConfig,
 	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository, registryIndexMappingRepository repository.RegistryIndexMappingRepository) *ImageScanServiceImpl {
-	imageScanService := &ImageScanServiceImpl{logger: logger, scanHistoryRepository: scanHistoryRepository, scanResultRepository: scanResultRepository,
-		scanObjectMetaRepository: scanObjectMetaRepository, cveStoreRepository: cveStoreRepository,
-		imageScanDeployInfoRepository:             imageScanDeployInfoRepository,
-		ciArtifactRepository:                      ciArtifactRepository,
-		scanToolExecutionHistoryMappingRepository: scanToolExecutionHistoryMappingRepository,
-		scanToolMetadataRepository:                scanToolMetadataRepository,
-		scanStepConditionRepository:               scanStepConditionRepository,
-		scanToolStepRepository:                    scanToolStepRepository,
-		scanStepConditionMappingRepository:        scanStepConditionMappingRepository,
-		imageScanConfig:                           imageScanConfig,
-		dockerArtifactStoreRepository:             dockerArtifactStoreRepository,
-		registryIndexMappingRepository:            registryIndexMappingRepository,
+	imageScanService := &ImageScanServiceImpl{Logger: logger, ScanHistoryRepository: scanHistoryRepository, ScanResultRepository: scanResultRepository,
+		ScanObjectMetaRepository: scanObjectMetaRepository, CveStoreRepository: cveStoreRepository,
+		ImageScanDeployInfoRepository:             imageScanDeployInfoRepository,
+		CiArtifactRepository:                      ciArtifactRepository,
+		ScanToolExecutionHistoryMappingRepository: scanToolExecutionHistoryMappingRepository,
+		ScanToolMetadataRepository:                scanToolMetadataRepository,
+		ScanStepConditionRepository:               scanStepConditionRepository,
+		ScanToolStepRepository:                    scanToolStepRepository,
+		ScanStepConditionMappingRepository:        scanStepConditionMappingRepository,
+		ImageScanConfig:                           imageScanConfig,
+		DockerArtifactStoreRepository:             dockerArtifactStoreRepository,
+		RegistryIndexMappingRepository:            registryIndexMappingRepository,
+		CliCommandEnv:                             os.Environ(),
 	}
-	imageScanService.handleProgressingScans()
+	imageScanService.HandleProgressingScans()
 	return imageScanService
+}
+
+func (impl *ImageScanServiceImpl) GetImageToBeScannedAndFetchCliEnv(scanEvent *common.ImageScanEvent) (string, error) {
+	impl.CliCommandEnv = append(os.Environ(), impl.CliCommandEnv...)
+	return scanEvent.Image, nil
 }
 
 func (impl *ImageScanServiceImpl) GetActiveTool() (*repository.ScanToolMetadata, error) {
 	//get active tool
-	tool, err := impl.scanToolMetadataRepository.FindActiveToolByScanTarget(repository.ImageScanTargetType)
+	tool, err := impl.ScanToolMetadataRepository.FindActiveToolByScanTarget(repository.ImageScanTargetType)
 	if err != nil {
-		impl.logger.Errorw("error in getting active tool by scan target", "err", err, "scanTarget", repository.ImageScanTargetType)
+		impl.Logger.Errorw("error in getting active tool by scan target", "err", err, "scanTarget", repository.ImageScanTargetType)
 		return nil, err
 	}
 	return tool, nil
 }
+
 func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory, executionHistoryDirPath string) error {
-	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(impl.imageScanConfig.ScanImageTimeout)*time.Minute)
+	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(impl.ImageScanConfig.ScanImageTimeout)*time.Minute)
 	defer cancel()
 	//checking if image is already scanned or not
 	isImageScanned, err := impl.IsImageScanned(scanEvent.Image)
 	if err != nil && err != pg.ErrNoRows {
-		impl.logger.Errorw("error in fetching scan history ", "err", err, "image", scanEvent.Image)
+		impl.Logger.Errorw("error in fetching scan history ", "err", err, "image", scanEvent.Image)
 		return err
 	}
 	if isImageScanned {
-		impl.logger.Infow("image already scanned, skipping further process", "image", scanEvent.Image)
+		impl.Logger.Infow("image already scanned, skipping further process", "image", scanEvent.Image)
 		return nil
 	}
-	imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
+	imageScanRenderDto, err := impl.GetImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
 	if err != nil {
-		impl.logger.Errorw("service error, getImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
+		impl.Logger.Errorw("service error, GetImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 		return err
 	}
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	// TODO: if multiple processes are to be done in parallel, then error propagation should have to be done via channels
-	err = impl.scanImageForTool(tool, executionHistory.Id, executionHistoryDirPath, wg, int32(scanEvent.UserId), ctx, imageScanRenderDto)
+	err = impl.ScanImageForTool(tool, executionHistory.Id, executionHistoryDirPath, wg, int32(scanEvent.UserId), ctx, imageScanRenderDto)
 	if err != nil {
-		impl.logger.Errorw("err in scanning image", "err", err, "tool", tool, "executionHistory.Id", executionHistory.Id, "executionHistoryDirPath", executionHistoryDirPath, "scanEvent.UserId", scanEvent.UserId)
+		impl.Logger.Errorw("err in scanning image", "err", err, "tool", tool, "executionHistory.Id", executionHistory.Id, "executionHistoryDirPath", executionHistoryDirPath, "scanEvent.UserId", scanEvent.UserId)
 		return err
 	}
 	wg.Wait()
 	return err
 }
 
-func (impl *ImageScanServiceImpl) getImageScanRenderDto(registryId string, image string) (*common.ImageScanRenderDto, error) {
-	dockerRegistry, err := impl.dockerArtifactStoreRepository.FindById(registryId)
+func (impl *ImageScanServiceImpl) GetImageScanRenderDto(registryId string, image string) (*common.ImageScanRenderDto, error) {
+	dockerRegistry, err := impl.DockerArtifactStoreRepository.FindById(registryId)
 	if err != nil {
-		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", registryId)
+		impl.Logger.Errorw("error in getting docker registry by id", "err", err, "id", registryId)
 		return nil, err
 	}
 	imageScanRenderDto := &common.ImageScanRenderDto{
@@ -139,26 +152,26 @@ func (impl *ImageScanServiceImpl) getImageScanRenderDto(registryId string, image
 	}
 	return imageScanRenderDto, nil
 }
-func (impl *ImageScanServiceImpl) scanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int,
+func (impl *ImageScanServiceImpl) ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int,
 	executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto) error {
 	toolCopy := *tool
 	var processedState bean.ScanExecutionProcessState
 	err := impl.ProcessScanForTool(toolCopy, executionHistoryDirPathCopy, executionHistoryId, userId, ctx, imageScanRenderDto)
 	if err != nil {
-		impl.logger.Errorw("error in processing scan for tool:", toolCopy.Name, "err", err)
+		impl.Logger.Errorw("error in processing scan for tool:", toolCopy.Name, "err", err)
 		processedState = bean.ScanExecutionProcessStateFailed
 	} else {
 		processedState = bean.ScanExecutionProcessStateCompleted
 	}
-	updateErr := impl.scanToolExecutionHistoryMappingRepository.UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolCopy.Id, processedState, time.Now())
+	updateErr := impl.ScanToolExecutionHistoryMappingRepository.UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolCopy.Id, processedState, time.Now())
 	if updateErr != nil {
-		impl.logger.Errorw("error in UpdateStateByToolAndExecutionHistoryId", "err", err)
+		impl.Logger.Errorw("error in UpdateStateByToolAndExecutionHistoryId", "err", err)
 		err = updateErr
 	}
 	wg.Done()
 	return err
 }
-func (impl *ImageScanServiceImpl) createFolderForOutputData(executionHistoryModelId int) string {
+func (impl *ImageScanServiceImpl) CreateFolderForOutputData(executionHistoryModelId int) string {
 	executionHistoryModelIdStr := strconv.Itoa(executionHistoryModelId)
 	executionHistoryDirPath := path.Join(bean.ScanOutputDirectory, executionHistoryModelIdStr)
 	return executionHistoryDirPath
@@ -171,7 +184,7 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 	executionTimeStart := time.Now()
 	scanEventJson, err := json.Marshal(scanEvent)
 	if err != nil {
-		impl.logger.Errorw("error in marshalling scanEvent", "err", err, "event", scanEvent)
+		impl.Logger.Errorw("error in marshalling scanEvent", "err", err, "event", scanEvent)
 		return nil, "", err
 	}
 	executionHistoryModel := &repository.ImageScanExecutionHistory{
@@ -181,29 +194,29 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		ExecutedBy:         scanEvent.UserId,
 		SourceMetadataJson: string(scanEventJson),
 	}
-	err = impl.scanHistoryRepository.Save(executionHistoryModel)
+	err = impl.ScanHistoryRepository.Save(executionHistoryModel)
 	if err != nil {
-		impl.logger.Errorw("Failed to save executionHistory", "err", err, "model", executionHistoryModel)
+		impl.Logger.Errorw("Failed to save executionHistory", "err", err, "model", executionHistoryModel)
 		return nil, executionHistoryDirPath, err
 	}
 	// creating folder for storing all details if not exist
 	isExist, err := DoesFileExist(bean.ScanOutputDirectory)
 	if err != nil {
-		impl.logger.Errorw("error in checking if scan output directory exist ", "err", err)
+		impl.Logger.Errorw("error in checking if scan output directory exist ", "err", err)
 		return nil, executionHistoryDirPath, err
 	}
 	if !isExist {
 		err = os.Mkdir(bean.ScanOutputDirectory, commonUtil.DefaultFileCreatePermission)
 		if err != nil && !os.IsExist(err) {
-			impl.logger.Errorw("error in creating Output directory", "err", err, "toolId", tool.Id, "executionHistoryDir", executionHistoryDirPath)
+			impl.Logger.Errorw("error in creating Output directory", "err", err, "toolId", tool.Id, "executionHistoryDir", executionHistoryDirPath)
 			return nil, executionHistoryDirPath, err
 		}
 	}
 	// creating folder for storing output data for this execution history data
-	executionHistoryDirPath = impl.createFolderForOutputData(executionHistoryModel.Id)
+	executionHistoryDirPath = impl.CreateFolderForOutputData(executionHistoryModel.Id)
 	err = os.Mkdir(executionHistoryDirPath, commonUtil.DefaultFileCreatePermission)
 	if err != nil && !os.IsExist(err) {
-		impl.logger.Errorw("error in creating executionHistory directory", "err", err, "executionHistoryId", executionHistoryModel.Id)
+		impl.Logger.Errorw("error in creating executionHistory directory", "err", err, "executionHistoryId", executionHistoryModel.Id)
 		return nil, executionHistoryDirPath, err
 	}
 	executionHistoryMappingModel := &repository.ScanToolExecutionHistoryMapping{
@@ -219,9 +232,9 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		},
 	}
 
-	err = impl.scanToolExecutionHistoryMappingRepository.Save(executionHistoryMappingModel)
+	err = impl.ScanToolExecutionHistoryMappingRepository.Save(executionHistoryMappingModel)
 	if err != nil {
-		impl.logger.Errorw("Failed to save executionHistoryMappingModel", "err", err)
+		impl.Logger.Errorw("Failed to save executionHistoryMappingModel", "err", err)
 		return nil, executionHistoryDirPath, err
 	}
 	return executionHistoryModel, executionHistoryDirPath, nil
@@ -240,7 +253,7 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 	imageScanConfig := &ImageScanConfig{}
 	err := env.Parse(imageScanConfig)
 	if err != nil {
-		impl.logger.Errorw("error in parsing env ", "err", err)
+		impl.Logger.Errorw("error in parsing env ", "err", err)
 		return err
 	}
 
@@ -249,13 +262,13 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 	toolOutputDirPath := path.Join(executionHistoryDirPath, toolIdStr)
 	err = os.Mkdir(toolOutputDirPath, commonUtil.DefaultFileCreatePermission)
 	if err != nil && !os.IsExist(err) {
-		impl.logger.Errorw("error in creating toolOutput directory", "err", err, "toolId", tool.Id, "executionHistoryDir", executionHistoryDirPath)
+		impl.Logger.Errorw("error in creating toolOutput directory", "err", err, "toolId", tool.Id, "executionHistoryDir", executionHistoryDirPath)
 		return err
 	}
 	//getting all steps for this tool
-	steps, err := impl.scanToolStepRepository.FindAllByScanToolId(tool.Id)
+	steps, err := impl.ScanToolStepRepository.FindAllByScanToolId(tool.Id)
 	if err != nil {
-		impl.logger.Errorw("error in getting steps by scan tool id", "err", err, "toolId", tool.Id)
+		impl.Logger.Errorw("error in getting steps by scan tool id", "err", err, "toolId", tool.Id)
 		return err
 	}
 	//sorting steps on the basis of index
@@ -265,9 +278,9 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 	var stepProcessIndex int
 
 	// Getting and Setting the starting index based of first step for processing starting point on registry type and tool
-	registryIndexMappingModel, err := impl.registryIndexMappingRepository.GetStartingIndexForARegistryAndATool(tool.Id, imageScanRenderDto.RegistryType)
+	registryIndexMappingModel, err := impl.RegistryIndexMappingRepository.GetStartingIndexForARegistryAndATool(tool.Id, imageScanRenderDto.RegistryType)
 	if err != nil {
-		impl.logger.Errorw("error in getting registry index mapping", "err", err, "RegistryType", imageScanRenderDto.RegistryType, "toolId", tool.Id)
+		impl.Logger.Errorw("error in getting registry index mapping", "err", err, "RegistryType", imageScanRenderDto.RegistryType, "toolId", tool.Id)
 		return err
 	}
 	stepProcessIndex = registryIndexMappingModel.Index
@@ -291,7 +304,7 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 		if step.StepExecutionSync {
 			output, err := impl.ProcessScanStep(step, tool, toolOutputDirPath, ctx, imageScanRenderDto)
 			if err != nil {
-				impl.logger.Errorw("error in processing scan step sync", "err", err, "stepId", step.Id)
+				impl.Logger.Errorw("error in processing scan step sync", "err", err, "stepId", step.Id)
 				return err
 			}
 			if step.StepExecutionType == bean.ScanExecutionTypeCli && step.CliOutputType == cliUtil.CliOutPutTypeStream {
@@ -299,24 +312,24 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 				outputFileName := path.Join(toolOutputDirPath, fmt.Sprintf("%d%s", step.Index, bean.JsonOutputFileNameSuffix))
 				output, err = commonUtil.ReadFile(outputFileName)
 				if err != nil {
-					impl.logger.Errorw("error in getting reading output of step", "err", err, "stepOutputFileName", outputFileName)
+					impl.Logger.Errorw("error in getting reading output of step", "err", err, "stepOutputFileName", outputFileName)
 					return err
 				}
 			}
 
 			isPassed, err := impl.CheckConditionsForAStep(step, output)
 			if err != nil {
-				impl.logger.Errorw("error in checking conditions for step", "err", err, "stepId", step.Id)
+				impl.Logger.Errorw("error in checking conditions for step", "err", err, "stepId", step.Id)
 				return err
 			}
 			if !isPassed {
-				impl.logger.Infow("conditions not passed for step", "stepId", step.Id)
+				impl.Logger.Infow("conditions not passed for step", "stepId", step.Id)
 				return fmt.Errorf("conditions not passed for step with index : %d", step.Index)
 			}
 			if step.ExecuteStepOnPass == bean.NullProcessIndex && isPassed { //step process is passed and scanning is completed
 				err = impl.ConvertEndStepOutputAndSaveVulnerabilities(output, executionHistoryId, tool, step, userId)
 				if err != nil {
-					impl.logger.Errorw("error in saving vulnerabilities", "err", err)
+					impl.Logger.Errorw("error in saving vulnerabilities", "err", err)
 					return err
 				}
 				return nil
@@ -334,7 +347,7 @@ func (impl *ImageScanServiceImpl) ProcessScanForTool(tool repository.ScanToolMet
 				//will not check if step is passed or failed
 				_, err := impl.ProcessScanStep(step, tool, toolOutputDirPath, cxtx, nil)
 				if err != nil {
-					impl.logger.Errorw("error in processing scan step async", "err", err, "stepId", step.Id)
+					impl.Logger.Errorw("error in processing scan step async", "err", err, "stepId", step.Id)
 					return
 				}
 			}()
@@ -352,24 +365,25 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 	if step.StepExecutionType == bean.ScanExecutionTypeHttp {
 		queryParams, httpHeaders, inputPayload, err := impl.GetHttpStepInputParams(step, toolOutputDirPath, nil)
 		if err != nil {
-			impl.logger.Errorw("error in getting http step input params", "err", err)
+			impl.Logger.Errorw("error in getting http step input params", "err", err)
 			return nil, err
 		}
 		output, err = httpUtil.HandleHTTPRequest(tool.ServerBaseUrl, step.HttpMethodType, httpHeaders, queryParams, inputPayload, outputFileNameForThisStep, ctx)
 		if err != nil {
-			impl.logger.Errorw("error in http request txn", "err", err)
+			impl.Logger.Errorw("error in http request txn", "err", err)
 			return nil, err
 		}
 	} else if step.StepExecutionType == bean.ScanExecutionTypeCli {
 		imageScanRenderDto.OutputFilePath = outputFileNameForThisStep
 		renderedCommand, err := impl.GetCliInputParams(step, toolOutputDirPath, imageScanRenderDto, tool.ToolMetaData)
 		if err != nil {
-			impl.logger.Errorw("error in getting cli step input params", "err", err)
+			impl.Logger.Errorw("error in getting cli step input params", "err", err)
 			return nil, err
 		}
-		output, err = cliUtil.HandleCliRequest(renderedCommand, outputFileNameForThisStep, ctx, step.CliOutputType, nil)
+		cliCommandEnv := impl.CliCommandEnv
+		output, err = cliUtil.HandleCliRequest(renderedCommand, outputFileNameForThisStep, ctx, step.CliOutputType, nil, cliCommandEnv)
 		if err != nil {
-			impl.logger.Errorw("error in cli request txn", "err", err)
+			impl.Logger.Errorw("error in cli request txn", "err", err)
 			return nil, err
 		}
 	}
@@ -379,17 +393,17 @@ func (impl *ImageScanServiceImpl) ProcessScanStep(step repository.ScanToolStep, 
 func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(stepOutput []byte, executionHistoryId int, tool repository.ScanToolMetadata, step repository.ScanToolStep, userId int32) error {
 	var vulnerabilities []*bean.ImageScanOutputObject
 	var err error
-	impl.logger.Debugw("ConvertEndStepOutputAndSaveVulnerabilities", "stepOutput", string(stepOutput), "resultDescriptorTemplate", tool.ResultDescriptorTemplate)
+	impl.Logger.Debugw("ConvertEndStepOutputAndSaveVulnerabilities", "stepOutput", string(stepOutput), "resultDescriptorTemplate", tool.ResultDescriptorTemplate)
 	if isV1Template(tool.ResultDescriptorTemplate) { // result descriptor template is go template, go with v1 logic
 		vulnerabilities, err = impl.getImageScanOutputObjectsV1(stepOutput, tool.ResultDescriptorTemplate)
 		if err != nil {
-			impl.logger.Errorw("error, getImageScanOutputObjectsV1", "err", err, "stepOutput", stepOutput, "resultDescriptorTemplate", tool.ResultDescriptorTemplate)
+			impl.Logger.Errorw("error, getImageScanOutputObjectsV1", "err", err, "stepOutput", stepOutput, "resultDescriptorTemplate", tool.ResultDescriptorTemplate)
 			return err
 		}
 	} else { //not go template, go with v2 logic
 		vulnerabilities, err = impl.getImageScanOutputObjectsV2(stepOutput, tool.ResultDescriptorTemplate)
 		if err != nil {
-			impl.logger.Errorw("error, getImageScanOutputObjectsV2", "err", err, "stepOutput", stepOutput, "resultDescriptorTemplate", tool.ResultDescriptorTemplate)
+			impl.Logger.Errorw("error, getImageScanOutputObjectsV2", "err", err, "stepOutput", stepOutput, "resultDescriptorTemplate", tool.ResultDescriptorTemplate)
 			return err
 		}
 	}
@@ -406,13 +420,13 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	}
 	allSavedCvesMap := make(map[string]*repository.CveStore)
 	if len(allCvesNames) > 0 {
-		allSavedCves, err := impl.cveStoreRepository.FindByCveNames(allCvesNames)
+		allSavedCves, err := impl.CveStoreRepository.FindByCveNames(allCvesNames)
 		if err != nil {
 			if err == pg.ErrNoRows {
 				// in case of no cve found , just ignore
-				impl.logger.Infow("no saved cves found", err)
+				impl.Logger.Infow("no saved cves found", err)
 			} else {
-				impl.logger.Errorw("error in getting all cves ", "err", err)
+				impl.Logger.Errorw("error in getting all cves ", "err", err)
 				return err
 			}
 		}
@@ -454,30 +468,30 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 		}
 		imageScanExecutionResults = append(imageScanExecutionResults, imageScanExecutionResult)
 	}
-	tx, err := impl.cveStoreRepository.GetConnection().Begin()
+	tx, err := impl.CveStoreRepository.GetConnection().Begin()
 	if err != nil {
-		impl.logger.Errorw("error in initiating db transaction", "err", err)
+		impl.Logger.Errorw("error in initiating db transaction", "err", err)
 		return err
 	}
 	// Rollback tx on error.
 	defer tx.Rollback()
 	if len(cvesToBeSaved) > 0 {
-		err = impl.cveStoreRepository.SaveInBatch(cvesToBeSaved, tx)
+		err = impl.CveStoreRepository.SaveInBatch(cvesToBeSaved, tx)
 		if err != nil {
-			impl.logger.Errorw("error in saving cves in batch", "err", err)
+			impl.Logger.Errorw("error in saving cves in batch", "err", err)
 			return err
 		}
 	}
 	if len(imageScanExecutionResults) > 0 {
-		err = impl.scanResultRepository.SaveInBatch(imageScanExecutionResults, tx)
+		err = impl.ScanResultRepository.SaveInBatch(imageScanExecutionResults, tx)
 		if err != nil {
-			impl.logger.Errorw("error in saving scan execution results", "err", err)
+			impl.Logger.Errorw("error in saving scan execution results", "err", err)
 			return err
 		}
 	}
 	err = tx.Commit()
 	if err != nil {
-		impl.logger.Errorw("error in committing transaction", "err", err)
+		impl.Logger.Errorw("error in committing transaction", "err", err)
 		return err
 	}
 	return nil
@@ -500,14 +514,14 @@ func (impl *ImageScanServiceImpl) getImageScanOutputObjectsV1(stepOutput []byte,
 	//rendering image descriptor template with output json to get vulnerabilities updated
 	renderedTemplate, err := commonUtil.ParseJsonTemplate(resultDescriptorTemplate, stepOutput)
 	if err != nil {
-		impl.logger.Errorw("error in parsing template to get vulnerabilities", "err", err)
+		impl.Logger.Errorw("error in parsing template to get vulnerabilities", "err", err)
 		return nil, err
 	}
 	renderedTemplate = common.RemoveTrailingComma(renderedTemplate)
 	var vulnerabilities []*bean.ImageScanOutputObject
 	err = json.Unmarshal([]byte(renderedTemplate), &vulnerabilities)
 	if err != nil {
-		impl.logger.Errorw("error in unmarshalling rendered template", "err", err)
+		impl.Logger.Errorw("error in unmarshalling rendered template", "err", err)
 		return nil, err
 	}
 	return vulnerabilities, nil
@@ -518,7 +532,7 @@ func (impl *ImageScanServiceImpl) getImageScanOutputObjectsV2(stepOutput []byte,
 	var mappings []bean.Mapping
 	err := json.Unmarshal([]byte(resultDescriptorTemplate), &mappings)
 	if err != nil {
-		impl.logger.Errorw("error in un-marshaling result descriptor template", "err", err, "resultDescriptorTemplate", resultDescriptorTemplate)
+		impl.Logger.Errorw("error in un-marshaling result descriptor template", "err", err, "resultDescriptorTemplate", resultDescriptorTemplate)
 		return nil, err
 	}
 	var processArray func(mapping bean.Mapping, value gjson.Result)
@@ -547,7 +561,7 @@ func (impl *ImageScanServiceImpl) getImageScanOutputObjectsV2(stepOutput []byte,
 		}
 		processArray(mapping, result)
 	}
-	impl.logger.Debugw("received vulnerabilities", "vulnerabilites", vulnerabilities)
+	impl.Logger.Debugw("received vulnerabilities", "vulnerabilites", vulnerabilities)
 	return vulnerabilities, nil
 }
 
@@ -560,20 +574,20 @@ func (impl *ImageScanServiceImpl) GetHttpStepInputParams(step repository.ScanToo
 	if step.HttpQueryParams != nil {
 		err = json.Unmarshal(step.HttpQueryParams, &queryParams)
 		if err != nil {
-			impl.logger.Errorw("error in unmarshalling query params", "err", err)
+			impl.Logger.Errorw("error in unmarshalling query params", "err", err)
 			return queryParams, httpHeaders, inputPayload, err
 		}
 	}
 	if step.HttpReqHeaders != nil {
 		err = json.Unmarshal(step.HttpReqHeaders, &httpHeaders)
 		if err != nil {
-			impl.logger.Errorw("error in unmarshalling http headers", "err", err)
+			impl.Logger.Errorw("error in unmarshalling http headers", "err", err)
 			return queryParams, httpHeaders, inputPayload, err
 		}
 	}
 	inputPayloadBytes, err = impl.RenderInputDataForAStep(string(step.HttpInputPayload), step.RenderInputDataFromStep, toolOutputDirPath, imageScanRenderDto, "")
 	if err != nil {
-		impl.logger.Errorw("error in rendering http input payload", "err", err)
+		impl.Logger.Errorw("error in rendering http input payload", "err", err)
 		return queryParams, httpHeaders, inputPayload, err
 	}
 	inputPayload = bytes.NewBuffer(inputPayloadBytes)
@@ -585,7 +599,7 @@ func (impl *ImageScanServiceImpl) GetCliInputParams(step repository.ScanToolStep
 	var renderedCommand []byte
 	renderedCommand, err = impl.RenderInputDataForAStep(step.CliCommand, step.RenderInputDataFromStep, toolOutputDirPath, imageScanRenderDto, toolMetaData)
 	if err != nil {
-		impl.logger.Errorw("error in rendering cli input args", "err", err)
+		impl.Logger.Errorw("error in rendering cli input args", "err", err)
 		return "", err
 	}
 	return string(renderedCommand), nil
@@ -597,19 +611,19 @@ func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl strin
 	metaDataMap := map[string]interface{}{}
 	err := json.Unmarshal([]byte(toolMetaData), &metaDataMap)
 	if err != nil {
-		impl.logger.Errorw("error in unmarshalling meta data ", "err", err, "toolMetaData", toolMetaData)
+		impl.Logger.Errorw("error in unmarshalling meta data ", "err", err, "toolMetaData", toolMetaData)
 		return nil, err
 	}
 	if outputStepIndex != bean.NullProcessIndex {
 		outputFileName := path.Join(toolExecutionDirectoryPath, fmt.Sprintf("%d%s", outputStepIndex, bean.JsonOutputFileNameSuffix))
 		outputFromStep, err := commonUtil.ReadFile(outputFileName)
 		if err != nil {
-			impl.logger.Errorw("error in getting reading output of step", "err", err, "stepOutputFileName", outputFromStep)
+			impl.Logger.Errorw("error in getting reading output of step", "err", err, "stepOutputFileName", outputFromStep)
 			return nil, err
 		}
 		err = json.Unmarshal(outputFromStep, &jsonMap)
 		if err != nil {
-			impl.logger.Errorw("error in unmarshalling", "err", err)
+			impl.Logger.Errorw("error in unmarshalling", "err", err)
 			return nil, err
 		}
 	}
@@ -630,7 +644,7 @@ func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl strin
 	buf := &bytes.Buffer{}
 	err = tmpl.Execute(buf, jsonMap)
 	if err != nil {
-		impl.logger.Errorw("error in executing template", "err", err)
+		impl.Logger.Errorw("error in executing template", "err", err)
 		return nil, err
 	}
 	return buf.Bytes(), nil
@@ -640,10 +654,10 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*cl
 
 	var cveNames []string
 	for _, item := range vs {
-		impl.logger.Debugw("vulnerability data", "vs", item)
-		cveStore, err := impl.cveStoreRepository.FindByName(item.Name)
+		impl.Logger.Debugw("vulnerability data", "vs", item)
+		cveStore, err := impl.CveStoreRepository.FindByName(item.Name)
 		if err != nil && err != pg.ErrNoRows {
-			impl.logger.Errorw("Failed to fetch cve", "err", err)
+			impl.Logger.Errorw("Failed to fetch cve", "err", err)
 			return nil, err
 		}
 		if len(cveStore.Name) == 0 {
@@ -660,9 +674,9 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*cl
 			cveStore.CreatedBy = int32(event.UserId)
 			cveStore.UpdatedOn = time.Now()
 			cveStore.UpdatedBy = int32(event.UserId)
-			err := impl.cveStoreRepository.Save(cveStore)
+			err := impl.CveStoreRepository.Save(cveStore)
 			if err != nil {
-				impl.logger.Errorw("Failed to save cve", "err", err)
+				impl.Logger.Errorw("Failed to save cve", "err", err)
 				return nil, err
 			}
 			cveNames = append(cveNames, cveStore.Name)
@@ -676,9 +690,9 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*cl
 			CveStoreName:                cveName,
 			ScanToolId:                  toolId,
 		}
-		err := impl.scanResultRepository.Save(imageScanExecutionResult)
+		err := impl.ScanResultRepository.Save(imageScanExecutionResult)
 		if err != nil {
-			impl.logger.Errorw("Failed to save cve", "err", err)
+			impl.Logger.Errorw("Failed to save cve", "err", err)
 			return nil, err
 		}
 	}
@@ -689,10 +703,10 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 
 	var cveNames []string
 	for _, item := range vs {
-		impl.logger.Debugw("vulnerability data", "vs", item)
-		cveStore, err := impl.cveStoreRepository.FindByName(item.Name)
+		impl.Logger.Debugw("vulnerability data", "vs", item)
+		cveStore, err := impl.CveStoreRepository.FindByName(item.Name)
 		if err != nil && err != pg.ErrNoRows {
-			impl.logger.Errorw("Failed to fetch cve", "err", err)
+			impl.Logger.Errorw("Failed to fetch cve", "err", err)
 			return nil, err
 		}
 		if len(cveStore.Name) == 0 {
@@ -709,9 +723,9 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 			cveStore.CreatedBy = int32(event.UserId)
 			cveStore.UpdatedOn = time.Now()
 			cveStore.UpdatedBy = int32(event.UserId)
-			err := impl.cveStoreRepository.Save(cveStore)
+			err := impl.CveStoreRepository.Save(cveStore)
 			if err != nil {
-				impl.logger.Errorw("Failed to save cve", "err", err)
+				impl.Logger.Errorw("Failed to save cve", "err", err)
 				return nil, err
 			}
 			cveNames = append(cveNames, cveStore.Name)
@@ -725,9 +739,9 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 			CveStoreName:                cveName,
 			ScanToolId:                  toolId,
 		}
-		err := impl.scanResultRepository.Save(imageScanExecutionResult)
+		err := impl.ScanResultRepository.Save(imageScanExecutionResult)
 		if err != nil {
-			impl.logger.Errorw("Failed to save cve", "err", err)
+			impl.Logger.Errorw("Failed to save cve", "err", err)
 			return nil, err
 		}
 	}
@@ -736,9 +750,9 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 
 func (impl *ImageScanServiceImpl) IsImageScanned(image string) (bool, error) {
 	scanned := false
-	scanHistory, err := impl.scanHistoryRepository.FindByImage(image)
+	scanHistory, err := impl.ScanHistoryRepository.FindByImage(image)
 	if err != nil && err != pg.ErrNoRows {
-		impl.logger.Errorw("error in fetching scan history ", "err", err)
+		impl.Logger.Errorw("error in fetching scan history ", "err", err)
 		return scanned, err
 	}
 	scanHistoryId := 0
@@ -747,9 +761,9 @@ func (impl *ImageScanServiceImpl) IsImageScanned(image string) (bool, error) {
 		//scanned = true
 	}
 	if scanHistoryId > 0 {
-		scanHistoryMappings, err := impl.scanToolExecutionHistoryMappingRepository.GetAllScanHistoriesByExecutionHistoryIdAndStates(scanHistoryId, []bean.ScanExecutionProcessState{bean.ScanExecutionProcessStateRunning, bean.ScanExecutionProcessStateCompleted})
+		scanHistoryMappings, err := impl.ScanToolExecutionHistoryMappingRepository.GetAllScanHistoriesByExecutionHistoryIdAndStates(scanHistoryId, []bean.ScanExecutionProcessState{bean.ScanExecutionProcessStateRunning, bean.ScanExecutionProcessStateCompleted})
 		if err != nil && err != pg.ErrNoRows {
-			impl.logger.Errorw("error in getting history mappings", "err", err)
+			impl.Logger.Errorw("error in getting history mappings", "err", err)
 			return scanned, err
 		}
 		if len(scanHistoryMappings) > 0 {
@@ -762,15 +776,15 @@ func (impl *ImageScanServiceImpl) IsImageScanned(image string) (bool, error) {
 
 func (impl *ImageScanServiceImpl) CheckConditionsForAStep(step repository.ScanToolStep, stepOutput []byte) (bool, error) {
 	//get all conditions for a step
-	conditions, err := impl.scanStepConditionRepository.FindAllByToolStepId(step.Id)
+	conditions, err := impl.ScanStepConditionRepository.FindAllByToolStepId(step.Id)
 	if err != nil {
-		impl.logger.Errorw("error in getting all conditions by step id", "err", err, "stepId", step.Id)
+		impl.Logger.Errorw("error in getting all conditions by step id", "err", err, "stepId", step.Id)
 		return false, err
 	}
 	for _, condition := range conditions {
 		isPassedForCondition, err := impl.EvaluateCondition(*condition, stepOutput)
 		if err != nil {
-			impl.logger.Errorw("error in evaluating condition", "err", err, "condition", condition)
+			impl.Logger.Errorw("error in evaluating condition", "err", err, "condition", condition)
 			return false, err
 		}
 		if !isPassedForCondition { //condition failed, will not check further
@@ -805,18 +819,18 @@ func (impl *ImageScanServiceImpl) EvaluateCondition(condition repository.ScanSte
 	return isPassed, nil
 }
 
-func (impl *ImageScanServiceImpl) handleProgressingScans() {
+func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 	//marking all scans failed which have crossed try count
-	err := impl.scanToolExecutionHistoryMappingRepository.MarkAllRunningStateAsFailedHavingTryCountReachedLimit(impl.imageScanConfig.ScanTryCount)
+	err := impl.ScanToolExecutionHistoryMappingRepository.MarkAllRunningStateAsFailedHavingTryCountReachedLimit(impl.ImageScanConfig.ScanTryCount)
 	if err != nil {
-		impl.logger.Errorw("error in marking all running scan states as failed", "err", err)
+		impl.Logger.Errorw("error in marking all running scan states as failed", "err", err)
 		return
 	}
 
 	//getting all scans which are in progressing after marking failed
-	scanHistories, err := impl.scanToolExecutionHistoryMappingRepository.GetAllScanHistoriesByState(bean.ScanExecutionProcessStateRunning)
+	scanHistories, err := impl.ScanToolExecutionHistoryMappingRepository.GetAllScanHistoriesByState(bean.ScanExecutionProcessStateRunning)
 	if err != nil {
-		impl.logger.Errorw("error in getting all scans by running state", "err", err)
+		impl.Logger.Errorw("error in getting all scans by running state", "err", err)
 		return
 	}
 
@@ -825,18 +839,18 @@ func (impl *ImageScanServiceImpl) handleProgressingScans() {
 	// Create Folder for output data for execution history only if any pending scans are there due to pod died
 	if len(scanHistories) > 0 {
 		flagForDeleting = true
-		executionHistoryDirPath = impl.createFolderForOutputData(scanHistories[0].ImageScanExecutionHistoryId)
+		executionHistoryDirPath = impl.CreateFolderForOutputData(scanHistories[0].ImageScanExecutionHistoryId)
 	}
 	wg := &sync.WaitGroup{}
 	wg.Add(len(scanHistories))
-	imagescanExecutionHistories, err := impl.scanHistoryRepository.FindAll()
+	imagescanExecutionHistories, err := impl.ScanHistoryRepository.FindAll()
 	if err != nil {
-		impl.logger.Errorw("error in getting scan histories on start up", "err", err)
+		impl.Logger.Errorw("error in getting scan histories on start up", "err", err)
 		return
 	}
-	imageScanToolMetadatas, err := impl.scanToolMetadataRepository.FindAllActiveTools()
+	imageScanToolMetadatas, err := impl.ScanToolMetadataRepository.FindAllActiveTools()
 	if err != nil {
-		impl.logger.Errorw("error in getting all active tools", "err", err)
+		impl.Logger.Errorw("error in getting all active tools", "err", err)
 	}
 	imageScanExecutionHistoryMap := make(map[int]*repository.ImageScanExecutionHistory)
 	imageScanToolsMap := make(map[int]*repository.ScanToolMetadata)
@@ -858,17 +872,17 @@ func (impl *ImageScanServiceImpl) handleProgressingScans() {
 		scanTool := imageScanToolsMap[scanHistory.ScanToolId]
 		err = json.Unmarshal([]byte(scanEventJson), &scanHistory)
 		if err != nil {
-			impl.logger.Errorw("error in un-marshaling", "err", err)
+			impl.Logger.Errorw("error in un-marshaling", "err", err)
 			return
 		}
-		imageScanRenderDto, err := impl.getImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
+		imageScanRenderDto, err := impl.GetImageScanRenderDto(scanEvent.DockerRegistryId, scanEvent.Image)
 		if err != nil {
-			impl.logger.Errorw("service error, getImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
+			impl.Logger.Errorw("service error, GetImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 			return
 		}
-		err = impl.scanImageForTool(scanTool, scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, nil, imageScanRenderDto)
+		err = impl.ScanImageForTool(scanTool, scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, nil, imageScanRenderDto)
 		if err != nil {
-			impl.logger.Errorw("error in scanning image", "err", err)
+			impl.Logger.Errorw("error in scanning image", "err", err)
 			return
 		}
 	}
@@ -878,7 +892,7 @@ func (impl *ImageScanServiceImpl) handleProgressingScans() {
 	if flagForDeleting {
 		err = os.Remove(executionHistoryDirPath)
 		if err != nil {
-			impl.logger.Errorw("error in deleting executionHistoryDirectory", "err", err, "executionHistoryDirPath", executionHistoryDirPath)
+			impl.Logger.Errorw("error in deleting executionHistoryDirectory", "err", err, "executionHistoryDirPath", executionHistoryDirPath)
 		}
 	}
 

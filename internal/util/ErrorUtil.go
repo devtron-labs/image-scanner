@@ -22,7 +22,7 @@ func (e *ApiError) ErrorfInternal(format string, a ...interface{}) error {
 	return &ApiError{InternalMessage: fmt.Sprintf(format, a...)}
 }
 
-//default user message will be set
+// default user message will be set
 func (e ApiError) ErrorfUser(format string, a ...interface{}) error {
 	return &ApiError{InternalMessage: fmt.Sprintf(format, a...)}
 }

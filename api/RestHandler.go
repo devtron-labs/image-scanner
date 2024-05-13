@@ -3,11 +3,11 @@ package api
 import (
 	"encoding/json"
 	"github.com/devtron-labs/image-scanner/common"
-	"github.com/devtron-labs/image-scanner/internal/sql/bean"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"github.com/devtron-labs/image-scanner/pkg/grafeasService"
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"github.com/devtron-labs/image-scanner/pkg/security"
+	"github.com/devtron-labs/image-scanner/pkg/sql/bean"
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"github.com/devtron-labs/image-scanner/pubsub"
 	"go.uber.org/zap"
@@ -93,6 +93,13 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 		writeJsonResp(w, err, nil, http.StatusInternalServerError)
 		return
 	}
+	imageToBeScanned, err := impl.imageScanService.GetImageToBeScannedAndFetchCliEnv(&scanConfig)
+	if err != nil {
+		impl.logger.Errorw("service err, GetImageToBeScanned", "err", err)
+		writeJsonResp(w, err, nil, http.StatusInternalServerError)
+		return
+	}
+	scanConfig.Image = imageToBeScanned
 	if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {
 		result, err = impl.klarService.Process(&scanConfig, executionHistory)
 		if err != nil {
