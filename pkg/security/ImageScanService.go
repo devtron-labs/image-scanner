@@ -636,6 +636,7 @@ func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl strin
 	jsonMap[common.GCR_FILE_PATH] = toolExecutionDirectoryPath
 	jsonMap[common.IMAGE_NAME] = imageScanRenderDto.Image
 	jsonMap[common.OUTPUT_FILE_PATH] = imageScanRenderDto.OutputFilePath
+	jsonMap[common.EXTRA_ARGS] = ""
 
 	for key, val := range metaDataMap {
 		jsonMap[key] = val
