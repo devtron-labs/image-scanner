@@ -1,13 +1,13 @@
 package api
 
 import (
-	"github.com/devtron-labs/image-scanner/internal/util"
 	"encoding/json"
+	"github.com/devtron-labs/image-scanner/internal/util"
 	"github.com/juju/errors"
 	"net/http"
 )
 
-//use of writeJsonRespStructured is preferable. it api exists due to historical reason
+// use of writeJsonRespStructured is preferable. it api exists due to historical reason
 // err.message is used as internal message for ApiError object in resp
 func writeJsonResp(w http.ResponseWriter, err error, respBody interface{}, status int) {
 	response := ResponseV2{}
@@ -68,7 +68,7 @@ func writeJsonResp(w http.ResponseWriter, err error, respBody interface{}, statu
 	w.Write(b)
 }
 
-//use this method when we have specific api error to be conveyed to api User
+// use this method when we have specific api error to be conveyed to api User
 func writeJsonRespStructured(w http.ResponseWriter, err error, respBody interface{}, status int, apiErrors []*util.ApiError) {
 	response := ResponseV2{}
 	response.Code = status
@@ -88,7 +88,7 @@ func writeJsonRespStructured(w http.ResponseWriter, err error, respBody interfac
 	w.Write(b)
 }
 
-//global response body used across api
+// global response body used across api
 type ResponseV2 struct {
 	Code   int              `json:"code,omitempty"`
 	Status string           `json:"status,omitempty"`
