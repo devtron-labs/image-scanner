@@ -17,6 +17,7 @@ const (
 	IMAGE_NAME         = "IMAGE_NAME"
 	OUTPUT_FILE_PATH   = "OUTPUT_FILE_PATH"
 	EXTRA_ARGS         = "EXTRA_ARGS"
+	CA_CERT_FILE_PATH  = "CA_CERT_FILE_PATH"
 )
 
 const (
@@ -24,7 +25,17 @@ const (
 	COMMAND_ARGS  = "-c"
 )
 
+const (
+	CaCertDirectory          = "security/certs"
+	RegistryCaCertFilePrefix = "registry-ca-cert-"
+)
+
 type RegistryType string
+
+const (
+	INSECURE       = "insecure"
+	SECUREWITHCERT = "secure-with-cert"
+)
 
 type ImageScanRenderDto struct {
 	RegistryType       RegistryType `json:"-"`
@@ -35,6 +46,8 @@ type ImageScanRenderDto struct {
 	Password           string       `json:"password,omitempty"`
 	Image              string       `json:"image"`
 	OutputFilePath     string       `json:"-"`
+	CaCertFilePath     string       `json:"-"`
+	DockerConnection   string       `json:"-"`
 }
 
 type ImageScanEvent struct {
@@ -50,6 +63,8 @@ type ImageScanEvent struct {
 	Token            string `json:"token"`
 	AwsRegion        string `json:"awsRegion"`
 	DockerRegistryId string `json:"dockerRegistryId"`
+	DockerConnection string `json:"dockerConnection"`
+	DockerCert       string `json:"dockerCert"`
 	//CiProjectDetails []helper.CiProjectDetails `json:"ciProjectDetails"`
 	SourceType     SourceType    `json:"sourceType"`
 	SourceSubType  SourceSubType `json:"sourceSubType"`
