@@ -480,12 +480,11 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	cvesToUpdate := make([]*repository.CveStore, 0, len(uniqueVulnerabilityMap))
 	for _, vul := range uniqueVulnerabilityMap {
 		if val, ok := allSavedCvesMap[vul.Name]; ok {
-			cve := val
 			// updating cve here if vulnerability has a new severity
 			vulnerabilitySeverity := bean.SeverityStringToEnum(bean.ConvertToLowerCase(vul.Severity))
-			if vulnerabilitySeverity != cve.Severity {
-				cve.UpdateNewSeverityInCveStore(vulnerabilitySeverity, userId)
-				cvesToUpdate = append(cvesToUpdate, cve)
+			if vulnerabilitySeverity != val.Severity {
+				val.UpdateNewSeverityInCveStore(vulnerabilitySeverity, userId)
+				cvesToUpdate = append(cvesToUpdate, val)
 			}
 		} else {
 			cve := createCveStoreObject(vul.Name, vul.PackageVersion, vul.FixedInVersion, vul.Severity, userId)
