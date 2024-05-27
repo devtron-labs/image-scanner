@@ -79,7 +79,7 @@ func ConvertToLowerCase(input string) string {
 	return strings.ToLower(input)
 }
 
-func ConvertToSeverityUtility(severity string) Severity {
+func SeverityStringToEnum(severity string) Severity {
 	if severity == LOW || severity == SAFE {
 		return Low
 	} else if severity == MEDIUM {
@@ -89,7 +89,7 @@ func ConvertToSeverityUtility(severity string) Severity {
 	}
 	return Low
 }
-func ConvertToStandardSeverityUtility(severity string) Severity {
+func StandardSeverityStringToEnum(severity string) Severity {
 	if severity == LOW {
 		return Low
 	} else if severity == MEDIUM {

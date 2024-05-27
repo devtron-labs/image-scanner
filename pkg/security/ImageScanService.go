@@ -479,18 +479,16 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	}
 	cvesToUpdate := make([]*repository.CveStore, 0, len(uniqueVulnerabilityMap))
 	for _, vul := range uniqueVulnerabilityMap {
-		var cve *repository.CveStore
 		if val, ok := allSavedCvesMap[vul.Name]; ok {
-			cve = val
+			cve := val
 			// updating cve here if vulnerability has a new severity
-			vulnerabilitySeverity := bean.ConvertToSeverityUtility(bean.ConvertToLowerCase(vul.Severity))
+			vulnerabilitySeverity := bean.SeverityStringToEnum(bean.ConvertToLowerCase(vul.Severity))
 			if vulnerabilitySeverity != cve.Severity {
 				cve.UpdateNewSeverityInCveStore(vulnerabilitySeverity, userId)
 				cvesToUpdate = append(cvesToUpdate, cve)
 			}
-		}
-		if cve == nil {
-			cve = createCveStoreObject(vul.Name, vul.PackageVersion, vul.FixedInVersion, vul.Severity, userId)
+		} else {
+			cve := createCveStoreObject(vul.Name, vul.PackageVersion, vul.FixedInVersion, vul.Severity, userId)
 			cvesToBeSaved = append(cvesToBeSaved, cve)
 		}
 	}
@@ -709,7 +707,7 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*cl
 			cvesToBeSaved = append(cvesToBeSaved, cveStore)
 		} else {
 			// updating cve here if vulnerability has a new severity
-			vulnerabilitySeverity := bean.ConvertToSeverityUtility(bean.ConvertToLowerCase(item.Severity))
+			vulnerabilitySeverity := bean.SeverityStringToEnum(bean.ConvertToLowerCase(item.Severity))
 			if vulnerabilitySeverity != cveStore.Severity {
 				cveStore.UpdateNewSeverityInCveStore(vulnerabilitySeverity, userId)
 				cvesToUpdate = append(cvesToUpdate, cveStore)
@@ -772,7 +770,7 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 			cvesToBeSaved = append(cvesToBeSaved, cveStore)
 		} else {
 			// updating cve here if vulnerability has a new severity
-			vulnerabilitySeverity := bean.ConvertToSeverityUtility(bean.ConvertToLowerCase(item.Severity))
+			vulnerabilitySeverity := bean.SeverityStringToEnum(bean.ConvertToLowerCase(item.Severity))
 			if vulnerabilitySeverity != cveStore.Severity {
 				cveStore.UpdateNewSeverityInCveStore(vulnerabilitySeverity, userId)
 				cvesToUpdate = append(cvesToUpdate, cveStore)
