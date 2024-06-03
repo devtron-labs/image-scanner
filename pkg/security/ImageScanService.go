@@ -451,7 +451,6 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 		}
 	}
 
-	allCvesMap := make([]*repository.CveStore, 0, len(vulnerabilities))
 	cvesToBeSaved := make([]*repository.CveStore, 0, len(vulnerabilities))
 	uniqueVulnerabilityMap := make(map[string]*bean.ImageScanOutputObject)
 	allCvesNames := make([]string, 0, len(vulnerabilities))
@@ -478,37 +477,24 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 			allSavedCvesMap[cve.Name] = cve
 		}
 	}
+	cvesToUpdate := make([]*repository.CveStore, 0, len(uniqueVulnerabilityMap))
 	for _, vul := range uniqueVulnerabilityMap {
-		var cve *repository.CveStore
 		if val, ok := allSavedCvesMap[vul.Name]; ok {
-			cve = val
-		}
-		if cve == nil {
-			cve = &repository.CveStore{
-				Name:         vul.Name,
-				Package:      vul.Package,
-				Version:      vul.PackageVersion,
-				FixedVersion: vul.FixedInVersion,
+			// updating cve here if vulnerability has a new severity
+			vulnerabilitySeverity := bean.SeverityStringToEnum(bean.ConvertToLowerCase(vul.Severity))
+			if vulnerabilitySeverity != val.Severity {
+				val.UpdateNewSeverityInCveStore(vulnerabilitySeverity, userId)
+				cvesToUpdate = append(cvesToUpdate, val)
 			}
-			lowerCaseSeverity := bean.ConvertToLowerCase(vul.Severity)
-			cve.Severity = bean.ConvertToSeverityUtility(lowerCaseSeverity)
-			cve.StandardSeverity = bean.ConvertToStandardSeverityUtility(lowerCaseSeverity)
-			cve.CreatedOn = time.Now()
-			cve.CreatedBy = userId
-			cve.UpdatedOn = time.Now()
-			cve.UpdatedBy = userId
+		} else {
+			cve := createCveStoreObject(vul.Name, vul.PackageVersion, vul.FixedInVersion, vul.Severity, userId)
 			cvesToBeSaved = append(cvesToBeSaved, cve)
 		}
-		allCvesMap = append(allCvesMap, cve)
 	}
 
-	imageScanExecutionResults := make([]*repository.ImageScanExecutionResult, 0, len(allCvesMap))
-	for _, cve := range allCvesMap {
-		imageScanExecutionResult := &repository.ImageScanExecutionResult{
-			ImageScanExecutionHistoryId: executionHistoryId,
-			CveStoreName:                cve.Name,
-			ScanToolId:                  tool.Id,
-		}
+	imageScanExecutionResults := make([]*repository.ImageScanExecutionResult, 0, len(vulnerabilities))
+	for _, vul := range vulnerabilities {
+		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistoryId, vul.Name, vul.Package, tool.Id)
 		imageScanExecutionResults = append(imageScanExecutionResults, imageScanExecutionResult)
 	}
 	tx, err := impl.CveStoreRepository.GetConnection().Begin()
@@ -528,7 +514,14 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	if len(imageScanExecutionResults) > 0 {
 		err = impl.ScanResultRepository.SaveInBatch(imageScanExecutionResults, tx)
 		if err != nil {
-			impl.Logger.Errorw("error in saving scan execution results", "err", err)
+			impl.Logger.Errorw("error in saving scan execution results in batch", "err", err)
+			return err
+		}
+	}
+	if len(cvesToUpdate) > 0 {
+		_, err := impl.CveStoreRepository.UpdateInBatch(cvesToUpdate, tx)
+		if err != nil {
+			impl.Logger.Errorw("Failed to updateCveStoreWithUpdatedValues in batch", "err", err)
 			return err
 		}
 	}
@@ -697,7 +690,10 @@ func (impl *ImageScanServiceImpl) RenderInputDataForAStep(inputPayloadTmpl strin
 
 func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*claircore.Vulnerability, error) {
 
-	var cveNames []string
+	imageScanExecutionResultsToBeSaved := make([]*repository.ImageScanExecutionResult, 0, len(vs))
+	cvesToUpdate := make([]*repository.CveStore, 0, len(vs))
+	cvesToBeSaved := make([]*repository.CveStore, 0, len(vs))
+	userId := int32(event.UserId)
 	for _, item := range vs {
 		impl.Logger.Debugw("vulnerability data", "vs", item)
 		cveStore, err := impl.CveStoreRepository.FindByName(item.Name)
@@ -706,47 +702,61 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*cl
 			return nil, err
 		}
 		if len(cveStore.Name) == 0 {
-			cveStore = &repository.CveStore{
-				Name:         item.Name,
-				Package:      item.Package.Name,
-				Version:      item.Package.Version,
-				FixedVersion: item.FixedInVersion,
-			}
-			lowerCaseSeverity := bean.ConvertToLowerCase(item.Severity)
-			cveStore.Severity = bean.ConvertToSeverityUtility(lowerCaseSeverity)
-			cveStore.StandardSeverity = bean.ConvertToStandardSeverityUtility(lowerCaseSeverity)
-			cveStore.CreatedOn = time.Now()
-			cveStore.CreatedBy = int32(event.UserId)
-			cveStore.UpdatedOn = time.Now()
-			cveStore.UpdatedBy = int32(event.UserId)
-			err := impl.CveStoreRepository.Save(cveStore)
-			if err != nil {
-				impl.Logger.Errorw("Failed to save cve", "err", err)
-				return nil, err
-			}
-			cveNames = append(cveNames, cveStore.Name)
+			cveStore = createCveStoreObject(item.Name, item.Package.Version, item.FixedInVersion, item.Severity, userId)
+			cvesToBeSaved = append(cvesToBeSaved, cveStore)
 		} else {
-			cveNames = append(cveNames, cveStore.Name)
+			// updating cve here if vulnerability has a new severity
+			vulnerabilitySeverity := bean.SeverityStringToEnum(bean.ConvertToLowerCase(item.Severity))
+			if vulnerabilitySeverity != cveStore.Severity {
+				cveStore.UpdateNewSeverityInCveStore(vulnerabilitySeverity, userId)
+				cvesToUpdate = append(cvesToUpdate, cveStore)
+			}
 		}
+		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistory.Id, item.Name, item.Package.Name, toolId)
+		imageScanExecutionResultsToBeSaved = append(imageScanExecutionResultsToBeSaved, imageScanExecutionResult)
 	}
-	for _, cveName := range cveNames {
-		imageScanExecutionResult := &repository.ImageScanExecutionResult{
-			ImageScanExecutionHistoryId: executionHistory.Id,
-			CveStoreName:                cveName,
-			ScanToolId:                  toolId,
-		}
-		err := impl.ScanResultRepository.Save(imageScanExecutionResult)
+	tx, err := impl.CveStoreRepository.GetConnection().Begin()
+	if err != nil {
+		impl.Logger.Errorw("error in initiating db transaction", "err", err)
+		return nil, err
+	}
+	// Rollback tx on error.
+	defer tx.Rollback()
+	if len(cvesToBeSaved) > 0 {
+		err = impl.CveStoreRepository.SaveInBatch(cvesToBeSaved, tx)
 		if err != nil {
-			impl.Logger.Errorw("Failed to save cve", "err", err)
+			impl.Logger.Errorw("error in saving cves in batch", "err", err)
 			return nil, err
 		}
+	}
+	if len(imageScanExecutionResultsToBeSaved) > 0 {
+		err = impl.ScanResultRepository.SaveInBatch(imageScanExecutionResultsToBeSaved, tx)
+		if err != nil {
+			impl.Logger.Errorw("error in saving scan execution results in batch", "err", err)
+			return nil, err
+		}
+	}
+	if len(cvesToUpdate) > 0 {
+		_, err = impl.CveStoreRepository.UpdateInBatch(cvesToUpdate, tx)
+		if err != nil {
+			impl.Logger.Errorw("error in updating cves in batch", "err", err)
+			return nil, err
+		}
+	}
+	err = tx.Commit()
+	if err != nil {
+		impl.Logger.Errorw("error in committing transaction", "err", err)
+		return nil, err
 	}
 	return vs, nil
 }
 
 func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*clair.Vulnerability, error) {
 
-	var cveNames []string
+	imageScanExecutionResultsToBeSaved := make([]*repository.ImageScanExecutionResult, 0, len(vs))
+	cvesToUpdate := make([]*repository.CveStore, 0, len(vs))
+	cvesToBeSaved := make([]*repository.CveStore, 0, len(vs))
+	userId := int32(event.UserId)
 	for _, item := range vs {
 		impl.Logger.Debugw("vulnerability data", "vs", item)
 		cveStore, err := impl.CveStoreRepository.FindByName(item.Name)
@@ -755,40 +765,51 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 			return nil, err
 		}
 		if len(cveStore.Name) == 0 {
-			cveStore = &repository.CveStore{
-				Name:         item.Name,
-				Package:      item.FeatureName,
-				Version:      item.FeatureVersion,
-				FixedVersion: item.FixedBy,
-			}
-			lowerCaseSeverity := bean.ConvertToLowerCase(item.Severity)
-			cveStore.Severity = bean.ConvertToSeverityUtility(lowerCaseSeverity)
-			cveStore.StandardSeverity = bean.ConvertToStandardSeverityUtility(lowerCaseSeverity)
-			cveStore.CreatedOn = time.Now()
-			cveStore.CreatedBy = int32(event.UserId)
-			cveStore.UpdatedOn = time.Now()
-			cveStore.UpdatedBy = int32(event.UserId)
-			err := impl.CveStoreRepository.Save(cveStore)
-			if err != nil {
-				impl.Logger.Errorw("Failed to save cve", "err", err)
-				return nil, err
-			}
-			cveNames = append(cveNames, cveStore.Name)
+			cveStore = createCveStoreObject(item.Name, item.FeatureVersion, item.FixedBy, item.Severity, userId)
+			cvesToBeSaved = append(cvesToBeSaved, cveStore)
 		} else {
-			cveNames = append(cveNames, cveStore.Name)
+			// updating cve here if vulnerability has a new severity
+			vulnerabilitySeverity := bean.SeverityStringToEnum(bean.ConvertToLowerCase(item.Severity))
+			if vulnerabilitySeverity != cveStore.Severity {
+				cveStore.UpdateNewSeverityInCveStore(vulnerabilitySeverity, userId)
+				cvesToUpdate = append(cvesToUpdate, cveStore)
+			}
 		}
+		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistory.Id, item.Name, item.FeatureName, toolId)
+		imageScanExecutionResultsToBeSaved = append(imageScanExecutionResultsToBeSaved, imageScanExecutionResult)
 	}
-	for _, cveName := range cveNames {
-		imageScanExecutionResult := &repository.ImageScanExecutionResult{
-			ImageScanExecutionHistoryId: executionHistory.Id,
-			CveStoreName:                cveName,
-			ScanToolId:                  toolId,
-		}
-		err := impl.ScanResultRepository.Save(imageScanExecutionResult)
+	tx, err := impl.CveStoreRepository.GetConnection().Begin()
+	if err != nil {
+		impl.Logger.Errorw("error in initiating db transaction", "err", err)
+		return nil, err
+	}
+	// Rollback tx on error.
+	defer tx.Rollback()
+	if len(cvesToBeSaved) > 0 {
+		err = impl.CveStoreRepository.SaveInBatch(cvesToBeSaved, tx)
 		if err != nil {
-			impl.Logger.Errorw("Failed to save cve", "err", err)
+			impl.Logger.Errorw("error in saving cves in batch", "err", err)
 			return nil, err
 		}
+	}
+	if len(imageScanExecutionResultsToBeSaved) > 0 {
+		err = impl.ScanResultRepository.SaveInBatch(imageScanExecutionResultsToBeSaved, tx)
+		if err != nil {
+			impl.Logger.Errorw("error in saving scan execution results in batch", "err", err)
+			return nil, err
+		}
+	}
+	if len(cvesToUpdate) > 0 {
+		_, err = impl.CveStoreRepository.UpdateInBatch(cvesToUpdate, tx)
+		if err != nil {
+			impl.Logger.Errorw("error in updating cves in batch", "err", err)
+			return nil, err
+		}
+	}
+	err = tx.Commit()
+	if err != nil {
+		impl.Logger.Errorw("error in committing transaction", "err", err)
+		return nil, err
 	}
 	return vs, nil
 }
@@ -915,7 +936,7 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 			return
 		}
 		scanTool := imageScanToolsMap[scanHistory.ScanToolId]
-		err = json.Unmarshal([]byte(scanEventJson), &scanHistory)
+		err = json.Unmarshal([]byte(scanEventJson), &scanEvent)
 		if err != nil {
 			impl.Logger.Errorw("error in un-marshaling", "err", err)
 			return
@@ -925,7 +946,7 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 			impl.Logger.Errorw("service error, GetImageScanRenderDto", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 			return
 		}
-		err = impl.ScanImageForTool(scanTool, scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, nil, imageScanRenderDto)
+		err = impl.ScanImageForTool(scanTool, scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, context.Background(), imageScanRenderDto)
 		if err != nil {
 			impl.Logger.Errorw("error in scanning image", "err", err)
 			return

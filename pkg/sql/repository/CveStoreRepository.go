@@ -4,17 +4,32 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/sql/bean"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"
+	"time"
 )
 
 type CveStore struct {
 	tableName        struct{}      `sql:"cve_store" pg:",discard_unknown_columns"`
 	Name             string        `sql:"name,pk"`
 	Severity         bean.Severity `sql:"severity,notnull"`
-	Package          string        `sql:"package,notnull"`
+	Package          string        `sql:"package,notnull"` // deprecated, storing package data in image_scan_execution_result table
 	Version          string        `sql:"version,notnull"`
 	FixedVersion     string        `sql:"fixed_version,notnull"`
 	StandardSeverity bean.Severity `sql:"standard_severity,notnull"`
 	AuditLog
+}
+
+func (cve *CveStore) CreateAuditLog(userId int32) {
+	cve.CreatedBy = userId
+	cve.CreatedOn = time.Now()
+	cve.UpdatedBy = userId
+	cve.UpdatedOn = time.Now()
+}
+
+func (cve *CveStore) UpdateNewSeverityInCveStore(severity bean.Severity, userId int32) {
+	cve.Severity = severity
+	cve.StandardSeverity = severity
+	cve.UpdatedOn = time.Now()
+	cve.UpdatedBy = userId
 }
 
 type CveStoreRepository interface {
@@ -25,6 +40,7 @@ type CveStoreRepository interface {
 	FindByCveNames(names []string) ([]*CveStore, error)
 	FindByName(name string) (*CveStore, error)
 	Update(model *CveStore) error
+	UpdateInBatch(model []*CveStore, tx *pg.Tx) ([]*CveStore, error)
 }
 
 type CveStoreRepositoryImpl struct {
@@ -74,4 +90,14 @@ func (impl CveStoreRepositoryImpl) FindByName(name string) (*CveStore, error) {
 func (impl CveStoreRepositoryImpl) Update(team *CveStore) error {
 	err := impl.dbConnection.Update(team)
 	return err
+}
+
+// UpdateInBatch updates the cve store model in bulk in db, returns the updated models
+func (impl CveStoreRepositoryImpl) UpdateInBatch(models []*CveStore, tx *pg.Tx) ([]*CveStore, error) {
+	_, err := impl.dbConnection.Model(&models).Update()
+	if err != nil {
+		impl.logger.Errorw("error in UpdateInBatch CveStore", "err", err)
+		return nil, err
+	}
+	return models, nil
 }
