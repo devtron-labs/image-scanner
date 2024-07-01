@@ -262,7 +262,14 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		ExecutedBy:         scanEvent.UserId,
 		SourceMetadataJson: string(scanEventJson),
 	}
-	err = impl.ScanHistoryRepository.Save(executionHistoryModel)
+	tx, err := impl.ScanHistoryRepository.GetConnection().Begin()
+	if err != nil {
+		impl.Logger.Errorw("error in initiating db transaction", "err", err)
+		return nil, executionHistoryDirPath, err
+	}
+	// Rollback tx on error.
+	defer tx.Rollback()
+	err = impl.ScanHistoryRepository.Save(tx, executionHistoryModel)
 	if err != nil {
 		impl.Logger.Errorw("Failed to save executionHistory", "err", err, "model", executionHistoryModel)
 		return nil, executionHistoryDirPath, err
@@ -300,9 +307,14 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		},
 	}
 
-	err = impl.ScanToolExecutionHistoryMappingRepository.Save(executionHistoryMappingModel)
+	err = impl.ScanToolExecutionHistoryMappingRepository.Save(tx, executionHistoryMappingModel)
 	if err != nil {
 		impl.Logger.Errorw("Failed to save executionHistoryMappingModel", "err", err)
+		return nil, executionHistoryDirPath, err
+	}
+	err = tx.Commit()
+	if err != nil {
+		impl.Logger.Errorw("error in committing transaction", "err", err)
 		return nil, executionHistoryDirPath, err
 	}
 	return executionHistoryModel, executionHistoryDirPath, nil
