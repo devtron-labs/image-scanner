@@ -37,7 +37,8 @@ type ImageScanExecutionHistory struct {
 }
 
 type ImageScanHistoryRepository interface {
-	Save(model *ImageScanExecutionHistory) error
+	GetConnection() (dbConnection *pg.DB)
+	Save(tx *pg.Tx, model *ImageScanExecutionHistory) error
 	FindAll() ([]*ImageScanExecutionHistory, error)
 	FindOne(id int) (*ImageScanExecutionHistory, error)
 	FindByImageDigest(image string) (*ImageScanExecutionHistory, error)
@@ -58,8 +59,12 @@ func NewImageScanHistoryRepositoryImpl(dbConnection *pg.DB, logger *zap.SugaredL
 	}
 }
 
-func (impl ImageScanHistoryRepositoryImpl) Save(model *ImageScanExecutionHistory) error {
-	err := impl.dbConnection.Insert(model)
+func (impl ImageScanHistoryRepositoryImpl) GetConnection() (dbConnection *pg.DB) {
+	return impl.dbConnection
+}
+
+func (impl ImageScanHistoryRepositoryImpl) Save(tx *pg.Tx, model *ImageScanExecutionHistory) error {
+	err := tx.Insert(model)
 	return err
 }
 

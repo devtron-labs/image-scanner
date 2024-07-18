@@ -37,7 +37,7 @@ type ScanToolExecutionHistoryMapping struct {
 }
 
 type ScanToolExecutionHistoryMappingRepository interface {
-	Save(model *ScanToolExecutionHistoryMapping) error
+	Save(tx *pg.Tx, model *ScanToolExecutionHistoryMapping) error
 	SaveInBatch(models []*ScanToolExecutionHistoryMapping) error
 	UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolId int, state bean.ScanExecutionProcessState, executionFinishTime time.Time) error
 	MarkAllRunningStateAsFailedHavingTryCountReachedLimit(tryCount int) error
@@ -58,8 +58,8 @@ func NewScanToolExecutionHistoryMappingRepositoryImpl(dbConnection *pg.DB,
 	}
 }
 
-func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) Save(model *ScanToolExecutionHistoryMapping) error {
-	err := repo.dbConnection.Insert(model)
+func (repo *ScanToolExecutionHistoryMappingRepositoryImpl) Save(tx *pg.Tx, model *ScanToolExecutionHistoryMapping) error {
+	err := tx.Insert(model)
 	if err != nil {
 		repo.logger.Errorw("error in ScanToolExecutionHistoryMappingRepository, Save", "model", model, "err", err)
 		return err
