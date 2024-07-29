@@ -522,7 +522,7 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 
 	imageScanExecutionResults := make([]*repository.ImageScanExecutionResult, 0, len(vulnerabilities))
 	for _, vul := range vulnerabilities {
-		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistoryId, vul.Name, vul.Package, tool.Id)
+		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistoryId, vul.Name, vul.Package, vul.PackageVersion, vul.FixedInVersion, tool.Id)
 		imageScanExecutionResults = append(imageScanExecutionResults, imageScanExecutionResult)
 	}
 	tx, err := impl.CveStoreRepository.GetConnection().Begin()
@@ -740,7 +740,7 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*cl
 				cvesToUpdate = append(cvesToUpdate, cveStore)
 			}
 		}
-		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistory.Id, item.Name, item.Package.Name, toolId)
+		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistory.Id, item.Name, item.Package.Name, item.Package.Version, item.FixedInVersion, toolId)
 		imageScanExecutionResultsToBeSaved = append(imageScanExecutionResultsToBeSaved, imageScanExecutionResult)
 	}
 	tx, err := impl.CveStoreRepository.GetConnection().Begin()
@@ -803,7 +803,7 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 				cvesToUpdate = append(cvesToUpdate, cveStore)
 			}
 		}
-		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistory.Id, item.Name, item.FeatureName, toolId)
+		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistory.Id, item.Name, item.FeatureName, item.FeatureVersion, item.FixedBy, toolId)
 		imageScanExecutionResultsToBeSaved = append(imageScanExecutionResultsToBeSaved, imageScanExecutionResult)
 	}
 	tx, err := impl.CveStoreRepository.GetConnection().Begin()
