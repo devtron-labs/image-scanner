@@ -1,6 +1,8 @@
 module github.com/devtron-labs/image-scanner
 
-go 1.20
+go 1.21
+
+toolchain go1.22.3
 
 require (
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible
@@ -8,7 +10,7 @@ require (
 	github.com/aws/aws-sdk-go v1.44.116
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/caarlos0/env/v6 v6.10.1
-	github.com/devtron-labs/common-lib v0.0.22-0.20240705073412-32e32c499160
+	github.com/devtron-labs/common-lib v0.0.25-0.20240731124434-6b57265f3c61
 	github.com/go-pg/pg v6.15.1+incompatible
 	github.com/google/go-containerregistry v0.6.0
 	github.com/google/wire v0.6.0
