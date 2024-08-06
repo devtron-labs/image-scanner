@@ -41,9 +41,9 @@ func (cve *CveStore) CreateAuditLog(userId int32) {
 	cve.UpdatedOn = time.Now()
 }
 
-func (cve *CveStore) UpdateNewSeverityInCveStore(severity bean.Severity, userId int32) {
+func (cve *CveStore) UpdateNewSeverityInCveStore(severity bean.Severity, standardSeverity bean.Severity, userId int32) {
 	cve.Severity = severity
-	cve.StandardSeverity = severity
+	cve.StandardSeverity = standardSeverity
 	cve.UpdatedOn = time.Now()
 	cve.UpdatedBy = userId
 }
