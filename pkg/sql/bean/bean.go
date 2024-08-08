@@ -78,6 +78,7 @@ const (
 	LOW      string = "low"
 	MEDIUM   string = "medium"
 	MODERATE string = "moderate"
+	UNKNOWN  string = "unknown"
 )
 
 const (
@@ -86,10 +87,11 @@ const (
 	Critical
 	High
 	Safe
+	Unknown
 )
 
 func (sev Severity) String() string {
-	return [...]string{"low", "medium", "critical", "high", "safe"}[sev]
+	return [...]string{LOW, MEDIUM, CRITICAL, HIGH, SAFE, UNKNOWN}[sev]
 }
 func ConvertToLowerCase(input string) string {
 	return strings.ToLower(input)
@@ -98,17 +100,20 @@ func ConvertToLowerCase(input string) string {
 func SeverityStringToEnum(severity string) Severity {
 	if severity == LOW || severity == SAFE {
 		return Low
-	} else if severity == MEDIUM {
+	} else if severity == MEDIUM || severity == MODERATE {
 		return Medium
 	} else if severity == HIGH || severity == CRITICAL {
 		return Critical
+	} else if severity == UNKNOWN {
+		return Unknown
 	}
 	return Low
 }
+
 func StandardSeverityStringToEnum(severity string) Severity {
 	if severity == LOW {
 		return Low
-	} else if severity == MEDIUM {
+	} else if severity == MEDIUM || severity == MODERATE {
 		return Medium
 	} else if severity == HIGH {
 		return High
@@ -116,6 +121,8 @@ func StandardSeverityStringToEnum(severity string) Severity {
 		return Critical
 	} else if severity == SAFE {
 		return Safe
+	} else if severity == UNKNOWN {
+		return Unknown
 	}
 	return Low
 }

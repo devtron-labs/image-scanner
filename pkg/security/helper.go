@@ -13,7 +13,7 @@ func createCveStoreObject(name, version, fixedInVersion, severity string, userId
 	}
 	lowerCaseSeverity := bean.ConvertToLowerCase(severity)
 	cveStore.Severity = bean.SeverityStringToEnum(lowerCaseSeverity)
-	cveStore.StandardSeverity = bean.StandardSeverityStringToEnum(lowerCaseSeverity)
+	cveStore.SetStandardSeverity(bean.StandardSeverityStringToEnum(lowerCaseSeverity))
 	cveStore.CreateAuditLog(userId)
 	return cveStore
 }
