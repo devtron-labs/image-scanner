@@ -70,7 +70,6 @@ func (cve *CveStore) UpdateNewSeverityInCveStore(severity string, userId int32) 
 }
 
 func (cve *CveStore) SetStandardSeverity(severity bean.Severity) {
-	cve.Severity = severity
 	cve.StandardSeverity = &severity
 }
 
