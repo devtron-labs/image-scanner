@@ -50,6 +50,9 @@ const (
 )
 
 type ImageScanOutputObject struct {
+	TargetName     string `json:"targetName"`
+	Class          string `json:"class"`
+	Type           string `json:"type"`
 	Name           string `json:"name"`
 	Package        string `json:"package"`
 	PackageVersion string `json:"packageVersion"`
@@ -61,12 +64,18 @@ type ImageScanOutputObject struct {
 type Mapping map[string]string
 
 const (
-	MappingKeyPathToVulnerabilitiesArray = "pathToVulnerabilitiesArray"
-	MappingKeyName                       = "name"
-	MappingKeyPackage                    = "package"
-	MappingKeyPackageVersion             = "packageVersion"
-	MappingKeyFixedInVersion             = "fixedInVersion"
-	MappingKeySeverity                   = "severity"
+	MappingKeyPathToResultDataKeys        = "resultData"
+	MappingKeyPathToVulnerabilityDataKeys = "vulnerabilityData"
+	MappingKeyPathToResultsArray          = "pathToResultArray"
+	MappingKeyPathToVulnerabilitiesArray  = "pathToVulnerabilitiesArray"
+	MappingKeyName                        = "name"
+	MappingKeyPackage                     = "package"
+	MappingKeyPackageVersion              = "packageVersion"
+	MappingKeyFixedInVersion              = "fixedInVersion"
+	MappingKeySeverity                    = "severity"
+	MappingTarget                         = "target"
+	MappingType                           = "type"
+	MappingClass                          = "class"
 )
 
 type Severity int
