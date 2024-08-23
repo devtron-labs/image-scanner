@@ -18,7 +18,7 @@ func createCveStoreObject(name, version, fixedInVersion, severity string, userId
 	return cveStore
 }
 
-func createImageScanExecutionResultObject(executionHistoryId int, vulName, packageName, version, fixedInVersion string, toolId int) *repository.ImageScanExecutionResult {
+func createImageScanExecutionResultObject(executionHistoryId int, vulName, packageName, version, fixedInVersion, className, typeName, targetName string, toolId int) *repository.ImageScanExecutionResult {
 	return &repository.ImageScanExecutionResult{
 		ImageScanExecutionHistoryId: executionHistoryId,
 		CveStoreName:                vulName,
@@ -26,5 +26,8 @@ func createImageScanExecutionResultObject(executionHistoryId int, vulName, packa
 		ScanToolId:                  toolId,
 		Version:                     version,
 		FixedVersion:                fixedInVersion,
+		Target:                      targetName,
+		Type:                        typeName,
+		Class:                       className,
 	}
 }
