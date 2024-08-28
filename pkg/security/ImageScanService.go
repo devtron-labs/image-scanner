@@ -274,6 +274,7 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		impl.Logger.Errorw("Failed to save executionHistory", "err", err, "model", executionHistoryModel)
 		return nil, executionHistoryDirPath, err
 	}
+
 	// creating folder for storing all details if not exist
 	isExist, err := helper.DoesFileExist(bean.ScanOutputDirectory)
 	if err != nil {
@@ -509,9 +510,9 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 	for _, vul := range uniqueVulnerabilityMap {
 		if val, ok := allSavedCvesMap[vul.Name]; ok {
 			// updating cve here if vulnerability has a new severity
-			vulnerabilitySeverity := bean.SeverityStringToEnum(bean.ConvertToLowerCase(vul.Severity))
-			if vulnerabilitySeverity != val.Severity {
-				val.UpdateNewSeverityInCveStore(vulnerabilitySeverity, userId)
+			vulnerabilityStandardSeverity := bean.StandardSeverityStringToEnum(bean.ConvertToLowerCase(vul.Severity))
+			if vulnerabilityStandardSeverity != val.GetSeverity() {
+				val.UpdateNewSeverityInCveStore(vul.Severity, userId)
 				cvesToUpdate = append(cvesToUpdate, val)
 			}
 		} else {
@@ -522,7 +523,7 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 
 	imageScanExecutionResults := make([]*repository.ImageScanExecutionResult, 0, len(vulnerabilities))
 	for _, vul := range vulnerabilities {
-		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistoryId, vul.Name, vul.Package, vul.PackageVersion, vul.FixedInVersion, tool.Id)
+		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistoryId, vul.Name, vul.Package, vul.PackageVersion, vul.FixedInVersion, vul.Class, vul.Type, vul.TargetName, tool.Id)
 		imageScanExecutionResults = append(imageScanExecutionResults, imageScanExecutionResult)
 	}
 	tx, err := impl.CveStoreRepository.GetConnection().Begin()
@@ -562,7 +563,7 @@ func (impl *ImageScanServiceImpl) ConvertEndStepOutputAndSaveVulnerabilities(ste
 }
 
 func isV1Template(resultDescriptorTemplate string) bool {
-	var mappings []bean.Mapping
+	var mappings []map[string]interface{}
 	err := json.Unmarshal([]byte(resultDescriptorTemplate), &mappings)
 	return err != nil && isValidGoTemplate(resultDescriptorTemplate) //checking error too because our new result descriptor template can pass go templating too as it contains a simple json
 }
@@ -593,33 +594,46 @@ func (impl *ImageScanServiceImpl) getImageScanOutputObjectsV1(stepOutput []byte,
 
 func (impl *ImageScanServiceImpl) getImageScanOutputObjectsV2(stepOutput []byte, resultDescriptorTemplate string) ([]*bean.ImageScanOutputObject, error) {
 	var vulnerabilities []*bean.ImageScanOutputObject
-	var mappings []bean.Mapping
+	var mappings []map[string]interface{}
 	err := json.Unmarshal([]byte(resultDescriptorTemplate), &mappings)
 	if err != nil {
 		impl.Logger.Errorw("error in un-marshaling result descriptor template", "err", err, "resultDescriptorTemplate", resultDescriptorTemplate)
 		return nil, err
 	}
-	var processArray func(mapping bean.Mapping, value gjson.Result)
-	processArray = func(mapping bean.Mapping, value gjson.Result) {
+	var processArray func(mapping map[string]interface{}, value gjson.Result)
+	processArray = func(mapping map[string]interface{}, value gjson.Result) {
+		vulnerabilitiesPath := mapping[bean.MappingKeyPathToVulnerabilitiesArray].(string)
+		vulnerabilityDataKeyPathsMap := mapping[bean.MappingKeyPathToVulnerabilityDataKeys].(map[string]interface{})
+		resultDataKeyPathsMap := mapping[bean.MappingKeyPathToResultDataKeys].(map[string]interface{})
+
 		value.ForEach(func(_, nestedValue gjson.Result) bool {
-			if nestedValue.IsArray() {
-				// if the nested value is an array, recursively process it
-				processArray(mapping, nestedValue)
-			} else {
-				vulnerability := &bean.ImageScanOutputObject{
-					Name:           nestedValue.Get(mapping[bean.MappingKeyName]).String(),
-					Package:        nestedValue.Get(mapping[bean.MappingKeyPackage]).String(),
-					PackageVersion: nestedValue.Get(mapping[bean.MappingKeyPackageVersion]).String(),
-					FixedInVersion: nestedValue.Get(mapping[bean.MappingKeyFixedInVersion]).String(),
-					Severity:       nestedValue.Get(mapping[bean.MappingKeySeverity]).String(),
+			targetName, class, resType := "", "", ""
+			if nestedValue.IsObject() {
+				targetName, class, resType = nestedValue.Get(resultDataKeyPathsMap[bean.MappingTarget].(string)).String(), nestedValue.Get(resultDataKeyPathsMap[bean.MappingClass].(string)).String(), nestedValue.Get(resultDataKeyPathsMap[bean.MappingType].(string)).String()
+
+				if nestedValue.Get(vulnerabilitiesPath).IsArray() {
+					nestedValue.Get(vulnerabilitiesPath).ForEach(func(_, vul gjson.Result) bool {
+						vulnerability := &bean.ImageScanOutputObject{
+							Name:           vul.Get(vulnerabilityDataKeyPathsMap[bean.MappingKeyName].(string)).String(),
+							Package:        vul.Get(vulnerabilityDataKeyPathsMap[bean.MappingKeyPackage].(string)).String(),
+							PackageVersion: vul.Get(vulnerabilityDataKeyPathsMap[bean.MappingKeyPackageVersion].(string)).String(),
+							FixedInVersion: vul.Get(vulnerabilityDataKeyPathsMap[bean.MappingKeyFixedInVersion].(string)).String(),
+							Severity:       vul.Get(vulnerabilityDataKeyPathsMap[bean.MappingKeySeverity].(string)).String(),
+							TargetName:     targetName,
+							Class:          class,
+							Type:           resType,
+						}
+						vulnerabilities = append(vulnerabilities, vulnerability)
+						return true
+					})
 				}
-				vulnerabilities = append(vulnerabilities, vulnerability)
 			}
 			return true
 		})
 	}
+
 	for _, mapping := range mappings {
-		result := gjson.Get(string(stepOutput), mapping[bean.MappingKeyPathToVulnerabilitiesArray])
+		result := gjson.Get(string(stepOutput), mapping[bean.MappingKeyPathToResultsArray].(string))
 		if !result.Exists() {
 			continue
 		}
@@ -734,13 +748,13 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV4(vs []*cl
 			cvesToBeSaved = append(cvesToBeSaved, cveStore)
 		} else {
 			// updating cve here if vulnerability has a new severity
-			vulnerabilitySeverity := bean.SeverityStringToEnum(bean.ConvertToLowerCase(item.Severity))
-			if vulnerabilitySeverity != cveStore.Severity {
-				cveStore.UpdateNewSeverityInCveStore(vulnerabilitySeverity, userId)
+			vulnerabilityStandardSeverity := bean.StandardSeverityStringToEnum(bean.ConvertToLowerCase(item.Severity))
+			if vulnerabilityStandardSeverity != cveStore.GetSeverity() {
+				cveStore.UpdateNewSeverityInCveStore(item.Severity, userId)
 				cvesToUpdate = append(cvesToUpdate, cveStore)
 			}
 		}
-		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistory.Id, item.Name, item.Package.Name, item.Package.Version, item.FixedInVersion, toolId)
+		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistory.Id, item.Name, item.Package.Name, item.Package.Version, item.FixedInVersion, "", "", "", toolId)
 		imageScanExecutionResultsToBeSaved = append(imageScanExecutionResultsToBeSaved, imageScanExecutionResult)
 	}
 	tx, err := impl.CveStoreRepository.GetConnection().Begin()
@@ -797,13 +811,13 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 			cvesToBeSaved = append(cvesToBeSaved, cveStore)
 		} else {
 			// updating cve here if vulnerability has a new severity
-			vulnerabilitySeverity := bean.SeverityStringToEnum(bean.ConvertToLowerCase(item.Severity))
-			if vulnerabilitySeverity != cveStore.Severity {
-				cveStore.UpdateNewSeverityInCveStore(vulnerabilitySeverity, userId)
+			vulnerabilityStandardSeverity := bean.StandardSeverityStringToEnum(bean.ConvertToLowerCase(item.Severity))
+			if vulnerabilityStandardSeverity != cveStore.GetSeverity() {
+				cveStore.UpdateNewSeverityInCveStore(item.Severity, userId)
 				cvesToUpdate = append(cvesToUpdate, cveStore)
 			}
 		}
-		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistory.Id, item.Name, item.FeatureName, item.FeatureVersion, item.FixedBy, toolId)
+		imageScanExecutionResult := createImageScanExecutionResultObject(executionHistory.Id, item.Name, item.FeatureName, item.FeatureVersion, item.FixedBy, "", "", "", toolId)
 		imageScanExecutionResultsToBeSaved = append(imageScanExecutionResultsToBeSaved, imageScanExecutionResult)
 	}
 	tx, err := impl.CveStoreRepository.GetConnection().Begin()
