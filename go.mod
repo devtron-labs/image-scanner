@@ -1,6 +1,8 @@
 module github.com/devtron-labs/image-scanner
 
-go 1.20
+go 1.21
+
+toolchain go1.22.3
 
 require (
 	github.com/Knetic/govaluate v3.0.1-0.20171022003610-9aa49832a739+incompatible
@@ -8,7 +10,7 @@ require (
 	github.com/aws/aws-sdk-go v1.44.116
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/caarlos0/env/v6 v6.10.1
-	github.com/devtron-labs/common-lib v0.0.22-0.20240705073412-32e32c499160
+	github.com/devtron-labs/common-lib v0.16.1-0.20240904133334-7918e7c25b63
 	github.com/go-pg/pg v6.15.1+incompatible
 	github.com/google/go-containerregistry v0.6.0
 	github.com/google/wire v0.6.0
@@ -19,19 +21,18 @@ require (
 	github.com/quay/claircore v1.3.1
 	github.com/tidwall/gjson v1.14.4
 	go.uber.org/zap v1.21.0
-	golang.org/x/oauth2 v0.10.0
+	golang.org/x/oauth2 v0.21.0
 )
 
 require (
-	cloud.google.com/go/compute v1.23.0 // indirect
-	cloud.google.com/go/compute/metadata v0.2.3 // indirect
+	cloud.google.com/go/compute/metadata v0.3.0 // indirect
 	github.com/arl/statsviz v0.6.0 // indirect
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/cespare/xxhash/v2 v2.2.0 // indirect
 	github.com/coreos/clair v2.0.1-0.20171220021131-30bd568d8361+incompatible // indirect
 	github.com/docker/cli v24.0.6+incompatible // indirect
 	github.com/docker/distribution v2.8.2+incompatible // indirect
-	github.com/docker/docker v24.0.9+incompatible // indirect
+	github.com/docker/docker v27.2.0+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.7.0 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/protobuf v1.5.4 // indirect
@@ -58,14 +59,13 @@ require (
 	github.com/tidwall/pretty v1.2.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/multierr v1.7.0 // indirect
-	golang.org/x/crypto v0.21.0 // indirect
-	golang.org/x/mod v0.14.0 // indirect
-	golang.org/x/net v0.23.0 // indirect
-	golang.org/x/sync v0.6.0 // indirect
-	golang.org/x/sys v0.18.0 // indirect
-	golang.org/x/text v0.14.0 // indirect
-	golang.org/x/tools v0.17.0 // indirect
-	google.golang.org/appengine v1.6.7 // indirect
+	golang.org/x/crypto v0.25.0 // indirect
+	golang.org/x/mod v0.17.0 // indirect
+	golang.org/x/net v0.27.0 // indirect
+	golang.org/x/sync v0.7.0 // indirect
+	golang.org/x/sys v0.22.0 // indirect
+	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d // indirect
 	google.golang.org/genproto v0.0.0-20230803162519-f966b187b2e5 // indirect
 	google.golang.org/genproto/googleapis/api v0.0.0-20230726155614-23370e0ffb3e // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20230822172742-b8732ec3820d // indirect
