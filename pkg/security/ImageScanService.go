@@ -631,7 +631,6 @@ func (impl *ImageScanServiceImpl) getImageScanOutputObjectsV2(stepOutput []byte,
 			return true
 		})
 	}
-
 	for _, mapping := range mappings {
 		if mapping[bean.MappingKeyPathToResultsArray] != nil {
 			result := gjson.Get(string(stepOutput), mapping[bean.MappingKeyPathToResultsArray].(string))
