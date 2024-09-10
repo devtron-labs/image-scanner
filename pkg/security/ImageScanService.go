@@ -633,11 +633,13 @@ func (impl *ImageScanServiceImpl) getImageScanOutputObjectsV2(stepOutput []byte,
 	}
 
 	for _, mapping := range mappings {
-		result := gjson.Get(string(stepOutput), mapping[bean.MappingKeyPathToResultsArray].(string))
-		if !result.Exists() {
-			continue
+		if mapping[bean.MappingKeyPathToResultsArray] != nil {
+			result := gjson.Get(string(stepOutput), mapping[bean.MappingKeyPathToResultsArray].(string))
+			if !result.Exists() {
+				continue
+			}
+			processArray(mapping, result)
 		}
-		processArray(mapping, result)
 	}
 	impl.Logger.Debugw("received vulnerabilities", "vulnerabilites", vulnerabilities)
 	return vulnerabilities, nil
