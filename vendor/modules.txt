@@ -72,9 +72,10 @@ github.com/cespare/xxhash/v2
 github.com/coreos/clair/api/v3/clairpb
 github.com/coreos/clair/database
 github.com/coreos/clair/ext/versionfmt
-# github.com/devtron-labs/common-lib v0.16.1-0.20240904133334-7918e7c25b63
+# github.com/devtron-labs/common-lib v0.16.1-0.20240923062859-8a1483660d37
 ## explicit; go 1.21
 github.com/devtron-labs/common-lib/constants
+github.com/devtron-labs/common-lib/git-manager/util
 github.com/devtron-labs/common-lib/middlewares
 github.com/devtron-labs/common-lib/monitoring
 github.com/devtron-labs/common-lib/monitoring/pprof
@@ -83,6 +84,7 @@ github.com/devtron-labs/common-lib/pubsub-lib
 github.com/devtron-labs/common-lib/pubsub-lib/metrics
 github.com/devtron-labs/common-lib/pubsub-lib/model
 github.com/devtron-labs/common-lib/utils
+github.com/devtron-labs/common-lib/utils/bean
 github.com/devtron-labs/common-lib/utils/remoteConnection/bean
 # github.com/docker/cli v24.0.6+incompatible
 ## explicit
@@ -242,8 +244,8 @@ github.com/tidwall/pretty
 # go.uber.org/atomic v1.10.0
 ## explicit; go 1.18
 go.uber.org/atomic
-# go.uber.org/multierr v1.7.0
-## explicit; go 1.14
+# go.uber.org/multierr v1.11.0
+## explicit; go 1.19
 go.uber.org/multierr
 # go.uber.org/zap v1.21.0
 ## explicit; go 1.13
