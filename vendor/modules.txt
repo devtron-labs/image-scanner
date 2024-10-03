@@ -72,7 +72,7 @@ github.com/cespare/xxhash/v2
 github.com/coreos/clair/api/v3/clairpb
 github.com/coreos/clair/database
 github.com/coreos/clair/ext/versionfmt
-# github.com/devtron-labs/common-lib v0.16.1-0.20240923063129-ff2dc035435e
+# github.com/devtron-labs/common-lib v0.19.1-0.20241003134908-475594eb98fc
 ## explicit; go 1.21
 github.com/devtron-labs/common-lib/constants
 github.com/devtron-labs/common-lib/git-manager/util
