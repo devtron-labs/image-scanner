@@ -51,9 +51,8 @@ type ImageScanService interface {
 	ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory, executionHistoryDirPath string) error
 	CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*claircore.Vulnerability, error)
 	CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*clair.Vulnerability, error)
-	IsImageScanned(image string) (bool, error)
+	IsImageScanned(image string, hasSource bool) (int, bool, error)
 	ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int, executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto) error
-	CreateFolderForOutputData(executionHistoryModelId int) string
 	HandleProgressingScans()
 	GetActiveTool() (*repository.ScanToolMetadata, error)
 	RegisterScanExecutionHistoryAndState(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) (*repository.ImageScanExecutionHistory, string, error)
@@ -203,8 +202,11 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 }
 
 func (impl *ImageScanServiceImpl) GetImageScanRenderDto(registryId string, scanEvent *common.ImageScanEvent) (*common.ImageScanRenderDto, error) {
+
 	dockerRegistry, err := impl.DockerArtifactStoreRepository.FindById(registryId)
-	if err != nil {
+	if err == pg.ErrNoRows {
+		dockerRegistry = &repository.DockerArtifactStore{}
+	} else if err != nil {
 		impl.Logger.Errorw("error in getting docker registry by id", "err", err, "id", registryId)
 		return nil, err
 	}
@@ -238,11 +240,6 @@ func (impl *ImageScanServiceImpl) ScanImageForTool(tool *repository.ScanToolMeta
 	}
 	wg.Done()
 	return err
-}
-func (impl *ImageScanServiceImpl) CreateFolderForOutputData(executionHistoryModelId int) string {
-	executionHistoryModelIdStr := strconv.Itoa(executionHistoryModelId)
-	executionHistoryDirPath := path.Join(bean.ScanOutputDirectory, executionHistoryModelIdStr)
-	return executionHistoryDirPath
 }
 
 func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent *common.ImageScanEvent,
@@ -289,7 +286,7 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 		}
 	}
 	// creating folder for storing output data for this execution history data
-	executionHistoryDirPath = impl.CreateFolderForOutputData(executionHistoryModel.Id)
+	executionHistoryDirPath = CreateFolderForOutputData(executionHistoryModel.Id)
 	err = os.Mkdir(executionHistoryDirPath, commonUtil.DefaultFileCreatePermission)
 	if err != nil && !os.IsExist(err) {
 		impl.Logger.Errorw("error in creating executionHistory directory", "err", err, "executionHistoryId", executionHistoryModel.Id)
@@ -856,12 +853,19 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 	return vs, nil
 }
 
-func (impl *ImageScanServiceImpl) IsImageScanned(image string) (bool, error) {
+func (impl *ImageScanServiceImpl) IsImageScanned(image string, isV2 bool) (int, bool, error) {
 	scanned := false
-	scanHistory, err := impl.ScanHistoryRepository.FindByImage(image)
+	//scanHistory, err := impl.ScanHistoryRepository.FindByImage(image)
+	var scanHistory *repository.ImageScanExecutionHistory
+	var err error
+	if isV2 {
+		scanHistory, err = impl.ScanHistoryRepository.FindByImageWithSource(image)
+	} else {
+		scanHistory, err = impl.ScanHistoryRepository.FindByImageWithNoSource(image)
+	}
 	if err != nil && err != pg.ErrNoRows {
 		impl.Logger.Errorw("error in fetching scan history ", "err", err)
-		return scanned, err
+		return 0, scanned, err
 	}
 	scanHistoryId := 0
 	if scanHistory != nil {
@@ -872,14 +876,14 @@ func (impl *ImageScanServiceImpl) IsImageScanned(image string) (bool, error) {
 		scanHistoryMappings, err := impl.ScanToolExecutionHistoryMappingRepository.GetAllScanHistoriesByExecutionHistoryIdAndStates(scanHistoryId, []bean.ScanExecutionProcessState{bean.ScanExecutionProcessStateRunning, bean.ScanExecutionProcessStateCompleted})
 		if err != nil && err != pg.ErrNoRows {
 			impl.Logger.Errorw("error in getting history mappings", "err", err)
-			return scanned, err
+			return scanHistoryId, scanned, err
 		}
 		if len(scanHistoryMappings) > 0 {
 			scanned = true
 		}
 	}
 
-	return scanned, err
+	return scanHistoryId, scanned, err
 }
 
 func (impl *ImageScanServiceImpl) CheckConditionsForAStep(step repository.ScanToolStep, stepOutput []byte) (bool, error) {
@@ -947,7 +951,7 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 	// Create Folder for output data for execution history only if any pending scans are there due to pod died
 	if len(scanHistories) > 0 {
 		flagForDeleting = true
-		executionHistoryDirPath = impl.CreateFolderForOutputData(scanHistories[0].ImageScanExecutionHistoryId)
+		executionHistoryDirPath = CreateFolderForOutputData(scanHistories[0].ImageScanExecutionHistoryId)
 	}
 	wg := &sync.WaitGroup{}
 	wg.Add(len(scanHistories))

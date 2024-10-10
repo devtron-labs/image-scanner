@@ -56,13 +56,13 @@ type ClairService interface {
 	DeleteIndexReportFromManifestHash(manifestHash claircore.Digest) error
 }
 type ClairServiceImpl struct {
-	Logger                        *zap.SugaredLogger
-	ClairConfig                   *ClairConfig
-	HttpClient                    *http.Client
-	ImageScanService              security.ImageScanService
-	DockerArtifactStoreRepository repository.DockerArtifactStoreRepository
-	ScanToolMetadataRepository    repository.ScanToolMetadataRepository
-	RoundTripperService           roundTripper.RoundTripperService
+	logger                        *zap.SugaredLogger
+	clairConfig                   *ClairConfig
+	httpClient                    *http.Client
+	imageScanService              security.ImageScanService
+	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository
+	scanToolMetadataRepository    repository.ScanToolMetadataRepository
+	roundTripperService           roundTripper.RoundTripperService
 }
 
 func NewClairServiceImpl(logger *zap.SugaredLogger, clairConfig *ClairConfig,
@@ -70,13 +70,13 @@ func NewClairServiceImpl(logger *zap.SugaredLogger, clairConfig *ClairConfig,
 	dockerArtifactStoreRepository repository.DockerArtifactStoreRepository,
 	scanToolMetadataRepository repository.ScanToolMetadataRepository, roundTripperService roundTripper.RoundTripperService) *ClairServiceImpl {
 	return &ClairServiceImpl{
-		Logger:                        logger,
-		ClairConfig:                   clairConfig,
-		HttpClient:                    httpClient,
-		ImageScanService:              imageScanService,
-		DockerArtifactStoreRepository: dockerArtifactStoreRepository,
-		ScanToolMetadataRepository:    scanToolMetadataRepository,
-		RoundTripperService:           roundTripperService,
+		logger:                        logger,
+		clairConfig:                   clairConfig,
+		httpClient:                    httpClient,
+		imageScanService:              imageScanService,
+		dockerArtifactStoreRepository: dockerArtifactStoreRepository,
+		scanToolMetadataRepository:    scanToolMetadataRepository,
+		roundTripperService:           roundTripperService,
 	}
 }
 
@@ -101,23 +101,23 @@ func GetClairConfig() (*ClairConfig, error) {
 }
 
 func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory) (*common.ScanEventResponse, error) {
-	impl.Logger.Debugw("new request, scan image", "requestPayload", scanEvent)
+	impl.logger.Debugw("new request, scan image", "requestPayload", scanEvent)
 	scanEventResponse := &common.ScanEventResponse{
 		RequestData: scanEvent,
 	}
-	isImageScanned, err := impl.ImageScanService.IsImageScanned(scanEvent.Image)
+	_, isImageScanned, err := impl.imageScanService.IsImageScanned(scanEvent.Image, false)
 	if err != nil && err != pg.ErrNoRows {
-		impl.Logger.Errorw("error in fetching scan history ", "err", err, "image", scanEvent.Image)
+		impl.logger.Errorw("error in fetching scan history ", "err", err, "image", scanEvent.Image)
 		return nil, err
 	}
 	if isImageScanned {
-		impl.Logger.Infow("image already scanned, skipping further process", "image", scanEvent.Image)
+		impl.logger.Infow("image already scanned, skipping further process", "image", scanEvent.Image)
 		return scanEventResponse, nil
 	}
 
 	vulnerabilityReport, err := impl.GetVulnerabilityReportFromClair(scanEvent)
 	if err != nil {
-		impl.Logger.Errorw("error in getting vulnerability report from clair", "err", err, "scanEvent", scanEvent)
+		impl.logger.Errorw("error in getting vulnerability report from clair", "err", err, "scanEvent", scanEvent)
 		return nil, err
 	}
 
@@ -125,9 +125,9 @@ func (impl *ClairServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, tool *
 	for _, vulnerability := range vulnerabilityReport.Vulnerabilities {
 		vulnerabilities = append(vulnerabilities, vulnerability)
 	}
-	_, err = impl.ImageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent, tool.Id, executionHistory)
+	_, err = impl.imageScanService.CreateScanExecutionRegistryForClairV4(vulnerabilities, scanEvent, tool.Id, executionHistory)
 	if err != nil {
-		impl.Logger.Errorw("error in CreateScanExecutionRegistry", "err", err)
+		impl.logger.Errorw("error in CreateScanExecutionRegistry", "err", err)
 		return scanEventResponse, err
 	}
 	scanEventResponse.ResponseDataClairV4 = vulnerabilities
@@ -138,7 +138,7 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.
 	//get manifest from image
 	manifest, err := impl.CreateClairManifest(scanEvent)
 	if err != nil {
-		impl.Logger.Errorw("error in creating clair manifest", "err", err, "scanEvent", scanEvent)
+		impl.logger.Errorw("error in creating clair manifest", "err", err, "scanEvent", scanEvent)
 		return nil, err
 	}
 	//end get manifest
@@ -146,13 +146,13 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.
 	//checking if index report exists for this manifest hash; if it does, no need of creating index report
 	exists, err := impl.CheckIfIndexReportExistsForManifestHash(manifest.Hash)
 	if err != nil {
-		impl.Logger.Infow("err in checking if index report exists, trying once again", "err", err, "manifestHash", manifest.Hash)
+		impl.logger.Infow("err in checking if index report exists, trying once again", "err", err, "manifestHash", manifest.Hash)
 		exists, err := impl.CheckIfIndexReportExistsForManifestHash(manifest.Hash)
 		if !exists {
-			impl.Logger.Infow("could not check if index report exists in second try", "err", err, "manifestHash", manifest.Hash)
+			impl.logger.Infow("could not check if index report exists in second try", "err", err, "manifestHash", manifest.Hash)
 			err = impl.CreateIndexReportFromManifest(manifest)
 			if err != nil {
-				impl.Logger.Errorw("error in creating clair index report", "err", err, "manifest", manifest)
+				impl.logger.Errorw("error in creating clair index report", "err", err, "manifest", manifest)
 				return nil, err
 			}
 		}
@@ -160,7 +160,7 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.
 		//index report do not exist, creating index report for manifest
 		err = impl.CreateIndexReportFromManifest(manifest)
 		if err != nil {
-			impl.Logger.Errorw("error in creating clair index report", "err", err, "manifest", manifest)
+			impl.logger.Errorw("error in creating clair index report", "err", err, "manifest", manifest)
 			return nil, err
 		}
 	}
@@ -168,42 +168,42 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromClair(scanEvent *common.
 	//index report created, now getting vulnerability report
 	vulnerabilityReport, err := impl.GetVulnerabilityReportFromManifestHash(manifest.Hash)
 	if err != nil {
-		impl.Logger.Errorw("error in getting vulnerability report by manifest hash", "err", err, "manifestHash", manifest.Hash)
+		impl.logger.Errorw("error in getting vulnerability report by manifest hash", "err", err, "manifestHash", manifest.Hash)
 		return nil, err
 	}
 
 	//trying to delete index report for manifest hash, if unsuccessful will log and skip
 	err = impl.DeleteIndexReportFromManifestHash(manifest.Hash)
 	if err != nil {
-		impl.Logger.Warnw("error in deleting index report from manifest hash", "err", err, "manifestHash", manifest.Hash)
+		impl.logger.Warnw("error in deleting index report from manifest hash", "err", err, "manifestHash", manifest.Hash)
 	}
 	return vulnerabilityReport, nil
 }
 
 func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ImageScanEvent) (*claircore.Manifest, error) {
-	roundTripper, err := impl.RoundTripperService.GetRoundTripper(scanEvent)
+	roundTripper, err := impl.roundTripperService.GetRoundTripper(scanEvent)
 	if err != nil {
-		impl.Logger.Errorw("error in getting round tripper", "err", "image", scanEvent.Image)
+		impl.logger.Errorw("error in getting round tripper", "err", "image", scanEvent.Image)
 		return nil, err
 	}
 	reference, err := name.ParseReference(scanEvent.Image)
 	if err != nil {
-		impl.Logger.Errorw("error in parsing reference of image", "err", err, "image", scanEvent.Image)
+		impl.logger.Errorw("error in parsing reference of image", "err", err, "image", scanEvent.Image)
 		return nil, err
 	}
 	descriptor, err := remote.Get(reference, remote.WithTransport(roundTripper))
 	if err != nil {
-		impl.Logger.Errorw("error in getting image descriptor for given reference", "err", err, "reference", reference)
+		impl.logger.Errorw("error in getting image descriptor for given reference", "err", err, "reference", reference)
 		return nil, err
 	}
 	image, err := descriptor.Image()
 	if err != nil {
-		impl.Logger.Errorw("error in getting image by descriptor", "err", err, "descriptor", descriptor)
+		impl.logger.Errorw("error in getting image by descriptor", "err", err, "descriptor", descriptor)
 		return nil, err
 	}
 	manifest, err := impl.GenerateClairManifestFromImage(image, reference, roundTripper)
 	if err != nil {
-		impl.Logger.Errorw("error in generating clair manifest from image", "err", err, "image", image)
+		impl.logger.Errorw("error in generating clair manifest from image", "err", err, "image", image)
 		return nil, err
 	}
 	return manifest, nil
@@ -212,25 +212,25 @@ func (impl *ClairServiceImpl) CreateClairManifest(scanEvent *common.ImageScanEve
 func (impl *ClairServiceImpl) GenerateClairManifestFromImage(image v1.Image, reference name.Reference, roundTripper http.RoundTripper) (*claircore.Manifest, error) {
 	imageDigest, err := image.Digest()
 	if err != nil {
-		impl.Logger.Errorw("error in getting imageDigest by image", "err", err, "image", image)
+		impl.logger.Errorw("error in getting imageDigest by image", "err", err, "image", image)
 		return nil, err
 	}
 	parsedImageDigest, err := claircore.ParseDigest(imageDigest.String())
 	if err != nil {
-		impl.Logger.Errorw("error in getting parsing imageDigest", "err", err, "imageDigest", imageDigest)
+		impl.logger.Errorw("error in getting parsing imageDigest", "err", err, "imageDigest", imageDigest)
 		return nil, err
 	}
-	impl.Logger.Debugw("got hash for clair manifest", "hash", parsedImageDigest)
+	impl.logger.Debugw("got hash for clair manifest", "hash", parsedImageDigest)
 	manifest := &claircore.Manifest{
 		Hash: parsedImageDigest,
 	}
 
 	layers, err := image.Layers()
 	if err != nil {
-		impl.Logger.Errorw("error in getting layers from image", "err", err, "image", image)
+		impl.logger.Errorw("error in getting layers from image", "err", err, "image", image)
 		return nil, err
 	}
-	impl.Logger.Debugw("got image layers", "layers", layers, "image", image)
+	impl.logger.Debugw("got image layers", "layers", layers, "image", image)
 
 	//getting repository from reference
 	repository := reference.Context()
@@ -244,33 +244,33 @@ func (impl *ClairServiceImpl) GenerateClairManifestFromImage(image v1.Image, ref
 	for _, layer := range layers {
 		layerDigest, err := layer.Digest()
 		if err != nil {
-			impl.Logger.Errorw("error in getting image digest", "err", err, "image", image)
+			impl.logger.Errorw("error in getting image digest", "err", err, "image", image)
 			return nil, err
 		}
 		parsedLayerDigest, err := claircore.ParseDigest(layerDigest.String())
 		if err != nil {
-			impl.Logger.Errorw("error in parsing layerDigest", "err", err, "layerDigest", layerDigest)
+			impl.logger.Errorw("error in parsing layerDigest", "err", err, "layerDigest", layerDigest)
 			return nil, err
 		}
 		parsedRepositoryUrl, err := repositoryURL.Parse(path.Join("/", "v2", strings.TrimPrefix(repository.RepositoryStr(), repository.RegistryStr()), "blobs", layerDigest.String()))
 		if err != nil {
-			impl.Logger.Errorw("error in parsing repositoryUrl", "err", err, "repositoryUrl", repositoryURL)
+			impl.logger.Errorw("error in parsing repositoryUrl", "err", err, "repositoryUrl", repositoryURL)
 			return nil, err
 		}
 		httpRequest, err := http.NewRequest(http.MethodGet, parsedRepositoryUrl.String(), nil)
 		if err != nil {
-			impl.Logger.Errorw("error in creating new http request", "err", err, "method", http.MethodGet, "url", parsedRepositoryUrl.String())
+			impl.logger.Errorw("error in creating new http request", "err", err, "method", http.MethodGet, "url", parsedRepositoryUrl.String())
 			return nil, err
 		}
 		httpRequest.Header.Add("Range", "bytes=0-0")
 		httpResponse, err := httpClient.Do(httpRequest)
 		if err != nil {
-			impl.Logger.Errorw("error in sending http request", "err", err, "httpRequest", httpRequest)
+			impl.logger.Errorw("error in sending http request", "err", err, "httpRequest", httpRequest)
 			return nil, err
 		}
 		err = httpResponse.Body.Close()
 		if err != nil {
-			impl.Logger.Errorw("error in closing http request", "err", err)
+			impl.logger.Errorw("error in closing http request", "err", err)
 		}
 		httpResponse.Request.Header.Del("User-Agent")
 		httpResponse.Request.Header.Del("Range")
@@ -283,80 +283,80 @@ func (impl *ClairServiceImpl) GenerateClairManifestFromImage(image v1.Image, ref
 	return manifest, nil
 }
 func (impl *ClairServiceImpl) CheckIfIndexReportExistsForManifestHash(manifestHash claircore.Digest) (bool, error) {
-	impl.Logger.Debugw("new request, check if index report exists for manifest hash", "manifestHash", manifestHash)
+	impl.logger.Debugw("new request, check if index report exists for manifest hash", "manifestHash", manifestHash)
 
 	//url - base url + "/indexer/api/v1/index_report/{manifest_hash}"
-	checkIndexReportUrl, err := url.Parse(impl.ClairConfig.ClairAddress)
+	checkIndexReportUrl, err := url.Parse(impl.clairConfig.ClairAddress)
 	if err != nil {
-		impl.Logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.ClairConfig.ClairAddress)
+		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
 		return false, err
 	}
 	checkIndexReportUrl.Path = path.Join(checkIndexReportUrl.Path, CLAIR_INDEX_REPORT_URL, manifestHash.String())
 	request, err := http.NewRequest(http.MethodGet, checkIndexReportUrl.String(), nil)
 	if err != nil {
-		impl.Logger.Errorw("error in creating new http request", "err", err, "requestUrl", checkIndexReportUrl)
+		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", checkIndexReportUrl)
 		return false, err
 	}
-	response, err := impl.HttpClient.Do(request)
+	response, err := impl.httpClient.Do(request)
 	if err != nil {
-		impl.Logger.Errorw("error in http request - CheckIfIndexReportExistsForManifestHash", "err", err, "manifestHash", manifestHash)
+		impl.logger.Errorw("error in http request - CheckIfIndexReportExistsForManifestHash", "err", err, "manifestHash", manifestHash)
 		return false, err
 	}
 	status := response.StatusCode
 	if !(status >= 200 && status <= 299) {
-		impl.Logger.Infow("index report does not exists for given manifest hash", "responseStatusCode", response.StatusCode, "manifestHash", manifestHash)
+		impl.logger.Infow("index report does not exists for given manifest hash", "responseStatusCode", response.StatusCode, "manifestHash", manifestHash)
 		return false, nil
 	}
-	impl.Logger.Debugw("received response - index report exists for given manifest hash", "manifestHash", manifestHash)
+	impl.logger.Debugw("received response - index report exists for given manifest hash", "manifestHash", manifestHash)
 	return true, nil
 }
 
 func (impl *ClairServiceImpl) CreateIndexReportFromManifest(manifest *claircore.Manifest) error {
-	impl.Logger.Debugw("new request, create index report from manifest", "manifest", manifest)
+	impl.logger.Debugw("new request, create index report from manifest", "manifest", manifest)
 	requestBody, err := json.Marshal(manifest)
 	if err != nil {
-		impl.Logger.Errorw("error while marshaling request manifest", "err", err)
+		impl.logger.Errorw("error while marshaling request manifest", "err", err)
 		return err
 	}
-	getIndexReportUrl, err := url.Parse(impl.ClairConfig.ClairAddress)
+	getIndexReportUrl, err := url.Parse(impl.clairConfig.ClairAddress)
 	if err != nil {
-		impl.Logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.ClairConfig.ClairAddress)
+		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
 		return err
 	}
 	getIndexReportUrl.Path = path.Join(getIndexReportUrl.Path, CLAIR_INDEX_REPORT_URL)
 	request, err := http.NewRequest(http.MethodPost, getIndexReportUrl.String(), bytes.NewBuffer(requestBody))
 	if err != nil {
-		impl.Logger.Errorw("error in creating new http request", "err", err, "requestUrl", getIndexReportUrl, "requestBody", requestBody)
+		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", getIndexReportUrl, "requestBody", requestBody)
 		return err
 	}
 	request.Header.Set("Content-Type", "application/json")
-	indexReport, err := impl.HttpClient.Do(request)
+	indexReport, err := impl.httpClient.Do(request)
 	if err != nil {
-		impl.Logger.Errorw("error in http request - CreateIndexReportFromManifest", "err", err, "manifest", manifest)
+		impl.logger.Errorw("error in http request - CreateIndexReportFromManifest", "err", err, "manifest", manifest)
 		return err
 	}
-	impl.Logger.Debugw("created new index report from manifest", "indexReport", indexReport)
+	impl.logger.Debugw("created new index report from manifest", "indexReport", indexReport)
 	return nil
 }
 
 func (impl *ClairServiceImpl) GetVulnerabilityReportFromManifestHash(manifestHash claircore.Digest) (*claircore.VulnerabilityReport, error) {
-	impl.Logger.Debugw("new request, get vulnerability report from manifest hash", "manifestHash", manifestHash)
+	impl.logger.Debugw("new request, get vulnerability report from manifest hash", "manifestHash", manifestHash)
 
 	//url - base url + "/matcher/api/v1/vulnerability_report/{manifest_hash}"
-	getVulnerabilityReportUrl, err := url.Parse(impl.ClairConfig.ClairAddress)
+	getVulnerabilityReportUrl, err := url.Parse(impl.clairConfig.ClairAddress)
 	if err != nil {
-		impl.Logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.ClairConfig.ClairAddress)
+		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
 		return nil, err
 	}
 	getVulnerabilityReportUrl.Path = path.Join(getVulnerabilityReportUrl.Path, CLAIR_VULNERABILITY_REPORT_URL, manifestHash.String())
 	request, err := http.NewRequest(http.MethodGet, getVulnerabilityReportUrl.String(), nil)
 	if err != nil {
-		impl.Logger.Errorw("error in creating new http request", "err", err, "requestUrl", getVulnerabilityReportUrl)
+		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", getVulnerabilityReportUrl)
 		return nil, err
 	}
-	response, err := impl.HttpClient.Do(request)
+	response, err := impl.httpClient.Do(request)
 	if err != nil {
-		impl.Logger.Errorw("error in http request - GetVulnerabilityReportFromManifestHash", "err", err, "manifestHash", manifestHash)
+		impl.logger.Errorw("error in http request - GetVulnerabilityReportFromManifestHash", "err", err, "manifestHash", manifestHash)
 		return nil, err
 	}
 
@@ -365,43 +365,43 @@ func (impl *ClairServiceImpl) GetVulnerabilityReportFromManifestHash(manifestHas
 	if status >= 200 && status <= 299 {
 		responseBody, err := ioutil.ReadAll(response.Body)
 		if err != nil {
-			impl.Logger.Errorw("error in reading http response body - GetVulnerabilityReportFromManifestHash", "err", err)
+			impl.logger.Errorw("error in reading http response body - GetVulnerabilityReportFromManifestHash", "err", err)
 			return nil, err
 		}
 		err = json.Unmarshal(responseBody, vulnerabilityReport)
 		if err != nil {
-			impl.Logger.Errorw("error in un-marshaling vulnerability report", "err", err, "responseBody", responseBody)
+			impl.logger.Errorw("error in un-marshaling vulnerability report", "err", err, "responseBody", responseBody)
 			return nil, err
 		}
 	} else {
-		impl.Logger.Errorw("http request did not succeed", "response", response)
+		impl.logger.Errorw("http request did not succeed", "response", response)
 		return nil, fmt.Errorf("http request did not succeed, code: %d", status)
 	}
 
-	impl.Logger.Debugw("got vulnerability report from manifest hash", "vulnerabilityReport", vulnerabilityReport)
+	impl.logger.Debugw("got vulnerability report from manifest hash", "vulnerabilityReport", vulnerabilityReport)
 	return vulnerabilityReport, nil
 }
 
 func (impl *ClairServiceImpl) DeleteIndexReportFromManifestHash(manifestHash claircore.Digest) error {
-	impl.Logger.Debugw("new request, delete index report from manifest hash", "manifestHash", manifestHash)
+	impl.logger.Debugw("new request, delete index report from manifest hash", "manifestHash", manifestHash)
 
 	//url - base url + "/indexer/api/v1/index_report/{manifest_hash}"
-	deleteIndexReportUrl, err := url.Parse(impl.ClairConfig.ClairAddress)
+	deleteIndexReportUrl, err := url.Parse(impl.clairConfig.ClairAddress)
 	if err != nil {
-		impl.Logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.ClairConfig.ClairAddress)
+		impl.logger.Errorw("error in parsing clair address url", "err", err, "clairAddress", impl.clairConfig.ClairAddress)
 		return err
 	}
 	deleteIndexReportUrl.Path = path.Join(deleteIndexReportUrl.Path, CLAIR_INDEX_REPORT_URL, manifestHash.String())
 	request, err := http.NewRequest(http.MethodDelete, deleteIndexReportUrl.String(), nil)
 	if err != nil {
-		impl.Logger.Errorw("error in creating new http request", "err", err, "requestUrl", deleteIndexReportUrl)
+		impl.logger.Errorw("error in creating new http request", "err", err, "requestUrl", deleteIndexReportUrl)
 		return err
 	}
-	_, err = impl.HttpClient.Do(request)
+	_, err = impl.httpClient.Do(request)
 	if err != nil {
-		impl.Logger.Errorw("error in http request - DeleteIndexReportFromManifestHash", "err", err, "manifestHash", manifestHash)
+		impl.logger.Errorw("error in http request - DeleteIndexReportFromManifestHash", "err", err, "manifestHash", manifestHash)
 		return err
 	}
-	impl.Logger.Debugw("deleted index report from manifest hash", "manifestHash", manifestHash)
+	impl.logger.Debugw("deleted index report from manifest hash", "manifestHash", manifestHash)
 	return nil
 }
