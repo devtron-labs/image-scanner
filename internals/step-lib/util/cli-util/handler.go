@@ -19,7 +19,7 @@ package cli_util
 import (
 	"context"
 	"github.com/devtron-labs/image-scanner/common"
-	common_util "github.com/devtron-labs/image-scanner/internal/step-lib/util/common-util"
+	common_util "github.com/devtron-labs/image-scanner/internals/step-lib/util/common-util"
 	"io"
 	"log"
 	"os"

@@ -18,7 +18,7 @@ package repository
 
 import (
 	"encoding/json"
-	cli_util "github.com/devtron-labs/image-scanner/internal/step-lib/util/cli-util"
+	cli_util "github.com/devtron-labs/image-scanner/internals/step-lib/util/cli-util"
 	"github.com/devtron-labs/image-scanner/pkg/sql/bean"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"

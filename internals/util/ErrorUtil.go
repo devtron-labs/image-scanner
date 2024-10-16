@@ -33,7 +33,7 @@ func (e *ApiError) Error() string {
 	return e.InternalMessage
 }
 
-// default internal will be set
+// default internals will be set
 func (e *ApiError) ErrorfInternal(format string, a ...interface{}) error {
 	return &ApiError{InternalMessage: fmt.Sprintf(format, a...)}
 }
