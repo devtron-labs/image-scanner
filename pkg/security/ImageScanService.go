@@ -206,7 +206,9 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 
 func (impl *ImageScanServiceImpl) GetImageScanRenderDto(registryId string, scanEvent *common.ImageScanEvent) (*common.ImageScanRenderDto, error) {
 	dockerRegistry, err := impl.DockerArtifactStoreRepository.FindById(registryId)
-	if err != nil {
+	if err == pg.ErrNoRows {
+		dockerRegistry = &repository.DockerArtifactStore{}
+	} else if err != nil {
 		impl.Logger.Errorw("error in getting docker registry by id", "id", registryId, "err", err)
 		return nil, err
 	}
