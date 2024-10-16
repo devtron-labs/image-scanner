@@ -33,6 +33,7 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/sql/bean"
 	"github.com/devtron-labs/image-scanner/pkg/sql/repository"
 	"github.com/go-pg/pg"
+	"github.com/google/go-containerregistry/pkg/name"
 	"github.com/optiopay/klar/clair"
 	"github.com/quay/claircore"
 	"github.com/tidwall/gjson"
@@ -59,7 +60,7 @@ type ImageScanService interface {
 	RegisterScanExecutionHistoryAndState(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) (*repository.ImageScanExecutionHistory, string, error)
 	GetImageScanRenderDto(registryId string, scanEvent *common.ImageScanEvent) (*common.ImageScanRenderDto, error)
 	GetImageToBeScannedAndFetchCliEnv(scanEvent *common.ImageScanEvent) (string, error)
-	FetchProxyUrl(scanEvent *common.ImageScanEvent) (string, error)
+	FetchProxyUrl(scanEvent *common.ImageScanEvent) (string, []name.Option, error)
 }
 
 type ImageScanServiceImpl struct {
@@ -1005,8 +1006,8 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 
 }
 
-func (impl *ImageScanServiceImpl) FetchProxyUrl(scanEvent *common.ImageScanEvent) (string, error) {
-	return "", nil
+func (impl *ImageScanServiceImpl) FetchProxyUrl(scanEvent *common.ImageScanEvent) (string, []name.Option, error) {
+	return "", []name.Option{}, nil
 }
 
 func GetImageScannerConfig() (*ImageScanConfig, error) {
