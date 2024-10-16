@@ -29,6 +29,7 @@ import (
 	"go.uber.org/zap"
 	"net/http"
 	"os"
+	"time"
 )
 
 type RestHandler interface {
@@ -111,7 +112,20 @@ func (impl *RestHandlerImpl) ScanForVulnerabilityEvent(scanConfig *common.ImageS
 		impl.Logger.Errorw("err in image scanning", "err", err)
 		return nil, err
 	}
-	executionHistory, executionHistoryDirPath, err := impl.ImageScanService.RegisterScanExecutionHistoryAndState(scanConfig, tool)
+	//creating execution history
+	scanEventJson, err := json.Marshal(scanConfig)
+	if err != nil {
+		impl.Logger.Errorw("error in marshalling scanEvent", "event", scanConfig, "err", err)
+		return nil, err
+	}
+	executionHistoryModel := &repository.ImageScanExecutionHistory{
+		Image:              scanConfig.Image,
+		ImageHash:          scanConfig.ImageDigest,
+		ExecutionTime:      time.Now(),
+		ExecutedBy:         scanConfig.UserId,
+		SourceMetadataJson: string(scanEventJson),
+	}
+	executionHistory, executionHistoryDirPath, err := impl.ImageScanService.RegisterScanExecutionHistoryAndState(executionHistoryModel, tool)
 	if err != nil {
 		impl.Logger.Errorw("service err, RegisterScanExecutionHistoryAndState", "err", err)
 		return nil, err

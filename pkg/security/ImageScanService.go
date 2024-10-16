@@ -57,7 +57,7 @@ type ImageScanService interface {
 	CreateFolderForOutputData(executionHistoryModelId int) string
 	HandleProgressingScans()
 	GetActiveTool() (*repository.ScanToolMetadata, error)
-	RegisterScanExecutionHistoryAndState(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) (*repository.ImageScanExecutionHistory, string, error)
+	RegisterScanExecutionHistoryAndState(executionHistoryModel *repository.ImageScanExecutionHistory, tool *repository.ScanToolMetadata) (*repository.ImageScanExecutionHistory, string, error)
 	GetImageScanRenderDto(registryId string, scanEvent *common.ImageScanEvent) (*common.ImageScanRenderDto, error)
 	GetImageToBeScannedAndFetchCliEnv(scanEvent *common.ImageScanEvent) (string, error)
 	FetchProxyUrl(scanEvent *common.ImageScanEvent) (string, []name.Option, error)
@@ -248,23 +248,10 @@ func (impl *ImageScanServiceImpl) CreateFolderForOutputData(executionHistoryMode
 	return executionHistoryDirPath
 }
 
-func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent *common.ImageScanEvent,
+func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(executionHistoryModel *repository.ImageScanExecutionHistory,
 	tool *repository.ScanToolMetadata) (*repository.ImageScanExecutionHistory, string, error) {
 	executionHistoryDirPath := ""
 	//creating execution history
-	executionTimeStart := time.Now()
-	scanEventJson, err := json.Marshal(scanEvent)
-	if err != nil {
-		impl.Logger.Errorw("error in marshalling scanEvent", "event", scanEvent, "err", err)
-		return nil, "", err
-	}
-	executionHistoryModel := &repository.ImageScanExecutionHistory{
-		Image:              scanEvent.Image,
-		ImageHash:          scanEvent.ImageDigest,
-		ExecutionTime:      executionTimeStart,
-		ExecutedBy:         scanEvent.UserId,
-		SourceMetadataJson: string(scanEventJson),
-	}
 	tx, err := impl.ScanHistoryRepository.GetConnection().Begin()
 	if err != nil {
 		impl.Logger.Errorw("error in initiating db transaction", "err", err)
@@ -301,16 +288,15 @@ func (impl *ImageScanServiceImpl) RegisterScanExecutionHistoryAndState(scanEvent
 	executionHistoryMappingModel := &repository.ScanToolExecutionHistoryMapping{
 		ImageScanExecutionHistoryId: executionHistoryModel.Id,
 		ScanToolId:                  tool.Id,
-		ExecutionStartTime:          executionTimeStart,
+		ExecutionStartTime:          executionHistoryModel.ExecutionTime,
 		State:                       bean.ScanExecutionProcessStateRunning,
 		AuditLog: repository.AuditLog{
-			CreatedOn: executionTimeStart,
-			CreatedBy: int32(scanEvent.UserId),
-			UpdatedOn: executionTimeStart,
-			UpdatedBy: int32(scanEvent.UserId),
+			CreatedOn: executionHistoryModel.ExecutionTime,
+			CreatedBy: int32(executionHistoryModel.ExecutedBy),
+			UpdatedOn: executionHistoryModel.ExecutionTime,
+			UpdatedBy: int32(executionHistoryModel.ExecutedBy),
 		},
 	}
-
 	err = impl.ScanToolExecutionHistoryMappingRepository.Save(tx, executionHistoryMappingModel)
 	if err != nil {
 		impl.Logger.Errorw("Failed to save executionHistoryMappingModel", "err", err)
