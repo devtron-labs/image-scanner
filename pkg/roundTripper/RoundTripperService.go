@@ -24,6 +24,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/ecr"
 	"github.com/devtron-labs/image-scanner/common"
+	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/sql/repository"
 	"github.com/google/go-containerregistry/pkg/authn"
 	"github.com/google/go-containerregistry/pkg/name"
@@ -40,6 +41,7 @@ type RoundTripperService interface {
 type RoundTripperServiceImpl struct {
 	Logger                        *zap.SugaredLogger
 	DockerArtifactStoreRepository repository.DockerArtifactStoreRepository
+	imageScanService              security.ImageScanService
 }
 
 func NewRoundTripperServiceImpl(logger *zap.SugaredLogger,
@@ -70,16 +72,21 @@ func (impl *RoundTripperServiceImpl) GetRoundTripper(scanEvent *common.ImageScan
 		impl.Logger.Errorw("error, GetAuthenticatorByDockerRegistryId", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
 		return nil, err
 	}
+	proxyUrl, referenceOptions, err := impl.imageScanService.FetchProxyUrl(scanEvent)
+	if err != nil {
+		impl.Logger.Errorw("error, FetchProxyUrl", "err", err, "dockerRegistryId", scanEvent.DockerRegistryId)
+		return nil, err
+	}
 	rtConfig := &RoundTripperConfig{
 		Username: dockerRegistry.Username,
 		Password: dockerRegistry.Password,
+		ProxyUrl: proxyUrl,
 	}
 	rt, err := impl.GetRoundTripperTransport(rtConfig)
 	if err != nil {
 		impl.Logger.Errorw("error in getting roundTripper", "err", err)
 		return nil, err
 	}
-	var referenceOptions []name.Option
 	return impl.UpdateTransportWithReference(rt, scanEvent.Image, authenticator, referenceOptions)
 }
 

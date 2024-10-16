@@ -17,8 +17,10 @@
 package repository
 
 import (
+	"github.com/devtron-labs/image-scanner/pkg/sql/bean"
 	"github.com/go-pg/pg"
 	"go.uber.org/zap"
+	"time"
 )
 
 /*
@@ -31,10 +33,31 @@ type ImageScanDeployInfo struct {
 	Id                          int      `sql:"id,pk"`
 	ImageScanExecutionHistoryId []int    `sql:"image_scan_execution_history_id,notnull" pg:",array"`
 	ScanObjectMetaId            int      `sql:"scan_object_meta_id,notnull"`
-	ObjectType                  string   `sql:"object_type"`
-	EnvId                       int      `sql:"env_id"`
+	ObjectType                  string   `sql:"object_type,notnull"`
+	EnvId                       *int     `sql:"env_id"`
+	ClusterId                   *int     `sql:"cluster_id"`
 	AuditLog
 }
+
+func (r *ImageScanDeployInfo) CreateAuditLog() {
+	r.CreatedBy = bean.UserSystemId
+	r.CreatedOn = time.Now()
+	r.UpdatedBy = bean.UserSystemId
+	r.UpdatedOn = time.Now()
+}
+func (r *ImageScanDeployInfo) UpdateImageScanExecutionHistoryIdList(historyId int) {
+	r.ImageScanExecutionHistoryId = append(r.ImageScanExecutionHistoryId, historyId)
+	r.UpdatedOn = time.Now()
+}
+
+const (
+	ScanObjectType_APP           string = "app"
+	ScanObjectType_CHART         string = "chart"
+	ScanObjectType_POD           string = "pod"
+	ScanObjectType_CHART_HISTORY string = "chart-history"
+	ScanObjectType_CI_Workflow   string = "ci-workflow"
+	ScanObjectType_CD_Workflow   string = "cd-workflow"
+)
 
 type ImageScanDeployInfoRepository interface {
 	Save(model *ImageScanDeployInfo) error
@@ -44,6 +67,8 @@ type ImageScanDeployInfoRepository interface {
 	Update(model *ImageScanDeployInfo) error
 	FetchListingGroupByObject() ([]*ImageScanDeployInfo, error)
 	FetchByAppIdAndEnvId(appId int, envId int) (*ImageScanDeployInfo, error)
+	FindByObjectTypeAndId(scanObjectMetaId int, objectType string) (*ImageScanDeployInfo, error)
+	FindLatestChildParentInfoId(parentInfoId int) (*ImageScanDeployInfo, error)
 }
 
 type ImageScanDeployInfoRepositoryImpl struct {
@@ -110,5 +135,30 @@ func (impl ImageScanDeployInfoRepositoryImpl) FetchByAppIdAndEnvId(appId int, en
 		Where("env_id = ?", envId).Where("object_type = ?", "app").
 		Order("created_on desc").Limit(1).
 		Select()
+	return &model, err
+}
+
+func (impl ImageScanDeployInfoRepositoryImpl) FindByObjectTypeAndId(scanObjectMetaId int, objectType string) (*ImageScanDeployInfo, error) {
+	var model ImageScanDeployInfo
+	err := impl.dbConnection.Model(&model).
+		Where("scan_object_meta_id = ?", scanObjectMetaId).
+		Where("object_type = ?", objectType).
+		Order("created_on desc").Limit(1).
+		Select()
+	if err == pg.ErrNoRows {
+		return nil, nil
+	}
+	return &model, err
+}
+
+func (impl ImageScanDeployInfoRepositoryImpl) FindLatestChildParentInfoId(parentInfoId int) (*ImageScanDeployInfo, error) {
+	var model ImageScanDeployInfo
+	err := impl.dbConnection.Model(&model).
+		Where("parent_id = ?", parentInfoId).
+		Order("created_on desc").Limit(1).
+		Select()
+	if err == pg.ErrNoRows {
+		return nil, nil
+	}
 	return &model, err
 }

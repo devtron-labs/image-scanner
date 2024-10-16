@@ -54,6 +54,7 @@ func (t ResourceScanType) ToInt() int {
 
 type ResourceScanResultRepository interface {
 	SaveInBatch(models []*ResourceScanResult) error
+	FetchByScanHistoryIdAndFormatType(scanHistoryId int, format int) ([]*ResourceScanResult, error)
 }
 
 type ResourceScanResultRepositoryImpl struct {
@@ -70,4 +71,17 @@ func NewResourceScanResultRepositoryImpl(dbConnection *pg.DB, logger *zap.Sugare
 
 func (impl ResourceScanResultRepositoryImpl) SaveInBatch(models []*ResourceScanResult) error {
 	return impl.dbConnection.Insert(&models)
+}
+
+func (impl ResourceScanResultRepositoryImpl) FetchByScanHistoryIdAndFormatType(scanHistoryId int, format int) ([]*ResourceScanResult, error) {
+	var model []*ResourceScanResult
+	err := impl.dbConnection.Model(&model).
+		Where("image_scan_execution_history_id = ?", scanHistoryId).
+		Where("format = ?", format).
+		Select()
+	if err != nil {
+		return model, err
+	}
+
+	return model, nil
 }

@@ -31,15 +31,15 @@ type RegistryIndexMapping struct {
 }
 
 type RegistryIndexMappingRepositoryImpl struct {
-	dbConnection *pg.DB
-	logger       *zap.SugaredLogger
+	DbConnection *pg.DB
+	Logger       *zap.SugaredLogger
 }
 
 func NewRegistryIndexMappingRepositoryImpl(dbConnection *pg.DB,
 	logger *zap.SugaredLogger) *RegistryIndexMappingRepositoryImpl {
 	return &RegistryIndexMappingRepositoryImpl{
-		dbConnection: dbConnection,
-		logger:       logger,
+		DbConnection: dbConnection,
+		Logger:       logger,
 	}
 }
 
@@ -49,7 +49,7 @@ type RegistryIndexMappingRepository interface {
 
 func (repo *RegistryIndexMappingRepositoryImpl) GetStartingIndexForARegistryAndATool(scanToolid int, registry common.RegistryType) (*RegistryIndexMapping, error) {
 	var model RegistryIndexMapping
-	err := repo.dbConnection.Model(&model).Where("scan_tool_id = ?", scanToolid).Where("registry_type = ?", registry).Select()
+	err := repo.DbConnection.Model(&model).Where("scan_tool_id = ?", scanToolid).Where("registry_type = ?", registry).Select()
 	if err != nil {
 		return &model, err
 	}
