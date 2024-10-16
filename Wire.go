@@ -1,3 +1,6 @@
+//go:build wireinject
+// +build wireinject
+
 /*
  * Copyright (c) 2024. Devtron Inc.
  *
@@ -13,9 +16,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-//go:build wireinject
-// +build wireinject
 
 package main
 
@@ -54,8 +54,6 @@ func InitializeApp() (*App, error) {
 		pubsub.NewNatSubscription,
 		grafeasService.NewKlarServiceImpl,
 		wire.Bind(new(grafeasService.GrafeasService), new(*grafeasService.GrafeasServiceImpl)),
-		pubsub.NewTestPublishImpl,
-		wire.Bind(new(pubsub.TestPublish), new(*pubsub.TestPublishImpl)),
 
 		clairService.GetClairConfig,
 		clairService.NewClairServiceImpl,

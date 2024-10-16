@@ -18,7 +18,6 @@ package common
 
 import (
 	git "github.com/devtron-labs/common-lib/git-manager"
-	"github.com/devtron-labs/image-scanner/pkg/sql/repository"
 	"github.com/optiopay/klar/clair"
 	"github.com/quay/claircore"
 	"strings"
@@ -102,13 +101,6 @@ type ScanEventResponse struct {
 	ResponseDataClairV4 []*claircore.Vulnerability `json:"responseDataClairV4"`
 	ResponseDataClairV2 []*clair.Vulnerability     `json:"ResponseDataClairV2"`
 	CodeScanRes         interface{}                `json:"codeScanResponse"`
-}
-
-type ScanCodeRequest struct {
-	ScanEvent               *ImageScanEvent
-	Tool                    *repository.ScanToolMetadata
-	ExecutionHistory        *repository.ImageScanExecutionHistory
-	ExecutionHistoryDirPath string
 }
 
 const (
