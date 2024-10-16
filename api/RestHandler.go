@@ -42,23 +42,23 @@ func NewRestHandlerImpl(logger *zap.SugaredLogger,
 	clairService clairService.ClairService,
 	imageScanConfig *security.ImageScanConfig) *RestHandlerImpl {
 	return &RestHandlerImpl{
-		logger:           logger,
+		Logger:           logger,
 		grafeasService:   grafeasService,
 		userService:      userService,
-		imageScanService: imageScanService,
-		klarService:      klarService,
-		clairService:     clairService,
+		ImageScanService: imageScanService,
+		KlarService:      klarService,
+		ClairService:     clairService,
 		imageScanConfig:  imageScanConfig,
 	}
 }
 
 type RestHandlerImpl struct {
-	logger           *zap.SugaredLogger
+	Logger           *zap.SugaredLogger
 	grafeasService   grafeasService.GrafeasService
 	userService      user.UserService
-	imageScanService security.ImageScanService
-	klarService      klarService.KlarService
-	clairService     clairService.ClairService
+	ImageScanService security.ImageScanService
+	KlarService      klarService.KlarService
+	ClairService     clairService.ClairService
 	imageScanConfig  *security.ImageScanConfig
 }
 type Response struct {
@@ -85,17 +85,17 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 	var scanConfig common.ImageScanEvent
 	err := decoder.Decode(&scanConfig)
 	if err != nil {
-		impl.logger.Errorw("error in decode request", "error", err)
+		impl.Logger.Errorw("error in decode request", "error", err)
 		writeJsonResp(w, err, nil, http.StatusBadRequest)
 		return
 	}
-	impl.logger.Infow("imageScan event", "scanConfig", scanConfig)
+	impl.Logger.Infow("imageScan event", "scanConfig", scanConfig)
 	result, err := impl.ScanForVulnerabilityEvent(&scanConfig)
 	if err != nil {
 		writeJsonResp(w, err, nil, http.StatusInternalServerError)
 		return
 	}
-	impl.logger.Debugw("save", "status", result)
+	impl.Logger.Debugw("save", "status", result)
 	writeJsonResp(w, err, result, http.StatusOK)
 }
 
@@ -103,47 +103,47 @@ func (impl *RestHandlerImpl) ScanForVulnerabilityEvent(scanConfig *common.ImageS
 	if scanConfig.UserId == 0 {
 		scanConfig.UserId = 1 //setting user as system user in case of empty user data
 	}
-	impl.logger.Infow("image scan req", "req", scanConfig)
+	impl.Logger.Infow("image scan req", "req", scanConfig)
 	var result = &common.ScanEventResponse{}
-	tool, err := impl.imageScanService.GetActiveTool()
+	tool, err := impl.ImageScanService.GetActiveTool()
 	if err != nil {
-		impl.logger.Errorw("err in image scanning", "err", err)
+		impl.Logger.Errorw("err in image scanning", "err", err)
 		return nil, err
 	}
-	executionHistory, executionHistoryDirPath, err := impl.imageScanService.RegisterScanExecutionHistoryAndState(scanConfig, tool)
+	executionHistory, executionHistoryDirPath, err := impl.ImageScanService.RegisterScanExecutionHistoryAndState(scanConfig, tool)
 	if err != nil {
-		impl.logger.Errorw("service err, RegisterScanExecutionHistoryAndState", "err", err)
+		impl.Logger.Errorw("service err, RegisterScanExecutionHistoryAndState", "err", err)
 		return nil, err
 	}
-	imageToBeScanned, err := impl.imageScanService.GetImageToBeScannedAndFetchCliEnv(scanConfig)
+	imageToBeScanned, err := impl.ImageScanService.GetImageToBeScannedAndFetchCliEnv(scanConfig)
 	if err != nil {
-		impl.logger.Errorw("service err, GetImageToBeScanned", "err", err)
+		impl.Logger.Errorw("service err, GetImageToBeScanned", "err", err)
 		return nil, err
 	}
 	scanConfig.Image = imageToBeScanned
 	if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion2 {
-		result, err = impl.klarService.Process(scanConfig, executionHistory)
+		result, err = impl.KlarService.Process(scanConfig, executionHistory)
 		if err != nil {
-			impl.logger.Errorw("err in process msg", "err", err)
+			impl.Logger.Errorw("err in process msg", "err", err)
 			return nil, err
 		}
 	} else if tool.Name == bean.ScanToolClair && tool.Version == bean.ScanToolVersion4 {
-		result, err = impl.clairService.ScanImage(scanConfig, tool, executionHistory)
+		result, err = impl.ClairService.ScanImage(scanConfig, tool, executionHistory)
 		if err != nil {
-			impl.logger.Errorw("err in process msg", "err", err)
+			impl.Logger.Errorw("err in process msg", "err", err)
 			return nil, err
 		}
 	} else {
-		err = impl.imageScanService.ScanImage(scanConfig, tool, executionHistory, executionHistoryDirPath)
+		err = impl.ImageScanService.ScanImage(scanConfig, tool, executionHistory, executionHistoryDirPath)
 		if err != nil {
-			impl.logger.Errorw("err in process msg", "err", err)
+			impl.Logger.Errorw("err in process msg", "err", err)
 			return nil, err
 		}
 	}
 	//deleting executionDirectoryPath with files as well
 	err = os.RemoveAll(executionHistoryDirPath)
 	if err != nil {
-		impl.logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
+		impl.Logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
 		return nil, err
 	}
 	return result, nil
