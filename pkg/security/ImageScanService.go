@@ -51,14 +51,15 @@ type ImageScanService interface {
 	ScanImage(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata, executionHistory *repository.ImageScanExecutionHistory, executionHistoryDirPath string) error
 	CreateScanExecutionRegistryForClairV4(vs []*claircore.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*claircore.Vulnerability, error)
 	CreateScanExecutionRegistryForClairV2(vs []*clair.Vulnerability, event *common.ImageScanEvent, toolId int, executionHistory *repository.ImageScanExecutionHistory) ([]*clair.Vulnerability, error)
-	IsImageScanned(image string) (bool, error)
-	ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int, executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto) error
+	IsImageScanned(image string, hasSource bool) (int, bool, error)
+	ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int, executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto, isV2 bool) (string, string, error)
 	CreateFolderForOutputData(executionHistoryModelId int) string
 	HandleProgressingScans()
 	GetActiveTool() (*repository.ScanToolMetadata, error)
 	RegisterScanExecutionHistoryAndState(scanEvent *common.ImageScanEvent, tool *repository.ScanToolMetadata) (*repository.ImageScanExecutionHistory, string, error)
 	GetImageScanRenderDto(registryId string, scanEvent *common.ImageScanEvent) (*common.ImageScanRenderDto, error)
 	GetImageToBeScannedAndFetchCliEnv(scanEvent *common.ImageScanEvent) (string, error)
+	FetchProxyUrl(scanEvent *common.ImageScanEvent) (string, error)
 }
 
 type ImageScanServiceImpl struct {
@@ -166,7 +167,7 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 	ctx, cancel := context.WithTimeout(context.Background(), time.Duration(impl.ImageScanConfig.ScanImageTimeout)*time.Minute)
 	defer cancel()
 	//checking if image is already scanned or not
-	isImageScanned, err := impl.IsImageScanned(scanEvent.Image)
+	_, isImageScanned, err := impl.IsImageScanned(scanEvent.Image, false)
 	if err != nil && err != pg.ErrNoRows {
 		impl.Logger.Errorw("error in fetching scan history ", "image", scanEvent.Image, "err", err)
 		return err
@@ -193,7 +194,7 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 	wg := &sync.WaitGroup{}
 	wg.Add(1)
 	// TODO: if multiple processes are to be done in parallel, then error propagation should have to be done via channels
-	err = impl.ScanImageForTool(tool, executionHistory.Id, executionHistoryDirPath, wg, int32(scanEvent.UserId), ctx, imageScanRenderDto)
+	_, _, err = impl.ScanImageForTool(tool, executionHistory.Id, executionHistoryDirPath, wg, int32(scanEvent.UserId), ctx, imageScanRenderDto, false)
 	if err != nil {
 		impl.Logger.Errorw("err in scanning image", "tool", tool, "executionHistory.Id", executionHistory.Id, "executionHistoryDirPath", executionHistoryDirPath, "scanEvent.UserId", scanEvent.UserId, "err", err)
 		return err
@@ -220,8 +221,7 @@ func (impl *ImageScanServiceImpl) GetImageScanRenderDto(registryId string, scanE
 	}
 	return imageScanRenderDto, nil
 }
-func (impl *ImageScanServiceImpl) ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int,
-	executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto) error {
+func (impl *ImageScanServiceImpl) ScanImageForTool(tool *repository.ScanToolMetadata, executionHistoryId int, executionHistoryDirPathCopy string, wg *sync.WaitGroup, userId int32, ctx context.Context, imageScanRenderDto *common.ImageScanRenderDto, isV2 bool) (string, string, error) {
 	toolCopy := *tool
 	var processedState bean.ScanExecutionProcessState
 	err := impl.ProcessScanForTool(toolCopy, executionHistoryDirPathCopy, executionHistoryId, userId, ctx, imageScanRenderDto)
@@ -237,7 +237,7 @@ func (impl *ImageScanServiceImpl) ScanImageForTool(tool *repository.ScanToolMeta
 		err = updateErr
 	}
 	wg.Done()
-	return err
+	return "", "", err
 }
 func (impl *ImageScanServiceImpl) CreateFolderForOutputData(executionHistoryModelId int) string {
 	executionHistoryModelIdStr := strconv.Itoa(executionHistoryModelId)
@@ -853,12 +853,12 @@ func (impl *ImageScanServiceImpl) CreateScanExecutionRegistryForClairV2(vs []*cl
 	return vs, nil
 }
 
-func (impl *ImageScanServiceImpl) IsImageScanned(image string) (bool, error) {
+func (impl *ImageScanServiceImpl) IsImageScanned(image string, hasSource bool) (int, bool, error) {
 	scanned := false
 	scanHistory, err := impl.ScanHistoryRepository.FindByImage(image)
 	if err != nil && err != pg.ErrNoRows {
 		impl.Logger.Errorw("error in fetching scan history ", "err", err)
-		return scanned, err
+		return 0, scanned, err
 	}
 	scanHistoryId := 0
 	if scanHistory != nil {
@@ -869,14 +869,14 @@ func (impl *ImageScanServiceImpl) IsImageScanned(image string) (bool, error) {
 		scanHistoryMappings, err := impl.ScanToolExecutionHistoryMappingRepository.GetAllScanHistoriesByExecutionHistoryIdAndStates(scanHistoryId, []bean.ScanExecutionProcessState{bean.ScanExecutionProcessStateRunning, bean.ScanExecutionProcessStateCompleted})
 		if err != nil && err != pg.ErrNoRows {
 			impl.Logger.Errorw("error in getting history mappings", "err", err)
-			return scanned, err
+			return 0, scanned, err
 		}
 		if len(scanHistoryMappings) > 0 {
 			scanned = true
 		}
 	}
 
-	return scanned, err
+	return 0, scanned, err
 }
 
 func (impl *ImageScanServiceImpl) CheckConditionsForAStep(step repository.ScanToolStep, stepOutput []byte) (bool, error) {
@@ -985,7 +985,7 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 			impl.Logger.Errorw("service error, GetImageScanRenderDto", "dockerRegistryId", scanEvent.DockerRegistryId, "err", err)
 			return
 		}
-		err = impl.ScanImageForTool(scanTool, scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, context.Background(), imageScanRenderDto)
+		_, _, err = impl.ScanImageForTool(scanTool, scanHistory.ImageScanExecutionHistoryId, executionHistoryDirPath, wg, 1, context.Background(), imageScanRenderDto, false)
 		if err != nil {
 			impl.Logger.Errorw("error in scanning image", "err", err)
 			return
@@ -1001,6 +1001,10 @@ func (impl *ImageScanServiceImpl) HandleProgressingScans() {
 		}
 	}
 
+}
+
+func (impl *ImageScanServiceImpl) FetchProxyUrl(scanEvent *common.ImageScanEvent) (string, error) {
+	return "", nil
 }
 
 func GetImageScannerConfig() (*ImageScanConfig, error) {
