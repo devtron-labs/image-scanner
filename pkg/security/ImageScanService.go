@@ -125,7 +125,7 @@ func (impl *ImageScanServiceImpl) GetActiveTool() (*repository.ScanToolMetadata,
 	return tool, nil
 }
 
-func (impl *ImageScanServiceImpl) createCaCertFile(cert string) (string, error) {
+func (impl *ImageScanServiceImpl) CreateCaCertFile(cert string) (string, error) {
 	// creating directory for temporarily storing CA certs, if not exist
 	isExist, err := helper.DoesFileExist(common.CaCertDirectory)
 	if err != nil {
@@ -178,7 +178,7 @@ func (impl *ImageScanServiceImpl) ScanImage(scanEvent *common.ImageScanEvent, to
 	}
 	var caCertFilePath string
 	if scanEvent.DockerConnection == common.SECUREWITHCERT {
-		caCertFilePath, err = impl.createCaCertFile(scanEvent.DockerCert)
+		caCertFilePath, err = impl.CreateCaCertFile(scanEvent.DockerCert)
 		if err != nil {
 			impl.Logger.Errorw("error in creating cert file", "image", scanEvent.Image, "err", err)
 			return err
