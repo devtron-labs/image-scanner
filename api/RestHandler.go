@@ -24,6 +24,7 @@ import (
 	"github.com/devtron-labs/image-scanner/pkg/klarService"
 	"github.com/devtron-labs/image-scanner/pkg/security"
 	"github.com/devtron-labs/image-scanner/pkg/sql/bean"
+	"github.com/devtron-labs/image-scanner/pkg/sql/repository"
 	"github.com/devtron-labs/image-scanner/pkg/user"
 	"go.uber.org/zap"
 	"net/http"
@@ -104,7 +105,7 @@ func (impl *RestHandlerImpl) ScanForVulnerabilityEvent(scanConfig *common.ImageS
 		scanConfig.UserId = 1 //setting user as system user in case of empty user data
 	}
 	impl.Logger.Infow("image scan req", "req", scanConfig)
-	var result = &common.ScanEventResponse{}
+
 	tool, err := impl.ImageScanService.GetActiveTool()
 	if err != nil {
 		impl.Logger.Errorw("err in image scanning", "err", err)
@@ -115,6 +116,23 @@ func (impl *RestHandlerImpl) ScanForVulnerabilityEvent(scanConfig *common.ImageS
 		impl.Logger.Errorw("service err, RegisterScanExecutionHistoryAndState", "err", err)
 		return nil, err
 	}
+	result, err := impl.ScanImageAsPerTool(scanConfig, tool, executionHistory, executionHistoryDirPath)
+	if err != nil {
+		impl.Logger.Errorw("service err, ScanImageAsPerTool", "err", err)
+		return nil, err
+	}
+	//deleting executionDirectoryPath with files as well
+	err = os.RemoveAll(executionHistoryDirPath)
+	if err != nil {
+		impl.Logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
+		return nil, err
+	}
+	return result, nil
+}
+
+func (impl *RestHandlerImpl) ScanImageAsPerTool(scanConfig *common.ImageScanEvent, tool *repository.ScanToolMetadata,
+	executionHistory *repository.ImageScanExecutionHistory, executionHistoryDirPath string) (*common.ScanEventResponse, error) {
+	var result = &common.ScanEventResponse{}
 	imageToBeScanned, err := impl.ImageScanService.GetImageToBeScannedAndFetchCliEnv(scanConfig)
 	if err != nil {
 		impl.Logger.Errorw("service err, GetImageToBeScanned", "err", err)
@@ -139,12 +157,6 @@ func (impl *RestHandlerImpl) ScanForVulnerabilityEvent(scanConfig *common.ImageS
 			impl.Logger.Errorw("err in process msg", "err", err)
 			return nil, err
 		}
-	}
-	//deleting executionDirectoryPath with files as well
-	err = os.RemoveAll(executionHistoryDirPath)
-	if err != nil {
-		impl.Logger.Errorw("error in deleting executionHistoryDirectory", "err", err)
-		return nil, err
 	}
 	return result, nil
 }
