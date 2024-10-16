@@ -225,13 +225,15 @@ func (impl *ImageScanServiceImpl) ScanImageForTool(tool *repository.ScanToolMeta
 	toolCopy := *tool
 	var processedState bean.ScanExecutionProcessState
 	err := impl.ProcessScanForTool(toolCopy, executionHistoryDirPathCopy, executionHistoryId, userId, ctx, imageScanRenderDto)
+	var errorMessage string
 	if err != nil {
 		impl.Logger.Errorw("error in processing scan for tool:", "toolCopy Name", toolCopy.Name, "err", err)
 		processedState = bean.ScanExecutionProcessStateFailed
+		errorMessage = err.Error()
 	} else {
 		processedState = bean.ScanExecutionProcessStateCompleted
 	}
-	updateErr := impl.ScanToolExecutionHistoryMappingRepository.UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolCopy.Id, processedState, time.Now())
+	updateErr := impl.ScanToolExecutionHistoryMappingRepository.UpdateStateByToolAndExecutionHistoryId(executionHistoryId, toolCopy.Id, processedState, time.Now(), errorMessage)
 	if updateErr != nil {
 		impl.Logger.Errorw("error in UpdateStateByToolAndExecutionHistoryId", "err", err)
 		err = updateErr

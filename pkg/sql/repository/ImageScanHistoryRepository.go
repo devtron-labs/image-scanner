@@ -34,7 +34,27 @@ type ImageScanExecutionHistory struct {
 	ExecutionHistoryDirectoryPath string               `sql:"execution_history_directory_path"` // Deprecated
 	SourceType                    common.SourceType    `sql:"source_type"`
 	SourceSubType                 common.SourceSubType `sql:"source_sub_type"`
+	ParentId                      int                  `sql:"parent_id"`
+	IsLatest                      bool                 `sql:"is_latest"`
 }
+
+func (r *ImageScanExecutionHistory) IsSourceAndSubSourceTypeSame(sourceType common.SourceType, sourceSubType common.SourceSubType) bool {
+	return r.SourceType == sourceType && r.SourceSubType == sourceSubType
+}
+
+func (r *ImageScanExecutionHistory) UpdateIsLatest(isLatest bool) *ImageScanExecutionHistory {
+	r.IsLatest = isLatest
+	return r
+}
+
+func (r *ImageScanExecutionHistory) UpdateParentId(parentId int) {
+	r.ParentId = parentId
+}
+
+//Refer image_scan_deploy_info table for source_type relation
+// ci workflow will have  scans for ci-code and ci artifact
+// cd workflow will have scans for deployment manifest, manifest images
+// helm chart will have scans for manifest images and manifest
 
 type ImageScanHistoryRepository interface {
 	GetConnection() (dbConnection *pg.DB)
@@ -45,6 +65,9 @@ type ImageScanHistoryRepository interface {
 	FindByImageDigests(digest []string) ([]*ImageScanExecutionHistory, error)
 	Update(model *ImageScanExecutionHistory) error
 	FindByImage(image string) (*ImageScanExecutionHistory, error)
+	FindByImageWithNoSource(image string) (*ImageScanExecutionHistory, error)
+	FindByImageWithSource(image string) (*ImageScanExecutionHistory, error)
+	FindLatestByParentScanHistory(parentScanHistoryId int) (*ImageScanExecutionHistory, error)
 }
 
 type ImageScanHistoryRepositoryImpl struct {
@@ -104,5 +127,34 @@ func (impl ImageScanHistoryRepositoryImpl) FindByImage(image string) (*ImageScan
 	var model ImageScanExecutionHistory
 	err := impl.dbConnection.Model(&model).
 		Where("image = ?", image).Order("execution_time desc").Limit(1).Select()
+	return &model, err
+}
+
+func (impl ImageScanHistoryRepositoryImpl) FindByImageWithNoSource(image string) (*ImageScanExecutionHistory, error) {
+	var model ImageScanExecutionHistory
+	q := impl.dbConnection.Model(&model).
+		Where("image = ?", image).Where("source_type is null or source_type = 0").Where("source_type is null or source_type = 0")
+
+	err := q.Order("execution_time desc").
+		Limit(1).Select()
+	return &model, err
+}
+
+func (impl ImageScanHistoryRepositoryImpl) FindByImageWithSource(image string) (*ImageScanExecutionHistory, error) {
+	var model ImageScanExecutionHistory
+	q := impl.dbConnection.Model(&model).
+		Where("image = ?", image).Where("source_type != 0 and source_type is not null")
+
+	err := q.Order("execution_time desc").
+		Limit(1).Select()
+	return &model, err
+}
+
+func (impl ImageScanHistoryRepositoryImpl) FindLatestByParentScanHistory(parentScanHistoryId int) (*ImageScanExecutionHistory, error) {
+	var model ImageScanExecutionHistory
+	err := impl.dbConnection.Model(&model).
+		Where("parent_id = ?", parentScanHistoryId).
+		Where("is_latest = ?", true).
+		Select()
 	return &model, err
 }
