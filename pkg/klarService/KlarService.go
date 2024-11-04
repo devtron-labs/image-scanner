@@ -99,7 +99,7 @@ func (impl *KlarServiceImpl) Process(scanEvent *common.ImageScanEvent, execution
 		impl.logger.Errorw("error in getting docker registry by id", "err", err, "id", scanEvent.DockerRegistryId)
 		return nil, err
 	}
-	scanned, err := impl.imageScanService.IsImageScanned(scanEvent.Image)
+	_, scanned, err := impl.imageScanService.IsImageScanned(scanEvent.Image, false)
 	if err != nil && err != pg.ErrNoRows {
 		impl.logger.Errorw("error in fetching scan history ", "err", err)
 		return nil, err

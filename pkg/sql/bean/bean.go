@@ -22,6 +22,8 @@ import (
 	"strings"
 )
 
+const UserSystemId = 1
+
 const (
 	ScanOutputDirectory      = "/security/devtronimagescan" // This is not configurable due to permissions for devtron-user
 	NullProcessIndex         = -1
@@ -32,6 +34,7 @@ const (
 	ScanToolClair            = "CLAIR"
 	ScanToolVersion2         = "V2"
 	ScanToolVersion4         = "V4"
+	SbomOutputFileNameSuffix = "_out.json"
 )
 
 type ScanExecutionType string

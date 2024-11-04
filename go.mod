@@ -10,7 +10,7 @@ require (
 	github.com/aws/aws-sdk-go v1.44.116
 	github.com/caarlos0/env v3.5.0+incompatible
 	github.com/caarlos0/env/v6 v6.10.1
-	github.com/devtron-labs/common-lib v0.16.1-0.20240923063129-ff2dc035435e
+	github.com/devtron-labs/common-lib v0.19.0
 	github.com/go-pg/pg v6.15.1+incompatible
 	github.com/google/go-containerregistry v0.6.0
 	github.com/google/wire v0.6.0
@@ -73,3 +73,5 @@ require (
 	google.golang.org/protobuf v1.33.0 // indirect
 	mellium.im/sasl v0.3.1 // indirect
 )
+
+replace github.com/devtron-labs/common-lib => github.com/devtron-labs/devtron-services/common-lib v0.0.0-20241024135802-b4888f54a136
