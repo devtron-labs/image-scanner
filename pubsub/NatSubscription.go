@@ -24,6 +24,7 @@ import (
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"go.uber.org/zap"
+	"os"
 )
 
 type NatSubscription interface {
@@ -40,8 +41,8 @@ type NatsSubscriptionModeConfig struct {
 	ToBeSubscribed bool `env:"NATS_TO_BE_SUBSCRIPTION" envDefault:"true"`
 }
 
-func (config *NatsSubscriptionModeConfig) SetNatsToBeSubscribed(value bool) {
-	config.ToBeSubscribed = value
+func (config *NatsSubscriptionModeConfig) SetNatsToBeSubscribed(value string) {
+	os.Setenv("NATS_TO_BE_SUBSCRIPTION", value)
 }
 
 func NewNatSubscription(pubSubClient *pubsub1.PubSubClientServiceImpl,
