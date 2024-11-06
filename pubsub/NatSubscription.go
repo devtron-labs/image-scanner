@@ -41,7 +41,7 @@ type NatsSubscriptionModeConfig struct {
 	ToBeSubscribed bool `env:"NATS_TO_BE_SUBSCRIPTION" envDefault:"true"`
 }
 
-func (config *NatsSubscriptionModeConfig) SetNatsToBeSubscribed(value string) {
+func SetNatsToBeSubscribed(value string) {
 	os.Setenv("NATS_TO_BE_SUBSCRIPTION", value)
 }
 
