@@ -18,6 +18,7 @@ package pubsub
 
 import (
 	"encoding/json"
+	"github.com/caarlos0/env"
 	pubsub1 "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/common-lib/pubsub-lib/model"
 	"github.com/devtron-labs/image-scanner/common"
@@ -35,6 +36,14 @@ type NatSubscriptionImpl struct {
 	ClairService clairService.ClairService
 }
 
+type NatsSubscriptionModeConfig struct {
+	ToBeSubscribed bool `env:"NATS_TO_BE_SUBSCRIPTION" envDefault:"true"`
+}
+
+func (config *NatsSubscriptionModeConfig) SetNatsToBeSubscribed(value bool) {
+	config.ToBeSubscribed = value
+}
+
 func NewNatSubscription(pubSubClient *pubsub1.PubSubClientServiceImpl,
 	logger *zap.SugaredLogger,
 	clairService clairService.ClairService) (*NatSubscriptionImpl, error) {
@@ -43,7 +52,15 @@ func NewNatSubscription(pubSubClient *pubsub1.PubSubClientServiceImpl,
 		Logger:       logger,
 		ClairService: clairService,
 	}
-	return ns, ns.Subscribe()
+	natsSubscriptionEnv := NatsSubscriptionModeConfig{}
+	err := env.Parse(&natsSubscriptionEnv)
+	if err != nil {
+		logger.Errorw("error while parsing env", "error", err)
+	}
+	if natsSubscriptionEnv.ToBeSubscribed {
+		return ns, ns.Subscribe()
+	}
+	return ns, nil
 }
 
 func (impl *NatSubscriptionImpl) Subscribe() error {
