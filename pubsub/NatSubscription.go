@@ -58,10 +58,10 @@ func NewNatSubscription(pubSubClient *pubsub1.PubSubClientServiceImpl,
 	if err != nil {
 		logger.Errorw("error while parsing env", "error", err)
 	}
-	if natsSubscriptionEnv.ToBeSubscribed {
-		return ns, ns.Subscribe()
+	if !natsSubscriptionEnv.ToBeSubscribed {
+		return ns, nil
 	}
-	return ns, nil
+	return ns, ns.Subscribe()
 }
 
 func (impl *NatSubscriptionImpl) Subscribe() error {
