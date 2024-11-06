@@ -35,13 +35,27 @@ type NatSubscriptionImpl struct {
 	ClairService clairService.ClairService
 }
 
+type NatsSubscriptionModeConfig struct {
+	ToBeSubscribed bool
+}
+
+func NewNatsSubscriptionModeConfig() NatsSubscriptionModeConfig {
+	return NatsSubscriptionModeConfig{
+		ToBeSubscribed: true,
+	}
+}
+
 func NewNatSubscription(pubSubClient *pubsub1.PubSubClientServiceImpl,
 	logger *zap.SugaredLogger,
-	clairService clairService.ClairService) (*NatSubscriptionImpl, error) {
+	clairService clairService.ClairService, natsSubscriptionConfig NatsSubscriptionModeConfig) (*NatSubscriptionImpl, error) {
 	ns := &NatSubscriptionImpl{
 		PubSubClient: pubSubClient,
 		Logger:       logger,
 		ClairService: clairService,
+	}
+
+	if !natsSubscriptionConfig.ToBeSubscribed {
+		return ns, nil
 	}
 	return ns, ns.Subscribe()
 }

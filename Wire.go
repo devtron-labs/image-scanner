@@ -51,6 +51,7 @@ func InitializeApp() (*App, error) {
 		client.NewPubSubClientServiceImpl,
 		klarService.NewKlarServiceImpl,
 		wire.Bind(new(klarService.KlarService), new(*klarService.KlarServiceImpl)),
+		pubsub.NewNatsSubscriptionModeConfig,
 		pubsub.NewNatSubscription,
 		grafeasService.NewKlarServiceImpl,
 		wire.Bind(new(grafeasService.GrafeasService), new(*grafeasService.GrafeasServiceImpl)),
