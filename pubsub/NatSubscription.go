@@ -18,13 +18,11 @@ package pubsub
 
 import (
 	"encoding/json"
-	"github.com/caarlos0/env"
 	pubsub1 "github.com/devtron-labs/common-lib/pubsub-lib"
 	"github.com/devtron-labs/common-lib/pubsub-lib/model"
 	"github.com/devtron-labs/image-scanner/common"
 	"github.com/devtron-labs/image-scanner/pkg/clairService"
 	"go.uber.org/zap"
-	"os"
 )
 
 type NatSubscription interface {
@@ -38,27 +36,25 @@ type NatSubscriptionImpl struct {
 }
 
 type NatsSubscriptionModeConfig struct {
-	ToBeSubscribed bool `env:"NATS_TO_BE_SUBSCRIPTION" envDefault:"true"`
+	ToBeSubscribed bool
 }
 
-func SetNatsToBeSubscribed(value string) {
-	os.Setenv("NATS_TO_BE_SUBSCRIPTION", value)
+func NewNatsSubscriptionModeConfig() NatsSubscriptionModeConfig {
+	return NatsSubscriptionModeConfig{
+		ToBeSubscribed: true,
+	}
 }
 
 func NewNatSubscription(pubSubClient *pubsub1.PubSubClientServiceImpl,
 	logger *zap.SugaredLogger,
-	clairService clairService.ClairService) (*NatSubscriptionImpl, error) {
+	clairService clairService.ClairService, natsSubscriptionConfig NatsSubscriptionModeConfig) (*NatSubscriptionImpl, error) {
 	ns := &NatSubscriptionImpl{
 		PubSubClient: pubSubClient,
 		Logger:       logger,
 		ClairService: clairService,
 	}
-	natsSubscriptionEnv := NatsSubscriptionModeConfig{}
-	err := env.Parse(&natsSubscriptionEnv)
-	if err != nil {
-		logger.Errorw("error while parsing env", "error", err)
-	}
-	if !natsSubscriptionEnv.ToBeSubscribed {
+
+	if !natsSubscriptionConfig.ToBeSubscribed {
 		return ns, nil
 	}
 	return ns, ns.Subscribe()
