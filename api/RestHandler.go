@@ -88,17 +88,17 @@ func (impl *RestHandlerImpl) ScanForVulnerability(w http.ResponseWriter, r *http
 	err := decoder.Decode(&scanConfig)
 	if err != nil {
 		impl.Logger.Errorw("error in decode request", "error", err)
-		writeJsonResp(w, err, nil, http.StatusBadRequest)
+		WriteJsonResp(w, err, nil, http.StatusBadRequest)
 		return
 	}
 	impl.Logger.Infow("imageScan event", "scanConfig", scanConfig)
 	result, err := impl.ScanForVulnerabilityEvent(&scanConfig)
 	if err != nil {
-		writeJsonResp(w, err, nil, http.StatusInternalServerError)
+		WriteJsonResp(w, err, nil, http.StatusInternalServerError)
 		return
 	}
 	impl.Logger.Debugw("save", "status", result)
-	writeJsonResp(w, err, result, http.StatusOK)
+	WriteJsonResp(w, err, result, http.StatusOK)
 }
 
 func (impl *RestHandlerImpl) ScanForVulnerabilityEvent(scanConfig *common.ImageScanEvent) (*common.ScanEventResponse, error) {
