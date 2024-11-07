@@ -30,39 +30,53 @@ type NatSubscription interface {
 }
 
 type NatSubscriptionImpl struct {
-	pubSubClient *pubsub1.PubSubClientServiceImpl
-	logger       *zap.SugaredLogger
-	clairService clairService.ClairService
+	PubSubClient *pubsub1.PubSubClientServiceImpl
+	Logger       *zap.SugaredLogger
+	ClairService clairService.ClairService
+}
+
+type NatsSubscriptionModeConfig struct {
+	ToBeSubscribed bool
+}
+
+func NewNatsSubscriptionModeConfig() NatsSubscriptionModeConfig {
+	return NatsSubscriptionModeConfig{
+		ToBeSubscribed: true,
+	}
 }
 
 func NewNatSubscription(pubSubClient *pubsub1.PubSubClientServiceImpl,
 	logger *zap.SugaredLogger,
-	clairService clairService.ClairService) (*NatSubscriptionImpl, error) {
+	clairService clairService.ClairService, natsSubscriptionConfig NatsSubscriptionModeConfig) (*NatSubscriptionImpl, error) {
 	ns := &NatSubscriptionImpl{
-		pubSubClient: pubSubClient,
-		logger:       logger,
-		clairService: clairService,
+		PubSubClient: pubSubClient,
+		Logger:       logger,
+		ClairService: clairService,
+	}
+
+	if !natsSubscriptionConfig.ToBeSubscribed {
+		return ns, nil
 	}
 	return ns, ns.Subscribe()
 }
 
 func (impl *NatSubscriptionImpl) Subscribe() error {
 	callback := func(msg *model.PubSubMsg) {
-		impl.logger.Debugw("received msg", "msg", msg)
+		impl.Logger.Debugw("received msg", "msg", msg)
 		// defer msg.Ack()
 		scanConfig := &common.ImageScanEvent{}
 		err := json.Unmarshal([]byte(msg.Data), scanConfig)
 		if err != nil {
-			impl.logger.Errorw("err in reading msg", "err", err, "msg", string(msg.Data))
+			impl.Logger.Errorw("err in reading msg", "err", err, "msg", string(msg.Data))
 			return
 		}
-		impl.logger.Infow("scanConfig unmarshal data", "scanConfig", scanConfig)
+		impl.Logger.Infow("scanConfig unmarshal data", "scanConfig", scanConfig)
 		// NOTE: This is not being used, thats why not updated the call
 		// TODO: Will have to update if any usage in future
 		// scanConfig.Image = "quay.io/coreos/clair:v2.0.0"
-		_, err = impl.clairService.ScanImage(scanConfig, nil, nil)
+		_, err = impl.ClairService.ScanImage(scanConfig, nil, nil)
 		if err != nil {
-			impl.logger.Infow("err in process msg", "err", err)
+			impl.Logger.Infow("err in process msg", "err", err)
 			return
 		}
 	}
@@ -76,9 +90,9 @@ func (impl *NatSubscriptionImpl) Subscribe() error {
 		return "got message for deployment stage completion", []interface{}{"envId", deploymentEvent.EnvId, "appId", deploymentEvent.AppId, "ciArtifactId", deploymentEvent.CiArtifactId}
 	}
 
-	err := impl.pubSubClient.Subscribe(pubsub1.TOPIC_CI_SCAN, callback, loggerFunc)
+	err := impl.PubSubClient.Subscribe(pubsub1.TOPIC_CI_SCAN, callback, loggerFunc)
 	if err != nil {
-		impl.logger.Errorw("Error while subscribing to pubsub", "topic", pubsub1.TOPIC_CI_SCAN, "error", err)
+		impl.Logger.Errorw("Error while subscribing to pubsub", "topic", pubsub1.TOPIC_CI_SCAN, "error", err)
 	}
 	return err
 }

@@ -75,6 +75,7 @@ github.com/coreos/clair/ext/versionfmt
 # github.com/devtron-labs/common-lib v0.19.0 => github.com/devtron-labs/devtron-services/common-lib v0.0.0-20241024135802-b4888f54a136
 ## explicit; go 1.21
 github.com/devtron-labs/common-lib/constants
+github.com/devtron-labs/common-lib/git-manager
 github.com/devtron-labs/common-lib/git-manager/util
 github.com/devtron-labs/common-lib/middlewares
 github.com/devtron-labs/common-lib/monitoring

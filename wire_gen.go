@@ -26,11 +26,6 @@ import (
 
 func InitializeApp() (*App, error) {
 	sugaredLogger := logger.NewSugardLogger()
-	pubSubClientServiceImpl, err := pubsub_lib.NewPubSubClientServiceImpl(sugaredLogger)
-	if err != nil {
-		return nil, err
-	}
-	testPublishImpl := pubsub.NewTestPublishImpl(pubSubClientServiceImpl, sugaredLogger)
 	apiClient := grafeasService.GetGrafeasClient()
 	client := logger.NewHttpClient()
 	grafeasServiceImpl := grafeasService.NewKlarServiceImpl(sugaredLogger, apiClient, client)
@@ -73,10 +68,15 @@ func InitializeApp() (*App, error) {
 	}
 	roundTripperServiceImpl := roundTripper.NewRoundTripperServiceImpl(sugaredLogger, dockerArtifactStoreRepositoryImpl)
 	clairServiceImpl := clairService.NewClairServiceImpl(sugaredLogger, clairConfig, client, imageScanServiceImpl, dockerArtifactStoreRepositoryImpl, scanToolMetadataRepositoryImpl, roundTripperServiceImpl)
-	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, testPublishImpl, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl, imageScanConfig)
+	restHandlerImpl := api.NewRestHandlerImpl(sugaredLogger, grafeasServiceImpl, userServiceImpl, imageScanServiceImpl, klarServiceImpl, clairServiceImpl, imageScanConfig)
 	monitoringRouter := monitoring.NewMonitoringRouter(sugaredLogger)
 	router := api.NewRouter(sugaredLogger, restHandlerImpl, monitoringRouter)
-	natSubscriptionImpl, err := pubsub.NewNatSubscription(pubSubClientServiceImpl, sugaredLogger, clairServiceImpl)
+	pubSubClientServiceImpl, err := pubsub_lib.NewPubSubClientServiceImpl(sugaredLogger)
+	if err != nil {
+		return nil, err
+	}
+	natsSubscriptionModeConfig := pubsub.NewNatsSubscriptionModeConfig()
+	natSubscriptionImpl, err := pubsub.NewNatSubscription(pubSubClientServiceImpl, sugaredLogger, clairServiceImpl, natsSubscriptionModeConfig)
 	if err != nil {
 		return nil, err
 	}

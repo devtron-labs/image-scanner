@@ -18,14 +18,14 @@ package api
 
 import (
 	"encoding/json"
-	"github.com/devtron-labs/image-scanner/internal/util"
+	"github.com/devtron-labs/image-scanner/internals/util"
 	"github.com/juju/errors"
 	"net/http"
 )
 
-// use of writeJsonRespStructured is preferable. it api exists due to historical reason
-// err.message is used as internal message for ApiError object in resp
-func writeJsonResp(w http.ResponseWriter, err error, respBody interface{}, status int) {
+// use of WriteJsonRespStructured is preferable. it api exists due to historical reason
+// err.message is used as internals message for ApiError object in resp
+func WriteJsonResp(w http.ResponseWriter, err error, respBody interface{}, status int) {
 	response := ResponseV2{}
 	if err == nil {
 		response.Result = respBody
@@ -85,7 +85,7 @@ func writeJsonResp(w http.ResponseWriter, err error, respBody interface{}, statu
 }
 
 // use this method when we have specific api error to be conveyed to api User
-func writeJsonRespStructured(w http.ResponseWriter, err error, respBody interface{}, status int, apiErrors []*util.ApiError) {
+func WriteJsonRespStructured(w http.ResponseWriter, err error, respBody interface{}, status int, apiErrors []*util.ApiError) {
 	response := ResponseV2{}
 	response.Code = status
 	response.Status = http.StatusText(status)
